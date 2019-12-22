@@ -1,13 +1,15 @@
 <template>
   <div
-    v-if="token && ready"
+    v-if="token && $root.ready"
     id="app"
     :class="{ noFocus, 'loaded': !loading, 'fullscreen': fullScreen}">
     <Navigation ref="nav" />
+    {{ showProgress }}<br>
+    {{ progressStatus }}
     <Content ref="content" />
   </div>
-  <div v-else-if="ready">
-    <LoginView />
+  <div v-else>
+    <router-view class="content" />
   </div>
 </template>
 
@@ -16,18 +18,14 @@
 import gql from 'graphql-tag'
 import { gsap } from 'gsap'
 
-import LoginView from './views/auth/LoginView'
 export default {
-  components: {
-    LoginView
-  },
-
   data () {
     return {
+      showProgress: false,
+      progressStatus: {},
       noFocus: true,
       loading: 1,
       initialized: false,
-      ready: false,
       fullScreen: false
     }
   },
@@ -42,13 +40,6 @@ export default {
         gsap.to('main', { ease: 'power2.in', duration: 0.35, marginLeft: 370 })
       }
     },
-
-    // me (value) {
-    //   if (value && !this.initialized) {
-    //     this.initialized = true
-    //     this.initializeApp()
-    //   }
-    // },
 
     '$route' () {
       if (this.$route.meta.fullScreen) {
@@ -77,6 +68,7 @@ export default {
   },
 
   async created () {
+    this.$root.ready = false
     console.debug('created <App />')
 
     document.addEventListener('keydown', e => {
@@ -89,9 +81,10 @@ export default {
       this.fullScreen = true
     }
 
-    this.setToken(localStorage.getItem('token'))
+    const token = localStorage.getItem('token')
+    this.setToken(token)
 
-    if (this.token) {
+    if (token) {
       // check if the token is valid — might be old
       let fmData = new FormData()
       fmData.append('jwt', this.token)
@@ -102,25 +95,24 @@ export default {
       })
 
       switch (response.status) {
-        // case 200:
-        //   await this.initializeApp()
-        //   break
+        case 200:
+          this.$root.ready = true
+          break
         case 406:
           this.setToken(null)
           localStorage.removeItem('token')
 
           // this.$router.push({ name: 'login' })
-          window.location = '/admin/login?expired=true?code=406'
+          this.$router.push({ name: 'login' })
           break
         case 401:
           this.setToken(null)
           localStorage.removeItem('token')
 
-          window.location = '/admin/login?expired=true?code=401'
+          this.$router.push({ name: 'login' })
       }
     } else {
       this.loading = 0
-      this.ready = true
     }
   },
 
@@ -138,12 +130,12 @@ export default {
       })
     },
 
-    async initializeApp () {
-      console.log('connectsocket')
-      this.connectSocket()
+    async initializeApp (me) {
       try {
-        this.joinAdminChannel()
-        this.joinUserChannel()
+        this.connectSocket().then(() => {
+          this.joinAdminChannel(me)
+          this.joinUserChannel(me)
+        })
       } catch (err) {
         throw err
       }
@@ -153,11 +145,11 @@ export default {
       this.noFocus = false
     },
 
-    joinUserChannel () {
-      this.userChannel = this.$socket.channel(`user:${this.me.id}`, {})
+    joinUserChannel (me) {
+      this.userChannel = this.$socket.channel(`user:${me.id}`, {})
       this.userChannel.join()
         .receive('ok', userId => {
-          console.debug(`== Ble medlem av brukerkanal:${this.me.id} med bruker:${userId}`)
+          console.debug(`== Ble medlem av brukerkanal:${me.id} med bruker:${userId}`)
           this.loading = false
         })
         .receive('error', resp => { console.error('!! Kunne ikke påmeldes ', resp) })
@@ -165,10 +157,12 @@ export default {
       this.userChannel.on('progress:show', payload => {
         this.showProgress = true
       })
+
       this.userChannel.on('progress:hide', payload => {
         this.showProgress = false
         this.progressStatus = {}
       })
+
       this.userChannel.on('progress:update', payload => {
         let percent = 0
         if (payload.hasOwnProperty('percent')) {
@@ -192,7 +186,6 @@ export default {
       this.adminChannel.join()
         .receive('ok', userId => {
           console.debug(`== Ble medlem av adminkanal med bruker:${userId}`)
-          this.ready = true
         })
         .receive('error', resp => { console.error('!! Kunne ikke påmeldes ', resp) })
 
@@ -243,15 +236,17 @@ export default {
       `,
 
       update ({ me }) {
+        console.log('update me', this.$root.ready)
         this.$i18n.locale = me.language
         if (!this.initialized) {
           this.initialized = true
-          this.initializeApp()
+          console.log('INITIALIZE APP FROM ME', me)
+          this.initializeApp(me)
         }
       },
 
       skip () {
-        return !this.token
+        return !this.$root.ready
       }
     },
 

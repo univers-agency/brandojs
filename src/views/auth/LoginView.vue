@@ -28,7 +28,7 @@
                   label="Login"
                   name="email"
                   placeholder="Epost"
-                  @keyup.enter="login"
+                  @keyup.native.enter="login"
                   data-cy-email />
                 <KInputPassword
                   v-model="user.password"
@@ -37,7 +37,7 @@
                   name="password"
                   placeholder="Passord"
                   data-cy-password
-                  @keyup.enter="login" />
+                  @keyup.native.enter="login" />
               </form>
               <div>
                 <ButtonPrimary
@@ -103,6 +103,7 @@ export default {
     },
 
     async login () {
+      console.log('yes')
       const fmData = new FormData()
 
       fmData.append('email', this.user.email)
@@ -140,6 +141,7 @@ export default {
                       value: localStorage.getItem('token')
                     }
                   })
+                  this.$root.ready = true
                   this.$router.push({ name: 'dashboard' })
                 } })
             }

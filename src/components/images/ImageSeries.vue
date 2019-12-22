@@ -3,10 +3,10 @@
     <ModalImageUpload
       :show-modal="selectedImageSeriesForUpload === imageSeries.id"
       :image-series="imageSeries"
-      :upload-callback="uploadCallback"
+      @save="addImageToSeries"
       @close="closeUploadModal" />
-    <div class="card-header-tab">
-      <h2>Bildeserie: {{ imageSeries.name }}</h2>
+    <h2>Bildeserie: {{ imageSeries.name }}</h2>
+    <div class="button-group">
       <ButtonSecondary
         @click.native.prevent="uploadToSeries(imageSeries)">
         Last opp bilder
@@ -20,6 +20,7 @@
         Slett
       </ButtonSecondary>
     </div>
+
     <div class="card">
       <div
         v-if="images.length"
@@ -78,6 +79,7 @@
 import BaseImage from './BaseImage.vue'
 import ModalImageUpload from './modals/ModalImageUpload.vue'
 import gql from 'graphql-tag'
+import GET_IMAGE_CATEGORY from '../../gql/images/IMAGE_CATEGORY_QUERY.graphql'
 
 export default {
   components: {
@@ -155,6 +157,35 @@ export default {
       this.selectedImageSeriesForUpload = null
     },
 
+    addImageToSeries (image) {
+      console.log('image we are adding', image)
+
+      const store = this.$apolloProvider.defaultClient.store.cache
+
+      // check if we have a category with this series
+      let query = {
+        query: GET_IMAGE_CATEGORY,
+        variables: {
+          categoryId: parseInt(this.imageSeries.image_category_id)
+        }
+      }
+
+      try {
+        let data = store.readQuery(query)
+        const series = data.imageCategory.image_series.find(s => parseInt(s.id) === parseInt(image.image_series_id))
+        console.log('found series', series)
+        series.images.unshift(image)
+
+        store.writeQuery({
+          ...query,
+          data
+        })
+      } catch (err) {
+        console.log(err)
+        // not in store
+      }
+    },
+
     deleteSeries (series) {
       this.$alerts.alertConfirm('OBS', 'Er du sikker på at du vil slette denne bildeserien?', async (data) => {
         if (!data) {
@@ -187,6 +218,10 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+  .button-group {
+    display: flex;
+  }
+
   .empty-series {
     @space margin-top xs;
     background-color: theme(colors.peach);

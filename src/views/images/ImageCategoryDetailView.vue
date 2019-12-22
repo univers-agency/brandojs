@@ -198,18 +198,25 @@ export default {
       }
 
       const store = this.$apolloProvider.defaultClient.store.cache
-      const data = store.readQuery(query)
 
-      const series = data.imageCategory.image_series.find(s => parseInt(s.id) === parseInt(imageSeriesId))
-      const idx = series.images.findIndex(i => parseInt(i.id) === parseInt(id))
+      try {
+        const data = store.readQuery(query)
 
-      if (idx !== -1) {
-        series.images.splice(idx, 1)
+        console.log(data)
 
-        store.writeQuery({
-          ...query,
-          data
-        })
+        const series = data.imageCategory.image_series.find(s => parseInt(s.id) === parseInt(imageSeriesId))
+        const idx = series.images.findIndex(i => parseInt(i.id) === parseInt(id))
+
+        if (idx !== -1) {
+          series.images.splice(idx, 1)
+
+          store.writeQuery({
+            ...query,
+            data
+          })
+        }
+      } catch (err) {
+        console.log(err)
       }
     }
   },

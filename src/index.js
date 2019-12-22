@@ -8,7 +8,7 @@ import VueShortkey from 'vue-shortkey'
 import VueClickOutside from 'v-click-outside'
 import { createProvider } from './vue-apollo'
 import iziToast from 'izitoast'
-import { Socket } from 'phoenix'
+import VuePhoenixSocket from './utils/socket'
 
 import { ValidationProvider, ValidationObserver, extend, configure } from 'vee-validate'
 import { required, email, max, confirmed, min } from 'vee-validate/dist/rules'
@@ -144,19 +144,7 @@ export default {
 
     Vue.prototype.$menu = { sections: defaultMenuSections }
 
-    Vue.prototype.connectSocket = function () {
-      const token = localStorage.getItem('token')
-      let socket = new Socket('/admin/socket', { params: { guardian_token: token } })
-      socket.onError(() => {
-        Vue.prototype.$toast.error({ message: 'Ingen forbindelse til WS' })
-      })
-      socket.onClose(err => {
-        console.error(err)
-      })
-
-      socket.connect()
-      Vue.prototype.$socket = socket
-    }
+    Vue.use(VuePhoenixSocket)
 
     // // Add or modify global methods or properties.
     // Vue.yourMethod = (value) => value

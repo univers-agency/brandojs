@@ -160,11 +160,6 @@ export default {
     imageSeries: {
       type: Object,
       required: true
-    },
-
-    uploadCallback: {
-      type: Function,
-      default: null
     }
   },
 
@@ -189,11 +184,18 @@ export default {
         // Uploaded successfully
         if (newFile.success !== oldFile.success) {
           if (newFile.response.status === '200') {
-            if (this.uploadCallback) {
-              this.uploadCallback(newFile.response.image)
-            } else {
-              this.storeImage(newFile.response.image)
+            // massage the file a bit
+            const image = {
+              ...newFile.response.image,
+              __typename: 'Image',
+              image: {
+                ...newFile.response.image.image,
+                __typename: 'ImageType',
+                medium: newFile.response.image.image.sizes.medium,
+                thumb: newFile.response.image.image.sizes.thumb
+              }
             }
+            this.$emit('save', image)
           }
         }
         // Upload error
