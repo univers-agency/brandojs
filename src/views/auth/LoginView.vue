@@ -103,7 +103,6 @@ export default {
     },
 
     async login () {
-      console.log('yes')
       const fmData = new FormData()
 
       fmData.append('email', this.user.email)
