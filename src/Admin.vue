@@ -1,11 +1,9 @@
 <template>
   <div
-    v-if="token && $root.ready"
+    v-if="token && ready"
     id="app"
     :class="{ noFocus, 'loaded': !loading, 'fullscreen': fullScreen}">
     <Navigation ref="nav" />
-    {{ showProgress }}<br>
-    {{ progressStatus }}
     <Content ref="content" />
   </div>
   <div v-else>
@@ -26,7 +24,8 @@ export default {
       noFocus: true,
       loading: 1,
       initialized: false,
-      fullScreen: false
+      fullScreen: false,
+      ready: false
     }
   },
 
@@ -68,7 +67,7 @@ export default {
   },
 
   async created () {
-    this.$root.ready = false
+    this.ready = false
     console.debug('created <App />')
 
     document.addEventListener('keydown', e => {
@@ -96,7 +95,7 @@ export default {
 
       switch (response.status) {
         case 200:
-          this.$root.ready = true
+          this.ready = true
           break
         case 406:
           this.setToken(null)
@@ -236,17 +235,15 @@ export default {
       `,
 
       update ({ me }) {
-        console.log('update me', this.$root.ready)
-        this.$i18n.locale = me.language
         if (!this.initialized) {
+          this.$i18n.locale = me.language
           this.initialized = true
-          console.log('INITIALIZE APP FROM ME', me)
           this.initializeApp(me)
         }
       },
 
       skip () {
-        return !this.$root.ready
+        return !this.ready
       }
     },
 
