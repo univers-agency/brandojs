@@ -32,11 +32,9 @@ export default {
     beforeEnter (el) {
       const els = [this.$refs.header.$el, this.$refs.menu.$el]
       gsap.set(els, { autoAlpha: 0, x: -15 })
-      console.log(this.$refs.nav)
     },
 
     enter (el, done) {
-      console.log(this.$refs.nav)
       const els = [this.$refs.header.$el, this.$refs.menu.$el]
       const tl = gsap.timeline({
         onComplete: done
