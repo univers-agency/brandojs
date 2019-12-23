@@ -5,7 +5,7 @@
       class="nav-sections"
       ref="sections">
       <NavigationMenuSection
-        v-for="section in $menu.sections"
+        v-for="section in $menu.sections[$i18n.locale]"
         :key="section.name"
         :section="section" />
     </div>

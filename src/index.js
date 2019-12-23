@@ -136,32 +136,17 @@ export default {
     Vue.prototype.$toast = iziToast
     Vue.prototype.$app = app
 
-    const contentMenu = defaultMenuSections.find(s => s.name === 'Content')
-    contentMenu.items = [
-      ...contentMenu.items,
-      ...menuSections
-    ]
+    menuSections.forEach(section => {
+      Object.keys(section).forEach(lang => {
+        defaultMenuSections[lang][1].items = [
+          ...defaultMenuSections[lang][1].items,
+          ...(section[lang] ? section[lang] : [])
+        ]
+      })
+    })
 
     Vue.prototype.$menu = { sections: defaultMenuSections }
 
     Vue.use(VuePhoenixSocket)
-
-    // // Add or modify global methods or properties.
-    // Vue.yourMethod = (value) => value
-    // // Add a component or directive to your plugin, so it will be installed globally to your project.
-    // Vue.component('component', Component)
-    // // Add `Vue.mixin()` to inject options to all components.
-    // Vue.mixin({
-    //   // Add component lifecycle hooks or properties.
-    //   created() {
-    //     console.log('Hello from created hook!')
-    //   }
-    // })
-    // // Add Vue instance methods by attaching them to Vue.prototype.
-    // Vue.property.$myProperty = 'This is a Vue instance property.'
   }
-}
-
-export {
-  mapActions, mapGetters, mapState, mapMutations
 }
