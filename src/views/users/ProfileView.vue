@@ -2,10 +2,10 @@
   <article v-if="user">
     <ContentHeader>
       <template v-slot:title>
-        Din brukerprofil
+        {{ $t('profile.title') }}
       </template>
       <template v-slot:subtitle>
-        Administrasjon av brukerinfo
+        {{ $t('profile.helpText') }}
       </template>
     </ContentHeader>
     <KForm
@@ -15,48 +15,57 @@
         <div class="half">
           <KInput
             v-model="user.full_name"
-            label="Navn"
-            helpText="navn som brukes når du er artikkelforfatter"
+            :label="$t('user.name')"
+            :helpText="$t('user.name.help')"
             rules="required"
             placeholder="Navn Navnesen"
             name="user[full_name]" />
           <KInputEmail
             v-model="user.email"
-            label="Epost"
-            helpText="brukes til innlogging og notifikasjoner"
+            :label="$t('user.email')"
+            :helpText="$t('user.email.help')"
             rules="required|email"
             placeholder="min@epost.no"
             name="user[email]" />
           <KInputRadios
             v-model="user.role"
             rules="required"
+            :label="$t('user.role')"
             :options="[
-              { name: 'Superbruker', value: 'superuser' },
+              { name: 'Super', value: 'superuser' },
               { name: 'Admin', value: 'admin' },
-              { name: 'Stab', value: 'staff' }
+              { name: 'Staff', value: 'staff' }
             ]"
-            name="user[role]"
-            label="Rolle" />
+            name="user[role]" />
+          <KInputRadios
+            v-model="user.language"
+            rules="required"
+            :options="[
+              { name: 'English', value: 'en' },
+              { name: 'Norsk', value: 'nb' }
+            ]"
+            name="user[language]"
+            :label="$t('user.language')" />
           <KInputPassword
             v-model="user.password"
+            :label="$t('user.password')"
+            :placeholder="$t('user.password')"
             rules="min:6|confirmed:user[password_confirm]"
             name="user[password]"
-            label="Passord"
-            placeholder="Passord"
           />
           <KInputPassword
             v-model="user.password_confirm"
+            :label="$t('user.password_confirm')"
+            :placeholder="$t('user.password_confirm')"
             name="user[password_confirm]"
-            label="Bekreft passord"
-            placeholder="Bekreft passord"
           />
         </div>
         <div class="half">
           <KInputImage
             v-model="user.avatar"
+            :label="$t('user.avatar')"
+            :helpText="$t('user.avatar.help')"
             name="user[avatar]"
-            label="Profilbilde"
-            helpText="Klikk på bildet for å sette fokuspunkt."
           />
         </div>
       </section>
@@ -99,10 +108,19 @@ export default {
               }
             }
           `,
+
           variables: {
             userParams,
             userId: this.me.id
-          }
+          },
+
+          context: {
+            fetchOptions: {
+              onUploadProgress: (progress => {
+                console.info(progress)
+              })
+            }
+          },
         })
 
         this.$toast.success({ message: 'Profil oppdatert' })
@@ -163,3 +181,35 @@ export default {
 <style>
 
 </style>
+<i18n>
+{
+  "en": {
+    "user.language": "Language",
+    "user.password": "Password",
+    "user.password_confirm": "Confirm password",
+    "user.avatar": "Avatar",
+    "user.avatar.help": "Click to set focal point.",
+    "user.email": "Email",
+    "user.email.help": "used for login and notifications",
+    "user.name": "Name",
+    "user.name.help": "name also used as entry author",
+    "user.role": "Role",
+    "profile.title": "Your User Profile",
+    "profile.helpText": "Administrate user info"
+  },
+  "nb": {
+    "user.language": "Språk",
+    "user.password": "Passord",
+    "user.password_confirm": "Bekreft passord",
+    "user.avatar": "Profilbilde",
+    "user.avatar.help": "Klikk på bildet for å sette fokuspunkt.",
+    "user.email": "Epost",
+    "user.email.help": "brukes til innlogging og notifikasjoner",
+    "user.name": "Navn",
+    "user.name.help": "navnet brukes også som artikkelforfatter",
+    "user.role": "Rolle",
+    "profile.title": "Din brukerprofil",
+    "profile.helpText": "Administrasjon av brukerinfo"
+  }
+}
+</i18n>
