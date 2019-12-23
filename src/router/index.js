@@ -24,6 +24,8 @@ import LogoutView from '../views/auth/LogoutView'
 
 Vue.use(VueRouter)
 
+console.log('router setup')
+
 const routes = [
   {
     path: '/login',
@@ -162,13 +164,9 @@ router.beforeEach((to, from, next) => {
   // check if the user needs to be authenticated.
   // If yes, redirect to the login page if the token is null
   if (to.matched.some(m => m.meta.noAuth)) {
-    console.log('no auth. ')
     next()
   } else {
-    console.log('auth!')
-    console.log(Vue.prototype)
     if (!token) {
-      console.log('NO TOKEN')
       return router.replace({ name: 'login', query: { redirect: to.fullPath } })
     }
     next()
