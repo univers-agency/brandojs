@@ -14,7 +14,7 @@
                 v-shortkey="['meta', 's']"
                 @shortkey.native="validate"
                 @click="validate">
-                Lagre (⌘S)
+                {{ $t('save') }} (⌘S)
               </ButtonPrimary>
               <ButtonSecondary
                 :to="back">
@@ -40,7 +40,9 @@ export default {
 
     backText: {
       type: String,
-      default: 'Tilbake til oversikten'
+      default: function () {
+        return this.$t('back')
+      }
     }
   },
 
@@ -88,3 +90,15 @@ export default {
     }
   }
 </style>
+<i18n>
+{
+  "en": {
+    "save": "Save",
+    "back": "Back to index"
+  },
+  "nb": {
+    "save": "Lagre",
+    "back": "Tilbake til oversikten"
+  }
+}
+</i18n>
