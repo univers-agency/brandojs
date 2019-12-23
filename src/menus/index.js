@@ -1,55 +1,113 @@
-export default [
-  {
-    name: 'System',
-    items: [
-      {
-        name: 'Dashboard',
-        to: {
-          name: 'dashboard'
-        }
-      },
-      {
-        name: 'Konfigurasjon',
-        items: [
-          {
-            text: 'Identitet',
-            to: {
-              name: 'config-identity'
-            }
-          }, {
-            text: 'Innholdsmaler',
-            to: {
-              name: 'templates'
-            }
+export default {
+  nb: [
+    {
+      name: 'System',
+      items: [
+        {
+          name: 'Dashboard',
+          to: {
+            name: 'dashboard'
           }
-        ]
-      }, {
-        name: 'Brukere',
-        to: {
-          name: 'users'
+        },
+        {
+          name: 'Konfigurasjon',
+          items: [
+            {
+              text: 'Identitet',
+              to: {
+                name: 'config-identity'
+              }
+            }, {
+              text: 'Innholdsmaler',
+              to: {
+                name: 'templates'
+              }
+            }
+          ]
+        }, {
+          name: 'Brukere',
+          to: {
+            name: 'users'
+          }
+        }, {
+          name: 'Bildebibliotek',
+          to: {
+            name: 'images'
+          }
+        }, {
+          name: 'Filbibliotek',
+          to: {
+            name: 'files'
+          }
         }
-      }, {
-        name: 'Bildebibliotek',
-        to: {
-          name: 'images'
+      ]
+    },
+    {
+      name: 'Innhold',
+      items: [
+        {
+          name: 'Sider & seksjoner',
+          to: {
+            name: 'pages'
+          }
         }
-      }, {
-        name: 'Filbibliotek',
-        to: {
-          name: 'files'
+      ]
+    }
+  ],
+
+  en: [
+    {
+      name: 'System',
+      items: [
+        {
+          name: 'Dashboard',
+          to: {
+            name: 'dashboard'
+          }
+        },
+        {
+          name: 'Configuration',
+          items: [
+            {
+              text: 'Identity',
+              to: {
+                name: 'config-identity'
+              }
+            }, {
+              text: 'Templates',
+              to: {
+                name: 'templates'
+              }
+            }
+          ]
+        }, {
+          name: 'Users',
+          to: {
+            name: 'users'
+          }
+        }, {
+          name: 'Image Library',
+          to: {
+            name: 'images'
+          }
+        }, {
+          name: 'File Library',
+          to: {
+            name: 'files'
+          }
         }
-      }
-    ]
-  },
-  {
-    name: 'Content',
-    items: [
-      {
-        name: 'Sider & seksjoner',
-        to: {
-          name: 'pages'
+      ]
+    },
+    {
+      name: 'Content',
+      items: [
+        {
+          name: 'Pages & Sections',
+          to: {
+            name: 'pages'
+          }
         }
-      }
-    ]
-  }
-]
+      ]
+    }
+  ]
+}
