@@ -2,7 +2,9 @@ import Vue from 'vue'
 import VueApollo from 'vue-apollo'
 import { createApolloClient } from 'vue-cli-plugin-apollo/graphql-client'
 import { createLink } from 'apollo-absinthe-upload-link'
+import { buildAxiosFetch } from '@lifeomic/axios-fetch'
 import gql from 'graphql-tag'
+import axios from 'axios'
 
 // Install the vue plugin
 Vue.use(VueApollo)
@@ -10,7 +12,14 @@ Vue.use(VueApollo)
 // Name of the localStorage item
 const AUTH_TOKEN = 'token'
 const httpEndpoint = process.env.VUE_APP_GRAPHQL_HTTP || 'http://localhost:4000/admin/graphql'
-const link = createLink({ uri: httpEndpoint })
+
+const link = createLink({
+  uri: httpEndpoint,
+  fetch: buildAxiosFetch(axios, (config, input, init) => ({
+    ...config,
+    onUploadProgress: init.onUploadProgress
+  }))
+})
 
 // Config
 const defaultOptions = {
