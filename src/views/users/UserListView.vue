@@ -9,7 +9,7 @@
       </template>
       <template v-slot:help>
         <p>
-          Administrasjon av brukere. Opprett nye brukere, deaktivér brukere
+          Administrasjon av brukere.
         </p>
       </template>
     </ContentHeader>
