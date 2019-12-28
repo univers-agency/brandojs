@@ -3,7 +3,6 @@
     v-if="page"
     :back="{ name: 'pages' }"
     @save="save">
-
     <section class="row">
       <div class="half">
         <KInputSelect
@@ -18,8 +17,8 @@
           label="Språk" />
 
         <KInput
-          :monospace="true"
           v-model="page.key"
+          :monospace="true"
           rules="required"
           name="page[key]"
           type="text"
@@ -37,8 +36,13 @@
         <KInputSelect
           v-model="page.parent_id"
           :options="parents"
+          optionLabelKey="title"
           name="page[parent_id]"
-          label="Tilhørende side" />
+          label="Tilhørende side">
+          <template v-slot:label="{ option }">
+            [{{ option.language.toUpperCase() }}] {{ option.title }}
+          </template>
+        </KInputSelect>
 
         <KInput
           v-model="page.css_classes"
@@ -65,11 +69,13 @@
       :template-mode="settings.templateMode"
       :templates="settings.templateNamespace"
       name="page[data]"
-      label="Innhold"/>
+      label="Innhold" />
   </KForm>
 </template>
 
 <script>
+import gql from 'graphql-tag'
+
 export default {
   props: {
     page: {
@@ -98,8 +104,18 @@ export default {
     'adminChannel'
   ],
 
-  created () {
-    console.log(this.page)
+  apollo: {
+    parents: {
+      query: gql`
+        query Parents {
+          parents: pages {
+            id
+            language
+            title
+          }
+        }
+      `
+    }
   }
 }
 </script>

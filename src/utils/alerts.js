@@ -14,7 +14,7 @@ function alertError (title, text, callback) {
         <i class="fa fa-exclamation-circle fa-5x"></i>
       </div>
       <div class="text-center text-lg mt-3 mb-3 dialog-title">
-        <strong>${title}</strong>
+        ${title}
       </div>
       <div class="text-center">
         ${text}
@@ -35,7 +35,7 @@ function alertInfo (title, text, callback) {
         <i class="fa fa-info-circle fa-5x"></i>
       </div>
       <div class="text-center text-lg mt-3 mb-3 dialog-title">
-        <strong>${title}</strong>
+        ${title}
       </div>
       <div class="text-center">
         ${text}
@@ -56,7 +56,7 @@ function alertSuccess (title, text, callback) {
         <i class="fa fa-check-circle fa-5x"></i>
       </div>
       <div class="text-center text-lg mt-3 mb-3 dialog-title">
-        <strong>${title}</strong>
+        ${title}
       </div>
       <div class="text-center">
         ${text}
@@ -77,7 +77,7 @@ function alertWarning (title, text, callback) {
         <i class="fa fa-exclamation-triangle fa-5x"></i>
       </div>
       <div class="text-center text-lg mt-3 mb-3 dialog-title">
-        <strong>${title}</strong>
+        ${title}
       </div>
       <div class="text-center">
         ${text}
@@ -118,7 +118,7 @@ function alertConfirm (title, text, callback) {
         <i class="fa fa-exclamation-triangle fa-5x"></i>
       </div>
       <div class="text-center text-lg mt-3 mb-3 dialog-title">
-        <strong>${title}</strong>
+        ${title}
       </div>
       <div class="text-center">
         ${text}

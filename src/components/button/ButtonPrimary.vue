@@ -30,7 +30,7 @@ export default {
 
 <style lang="postcss" scoped>
   a {
-    padding-top: 18px;
+    padding-top: 16px;
     display: inline-block;
   }
 

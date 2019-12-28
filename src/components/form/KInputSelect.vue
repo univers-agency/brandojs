@@ -7,8 +7,8 @@
     :value="value">
     <template v-slot>
       <input
-        ref="input"
         :id="id"
+        ref="input"
         v-model="innerValue"
         :placeholder="placeholder"
         :name="name"
@@ -30,8 +30,8 @@
           style="line-height: 1.5">
           <input
             ref="search"
-            name="search"
             v-model="searchString"
+            name="search"
             placeholder="Søk..."
             autocomplete="off"
             spellcheck="false"
@@ -41,7 +41,6 @@
             @keydown.down.prevent="pointerForward()"
             @keydown.up.prevent="pointerBackward()"
             @focus="$event.target.select()">
-
         </div>
         <button
           class="button-edit"
@@ -67,7 +66,11 @@
           class="megaselect__options__option"
           @click="selectOption(option)"
           @mouseenter.self="pointerSet(index)">
-          {{ option[optionLabelKey] }}
+          <slot
+            name="label"
+            v-bind:option="option">
+            {{ option[optionLabelKey] }}
+          </slot>
         </div>
       </div>
     </template>

@@ -5,7 +5,7 @@
         Bildekategori
       </template>
       <template v-slot:subtitle>
-        "<span class="cap">{{ imageCategory.name }}</span>"
+        &laquo;<span class="cap">{{ imageCategory.name }}</span>&raquo;
       </template>
       <template v-slot:help>
         <div>
@@ -73,8 +73,8 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-12">
+      <div>
+        <div>
           <transition-group
             name="slide-fade-top-slow"
             appear>
@@ -201,9 +201,6 @@ export default {
 
       try {
         const data = store.readQuery(query)
-
-        console.log(data)
-
         const series = data.imageCategory.image_series.find(s => parseInt(s.id) === parseInt(imageSeriesId))
         const idx = series.images.findIndex(i => parseInt(i.id) === parseInt(id))
 

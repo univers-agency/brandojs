@@ -1,7 +1,9 @@
 <template>
   <dl ref="el">
     <template v-if="item.items">
-      <dt @click="toggle">
+      <dt
+        @mouseover="$emit('hover', $event)"
+        @click="toggle">
         {{ item.name }}
       </dt>
       <dd ref="dd" v-if="item.items">
@@ -18,7 +20,7 @@
       </dd>
     </template>
     <template v-else>
-      <dt>
+      <dt @mouseover="$emit('hover', $event)">
         <router-link
           exact
           :to="item.to">

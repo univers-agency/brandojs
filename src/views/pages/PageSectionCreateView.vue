@@ -2,10 +2,12 @@
   <article>
     <ContentHeader>
       <template v-slot:title>
-        Ny innholdsseksjon
+        {{ $t('section.new') }}
       </template>
     </ContentHeader>
-    <PageSectionForm :page="page" :save="save" />
+    <PageSectionForm
+      :page="page"
+      :save="save" />
   </article>
 </template>
 
@@ -62,11 +64,19 @@ export default {
                 id
                 title
                 key
-                data
                 parent_key
                 language
                 updated_at
                 page_id
+                data
+
+                creator {
+                  id
+                  full_name
+                  avatar {
+                    thumb: url(size: "xlarge")
+                  }
+                }
               }
             }
           `,
@@ -92,7 +102,7 @@ export default {
           }
         })
 
-        this.$toast.success({ message: 'Seksjon opprettet' })
+        this.$toast.success({ message: this.$t('section.created') })
         this.$router.push({ name: 'pages' })
       } catch (err) {
         this.$utils.showError(err)
@@ -101,3 +111,15 @@ export default {
   }
 }
 </script>
+<i18n>
+{
+  "no": {
+    "section.new": "Ny innholdsseksjon",
+    "section.created": "Seksjon opprettet"
+  },
+  "en": {
+    "section.new": "New section",
+    "section.created": "Section created"
+  }
+}
+</i18n>

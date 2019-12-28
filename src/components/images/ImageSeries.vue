@@ -5,14 +5,20 @@
       :image-series="imageSeries"
       @save="addImageToSeries"
       @close="closeUploadModal" />
-    <h2>Bildeserie: {{ imageSeries.name }}</h2>
+    <h2>Bildeserie &laquo;<strong>{{ imageSeries.name }}</strong>&raquo;</h2>
     <div class="button-group">
+      <ButtonSecondary
+        :narrow="true"
+        @click.native.prevent="displayList = !displayList">
+        <FontAwesomeIcon
+          :icon="displayList ? 'image' : 'list'" />
+      </ButtonSecondary>
       <ButtonSecondary
         @click.native.prevent="uploadToSeries(imageSeries)">
         Last opp bilder
       </ButtonSecondary>
       <ButtonSecondary
-        :to="{ name: 'image-series-edit', params: { seriesId: imageSeries.id } }">
+        :to="{ name: 'image-series-edit', params: { imageSeriesId: imageSeries.id } }">
         Konfigurér
       </ButtonSecondary>
       <ButtonSecondary
@@ -21,55 +27,50 @@
       </ButtonSecondary>
     </div>
 
-    <div class="card">
-      <div
-        v-if="images.length"
-        class="card-body">
-        <transition-group
-          v-sortable="{handle: '.sort-handle', animation: 0, store: {get: getOrder, set: storeOrder}}"
-          name="fade-move"
-          tag="div"
-          class="sort-container">
-          <template v-for="i in images">
-            <BaseImage
-              :key="i.id"
-              :data-id="i.id"
-              class="sort-handle"
-              :image="i"
-              :selected-images="selectedImages" />
-          </template>
-        </transition-group>
-      </div>
-      <div
-        v-else
-        class="empty-series">
-        Ingen bilder i bildeserien
-      </div>
+    <div
+      v-if="images.length">
+      <transition-group
+        v-sortable="{handle: '.sort-handle', animation: 0, store: {get: getOrder, set: storeOrder}}"
+        name="fade-move"
+        tag="div"
+        class="sort-container">
+        <template v-for="i in images">
+          <BaseImage
+            :key="i.id"
+            :data-id="i.id"
+            class="sort-handle"
+            :image="i"
+            :display-list="displayList"
+            :selected-images="selectedImages" />
+        </template>
+      </transition-group>
+    </div>
+    <div
+      v-else
+      class="empty-series">
+      Ingen bilder i bildeserien
+    </div>
 
-      <div
-        v-if="modal"
-        class="card-footer bg-white pt-0">
-        <div class="w-50">
-          <button
-            class="btn btn-outline-secondary text-left"
-            @click.prevent="uploadToSeries(imageSeries)">
-            <i class="fal fa-fw mr-3 subtle fa-cloud" />
-            Last opp bilder
-          </button>
-          <button
-            class="btn btn-outline-secondary text-left"
-            @click.prevent="deleteSeries(imageSeries)">
-            <i class="fal fa-fw mr-3 subtle fa-trash" />
-            Slett bildeserie
-          </button>
-          <button
-            class="btn btn-outline-secondary text-left"
-            @click.prevent="$emit('close')">
-            <i class="fal fa-fw mr-3 subtle fa-window-close" />
-            Lukk vindu
-          </button>
-        </div>
-      </div>
+    <div
+      v-if="modal">
+      <button
+        class="btn btn-outline-secondary text-left"
+        @click.prevent="uploadToSeries(imageSeries)">
+        <i class="fal fa-fw mr-3 subtle fa-cloud" />
+        Last opp bilder
+      </button>
+      <button
+        class="btn btn-outline-secondary text-left"
+        @click.prevent="deleteSeries(imageSeries)">
+        <i class="fal fa-fw mr-3 subtle fa-trash" />
+        Slett bildeserie
+      </button>
+      <button
+        class="btn btn-outline-secondary text-left"
+        @click.prevent="$emit('close')">
+        <i class="fal fa-fw mr-3 subtle fa-window-close" />
+        Lukk vindu
+      </button>
     </div>
   </div>
 </template>
@@ -119,6 +120,7 @@ export default {
 
   data () {
     return {
+      displayList: false,
       sortedArray: [],
       selectedImageSeriesForUpload: null
     }

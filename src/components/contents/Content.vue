@@ -5,6 +5,37 @@
 
     <main>
       <GridDebug />
+      <div class="progress" ref="progress">
+        <transition-group
+          name="slide-fade"
+          tag="div"
+          class="progress-inner"
+          appear>
+          <div
+            v-for="k in Object.keys(progressStatus)"
+            :key="k">
+            <transition
+              name="fade"
+              mode="out-in"
+              :duration="250">
+              <i
+                v-if="progressStatus[k].percent !== 100"
+                key="working"
+                :class="'fal fa-fw mr-3 fa-cog fa-spin'" />
+              <i
+                v-else
+                key="done"
+                :class="'fal fa-fw mr-3 fa-check text-success'" />
+            </transition>
+            <div
+              class="d-inline-block"
+              v-html="progressStatus[k].content" />
+            <div
+              class="bar"
+              :style="{ width: progressStatus[k].percent + '%' }"></div>
+          </div>
+        </transition-group>
+      </div>
       <transition
         mode="out-in"
         @beforeAppear="beforeAppearContent"
@@ -30,6 +61,47 @@ export default {
     GridDebug
   },
 
+  props: {
+    showProgress: {
+      type: Boolean,
+      required: true
+    },
+
+    progressStatus: {
+      type: Object,
+      required: true
+    }
+  },
+
+  data () {
+    return {
+    }
+  },
+
+  watch: {
+    showProgress (val) {
+      if (val) {
+        console.log('play progress')
+        this.progressTimeline.play()
+      } else {
+        console.log('reverse progress')
+        this.progressTimeline.reverse()
+      }
+    }
+  },
+
+  mounted () {
+    this.progressTimeline = gsap.timeline({ paused: true, reversed: true })
+
+    this.progressTimeline
+      .to(this.$refs.progress, {
+        duration: 0.35,
+        height: 100,
+        opacity: 1,
+        ease: 'sine.out'
+      })
+  },
+
   methods: {
     afterLeave () {
       window.scrollTo(0, 0)
@@ -49,7 +121,8 @@ export default {
           duration: 0.7,
           yPercent: 0,
           delay: 1.4,
-          ease: 'power3.out'
+          ease: 'power3.out',
+          clearProps: 'transform'
         })
     },
 
@@ -92,11 +165,41 @@ export default {
     width: 100%;
     min-height: 100vh;
     background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 100px;
 
     > .content {
       @space padding-left md;
       @space padding-right md;
       @space padding-bottom md;
+    }
+
+    > .progress {
+      @container;
+      z-index: 9999;
+      color: theme(colors.peach);
+      background-color: theme(colors.dark);
+      height: 0px;
+      overflow-y: scroll;
+      display: flex;
+      opacity: 0;
+      position: fixed;
+
+      .progress-inner {
+        display: flex;
+        align-items: center;
+
+        div {
+          margin-top: -5px;
+        }
+      }
+
+      .bar {
+        height: 2px;
+        background-color: theme(colors.peach);
+        transition: width 0.75s ease;
+      }
     }
   }
 

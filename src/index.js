@@ -3,7 +3,6 @@ import 'vex-js/dist/css/vex.css'
 import 'izitoast/dist/css/iziToast.css'
 
 import Sortable from 'sortablejs'
-import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
 import VueShortkey from 'vue-shortkey'
 import VueClickOutside from 'v-click-outside'
 import { createProvider } from './vue-apollo'
@@ -16,6 +15,7 @@ import { required, email, max, confirmed, min } from 'vee-validate/dist/rules'
 import VueUploadComponent from 'vue-upload-component'
 
 import Admin from './Admin'
+import Dropzone from './components/Dropzone'
 import * as FormComponents from './components/form'
 import * as ButtonComponents from './components/button'
 import * as ContentComponents from './components/contents'
@@ -86,6 +86,7 @@ export default {
     }
 
     Vue.component('Admin', Admin)
+    Vue.component('Dropzone', Dropzone)
     Vue.component('FileUpload', VueUploadComponent)
 
     /**

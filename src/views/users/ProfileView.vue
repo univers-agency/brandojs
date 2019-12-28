@@ -112,15 +112,7 @@ export default {
           variables: {
             userParams,
             userId: this.me.id
-          },
-
-          context: {
-            fetchOptions: {
-              onUploadProgress: (progress => {
-                console.info(progress)
-              })
-            }
-          },
+          }
         })
 
         this.$toast.success({ message: 'Profil oppdatert' })

@@ -7,7 +7,8 @@
     <NavigationMenuSectionItem
       v-for="item in section.items"
       :key="item.name"
-      :item="item" />
+      :item="item"
+      @hover="$emit('hover', $event.target)" />
   </section>
 </template>
 

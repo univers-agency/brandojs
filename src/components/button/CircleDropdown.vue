@@ -1,15 +1,54 @@
 <template>
-  <div class="wrapper" v-click-outside="closeContent">
-    <button ref="button" :class="{ open }" type="button" @click="toggle">
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle class="main-circle" cx="20" cy="20" r="19.5" fill="#0047FF" stroke="#0047FF"/>
-        <line x1="12" y1="12.5" x2="28" y2="12.5" stroke="white"/>
-        <line x1="18" y1="26.5" x2="28" y2="26.5" stroke="white"/>
-        <line x1="12" y1="19.5" x2="28" y2="19.5" stroke="white"/>
-        <circle cx="13.5" cy="26.5" r="1.5" fill="white"/>
+  <div
+    v-click-outside="closeContent"
+    class="wrapper">
+    <button
+      ref="button"
+      :class="{ open }"
+      type="button"
+      @click.stop="toggle">
+      <svg
+        width="40"
+        height="40"
+        viewBox="0 0 40 40"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <circle
+          class="main-circle"
+          cx="20"
+          cy="20"
+          r="19.5"
+          fill="#0047FF"
+          stroke="#0047FF" />
+        <line
+          x1="12"
+          y1="12.5"
+          x2="28"
+          y2="12.5"
+          stroke="white" />
+        <line
+          x1="18"
+          y1="26.5"
+          x2="28"
+          y2="26.5"
+          stroke="white" />
+        <line
+          x1="12"
+          y1="19.5"
+          x2="28"
+          y2="19.5"
+          stroke="white" />
+        <circle
+          cx="13.5"
+          cy="26.5"
+          r="1.5"
+          fill="white" />
       </svg>
     </button>
-    <ul ref="content" class="dropdown-content">
+    <ul
+      ref="content"
+      class="dropdown-content"
+      @click="closeContent">
       <slot></slot>
     </ul>
   </div>
@@ -42,12 +81,15 @@ export default {
     },
 
     closeContent () {
-      this.open = false
-      gsap.to(this.$refs.content, { opacity: 0,
-        x: -15,
-        onComplete: () => {
-          gsap.set(this.$refs.content, { display: 'none' })
-        } })
+      if (this.open) {
+        this.open = false
+        gsap.to(this.$refs.content, { opacity: 0,
+          x: -15,
+          onComplete: () => {
+            gsap.set(this.$refs.content, { display: 'none' })
+          }
+        })
+      }
     }
   }
 }
@@ -137,5 +179,6 @@ export default {
 
   .wrapper {
     position: relative;
+    display: flex;
   }
 </style>

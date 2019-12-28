@@ -1,75 +1,69 @@
 <template>
   <article>
     <ContentHeader>
-      <template v-slot:title>
-        {{ $t('pages.title') }}
-      </template>
-      <template v-slot:subtitle>
-        {{ $t('pages.subtitle')}}
-      </template>
+      <template v-slot:title>{{ $t('pages.title') }}</template>
+      <template v-slot:subtitle>{{ $t('pages.subtitle') }}</template>
       <template v-slot:help>
-        <p>
-          -
-        </p>
+        <div>
+          <Dropdown>
+            <template v-slot:default>{{ $t('pages.actions') }}</template>
+            <template v-slot:content>
+              <li>
+                <router-link :to="{ name: 'pages-new' }">{{ $t('pages.new') }}</router-link>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  @click="reprocess">
+                  {{ $t('pages.reprocess') }}
+                </button>
+              </li>
+            </template>
+          </Dropdown>
+        </div>
       </template>
     </ContentHeader>
 
     <div class="row">
       <div class="half">
-        <h2>
-          {{ $t('pages.index') }}
-        </h2>
-      </div>
-      <div class="half">
-        <Dropdown>
-          <template v-slot:default>
-            {{ $t('pages.actions') }}
-          </template>
-          <template v-slot:content>
-            <li>
-              <router-link
-                :to="{ name: 'pages-new' }">
-                {{ $t('pages.new') }}
-              </router-link>
-            </li>
-            <li>
-              <button>
-                {{ $t('pages.reprocess') }}
-              </button>
-            </li>
-          </template>
-        </Dropdown>
+        <h2>{{ $t('pages.index') }}</h2>
       </div>
     </div>
     <ContentList
       v-if="pages"
       :entries="pages"
       :sortable="true"
+      filter="title"
       @sort="sortPages">
-
       <template v-slot:row="{ entry }">
         <div class="col-1">
           <div class="circle">
-            <span>
-              {{ entry.language }}
-            </span>
+            <span>{{ entry.language }}</span>
           </div>
         </div>
-        <div class="col-7 title flex-v">
-          <router-link
-            :to="{ name: 'pages-edit', params: { pageId: entry.id } }">
+        <div class="col-5 title flex-h">
+          <router-link :to="{ name: 'pages-edit', params: { pageId: entry.id } }">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 12 12">
+              <circle
+                r="6"
+                cy="6"
+                cx="6"
+                fill="#F4D37D" />
+            </svg>
             {{ entry.title }}
           </router-link>
-          <div class="badge">
-            {{ entry.key }}
-          </div>
+          <div class="badge">{{ entry.key }}</div>
         </div>
-        <div class="col-3">
+        <div class="col-4">
           <ItemMeta
             :entry="entry"
             :user="entry.creator" />
         </div>
-        <div class="col-3">
+        <div class="col-4">
           <ChildrenButton
             :id="entry.id"
             :length="entry.fragments.length"
@@ -80,39 +74,46 @@
         <div class="col-1">
           <CircleDropdown>
             <li>
-              <router-link :to="{ name: 'sections-new', params: { pageId: entry.id } }">
-                {{$t('pages.new-section')}}
+              <router-link
+                :to="{ name: 'sections-new', params: { pageId: entry.id } }">
+                {{ $t('pages.new-section') }}
               </router-link>
             </li>
             <li>
-              <router-link :to="{ name: 'pages-edit', params: { pageId: entry.id } }">
-                {{$t('pages.edit-page')}}
-              </router-link>
-            </li>
-
-            <li>
-              <router-link :to="{ name: 'dashboard' }">
-                {{$t('pages.duplicate-page')}}
+              <router-link
+                :to="{ name: 'pages-edit', params: { pageId: entry.id } }">
+                {{ $t('pages.edit-page') }}
               </router-link>
             </li>
 
             <li>
-              <router-link :to="{ name: 'dashboard' }">
-                {{$t('pages.reprocess-page')}}
-              </router-link>
+              <button
+                type="button"
+                @click="duplicatePage(entry)">
+                {{ $t('pages.duplicate-page') }}
+              </button>
             </li>
 
             <li>
-              <router-link :to="{ name: 'dashboard' }">
-                {{$t('pages.delete-page')}}
-              </router-link>
+              <button
+                type="button"
+                @click="reprocessPage(entry)">
+                {{ $t('pages.reprocess-page') }}
+              </button>
+            </li>
+
+            <li>
+              <button
+                type="button"
+                @click="deletePage(entry)">
+                {{ $t('pages.delete-page') }}
+              </button>
             </li>
           </CircleDropdown>
         </div>
       </template>
       <template v-slot:children="{ entry }">
-        <template
-          v-if="entry.fragments.length && visibleChildren.includes(entry.id)">
+        <template v-if="entry.fragments.length && visibleChildren.includes(entry.id)">
           <ContentList
             :level="2"
             :entries="entry.fragments"
@@ -122,39 +123,33 @@
             @sort="sortSections($event, entry.id)"
             @move="moveSections">
             <template v-slot:row="{ entry: section }">
-              <div class="col-1">
-              </div>
+              <div class="col-1"></div>
               <div class="col-8 subtitle">
                 <div class="arrow">↳</div>
                 <div class="flex-v">
                   <router-link
-                    :to="{ name: 'sections-edit', params: { sectionId: section.id } }">{{ section.title || 'Ingen tittel' }}</router-link>
+                    :to="{ name: 'sections-edit', params: { sectionId: section.id } }">
+                    {{ section.title || 'Ingen tittel' }}
+                  </router-link>
                   <div class="keys">
-                    <div class="badge">
-                      {{ section.parent_key }}
-                    </div>
-                    <div class="badge">
-                      {{ section.key }}
-                    </div>
+                    <div class="badge">{{ section.parent_key }}</div>
+                    <div class="badge">{{ section.key }}</div>
                   </div>
                 </div>
               </div>
               <div class="col-5 flex-v">
-                <div class="badge">
-                  {{$t('pages.section')}}
-                </div>
+                <div class="badge">{{ $t('pages.section') }}</div>
               </div>
               <div class="col-1">
                 <CircleDropdown>
                   <li>
-                    <router-link :to="{ name: 'sections-edit', params: { sectionId: section.id } }">
-                      {{$t('pages.edit-section')}}
+                    <router-link
+                      :to="{ name: 'sections-edit', params: { sectionId: section.id } }">
+                      {{ $t('pages.edit-section') }}
                     </router-link>
                   </li>
                   <li>
-                    <button @click="deleteSection(section)">
-                      {{$t('pages.delete-section')}}
-                    </button>
+                    <button @click="deleteSection(section)">{{ $t('pages.delete-section') }}</button>
                   </li>
                 </CircleDropdown>
               </div>
@@ -167,9 +162,7 @@
 </template>
 
 <script>
-
 import gql from 'graphql-tag'
-
 import GET_PAGES from '../../gql/pages/PAGES_QUERY.graphql'
 
 export default {
@@ -179,11 +172,13 @@ export default {
     }
   },
 
-  inject: [
-    'adminChannel'
-  ],
+  inject: ['adminChannel'],
 
   methods: {
+    reprocess () {
+      //
+    },
+
     sortPages (seq) {
       this.adminChannel.channel
         .push('pages:sequence_pages', { ids: seq })
@@ -215,7 +210,9 @@ export default {
           const store = this.$apolloProvider.defaultClient.store.cache
           const data = store.readQuery(query)
 
-          const page = data.pages.find(p => parseInt(p.id) === parseInt(pageId))
+          const page = data.pages.find(
+            p => parseInt(p.id) === parseInt(pageId)
+          )
 
           page.fragments.sort((a, b) => {
             return seq.indexOf(parseInt(a.id)) - seq.indexOf(parseInt(b.id))
@@ -232,40 +229,201 @@ export default {
       console.log(data)
     },
 
-    async deleteSection (section) {
-      this.$alerts.alertConfirm('OBS', this.$t('pages.are-you-sure-you-want-to-delete-this-section'), async confirm => {
-        if (!confirm) {
-          return false
-        } else {
-          try {
-            await this.$apollo.mutate({
-              mutation: gql`
-                mutation DeletePageFragment($pageFragmentId: ID!) {
-                  deletePageFragment(
-                    pageFragmentId: $pageFragmentId,
-                  ) {
-                    id
+    async duplicatePage (page) {
+      try {
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation DuplicatePage($pageId: ID!) {
+              duplicatePage(pageId: $pageId) {
+                id
+                key
+                title
+                slug
+                language
+                data
+
+                creator {
+                  id
+                  full_name
+                  avatar {
+                    thumb: url(size: "xlarge")
                   }
                 }
-              `,
-              variables: {
-                pageFragmentId: section.id
-              },
 
-              update: (store, { data: { deletePageFragment } }) => {
-                const query = {
-                  query: GET_PAGES
+                parent {
+                  id
+                  key
+                  language
+                  title
+                  data
+                  slug
                 }
-                const data = store.readQuery(query)
-                const page = data.pages.find(page => parseInt(page.id) === parseInt(section.page_id))
 
-                if (page) {
-                  const fragment = page.fragments.find(f => parseInt(f.id) === parseInt(section.id))
-                  const idx = page.fragments.indexOf(fragment)
+                children {
+                  id
+                  key
+                  language
+                  data
+                  title
+                  slug
+                }
 
-                  page.fragments = [
-                    ...page.fragments.slice(0, idx),
-                    ...page.fragments.slice(idx + 1)
+                fragments {
+                  id
+                  title
+                  key
+                  parent_key
+                  language
+                  updated_at
+                  page_id
+                  data
+
+                  creator {
+                    id
+                    full_name
+                    avatar {
+                      thumb: url(size: "xlarge")
+                    }
+                  }
+                }
+
+                inserted_at
+                updated_at
+                deleted_at
+              }
+            }
+          `,
+          variables: {
+            pageId: page.id
+          },
+
+          update: (store, { data: { duplicatePage } }) => {
+            const query = {
+              query: GET_PAGES
+            }
+
+            const data = store.readQuery(query)
+            const idx = data.pages.findIndex(
+              p => parseInt(p.id) === parseInt(page.id)
+            )
+
+            data.pages = [
+              ...data.pages.slice(0, idx),
+              duplicatePage,
+              ...data.pages.slice(idx)
+            ]
+
+            // Write back to the cache
+            store.writeQuery({
+              ...query,
+              data
+            })
+          }
+        })
+
+        this.$toast.success({ message: this.$t('pages.page-duplicated') })
+      } catch (err) {
+        this.$utils.showError(err)
+      }
+    },
+
+    async deleteSection (section) {
+      this.$alerts.alertConfirm(
+        'OBS',
+        this.$t('pages.are-you-sure-you-want-to-delete-this-section'),
+        async confirm => {
+          if (!confirm) {
+            return false
+          } else {
+            try {
+              await this.$apollo.mutate({
+                mutation: gql`
+                  mutation DeletePageFragment($pageFragmentId: ID!) {
+                    deletePageFragment(pageFragmentId: $pageFragmentId) {
+                      id
+                    }
+                  }
+                `,
+                variables: {
+                  pageFragmentId: section.id
+                },
+
+                update: (store, { data: { deletePageFragment } }) => {
+                  const query = {
+                    query: GET_PAGES
+                  }
+                  const data = store.readQuery(query)
+                  const page = data.pages.find(
+                    page => parseInt(page.id) === parseInt(section.page_id)
+                  )
+
+                  if (page) {
+                    const fragment = page.fragments.find(
+                      f => parseInt(f.id) === parseInt(section.id)
+                    )
+                    const idx = page.fragments.indexOf(fragment)
+
+                    page.fragments = [
+                      ...page.fragments.slice(0, idx),
+                      ...page.fragments.slice(idx + 1)
+                    ]
+
+                    // Write back to the cache
+                    store.writeQuery({
+                      ...query,
+                      data
+                    })
+                  } else {
+                    console.log('page not found?', data.pages, section.page_id)
+                  }
+                }
+              })
+
+              this.$toast.success({
+                message: this.$t('pages.section-deleted')
+              })
+            } catch (err) {
+              this.$utils.showError(err)
+            }
+          }
+        }
+      )
+    },
+
+    async deletePage (page) {
+      this.$alerts.alertConfirm(
+        'OBS',
+        this.$t('pages.are-you-sure-you-want-to-delete-this-page'),
+        async confirm => {
+          if (!confirm) {
+            return false
+          } else {
+            try {
+              await this.$apollo.mutate({
+                mutation: gql`
+                  mutation DeletePage($pageId: ID!) {
+                    deletePage(pageId: $pageId) {
+                      id
+                    }
+                  }
+                `,
+                variables: {
+                  pageId: page.id
+                },
+
+                update: (store, { data: { deletePage } }) => {
+                  const query = {
+                    query: GET_PAGES
+                  }
+
+                  const data = store.readQuery(query)
+                  const idx = data.pages.findIndex(
+                    p => parseInt(p.id) === parseInt(page.id)
+                  )
+
+                  data.pages = [
+                    ...data.pages.slice(0, idx),
+                    ...data.pages.slice(idx + 1)
                   ]
 
                   // Write back to the cache
@@ -273,18 +431,16 @@ export default {
                     ...query,
                     data
                   })
-                } else {
-                  console.log('page not found?', data.pages, section.page_id)
                 }
-              }
-            })
+              })
 
-            this.$toast.success({ message: this.$t('pages.section-deleted') })
-          } catch (err) {
-            this.$utils.showError(err)
+              this.$toast.success({ message: this.$t('pages.page-deleted') })
+            } catch (err) {
+              this.$utils.showError(err)
+            }
           }
         }
-      })
+      )
     }
   },
 
@@ -298,11 +454,34 @@ export default {
 
 <style lang="postcss" scoped>
   .title {
-    @fontsize base(0.8);
-    font-family: theme(typography.families.mono);
+    @fontsize base/1;
 
-    .badge {
-      margin-top: 5px;
+    svg {
+      display: inline-block;
+      margin-top: -3px;
+      margin-right: 3px;
+
+      &.published {
+        circle {
+          fill: #77ec4c;
+        }
+      }
+
+      &.draft {
+        circle {
+          fill: #949494;
+        }
+      }
+
+      &.waiting {
+        circle {
+          fill: #fda23a;
+        }
+      }
+
+      circle {
+        fill: #77ec4c;
+      }
     }
   }
 
@@ -342,7 +521,10 @@ export default {
     "pages.are-you-sure-you-want-to-delete-this-section": "Are you sure you want to delete this section?",
     "pages.edit-page": "Edit page",
     "pages.reprocess-page": "Reprocess page",
-    "pages.section-deleted": "Section deleted"
+    "pages.section-deleted": "Section deleted",
+    "pages.are-you-sure-you-want-to-delete-this-page": "Are you sure you want to delete this page?",
+    "pages.page-deleted": "Page deleted",
+    "pages.page-duplicated": "Page duplicated"
   },
   "nb": {
     "pages.title": "Sider og seksjoner",
@@ -361,7 +543,10 @@ export default {
     "pages.duplicate-page": "Dupliser side",
     "pages.edit-section": "Rediger seksjon",
     "pages.reprocess-page": "Behandle siden på nytt",
-    "pages.section-deleted": "Seksjon slettet"
+    "pages.section-deleted": "Seksjon slettet",
+    "pages.are-you-sure-you-want-to-delete-this-page": "Er du sikker på at du vil slette denne siden?",
+    "pages.page-deleted": "Siden ble slettet",
+    "pages.page-duplicated": "Siden ble duplisert"
   }
 }
 </i18n>

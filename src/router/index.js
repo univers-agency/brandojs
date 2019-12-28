@@ -18,13 +18,12 @@ import UserEditView from '../views/users/UserEditView'
 import ImagesView from '../views/images/ImagesView'
 import ImageCategoryDetailView from '../views/images/ImageCategoryDetailView'
 import ImageCategoryEditView from '../views/images/ImageCategoryEditView'
+import ImageSeriesEditView from '../views/images/ImageSeriesEditView'
 
 import LoginView from '../views/auth/LoginView'
 import LogoutView from '../views/auth/LogoutView'
 
 Vue.use(VueRouter)
-
-console.log('router setup')
 
 const routes = [
   {
@@ -53,6 +52,18 @@ const routes = [
     path: '/images',
     name: 'images',
     component: ImagesView
+  },
+  {
+    path: '/images/series/edit/:imageSeriesId',
+    name: 'image-series-edit',
+    component: ImageSeriesEditView,
+    props: route => {
+      const imageSeriesId = Number.parseInt(route.params.imageSeriesId, 10)
+      if (Number.isNaN(imageSeriesId)) {
+        return 0
+      }
+      return { imageSeriesId }
+    }
   },
   {
     path: '/images/categories/edit/:imageCategoryId',

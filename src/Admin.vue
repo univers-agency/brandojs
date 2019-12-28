@@ -3,8 +3,26 @@
     v-if="token && ready"
     id="app"
     :class="{ noFocus, 'loaded': !loading, 'fullscreen': fullScreen}">
+    <transition
+      @appear="toggleMenuAppear">
+      <button
+        class="toggle-menu"
+        @click="toggleFullscreen">
+        <template v-if="fullscreen">
+          &rarr;
+        </template>
+        <template v-else>
+          &larr;
+        </template>
+      </button>
+    </transition>
+
     <Navigation ref="nav" />
-    <Content ref="content" />
+
+    <Content
+      ref="content"
+      :show-progress="showProgress"
+      :progress-status="progressStatus" />
   </div>
   <div v-else>
     <router-view class="content" />
@@ -32,11 +50,15 @@ export default {
   watch: {
     fullscreen (value) {
       if (value) {
-        gsap.to('#navigation', { ease: 'power2.in', duration: 0.35, xPercent: '-100' })
-        gsap.to('main', { ease: 'power2.in', duration: 0.35, marginLeft: 0 })
+        if (this.$refs.nav) {
+          gsap.to('#navigation', { ease: 'power2.in', duration: 0.35, xPercent: '-100' })
+          gsap.to('main', { ease: 'power2.in', duration: 0.35, marginLeft: 0 })
+        }
       } else {
-        gsap.to('#navigation', { ease: 'power2.in', duration: 0.35, xPercent: '0' })
-        gsap.to('main', { ease: 'power2.in', duration: 0.35, marginLeft: 370 })
+        if (this.$refs.nav) {
+          gsap.to('#navigation', { ease: 'power2.in', duration: 0.35, xPercent: '0' })
+          gsap.to('main', { ease: 'power2.in', duration: 0.35, marginLeft: 370 })
+        }
       }
     },
 
@@ -85,7 +107,7 @@ export default {
 
     if (token) {
       // check if the token is valid — might be old
-      let fmData = new FormData()
+      const fmData = new FormData()
       fmData.append('jwt', this.token)
 
       const response = await fetch('/admin/auth/verify', {
@@ -116,6 +138,10 @@ export default {
   },
 
   methods: {
+    toggleMenuAppear (el) {
+      gsap.to(el, { duration: 1, opacity: 1, delay: 1.8, ease: 'sine.in' })
+    },
+
     setToken (value) {
       this.$apollo.mutate({
         mutation: gql`
@@ -200,6 +226,19 @@ export default {
 
       // request presences
       this.adminChannel.push('admin:list_presence')
+    },
+
+    toggleFullscreen () {
+      this.$apollo.mutate({
+        mutation: gql`
+          mutation setFullscreen ($value: String!) {
+            fullscreenSet (value: $value) @client
+          }
+        `,
+        variables: {
+          value: !this.fullscreen
+        }
+      })
     }
   },
 
@@ -334,6 +373,14 @@ export default {
     font-style: normal;
   }
 
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.35s;
+  }
+
+  .fade-move-move {
+    transition: transform 0.35s;
+  }
+
   html {
     height: 100%;
   }
@@ -347,6 +394,10 @@ export default {
     float: right;
   }
 
+  .text-mono {
+    font-family: theme(typography.families.mono);
+  }
+
   .row {
     @row;
 
@@ -356,6 +407,29 @@ export default {
 
     .third {
       width: 33%;
+    }
+  }
+
+  .toggle-menu {
+    @fontsize xs/1;
+    border: 1px solid theme(colors.dark);
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    top: -25px;
+    left: -25px;
+    border-radius: 25px;
+    z-index: 1;
+    text-align: right;
+    padding-top: 5px;
+    padding-right: 5px;
+    opacity: 0;
+    transform: rotateZ(45deg);
+    transform-origin: center;
+
+    &:hover {
+      background-color: theme(colors.dark);
+      color: theme(colors.peach);
     }
   }
 
@@ -581,6 +655,13 @@ export default {
     align-items: flex-start;
   }
 
+  .flex-h {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
 }
 
 .mt-3 {
@@ -603,6 +684,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
 
   span {
     color: theme(colors.dark);
@@ -623,8 +705,15 @@ export default {
   line-height: 1;
   border: 1px solid theme(colors.blue);
   user-select: none;
+
   & + .badge {
     margin-left: -1px;
+  }
+
+  &.large {
+    font-size: 22px;
+    transform: translateY(-4px);
+    margin-left: 5px;
   }
 }
 
@@ -793,7 +882,7 @@ export default {
 
 .vex-overlay {
   z-index: 9999 !important;
-  background-color: theme(colors.blue);
+  background-color: rgba(0, 71, 255, 0.85);
 }
 
 .vex.vex-theme-kurtz .vex-content {
@@ -913,18 +1002,18 @@ export default {
 }
 
 .vex.vex-theme-kurtz .vex-dialog-button {
-  -moz-border-radius: 0;
-  -webkit-border-radius: 0;
   border: 0;
   border-radius: 0;
   float: none;
   font-family: inherit;
-  font-size: 0.8em;
-  letter-spacing: 0.1em;
+  line-height: 1em;
+  border: 0;
+  border-radius: 0;
+  float: none;
+  font-family: inherit;
   line-height: 1em;
   margin: 0 0.5em;
   padding: 0.75em 2em;
-  text-transform: uppercase;
 }
 
 .vex.vex-theme-kurtz .vex-dialog-button.vex-last {
@@ -953,7 +1042,7 @@ export default {
 }
 
 .dialog-title {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .vex.vex-theme-kurtz .vex-dialog-button.vex-dialog-button-primary {
@@ -975,15 +1064,23 @@ export default {
 
 .iziToast {
   font-family: theme(typography.families.main);
+  border-radius: 0;
+
+  &:after {
+    box-shadow: none;
+    border-radius: 0;
+  }
 
   > .iziToast-close {
     background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAKqNIzIAAAAJcEhZcwAADdcAAA3XAUIom3gAAAAHdElNRQfgCR4OIQIPSao6AAAAwElEQVRIx72VUQ6EIAwFmz2XB+AConhjzqTJ7JeGKhLYlyx/BGdoBVpjIpMJNjgIZDKTkQHYmYfwmR2AfAqGFBcO2QjXZCd24bEggvd1KBx+xlwoDpYmvnBUUy68DYXD77ESr8WDtYqvxRex7a8oHP4Wo1Mkt5I68Mc+qYqv1h5OsZmZsQ3gj/02h6cO/KEYx29hu3R+VTTwz6D3TymIP1E8RvEiiVdZfEzicxYLiljSxKIqlnW5seitTW6uYnv/Aqh4whX3mEUrAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE2LTA5LTMwVDE0OjMzOjAyKzAyOjAwl6RMVgAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNi0wOS0zMFQxNDozMzowMiswMjowMOb59OoAAAAZdEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwaAAAAAElFTkSuQmCC') no-repeat 50% 50%;
+    background-size: 12px;
   }
 
   &.iziToast-theme-brando {
     color: white;
 
     > .iziToast-body .iziToast-message {
+      margin-left: 5px;
       @fontsize base;
     }
 
@@ -1036,6 +1133,23 @@ export default {
       background-size: 85%;
     }
   }
+}
+
+input::-webkit-input-placeholder {
+  font-family: 'Founders Grotesk', sans-serif;
+  @fontsize lg;
+}
+input:-ms-input-placeholder {
+  font-family: 'Founders Grotesk', sans-serif;
+  @fontsize lg;
+}
+input:-moz-placeholder {
+  font-family: 'Founders Grotesk', sans-serif;
+  @fontsize lg;
+}
+input::-moz-placeholder {
+  font-family: 'Founders Grotesk', sans-serif;
+  @fontsize lg;
 }
 
 </style>

@@ -2,26 +2,28 @@
   <article>
     <ContentHeader>
       <template v-slot:title>
-        Endre bildekategori
+        Endre bildeserie
       </template>
     </ContentHeader>
-    <ImageCategoryForm :image-category="imageCategory" :save="save" />
+    <ImageSeriesForm
+      :image-series="imageSeries"
+      :save="save" />
   </article>
 </template>
 
 <script>
 
 import gql from 'graphql-tag'
-import ImageCategoryForm from './ImageCategoryForm'
-import GET_IMAGE_CATEGORY from '../../gql/images/IMAGE_CATEGORY_QUERY.graphql'
+import ImageSeriesForm from './ImageSeriesForm'
+import GET_IMAGE_SERIES from '../../gql/images/IMAGE_SERIES_QUERY.graphql'
 
 export default {
   components: {
-    ImageCategoryForm
+    ImageSeriesForm
   },
 
   props: {
-    imageCategoryId: {
+    imageSeriesId: {
       type: [Number],
       required: true
     }
@@ -34,25 +36,23 @@ export default {
 
   methods: {
     async save () {
-      const imageCategoryParams = this.$utils.stripParams(this.imageCategory, [
+      const imageSeriesParams = this.$utils.stripParams(this.imageSeries, [
         '__typename',
         'id',
         'creator',
-        'image_series',
-        'image_series_count',
         'deleted_at',
         'inserted_at'])
 
-      delete imageCategoryParams.cfg.__typename
-      imageCategoryParams.cfg = JSON.stringify(imageCategoryParams.cfg)
+      delete imageSeriesParams.cfg.__typename
+      imageSeriesParams.cfg = JSON.stringify(imageSeriesParams.cfg)
 
       try {
         await this.$apollo.mutate({
           mutation: gql`
-            mutation UpdateImageCategory($imageCategoryId: ID!, $imageCategoryParams: ImageCategoryParams) {
-              updateImageCategory(
-                imageCategoryId: $imageCategoryId,
-                imageCategoryParams: $imageCategoryParams
+            mutation UpdateImageSeries($imageSeriesId: ID!, $imageSeriesParams: ImageSeriesParams) {
+              updateImageSeries(
+                imageSeriesId: $imageSeriesId,
+                imageSeriesParams: $imageSeriesParams
               ) {
                   id
                   name
@@ -70,12 +70,12 @@ export default {
               }
           `,
           variables: {
-            imageCategoryParams,
-            imageCategoryId: this.imageCategory.id
+            imageSeriesParams,
+            imageSeriesId: this.imageSeries.id
           }
         })
 
-        this.$toast.success({ message: 'Kategori oppdatert' })
+        this.$toast.success({ message: 'Serie oppdatert' })
         this.$router.push({ name: 'images' })
       } catch (err) {
         this.$utils.showError(err)
@@ -84,16 +84,16 @@ export default {
   },
 
   apollo: {
-    imageCategory: {
-      query: GET_IMAGE_CATEGORY,
+    imageSeries: {
+      query: GET_IMAGE_SERIES,
       variables () {
         return {
-          categoryId: this.imageCategoryId
+          seriesId: this.imageSeriesId
         }
       },
 
       skip () {
-        return !this.imageCategoryId
+        return !this.imageSeriesId
       }
     }
   }

@@ -329,6 +329,7 @@ export default {
         }
       }
     },
+
     onClick () {
       if (!this.imageSelected) {
         this.selectImage()
@@ -341,6 +342,7 @@ export default {
 
       this.$emit('click')
     },
+
     onResize () {
       this.resizeCanvas()
 
@@ -348,27 +350,32 @@ export default {
         this.drawImage(this.imageObject)
       }
     },
+
     onDragEnter () {
       if (!this.supportsDragAndDrop) {
         return
       }
       this.draggingOver = true
     },
+
     onDragLeave () {
       if (!this.supportsDragAndDrop) {
         return
       }
       this.draggingOver = false
     },
+
     onFileDrop (e) {
       this.onDragLeave()
       this.onFileChange(e)
     },
+
     onFileChange (e, prefill) {
       let files = e.target.files || e.dataTransfer.files
       if (!files.length) {
         return
       }
+
       if (files[0].size <= 0 || files[0].size > this.size * 1024 * 1024) {
         this.$emit('error', {
           type: 'fileSize',
@@ -379,6 +386,7 @@ export default {
         })
         return
       }
+
       if (files[0].name === this.fileName && files[0].size === this.fileSize && this.fileModified === files[0].lastModified) {
         return
       }
@@ -406,6 +414,10 @@ export default {
         }
       }
 
+      if (this.imageSelected) {
+        this.focus = { x: 50, y: 50 }
+      }
+
       this.imageSelected = true
       this.image = ''
 
@@ -413,23 +425,23 @@ export default {
         if (this.supportsPreview) {
           this.pixelRatio = Math.round(window.devicePixelRatio || window.screen.deviceXDPI / window.screen.logicalXDPI)
           const canvas = this.$refs.previewCanvas
-          console.log(this.$refs)
           if (canvas && canvas.getContext) {
             this.context = canvas.getContext('2d')
             this.context.scale(this.pixelRatio, this.pixelRatio)
           }
-
           this.loadImage(files[0])
         } else {
           this.$emit('change', this.image)
         }
       })
     },
+
     onError (error) {
       if (this.alertOnError) {
         alert(error.message)
       }
     },
+
     loadImage (file) {
       this.getEXIFOrientation(file, orientation => {
         this.setOrientation(orientation)
@@ -453,6 +465,7 @@ export default {
         reader.readAsDataURL(file)
       })
     },
+
     drawImage (image) {
       this.imageWidth = image.width
       this.imageHeight = image.height
@@ -528,6 +541,7 @@ export default {
       this.previewWidth = Math.min(this.containerWidth - this.margin * 2, this.canvasWidth)
       this.previewHeight = this.previewWidth / previewRatio
     },
+
     getOrientation (width, height) {
       let orientation = 'square'
 
@@ -539,6 +553,7 @@ export default {
 
       return orientation
     },
+
     switchCanvasOrientation () {
       const canvasWidth = this.canvasWidth
       const canvasHeight = this.canvasHeight
@@ -546,10 +561,12 @@ export default {
       this.canvasWidth = canvasHeight
       this.canvasHeight = canvasWidth
     },
+
     rotateCanvas () {
       this.switchCanvasOrientation()
       this.resizeCanvas()
     },
+
     setOrientation (orientation) {
       this.rotate = false
       if (orientation === 8) {
@@ -560,6 +577,7 @@ export default {
         this.rotate = -Math.PI
       }
     },
+
     getEXIFOrientation (file, callback) {
       var reader = new FileReader()
       reader.onload = e => {
@@ -598,6 +616,7 @@ export default {
       }
       reader.readAsArrayBuffer(file.slice(0, 65536))
     },
+
     preloadImage (source, options) {
       // ie 11 support
       let File = window.File

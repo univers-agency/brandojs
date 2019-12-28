@@ -2,7 +2,7 @@
   <button
     type="button"
     :class="{ active }"
-    @click.prevent="clickHandler">
+    @click.stop.prevent="clickHandler">
     <template v-if="active">
       Lukk
     </template>
@@ -52,7 +52,7 @@ export default {
 
 <style lang="postcss" scoped>
   a {
-    padding-top: 18px;
+    padding-top: 16px;
     display: inline-block;
   }
 
@@ -68,6 +68,7 @@ export default {
     border-radius: 30px;
     padding-bottom: 0px;
     min-width: 205px;
+    user-select: none;
     text-align: center;
     transition: background-color 0.25s ease, border-color 0.25s ease;
 

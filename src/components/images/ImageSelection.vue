@@ -25,6 +25,8 @@
 
 <script>
 
+import gql from 'graphql-tag'
+
 export default {
   components: {},
 
@@ -54,16 +56,28 @@ export default {
     },
 
     deleteImages () {
-      this.adminChannel.channel
-        .push('images:delete_images', { ids: this.selectedImages.map(i => i.image.id) })
-        .receive('ok', payload => {
-          for (let i of this.selectedImages) {
-            const { id, image_series_id: imageSeriesId } = i.image
-            this.$emit('delete', { id, imageSeriesId })
+      console.log(this.selectedImages)
+      const imageIds = this.selectedImages.map(i => i.image.id)
+      const imageIdsWithSeriesId = this.selectedImages.map(i => ({ id: i.image.id, imageSeriesId: i.image.image_series_id }))
+      this.$apollo.mutate({
+        mutation: gql`
+          mutation DeleteImages($imageIds: [ID]) {
+            deleteImages(
+              imageIds: $imageIds
+            )
           }
-          this.clearSelection()
-          this.showConfirm = false
-        })
+        `,
+        variables: {
+          imageIds: imageIds
+        }
+      }).then(res => {
+        console.log(res)
+        imageIdsWithSeriesId.forEach(i => this.$emit('delete', { id: i.id, imageSeriesId: i.imageSeriesId }))
+        this.clearSelection()
+        // this.showConfirm = false
+      }).catch(e => {
+        console.log(e)
+      })
     }
   }
 }

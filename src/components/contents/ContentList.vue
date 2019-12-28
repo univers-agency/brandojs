@@ -2,6 +2,28 @@
   <div
     class="list"
     :data-level="level">
+    <div class="list-tools">
+      <div class="filter">
+        Filter
+        <input
+          v-if="filter"
+          v-model="filterValue"
+          placeholder="Filter"
+          type="text" />
+      </div>
+      <transition name="fade">
+        <div
+          v-if="selectedRows.length"
+          class="selected">
+          Med
+          <div class="circle">
+            <span>{{ selectedRows.length }}</span>
+          </div> valgte utfør handling &rarr;
+          <CircleDropdown>
+          </CircleDropdown>
+        </div>
+      </transition>
+    </div>
     <div class="list-header">
       <slot name="header"></slot>
     </div>
@@ -23,21 +45,28 @@
       :data-sort-src="sortParent"
       class="sort-container">
       <div
-        v-for="entry in entries"
+        v-for="entry in filteredEntries"
         :key="entry[entryKey]"
         :data-id="entry[entryKey]"
+        :class="{ selected: isSelected(entry[entryKey]) }"
         class="list-row">
-        <div class="main-content">
+        <div
+          class="main-content"
+          @click.stop="select(entry[entryKey])">
           <template v-if="sortable">
             <div class="col-1">
               <SequenceHandle
                 :class="sequenceHandle" />
             </div>
           </template>
-          <slot name="row" v-bind:entry="entry"></slot>
+          <slot
+            name="row"
+            v-bind:entry="entry"></slot>
         </div>
         <div class="children">
-          <slot name="children" v-bind:entry="entry"></slot>
+          <slot
+            name="children"
+            v-bind:entry="entry"></slot>
         </div>
       </div>
     </transition-group>
@@ -52,6 +81,11 @@ export default {
     entries: {
       type: Array,
       required: true
+    },
+
+    filter: {
+      type: String,
+      default: null
     },
 
     sortable: {
@@ -81,7 +115,38 @@ export default {
     }
   },
 
+  data () {
+    return {
+      filterValue: '',
+      selectedRows: []
+    }
+  },
+
+  computed: {
+    filteredEntries () {
+      if (this.filter && this.filterValue !== '') {
+        return this.entries.filter(e => e[this.filter].toLowerCase().includes(this.filterValue.toLowerCase()))
+      }
+      return this.entries
+    }
+  },
+
   methods: {
+    select (id) {
+      if (this.level > 1) {
+        return
+      }
+      if (this.selectedRows.includes(id)) {
+        this.selectedRows = this.selectedRows.filter(r => r !== id)
+      } else {
+        this.selectedRows.push(id)
+      }
+    },
+
+    isSelected (id) {
+      return this.selectedRows.includes(id)
+    },
+
     onAdd (e) {
       const moveEvent = {
         fromParentId: parseInt(e.from.dataset.sortSrc),
@@ -115,6 +180,45 @@ export default {
 </script>
 
 <style lang="postcss">
+  .list-tools {
+    @row;
+    @space margin-bottom xs;
+
+    .filter {
+      @column 8/16;
+      display: flex;
+      align-items: center;
+
+      input {
+        @fontsize lg;
+        padding-top: 12px;
+        padding-bottom: 5px;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-left: 15px;
+        width: 100%;
+        background-color: theme(colors.input);
+        border: 0;
+      }
+    }
+
+    .selected {
+      @column 8/16;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      .circle {
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+
+      .wrapper {
+        margin-left: 25px;
+      }
+    }
+  }
+
   .list {
     &[data-level="1"] {
       @space margin-top md;
@@ -153,6 +257,7 @@ export default {
       border-bottom: none;
       position: relative;
       color: theme(colors.dark);
+      padding-top: 3px;
 
       &:after {
         border-top: 2px solid theme(colors.blue);
@@ -182,6 +287,14 @@ export default {
     .list-row {
       border-bottom: 1px solid rgba(0, 0, 0, 0.2);
       background-color: theme(colors.peachLighter);
+
+      &.selected {
+        background-color: theme(colors.peachDarker);
+        margin-left: -25px;
+        margin-right: -25px;
+        padding-left: 25px;
+        padding-right: 25px;
+      }
 
       .main-content {
         @row;

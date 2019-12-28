@@ -229,7 +229,7 @@ export default {
     .card-header {
       color: #fff;
       background-color: #363e5c;
-      padding: 1.5rem 1.5rem;
+      padding: 18px 1.5rem;
       margin-bottom: 0;
       border-bottom: 0 solid rgba(0,0,0,.125);
     }
@@ -244,7 +244,7 @@ export default {
   }
 
   .modal-no-chrome {
-    margin: 5% auto 0;
+    margin: 120px auto 0;
     position: relative;
     transition: all 0.2s ease;
     width: 400px;

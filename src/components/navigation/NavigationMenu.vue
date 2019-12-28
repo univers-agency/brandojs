@@ -6,6 +6,7 @@
       ref="sections">
       <NavigationMenuSection
         v-for="section in $menu.sections[$i18n.locale]"
+        @hover="moveCircle"
         :key="section.name"
         :section="section" />
     </div>
@@ -29,12 +30,8 @@ export default {
   },
 
   mounted () {
-    const dls = this.$refs.nav.querySelectorAll('dl')
     this.$refs.sections.addEventListener('mouseover', () => { this.showCircle() })
     this.$refs.sections.addEventListener('mouseleave', () => { this.hideCircle() })
-    Array.from(dls).forEach(dl => {
-      dl.addEventListener('mouseover', () => this.moveCircle(dl))
-    })
   },
 
   methods: {

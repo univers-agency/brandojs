@@ -5,12 +5,7 @@
         Brukere
       </template>
       <template v-slot:subtitle>
-        Oversikt
-      </template>
-      <template v-slot:help>
-        <p>
-          Administrasjon av brukere.
-        </p>
+        Administrasjon av brukere.
       </template>
     </ContentHeader>
     <ButtonPrimary

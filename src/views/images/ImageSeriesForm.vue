@@ -1,29 +1,29 @@
 <template>
   <KForm
-    v-if="imageCategory"
+    v-if="imageSeries"
     :back="{ name: 'images' }"
     @save="save">
     <section class="row">
       <div class="half">
         <KInput
-          v-model="imageCategory.name"
+          v-model="imageSeries.name"
           rules="required"
-          name="imageCategory[name]"
+          name="imageSeries[name]"
           type="text"
           label="Tittel"
           placeholder="Tittel" />
 
         <KInputSlug
-          v-model="imageCategory.slug"
-          :from="imageCategory.name"
+          v-model="imageSeries.slug"
+          :from="imageSeries.name"
           rules="required"
           label="URL-tamp"
           placeholder="URL-tamp"
-          name="imageCategory[slug]" />
+          name="imageSeries[slug]" />
       </div>
     </section>
 
-    <ImageConfigForm :config="imageCategory.cfg" />
+    <ImageConfigForm :config="imageSeries.cfg" />
   </KForm>
 </template>
 
@@ -37,7 +37,7 @@ export default {
   },
 
   props: {
-    imageCategory: {
+    imageSeries: {
       type: Object,
       default: () => {}
     },

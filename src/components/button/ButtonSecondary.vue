@@ -1,12 +1,14 @@
 <template>
   <router-link
     v-if="to"
+    :class="{ narrow }"
     :to="to">
     <slot></slot>
   </router-link>
   <button
     v-else
     type="button"
+    :class="{ narrow }"
     @click.prevent="$emit('click')">
     <slot></slot>
   </button>
@@ -17,6 +19,11 @@ export default {
   props: {
     to: {
       type: [Object, Boolean]
+    },
+
+    narrow: {
+      type: Boolean,
+      default: false
     }
   }
 }
@@ -24,7 +31,7 @@ export default {
 
 <style lang="postcss" scoped>
   a {
-    padding-top: 18px;
+    padding-top: 16px;
     display: inline-block;
   }
 
@@ -41,6 +48,10 @@ export default {
     min-width: 205px;
     text-align: center;
     transition: background-color 0.25s ease, border-color 0.25s ease;
+
+    &.narrow {
+      min-width: 80px;
+    }
 
     &:hover {
       background-color: theme(colors.peach);

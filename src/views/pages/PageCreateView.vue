@@ -5,13 +5,16 @@
         Ny innholdsside
       </template>
     </ContentHeader>
-    <PageForm :page="page" :save="save" />
+    <PageForm
+      :page="page"
+      :save="save" />
   </article>
 </template>
 
 <script>
 
 import gql from 'graphql-tag'
+import GET_PAGES from '../../gql/pages/PAGES_QUERY.graphql'
 import PageForm from './PageForm'
 
 export default {
@@ -86,13 +89,25 @@ export default {
           `,
           variables: {
             pageParams
+          },
+
+          update: (store, { data: { createPage } }) => {
+            const query = {
+              query: GET_PAGES
+            }
+            const data = store.readQuery(query)
+            data.pages.push(createPage)
+            // Write back to the cache
+            store.writeQuery({
+              ...query,
+              data
+            })
           }
         })
 
         this.$toast.success({ message: 'Side opprettet' })
         this.$router.push({ name: 'pages' })
       } catch (err) {
-        console.log('calling showerror')
         this.$utils.showError(err)
       }
     }

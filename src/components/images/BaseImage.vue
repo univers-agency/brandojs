@@ -1,11 +1,11 @@
 <template>
   <div
-    :class="{selected: selected}"
-    class="image-wrapper float-left m-1"
+    :class="{selected: selected, displayList: displayList, displayThumb: !displayList}"
+    class="image-wrapper"
     @mouseover="mouseOver"
     @mouseout="mouseOut">
     <div
-      v-show="showOverlay"
+      v-show="!displayList && showOverlay"
       class="overlay"
       @click.stop.prevent="editImage">
       <i class="fa fa-search fa-fw" />
@@ -87,10 +87,34 @@
       </div>
     </modal>
 
-    <img
-      :src="img.image.sizes.thumb + '?' + timestamp"
-      class="img-fluid"
-      @click.stop.prevent="click">
+    <template v-if="displayList">
+      <div
+        class="list-row"
+        @click.stop.prevent="click">
+        <div class="thumbnail">
+          <img
+            :src="img.image.sizes.thumb + '?' + timestamp"
+            class="img-fluid" />
+        </div>
+        <div class="filename">
+          {{ img.image.path }}
+        </div>
+        <div class="dims">
+          {{ img.image.width }}x{{ img.image.height }}
+        </div>
+        <div class="edit">
+          <button
+            @click.stop.prevent="editImage">Editer</button>
+        </div>
+      </div>
+
+    </template>
+    <template v-else>
+      <img
+        :src="img.image.sizes.thumb + '?' + timestamp"
+        class="img-fluid"
+        @click.stop.prevent="click">
+    </template>
   </div>
 </template>
 
@@ -116,6 +140,11 @@ export default {
       type: Array,
       required: true,
       default: () => []
+    },
+
+    displayList: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -173,7 +202,6 @@ export default {
     },
 
     click (ev) {
-      console.log('click')
       // don't select if modal is open.
       if (!this.showEdit) {
         this.selected = !this.selected
@@ -191,32 +219,91 @@ export default {
 
 <style lang="postcss" scoped>
 .image-wrapper {
-  border: 5px solid #000;
-  cursor: pointer;
-  height: 125px;
-  padding: 2px;
-  position: relative;
-  width: 125px;
-  margin: 0.25rem;
-  float: left;
+
+  &.displayThumb {
+    border: 5px solid #000;
+    cursor: pointer;
+    height: 125px;
+    padding: 2px;
+    position: relative;
+    width: 125px;
+    margin: 0.25rem;
+    float: left;
+
+    &.selected {
+      background-color: theme(colors.blue);
+      border: 5px solid theme(colors.blue);
+      padding: 0;
+
+      img {
+        opacity: 0.50;
+      }
+    }
+  }
+
+  &.displayList {
+    width: 100%;
+    margin: 0.25rem 0;
+    background-color: theme(colors.peach);
+    display: flex;
+    line-height: 1;
+
+    &.selected {
+      background-color: theme(colors.blue);
+      color: theme(colors.peach);
+      padding: 0;
+
+      img {
+        opacity: 0.50;
+      }
+
+      .list-row {
+        > .edit {
+          button {
+            border: 1px solid theme(colors.peach);
+          }
+        }
+      }
+    }
+
+    .list-row {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 12px 12px;
+
+      > .thumbnail {
+        width: 50px;
+        margin-right: 25px;
+      }
+
+      > .filename {
+        width: inherit;
+        margin-top: 4px;
+      }
+
+      > .dims {
+        margin-top: 4px;
+      }
+
+      > .edit {
+        button {
+          margin-left: 15px;
+          border: 1px solid theme(colors.blue);
+          padding: 8px 15px 3px;
+        }
+      }
+    }
+  }
 
   &.sort-handle {
     cursor: move;
   }
 
-  &.selected {
-    background-color: theme(colors.overlay);
-    border: 3px solid theme(colors.overlay);
-    padding: 0;
-
-    img {
-      opacity: 0.50;
-    }
-  }
-
   .overlay {
     align-items: center;
-    background-color: theme(colors.overlay);
+    background-color: theme(colors.blue);
+    color: theme(colors.peach);
     border-radius: 15px;
     display: flex;
     height: 30px;
@@ -233,8 +320,9 @@ export default {
       transition: all 250ms ease;
     }
 
-    i {
-      color: #fff;
+    svg {
+      padding: 4px;
+      color: theme(colors.peach);
       text-align: center;
       transition: all 500ms ease;
     }
