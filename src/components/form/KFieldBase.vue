@@ -1,8 +1,8 @@
 <template>
   <div class="field-wrapper">
     <ValidationProvider
-      v-slot="{ errors, failed }"
       ref="provider"
+      v-slot="{ errors, failed }"
       :name="name"
       :vid="name"
       :rules="rules">
@@ -20,7 +20,9 @@
 
       <slot v-bind:provider="$refs.provider"></slot>
 
-      <div class="meta" v-if="helpText || maxlength">
+      <div
+        v-if="helpText || maxlength"
+        class="meta">
         <div
           v-if="helpText"
           class="help-text">

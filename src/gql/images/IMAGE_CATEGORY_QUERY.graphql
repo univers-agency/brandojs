@@ -1,3 +1,4 @@
+#import "./IMAGE_SERIES_FRAGMENT.graphql"
 query ImageCategory ($categoryId: ID!, $imageSeriesLimit: Int, $imageSeriesOffset: Int) {
   imageCategory (categoryId: $categoryId){
     id
@@ -21,29 +22,7 @@ query ImageCategory ($categoryId: ID!, $imageSeriesLimit: Int, $imageSeriesOffse
     }
     image_series_count
     image_series (limit: $imageSeriesLimit, offset: $imageSeriesOffset) {
-      id
-      name
-      slug
-      image_category_id
-
-      images {
-        id
-        image {
-          path
-          credits
-          title
-          focal
-          width
-          height
-          sizes
-          thumb: url(size: "thumb")
-          medium: url(size: "medium")
-        }
-        image_series_id
-        sequence
-        updated_at
-        deleted_at
-      }
+      ...image_series
     }
   }
 }

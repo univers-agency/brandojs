@@ -12,10 +12,10 @@
     </div>
     <modal
       v-if="showEdit"
+      ref="modal"
       :chrome="false"
       :large="true"
       :show="true"
-      ref="modal"
       @cancel="closeEdit">
       <div class="card">
         <div class="card-header">
@@ -104,10 +104,11 @@
         </div>
         <div class="edit">
           <button
-            @click.stop.prevent="editImage">Editer</button>
+            @click.stop.prevent="editImage">
+            Editer
+          </button>
         </div>
       </div>
-
     </template>
     <template v-else>
       <img

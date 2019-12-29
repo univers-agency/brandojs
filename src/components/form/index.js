@@ -9,6 +9,7 @@ import KInputCheckbox from './KInputCheckbox'
 import KInputPassword from './KInputPassword'
 import KInputImage from './KInputImage'
 import KInputSelect from './KInputSelect'
+import KInputMultiSelect from './KInputMultiSelect'
 import KInputTable from './KInputTable'
 import Villain from './Villain'
 
@@ -23,6 +24,7 @@ export {
   KInputCheckbox,
   KInputImage,
   KInputSelect,
+  KInputMultiSelect,
   KInputTable,
   KInputTextarea,
   Villain

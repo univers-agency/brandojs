@@ -1,0 +1,14 @@
+fragment user on User {
+  id
+  full_name
+  email
+  avatar {
+    focal
+    thumb: url(size: "thumb")
+    medium: url(size: "medium")
+  }
+  role
+  language
+  active
+  deleted_at
+}

@@ -1,7 +1,15 @@
 <template>
-  <transition name="login" @beforeAppear="beforeAppear" @appear="appear">
-    <div class="login" ref="login" v-if="!token">
-      <div class="brando-versioning" ref="v">
+  <transition
+    name="login"
+    @beforeAppear="beforeAppear"
+    @appear="appear">
+    <div
+      v-if="!token"
+      ref="login"
+      class="login">
+      <div
+        ref="v"
+        class="brando-versioning">
         <i class="fa fa-fw fa-adjust" /> BRANDO V &copy; 2007&mdash;2019
       </div>
 
@@ -11,13 +19,17 @@
         <transition
           name="slide-fade-top-slow"
           appear>
-          <div class="login-box" ref="loginBox">
+          <div
+            ref="loginBox"
+            class="login-box">
             <div class="figure-wrapper">
-              <figure v-html="$app.logo" :style="$app.logoStyle" />
+              <figure
+                :style="$app.logoStyle"
+                v-html="$app.logo" />
             </div>
             <div
-              class="login-form"
-              v-if="!loading">
+              v-if="!loading"
+              class="login-form">
               <form>
                 <div class="title">
                   {{ $app.name }} // ADMINISTRATION
@@ -28,8 +40,8 @@
                   label="Login"
                   name="email"
                   placeholder="Epost"
-                  @keyup.native.enter="login"
-                  data-cy-email />
+                  data-cy-email
+                  @keyup.native.enter="login" />
                 <KInputPassword
                   v-model="user.password"
                   class="form-control"
@@ -199,14 +211,14 @@ export default {
     }
 
     .login-box {
-      @column 8/16;
+      @column 10/16;
       @column-offset 4/16;
       background-color: theme(colors.peach);
       border: 1px solid theme(colors.dark);
       display: flex;
 
       .figure-wrapper {
-        @column 3/8;
+        @column 5/10;
         padding: 48px;
         display: flex;
         justify-content: center;
@@ -218,7 +230,7 @@ export default {
       }
 
       .login-form {
-        @column 5:1/8;
+        @column 5:1/10;
         background-color: #ffffff;
         padding: 48px;
       }

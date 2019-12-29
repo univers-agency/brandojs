@@ -51,22 +51,19 @@
             :label="$t('user.password')"
             :placeholder="$t('user.password')"
             rules="min:6|confirmed:user[password_confirm]"
-            name="user[password]"
-          />
+            name="user[password]" />
           <KInputPassword
             v-model="user.password_confirm"
             :label="$t('user.password_confirm')"
             :placeholder="$t('user.password_confirm')"
-            name="user[password_confirm]"
-          />
+            name="user[password_confirm]" />
         </div>
         <div class="half">
           <KInputImage
             v-model="user.avatar"
             :label="$t('user.avatar')"
             :helpText="$t('user.avatar.help')"
-            name="user[avatar]"
-          />
+            name="user[avatar]" />
         </div>
       </section>
     </KForm>
@@ -74,8 +71,9 @@
 </template>
 
 <script>
-
 import gql from 'graphql-tag'
+import GET_ME from '../../gql/users/ME_QUERY.graphql'
+import GET_USER from '../../gql/users/USER_QUERY.graphql'
 
 export default {
   data () {
@@ -123,39 +121,10 @@ export default {
   },
 
   apollo: {
-    me: gql`query Me {
-      me {
-        id
-        full_name
-        email
-        avatar {
-          focal
-          thumb: url(size: "xlarge")
-        }
-        role
-        language
-        active
-      }
-    }`,
+    me: GET_ME,
 
     user: {
-      query: gql`
-        query User ($userId: ID!) {
-          user (userId: $userId) {
-            id
-            full_name
-            email
-            avatar {
-              focal
-              thumb: url(size: "xlarge")
-            }
-            role
-            language
-            active
-            deleted_at
-          }
-        }
-      `,
+      query: GET_USER,
       variables () {
         return {
           userId: this.me.id

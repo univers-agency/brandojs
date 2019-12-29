@@ -2,10 +2,11 @@
   <transition
     @beforeAppear="beforeAppear"
     @appear="appear">
-
     <main>
       <GridDebug />
-      <div class="progress" ref="progress">
+      <div
+        ref="progress"
+        class="progress">
         <transition-group
           name="slide-fade"
           tag="div"
@@ -38,12 +39,12 @@
       </div>
       <transition
         mode="out-in"
+        v-bind:css="false"
+        appear
         @beforeAppear="beforeAppearContent"
         @appear="appearContent"
         @afterLeave="afterLeave"
-        @leave="leave"
-        v-bind:css="false"
-        appear>
+        @leave="leave">
         <router-view class="content" />
       </transition>
     </main>
@@ -140,7 +141,8 @@ export default {
         x: 0,
         delay: 2,
         autoAlpha: 1,
-        ease: 'power3.out'
+        ease: 'power3.out',
+        clearProps: 'transform'
       })
     },
 

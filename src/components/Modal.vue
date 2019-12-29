@@ -227,11 +227,27 @@ export default {
     }
 
     .card-header {
-      color: #fff;
-      background-color: #363e5c;
+      color: theme(colors.peach);
+      background-color: theme(colors.dark);
       padding: 18px 1.5rem;
       margin-bottom: 0;
       border-bottom: 0 solid rgba(0,0,0,.125);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      button {
+        max-width: 80px;
+        background-color: transparent;
+        border-color: theme(colors.peach);
+        color: theme(colors.peach);
+        height: 40px;
+
+        &:hover {
+          background-color: theme(colors.peach);
+          color: theme(colors.dark);
+        }
+      }
     }
 
     .card-block {

@@ -8,10 +8,10 @@
     :value="value">
     <template v-slot>
       <input
-        ref="input"
         :id="id"
-        :class="{ monospace }"
+        ref="input"
         v-model="innerValue"
+        :class="{ monospace }"
         :placeholder="placeholder"
         :maxlength="maxlength"
         :name="name"

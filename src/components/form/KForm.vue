@@ -1,7 +1,8 @@
 <template>
   <transition
+    appear
     @beforeEnter="beforeEnter"
-    @enter="enter" appear>
+    @enter="enter">
     <form>
       <ValidationObserver
         ref="observer">
@@ -69,7 +70,7 @@ export default {
     enter (el, done) {
       const fields = el.querySelectorAll('.field-wrapper')
 
-      gsap.to(fields, { duration: 0.5, autoAlpha: 1, x: 0, stagger: '0.05' })
+      gsap.to(fields, { duration: 0.5, autoAlpha: 1, x: 0, stagger: '0.05', clearProps: 'all' })
     }
   }
 }
