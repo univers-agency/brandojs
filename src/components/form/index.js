@@ -6,8 +6,9 @@ import KInputTextarea from './KInputTextarea'
 import KInputEmail from './KInputEmail'
 import KInputRadios from './KInputRadios'
 import KInputCheckbox from './KInputCheckbox'
-import KInputPassword from './KInputPassword'
 import KInputImage from './KInputImage'
+import KInputImageSeries from './KInputImageSeries'
+import KInputPassword from './KInputPassword'
 import KInputSelect from './KInputSelect'
 import KInputMultiSelect from './KInputMultiSelect'
 import KInputTable from './KInputTable'
@@ -23,6 +24,7 @@ export {
   KInputRadios,
   KInputCheckbox,
   KInputImage,
+  KInputImageSeries,
   KInputSelect,
   KInputMultiSelect,
   KInputTable,

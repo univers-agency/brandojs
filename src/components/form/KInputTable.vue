@@ -13,7 +13,9 @@
       <tr
         v-for="(entry, idx) in innerValue"
         :key="idx">
-        <slot name="row" v-bind:entry="entry"></slot>
+        <slot
+          name="row"
+          v-bind:entry="entry"></slot>
         <td class="action">
           <button
             type="button"
@@ -23,8 +25,12 @@
           </button>
         </td>
       </tr>
-      <tr class="input-row" ref="newRow">
-        <slot name="new" v-bind:newEntry="newEntry"></slot>
+      <tr
+        ref="newRow"
+        class="input-row">
+        <slot
+          name="new"
+          v-bind:newEntry="newEntry"></slot>
         <td class="action">
           <button
             type="button"
@@ -36,7 +42,9 @@
       </tr>
     </table>
 
-    <div class="meta" v-if="helpText">
+    <div
+      v-if="helpText"
+      class="meta">
       <div
         v-if="helpText"
         class="help-text">

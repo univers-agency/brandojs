@@ -140,11 +140,6 @@ export default {
   },
 
   props: {
-    hasError: {
-      type: Boolean,
-      default: false
-    },
-
     options: {
       type: Array,
       default: () => []
@@ -213,6 +208,7 @@ export default {
 
   data () {
     return {
+      innerValue: null,
       open: false,
       displayValue: '',
       searchString: '',
@@ -248,24 +244,26 @@ export default {
       options = this.filterOptions(options, normalizedSearch)
 
       return options.slice(0, this.optionsLimit)
-    },
-
-    innerValue: {
-      get () { return this.value },
-      set (innerValue) { this.$emit('input', innerValue) }
     }
   },
 
   watch: {
     selected (val) {
       this.innerValue = val.map(v => v[this.optionValueKey])
-      console.log(this.innerValue)
+
+      this.$emit('input', this.innerValue)
     }
   },
 
   created () {
-    this.innerValue = this.value
-    // look up the value
+    console.log('val', this.value)
+    this.selected = this.value.map(v => {
+      if (typeof v === 'object') {
+        return v
+      } else {
+        return this.options.find(o => o[this.optionValueKey].toString() === v.toString())
+      }
+    })
     this.displayData()
   },
 
