@@ -1,21 +1,49 @@
 <template>
   <div
+    ref="el"
     tabindex="0"
     :class="{ open: open }"
     class="dropdown"
     @click="toggle"
     @keyup.enter="toggle"
-    @focus="focus"
-    ref="el">
+    @focus="focus">
     <section class="button">
       <section class="icon-wrapper">
         <div class="icon">
-          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="24" cy="24" r="23.5" stroke="black"/>
-            <line x1="14.4" y1="15.1" x2="33.6" y2="15.1" stroke="black"/>
-            <line x1="21.6" y1="31.9" x2="33.6" y2="31.9" stroke="black"/>
-            <line x1="14.4" y1="23.5" x2="33.6" y2="23.5" stroke="black"/>
-            <circle cx="16.2" cy="31.8" r="1.8" fill="black"/>
+          <svg
+            width="48"
+            height="48"
+            viewBox="0 0 48 48"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <circle
+              cx="24"
+              cy="24"
+              r="23.5"
+              stroke="black" />
+            <line
+              x1="14.4"
+              y1="15.1"
+              x2="33.6"
+              y2="15.1"
+              stroke="black" />
+            <line
+              x1="21.6"
+              y1="31.9"
+              x2="33.6"
+              y2="31.9"
+              stroke="black" />
+            <line
+              x1="14.4"
+              y1="23.5"
+              x2="33.6"
+              y2="23.5"
+              stroke="black" />
+            <circle
+              cx="16.2"
+              cy="31.8"
+              r="1.8"
+              fill="black" />
           </svg>
         </div>
       </section>
@@ -26,13 +54,22 @@
           </div>
         </div>
         <div class="dropdown-icon">
-          <svg width="13" height="10" viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6.5 10L0.00480841 0.624999L12.9952 0.624998L6.5 10Z" fill="black"/>
+          <svg
+            width="13"
+            height="10"
+            viewBox="0 0 13 10"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M6.5 10L0.00480841 0.624999L12.9952 0.624998L6.5 10Z"
+              fill="black" />
           </svg>
         </div>
       </section>
     </section>
-    <section class="dropdown-content" ref="dropdownContent">
+    <section
+      ref="dropdownContent"
+      class="dropdown-content">
       <ul>
         <slot name="content"></slot>
       </ul>
@@ -186,9 +223,11 @@ export default {
           }
 
           a, button {
+            @fontsize base;
             display: block;
             padding: 14px 0 8px calc(8px + 64px + 15px);
             font-weight: 400;
+            width: 100%;
           }
 
           button {

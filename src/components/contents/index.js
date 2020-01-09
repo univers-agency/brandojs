@@ -3,11 +3,13 @@ import ContentHeader from './ContentHeader'
 import ContentList from './ContentList'
 import Content from './Content'
 import CircleFilled from './CircleFilled'
+import Status from './Status'
 
 export {
   ItemMeta,
   ContentHeader,
   ContentList,
   Content,
-  CircleFilled
+  CircleFilled,
+  Status
 }

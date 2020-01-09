@@ -8,11 +8,11 @@
     :value="value">
     <template v-slot>
       <textarea
-        ref="input"
         :id="id"
+        ref="input"
+        v-model="innerValue"
         :rows="rows"
         :class="{ monospace }"
-        v-model="innerValue"
         :placeholder="placeholder"
         :maxlength="maxlength"
         :name="name"
@@ -102,7 +102,7 @@ export default {
 </script>
 <style lang="postcss" scoped>
   textarea {
-    @fontsize lg;
+    @fontsize base;
     padding-top: 12px;
     padding-bottom: 5px;
     padding-left: 15px;

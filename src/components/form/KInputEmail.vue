@@ -8,8 +8,8 @@
     :value="value">
     <template v-slot>
       <input
-        ref="input"
         :id="id"
+        ref="input"
         v-model="innerValue"
         :placeholder="placeholder"
         :maxlength="maxlength"
@@ -91,7 +91,7 @@ export default {
 </script>
 <style lang="postcss" scoped>
   input {
-    @fontsize lg;
+    @fontsize base;
     padding-top: 12px;
     padding-bottom: 5px;
     padding-left: 15px;

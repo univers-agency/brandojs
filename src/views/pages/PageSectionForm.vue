@@ -3,7 +3,6 @@
     v-if="!loading"
     :back="{ name: 'pages' }"
     @save="save">
-
     <section class="row">
       <div class="half">
         <KInput
@@ -22,7 +21,7 @@
           ]"
           optionValueKey="value"
           name="page[language]"
-          label="Språk"/>
+          label="Språk" />
         <section class="row">
           <div class="half">
             <KInput
@@ -34,7 +33,6 @@
               placeholder="Hovednøkkel" />
           </div>
           <div class="half">
-
             <KInput
               v-model="page.key"
               rules="required"
@@ -70,7 +68,7 @@
       :template-mode="settings.templateMode"
       :templates="settings.templateNamespace"
       name="page[data]"
-      label="Innhold"/>
+      label="Innhold" />
   </KForm>
 </template>
 
@@ -110,7 +108,6 @@ export default {
 
   methods: {
     getParents () {
-      console.log(this.adminChannel)
       this.adminChannel.channel
         .push('pages:list_parents')
         .receive('ok', payload => {

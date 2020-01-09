@@ -5,7 +5,10 @@
       :image-series="imageSeries"
       @save="addImageToSeries"
       @close="closeUploadModal" />
-    <h2>Bildeserie &laquo;<strong>{{ imageSeries.name }}</strong>&raquo;</h2>
+    <h2
+      v-if="showHeader">
+      Bildeserie &laquo;<strong>{{ imageSeries.name }}</strong>&raquo;
+    </h2>
     <div class="button-group">
       <ButtonSecondary
         :narrow="true"
@@ -14,14 +17,17 @@
           :icon="displayList ? 'image' : 'list'" />
       </ButtonSecondary>
       <ButtonSecondary
+        v-if="showUpload"
         @click.native.prevent="uploadToSeries(imageSeries)">
         Last opp bilder
       </ButtonSecondary>
       <ButtonSecondary
+        v-if="showConfig"
         :to="{ name: 'image-series-edit', params: { imageSeriesId: imageSeries.id } }">
         Konfigurér
       </ButtonSecondary>
       <ButtonSecondary
+        v-if="showDelete"
         @click.native.prevent="deleteSeries(imageSeries)">
         Slett
       </ButtonSecondary>
@@ -94,6 +100,26 @@ export default {
       type: Object
     },
 
+    showHeader: {
+      type: Boolean,
+      default: true
+    },
+
+    showUpload: {
+      type: Boolean,
+      default: true
+    },
+
+    showConfig: {
+      type: Boolean,
+      default: true
+    },
+
+    showDelete: {
+      type: Boolean,
+      default: true
+    },
+
     selectedImages: {
       required: true,
       type: Array
@@ -147,6 +173,7 @@ export default {
       this.adminChannel.channel
         .push('images:sequence_images', { ids: this.sortedArray })
         .receive('ok', payload => {
+          this.$emit('sort', this.sortedArray)
           this.$toast.success({ message: 'Rekkefølge oppdatert' })
         })
     },
@@ -204,6 +231,7 @@ export default {
                 }
               }
             `,
+
             variables: {
               imageSeriesId: series.id
             }
@@ -235,6 +263,8 @@ export default {
 
   .sort-container {
     @space margin-top xs;
+    display: flex;
+    flex-wrap: wrap;
     margin-left: -0.25rem;
   }
 

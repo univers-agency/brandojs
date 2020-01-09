@@ -17,31 +17,31 @@
               <li>
                 <button
                   @click.prevent="createImageCategory">
-                  Opprett ny bildekategori
+                  Ny kategori
                 </button>
               </li>
               <li>
                 <button
                   @click.prevent="createImageSeries">
-                  Opprett ny bildeserie
+                  Ny serie
                 </button>
               </li>
               <li>
                 <router-link
                   :to="{ name: 'image-category-edit', params: { categoryId: imageCategory.id } }">
-                  Konfigurér bildekategorien
+                  Konfigurér kategorien
                 </router-link>
               </li>
               <li>
                 <button
                   @click.prevent="duplicateImageCategory">
-                  Dupliser bildekategori
+                  Dupliser kategori
                 </button>
               </li>
               <li>
                 <button
                   @click.prevent="deleteCategory">
-                  Slett bildekategori
+                  Slett kategori
                 </button>
               </li>
             </template>
@@ -107,6 +107,7 @@
 
 <script>
 import GET_IMAGE_CATEGORY from '../../gql/images/IMAGE_CATEGORY_QUERY.graphql'
+import DELETE_IMAGE_CATEGORY from '../../gql/images/DELETE_IMAGE_CATEGORY.graphql'
 import cache from './cache'
 
 import ImageSeries from '../../components/images/ImageSeries'
@@ -171,13 +172,25 @@ export default {
     },
 
     deleteCategory () {
-      this.$alerts.alertConfirm('OBS', 'Er du sikker på at du vil slette denne bildekategorien?', (data) => {
+      this.$alerts.alertConfirm('OBS', 'Er du sikker på at du vil slette denne bildekategorien?', async data => {
         if (!data) {
           return
         }
 
-        this.deleteImageCategory(this.imageCategory)
-        this.$router.push({ name: 'images' })
+        try {
+          await this.$apollo.mutate({
+            mutation: DELETE_IMAGE_CATEGORY,
+
+            variables: {
+              imageCategoryId: this.imageCategory.id
+            }
+          })
+
+          this.$toast.success({ message: 'Slettet kategori' })
+          this.$router.push({ name: 'images' })
+        } catch (err) {
+          this.$utils.showError(err)
+        }
       })
     },
 

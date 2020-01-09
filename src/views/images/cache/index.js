@@ -3,6 +3,7 @@ import GET_IMAGE_CATEGORIES from '../../../gql/images/IMAGE_CATEGORIES_QUERY.gra
 
 export default {
   removeSeries (provider, series) {
+    console.log(series)
     let query = {
       query: GET_IMAGE_CATEGORY,
       variables: {
@@ -14,6 +15,8 @@ export default {
     let data = store.readQuery(query)
     let idx = data.imageCategory.image_series.findIndex(s => parseInt(s.id) === parseInt(series.id))
 
+    console.log(idx)
+
     if (idx !== -1) {
       data.imageCategory.image_series.splice(idx, 1)
 
@@ -23,20 +26,23 @@ export default {
       })
     }
 
-    query = {
-      query: GET_IMAGE_CATEGORIES
+    try {
+      query = {
+        query: GET_IMAGE_CATEGORIES
+      }
+
+      data = store.readQuery(query)
+
+      let category = data.imageCategories.find(c => parseInt(c.id) === parseInt(series.image_category_id))
+      category.image_series_count = parseInt(category.image_series_count) - 1
+
+      store.writeQuery({
+        ...query,
+        data
+      })
+    } catch (err) {
+      // not in store
     }
-
-    data = store.readQuery(query)
-
-    console.log(data)
-    let category = data.imageCategories.find(c => parseInt(c.id) === parseInt(series.image_category_id))
-    category.image_series_count = parseInt(category.image_series_count) - 1
-
-    store.writeQuery({
-      ...query,
-      data
-    })
   },
 
   addSeries (provider, series, categoryId) {

@@ -140,7 +140,7 @@ export function createProvider (options = {}) {
 // Manually call this when user log in
 export async function onLogin (apolloClient, token) {
   try {
-    await apolloClient.resetStore()
+    setTimeout(() => { apolloClient.resetStore() }, 0)
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log('%cError on cache reset (login)', 'color: orange;', e.message)
@@ -150,8 +150,10 @@ export async function onLogin (apolloClient, token) {
 // Manually call this when user log out
 export async function onLogout (apolloClient) {
   try {
-    localStorage.removeItem('token')
-    await apolloClient.resetStore()
+    setTimeout(() => {
+      apolloClient.resetStore()
+      localStorage.removeItem('token')
+    }, 0)
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log('%cError on cache reset (logout)', 'color: orange;', e.message)

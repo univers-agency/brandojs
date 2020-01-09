@@ -1,7 +1,8 @@
 <template>
   <transition
     :duration="500"
-    name="modal">
+    appear
+    name="fade">
     <div
       v-show="show"
       class="modal"
@@ -273,7 +274,7 @@ export default {
   }
 
   .modal-backdrop {
-    background-color: rgba(98, 79, 160, 0.75);
+    background-color: rgba(5, 0, 128, 0.8);
     height: 100%;
     left: 0;
     overflow-y: scroll;

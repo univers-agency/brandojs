@@ -8,10 +8,6 @@
         Administrasjon av brukere.
       </template>
     </ContentHeader>
-    <ButtonPrimary
-      :to="{ name: 'users-new' }">
-      + Opprett ny bruker
-    </ButtonPrimary>
 
     <ContentList
       v-if="users"

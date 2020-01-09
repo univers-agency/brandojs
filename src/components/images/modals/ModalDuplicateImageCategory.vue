@@ -37,7 +37,7 @@
           Lagre bildekategori
         </button>
         <button
-          class="btn"
+          class="btn btn-secondary"
           @click.prevent="closeModal">
           Avbryt
         </button>

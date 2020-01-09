@@ -2,6 +2,7 @@ fragment image_series on ImageSeries {
   id
   name
   slug
+  image_category_id
   cfg {
     allowed_mimetypes
     default_size

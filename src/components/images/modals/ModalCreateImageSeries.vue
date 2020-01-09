@@ -48,6 +48,8 @@
 import Modal from '../../Modal'
 import gql from 'graphql-tag'
 
+import IMAGE_SERIES_FRAGMENT from '../../../gql/images/IMAGE_SERIES_FRAGMENT.graphql'
+
 export default {
   components: {
     Modal
@@ -89,33 +91,10 @@ export default {
               createImageSeries(
                 imageSeriesParams: $imageSeriesParams,
               ) {
-                id
-                name
-                slug
-                image_category_id
-
-                images {
-                  id
-
-                  image {
-                    path
-                    credits
-                    title
-                    focal
-                    width
-                    height
-                    sizes
-                    thumb: url(size: "thumb")
-                    medium: url(size: "medium")
-                  }
-
-                  image_series_id
-                  sequence
-                  updated_at
-                  deleted_at
-                }
+                ...image_series
               }
             }
+            ${IMAGE_SERIES_FRAGMENT}
           `,
           variables: {
             imageSeriesParams

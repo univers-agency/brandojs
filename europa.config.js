@@ -18,7 +18,15 @@ module.exports = {
       peachDarker: '#F6DFD5',
       peachDarkest: '#ECBFAC',
       blue: '#0047FF',
-      overlay: '#363E5C'
+      overlay: '#363E5C',
+      gray: '#333333',
+
+      status: {
+        draft: '#636363',
+        pending: '#f1ac00',
+        published: '#0047fe',
+        deleted: '#ff0000'
+      }
     }),
 
     container: {
@@ -87,31 +95,31 @@ module.exports = {
       sizes: {
         'nav.section': {
           iphone: {
-            'font-size': '18px',
+            'font-size': '16px',
             'line-height': '140%'
           },
           mobile: {
-            'font-size': '18px',
+            'font-size': '16px',
             'line-height': '140%'
           },
           ipad_portrait: {
-            'font-size': '18px',
+            'font-size': '16px',
             'line-height': '140%'
           },
           ipad_landscape: {
-            'font-size': '18px',
+            'font-size': '16px',
             'line-height': '140%'
           },
           desktop_md: {
-            'font-size': '18px',
+            'font-size': '16px',
             'line-height': '140%'
           },
           desktop_lg: {
-            'font-size': '18px',
+            'font-size': '16px',
             'line-height': '140%'
           },
           desktop_xl: {
-            'font-size': '18px',
+            'font-size': '16px',
             'line-height': '140%'
           }
         },

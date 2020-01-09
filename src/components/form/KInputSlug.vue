@@ -108,7 +108,7 @@ export default {
 </script>
 <style lang="postcss" scoped>
   input {
-    @fontsize lg;
+    @fontsize base;
     padding-top: 12px;
     padding-bottom: 5px;
     padding-left: 15px;

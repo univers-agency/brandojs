@@ -229,7 +229,6 @@ export default {
     position: relative;
     width: 125px;
     margin: 0.25rem;
-    float: left;
 
     &.selected {
       background-color: theme(colors.blue);

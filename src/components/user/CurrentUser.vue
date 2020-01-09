@@ -1,17 +1,17 @@
 <template>
   <transition
+    appear
     @beforeEnter="beforeEnter"
-    @enter="enter"
-    appear>
+    @enter="enter">
     <div
       v-if="!$apollo.queries.me.loading"
+      ref="el"
       tabindex="0"
       :class="{ open: open }"
       class="current-user"
       @click="toggle"
       @keyup.enter="toggle"
-      @focus="focus"
-      ref="el">
+      @focus="focus">
       <section class="button">
         <section class="avatar-wrapper">
           <div class="avatar">
@@ -28,13 +28,22 @@
             </div>
           </div>
           <div class="dropdown-icon">
-            <svg width="13" height="10" viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6.5 10L0.00480841 0.624999L12.9952 0.624998L6.5 10Z" fill="black"/>
+            <svg
+              width="13"
+              height="10"
+              viewBox="0 0 13 10"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M6.5 10L0.00480841 0.624999L12.9952 0.624998L6.5 10Z"
+                fill="black" />
             </svg>
           </div>
         </section>
       </section>
-      <section class="dropdown-content" ref="dropdownContent">
+      <section
+        ref="dropdownContent"
+        class="dropdown-content">
         <ul>
           <li>
             <router-link

@@ -13,6 +13,7 @@
             <div class="half buttons">
               <ButtonPrimary
                 v-shortkey="['meta', 's']"
+                :loading="loading"
                 @shortkey.native="validate"
                 @click="validate">
                 {{ $t('save') }} (⌘S)
@@ -47,6 +48,12 @@ export default {
     }
   },
 
+  data () {
+    return {
+      loading: false
+    }
+  },
+
   mounted () {
     const fields = this.$el.querySelectorAll('.field-wrapper')
     gsap.set(fields, { autoAlpha: 0, x: -15 })
@@ -60,7 +67,11 @@ export default {
         this.loading = false
         return
       }
-      this.$emit('save')
+      this.$emit('save', this.setLoader)
+    },
+
+    setLoader (status) {
+      this.loading = status
     },
 
     beforeEnter (el) {

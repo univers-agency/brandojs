@@ -1,5 +1,7 @@
 <template>
-  <div class="dropzone" ref="dropzone">
+  <div
+    ref="dropzone"
+    class="dropzone">
     <div class="upload">
       <table
         v-show="files.length"
@@ -33,22 +35,85 @@
             <td
               v-else-if="file.success"
               key="success"
-              class="fit">
-              OK
+              class="status">
+              <div class="check-icon-wrapper">
+                <svg
+                  id="Layer_1"
+                  version="1.1"
+                  preserveAspectRatio="xMidYMid meet"
+                  viewBox="0 0 98.5 98.5"
+                  enable-background="new 0 0 98.5 98.5"
+                  xml:space="preserve">
+                  <path
+                    class="checkmark"
+                    fill="none"
+                    stroke-width="8"
+                    stroke-miterlimit="10"
+                    d="M81.7,17.8C73.5,9.3,62,4,49.2,4
+                  C24.3,4,4,24.3,4,49.2s20.3,45.2,45.2,45.2s45.2-20.3,45.2-45.2c0-8.6-2.4-16.6-6.5-23.4l0,0L45.6,68.2L24.7,47.3" />
+                </svg>
+              </div>
             </td>
             <td
               v-else-if="file.active"
               key="active"
-              class="fit">
-              <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44" stroke="blue">
-                <g fill="none" fill-rule="evenodd" stroke-width="2">
-                  <circle cx="22" cy="22" r="19.6786">
-                    <animate attributeName="r" begin="0s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"/>
-                    <animate attributeName="stroke-opacity" begin="0s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"/>
+              class="status active">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                preserveAspectRatio="xMidYMid meet"
+                viewBox="0 0 44 44"
+                stroke="blue">
+                <g
+                  fill="none"
+                  fill-rule="evenodd"
+                  stroke-width="2">
+                  <circle
+                    cx="22"
+                    cy="22"
+                    r="19.6786">
+                    <animate
+                      attributeName="r"
+                      begin="0s"
+                      dur="1.8s"
+                      values="1; 20"
+                      calcMode="spline"
+                      keyTimes="0; 1"
+                      keySplines="0.165, 0.84, 0.44, 1"
+                      repeatCount="indefinite" />
+                    <animate
+                      attributeName="stroke-opacity"
+                      begin="0s"
+                      dur="1.8s"
+                      values="1; 0"
+                      calcMode="spline"
+                      keyTimes="0; 1"
+                      keySplines="0.3, 0.61, 0.355, 1"
+                      repeatCount="indefinite" />
                   </circle>
-                  <circle cx="22" cy="22" r="13.8461">
-                    <animate attributeName="r" begin="-0.9s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"/>
-                    <animate attributeName="stroke-opacity" begin="-0.9s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"/>
+                  <circle
+                    cx="22"
+                    cy="22"
+                    r="13.8461">
+                    <animate
+                      attributeName="r"
+                      begin="-0.9s"
+                      dur="1.8s"
+                      values="1; 20"
+                      calcMode="spline"
+                      keyTimes="0; 1"
+                      keySplines="0.165, 0.84, 0.44, 1"
+                      repeatCount="indefinite" />
+                    <animate
+                      attributeName="stroke-opacity"
+                      begin="-0.9s"
+                      dur="1.8s"
+                      values="1; 0"
+                      calcMode="spline"
+                      keyTimes="0; 1"
+                      keySplines="0.3, 0.61, 0.355, 1"
+                      repeatCount="indefinite" />
                   </circle>
                 </g>
               </svg>
@@ -56,7 +121,7 @@
             <td
               v-else
               key="other"
-              class="fit">
+              class="status">
               —
             </td>
           </transition>
@@ -71,9 +136,9 @@
             Velg filer
             <label for="image"></label>
             <input
+              id="image"
               type="file"
               name="image"
-              id="image"
               accept="image/*"
               multiple="multiple"
               @change="change">
@@ -142,10 +207,10 @@ export default {
 
     uploadFile (file) {
       return new Promise((resolve, reject) => {
-        const params = { file: file.file }
+        const params = { image: file.file }
         this.$apollo.mutate({
           mutation: gql`
-            mutation CreateImage($imageSeriesId: ID!, $imageUploadParams: ImageUploadParams) {
+            mutation CreateImage($imageSeriesId: ID!, $imageUploadParams: ImageUpload) {
               createImage(
                 imageSeriesId: $imageSeriesId,
                 imageUploadParams: $imageUploadParams
@@ -190,6 +255,7 @@ export default {
           this.uploading--
           resolve()
         }).catch(e => {
+          console.error(e)
           file.error = true
           file.active = false
           this.uploading--
@@ -363,7 +429,7 @@ export default {
           }
 
           const newFile = {
-            active: false,
+            active: true,
             success: false,
             error: false,
             id: Math.random().toString(36).substr(2),
@@ -507,6 +573,18 @@ table {
         width: 65px;
       }
 
+      &.status {
+        width: 60px;
+        height: 60px;
+        max-height: 60px;
+        margin: 0 auto;
+        text-align: center;
+
+        &.active {
+          transform: scale(0.8);
+        }
+      }
+
       &.name {
         position: relative;
         background-color: transparent;
@@ -543,6 +621,28 @@ table {
   .btn {
     + .btn {
       margin-left: -1px;
+    }
+  }
+}
+
+.check-icon-wrapper {
+  width: 20px;
+  margin: 0 auto;
+  margin-left: 7px;
+
+  .checkmark {
+    stroke: theme(colors.blue);
+    stroke-dashoffset: 745.74853515625;
+    stroke-dasharray: 745.74853515625;
+    animation: dash 2s ease-out forwards;
+  }
+
+  @keyframes dash {
+    0% {
+      stroke-dashoffset: 745.74853515625;
+    }
+    100% {
+      stroke-dashoffset: 0;
     }
   }
 }

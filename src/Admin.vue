@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="token && ready"
+    v-if="token && $root.ready && !loading"
     id="app"
     :class="{ noFocus, 'loaded': !loading, 'fullscreen': fullScreen}">
     <transition
@@ -24,7 +24,7 @@
       :show-progress="showProgress"
       :progress-status="progressStatus" />
   </div>
-  <div v-else>
+  <div v-else-if="!loading">
     <router-view class="content" />
   </div>
 </template>
@@ -40,14 +40,17 @@ export default {
       showProgress: false,
       progressStatus: {},
       noFocus: true,
-      loading: 1,
+      loading: 2,
       initialized: false,
-      fullScreen: false,
-      ready: false
+      fullScreen: false
     }
   },
 
   watch: {
+    loading (value) {
+      console.log('loading is', value)
+    },
+
     fullscreen (value) {
       if (value) {
         if (this.$refs.nav) {
@@ -89,7 +92,7 @@ export default {
   },
 
   async created () {
-    this.ready = false
+    this.$root.ready = false
     console.debug('created <App />')
 
     document.addEventListener('keydown', e => {
@@ -117,7 +120,7 @@ export default {
 
       switch (response.status) {
         case 200:
-          this.ready = true
+          this.$root.ready = true
           break
         case 406:
           this.setToken(null)
@@ -175,7 +178,6 @@ export default {
       this.userChannel.join()
         .receive('ok', userId => {
           console.debug(`== Ble medlem av brukerkanal:${me.id} med bruker:${userId}`)
-          this.loading = false
         })
         .receive('error', resp => { console.error('!! Kunne ikke påmeldes ', resp) })
 
@@ -211,6 +213,7 @@ export default {
       this.adminChannel.join()
         .receive('ok', userId => {
           console.debug(`== Ble medlem av adminkanal med bruker:${userId}`)
+          this.loading = 0
         })
         .receive('error', resp => { console.error('!! Kunne ikke påmeldes ', resp) })
 
@@ -282,7 +285,8 @@ export default {
       },
 
       skip () {
-        return !this.ready
+        console.log(this.$root.ready)
+        return !this.$root.ready
       }
     },
 
@@ -396,6 +400,29 @@ export default {
 
   .text-mono {
     font-family: theme(typography.families.mono);
+  }
+
+  a.link {
+    border-bottom: none;
+    position: relative;
+    color: theme(colors.dark);
+
+    &:after {
+      border-top: 2px solid theme(colors.blue);
+      content: '';
+      position: absolute;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      transition: right 350ms ease, color 550ms ease;
+    }
+
+    &:hover {
+      &:after {
+        right: 100%;
+        color: theme(colors.blue)
+      }
+    }
   }
 
   .row {
@@ -1137,19 +1164,19 @@ export default {
 
 input::-webkit-input-placeholder {
   font-family: 'Founders Grotesk', sans-serif;
-  @fontsize lg;
+  @fontsize base;
 }
 input:-ms-input-placeholder {
   font-family: 'Founders Grotesk', sans-serif;
-  @fontsize lg;
+  @fontsize base;
 }
 input:-moz-placeholder {
   font-family: 'Founders Grotesk', sans-serif;
-  @fontsize lg;
+  @fontsize base;
 }
 input::-moz-placeholder {
   font-family: 'Founders Grotesk', sans-serif;
-  @fontsize lg;
+  @fontsize base;
 }
 
 </style>

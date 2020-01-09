@@ -20,6 +20,11 @@
             <span>{{ selectedRows.length }}</span>
           </div> valgte utfør handling &rarr;
           <CircleDropdown>
+            <slot
+              name="selected"
+              v-bind:clearSelection="clearSelection"
+              v-bind:entries="selectedRows">
+            </slot>
           </CircleDropdown>
         </div>
       </transition>
@@ -59,6 +64,13 @@
                 :class="sequenceHandle" />
             </div>
           </template>
+          <template v-if="status">
+            <div class="col-1">
+              <Status
+                class="float-right"
+                :status="entry.status" />
+            </div>
+          </template>
           <slot
             name="row"
             v-bind:entry="entry"></slot>
@@ -86,6 +98,11 @@ export default {
     filter: {
       type: String,
       default: null
+    },
+
+    status: {
+      type: Boolean,
+      default: false
     },
 
     sortable: {
@@ -132,6 +149,10 @@ export default {
   },
 
   methods: {
+    clearSelection () {
+      this.selectedRows = []
+    },
+
     select (id) {
       if (this.level > 1) {
         return
@@ -287,6 +308,12 @@ export default {
     .list-row {
       border-bottom: 1px solid rgba(0, 0, 0, 0.2);
       background-color: theme(colors.peachLighter);
+
+      .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
       &.selected {
         background-color: theme(colors.peachDarker);
