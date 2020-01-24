@@ -11,7 +11,7 @@ Vue.use(VueApollo)
 
 // Name of the localStorage item
 const AUTH_TOKEN = 'token'
-const httpEndpoint = process.env.VUE_APP_GRAPHQL_HTTP || 'http://localhost:4000/admin/graphql'
+const httpEndpoint = process.env.VUE_APP_GRAPHQL_HTTP || '/admin/graphql'
 
 const link = createLink({
   uri: httpEndpoint,
@@ -118,6 +118,7 @@ export function createProvider (options = {}) {
         case 406:
           console.log('got 406, call onLogout')
           await onLogout(apolloClient)
+          window.location = '/admin/login'
           break
         default:
           if (graphQLErrors && graphQLErrors.length) {

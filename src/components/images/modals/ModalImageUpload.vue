@@ -14,11 +14,10 @@
       </div>
       <div class="card-body">
         <Dropzone
-          @close="closeModal"
-          @save="$emit('save', $event)"
           v-show="!files.length"
           :image-series-id="imageSeries.id"
-        />
+          @close="closeModal"
+          @save="$emit('save', $event)" />
       </div>
     </div>
   </modal>
@@ -164,10 +163,10 @@ export default {
 
 .file-selector-button {
   @space margin-top sm;
-  padding-top: 15px;
-  color: #ffffff;
+  @color fg peach;
+  @color bg blue;
+  padding-top: 10px;
   border: 1px solid theme(colors.blue);
-  background-color: theme(colors.blue);
   height: 60px;
   border-radius: 30px;
   padding-bottom: 0px;

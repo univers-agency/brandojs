@@ -1,14 +1,16 @@
 <template>
   <nav ref="nav">
-    <div class="nav-circle" ref="circle"></div>
     <div
-      class="nav-sections"
-      ref="sections">
+      ref="circle"
+      class="nav-circle"></div>
+    <div
+      ref="sections"
+      class="nav-sections">
       <NavigationMenuSection
         v-for="section in $menu.sections[$i18n.locale]"
-        @hover="moveCircle"
         :key="section.name"
-        :section="section" />
+        :section="section"
+        @hover="moveCircle" />
     </div>
   </nav>
 </template>
@@ -59,7 +61,7 @@ export default {
       width: 24px;
       height: 24px;
       opacity: 0;
-      margin-top: 3px;
+      margin-top: 9px;
       margin-left: -37px;
     }
   }

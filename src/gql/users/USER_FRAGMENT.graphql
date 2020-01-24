@@ -6,6 +6,7 @@ fragment user on User {
     focal
     thumb: url(size: "thumb")
     medium: url(size: "medium")
+    xlarge: url(size: "xlarge")
   }
   role
   language

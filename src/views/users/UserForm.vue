@@ -33,22 +33,20 @@
           rules="min:6|confirmed:user[password_confirm]"
           name="user[password]"
           label="Passord"
-          placeholder="Passord"
-        />
+          placeholder="Passord" />
         <KInputPassword
           v-model="user.password_confirm"
           name="user[password_confirm]"
           label="Bekreft passord"
-          placeholder="Bekreft passord"
-        />
+          placeholder="Bekreft passord" />
       </div>
       <div class="half">
         <KInputImage
           v-model="user.avatar"
           name="user[avatar]"
+          preview-key="xlarge"
           label="Profilbilde"
-          helpText="Klikk på bildet for å sette fokuspunkt."
-        />
+          helpText="Klikk på bildet for å sette fokuspunkt." />
       </div>
     </section>
   </KForm>

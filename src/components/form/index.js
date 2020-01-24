@@ -1,6 +1,8 @@
 import KForm from './KForm'
 import KFieldBase from './KFieldBase'
 import KInput from './KInput'
+import KInputDate from './KInputDate'
+import KInputDatetime from './KInputDatetime'
 import KInputSlug from './KInputSlug'
 import KInputTextarea from './KInputTextarea'
 import KInputEmail from './KInputEmail'
@@ -18,6 +20,8 @@ export {
   KForm,
   KFieldBase,
   KInput,
+  KInputDate,
+  KInputDatetime,
   KInputSlug,
   KInputEmail,
   KInputPassword,

@@ -8,14 +8,40 @@
     <template v-slot>
     </template>
     <template v-slot:outsideValidator>
-      <div v-if="innerValue && innerValue.id">
-        <ImageSeries
-          :selected-images="[]"
-          :show-header="false"
-          :show-delete="showDelete"
-          :show-config="showConfig"
-          :show-upload="showUpload"
-          :image-series="innerValue" />
+      <div v-if="innerValue && innerValue">
+        <table>
+          <slot name="head"></slot>
+          <tr
+            v-for="(entry, idx) in innerValue"
+            :key="idx">
+            <slot
+              name="row"
+              v-bind:entry="entry"></slot>
+            <td class="action">
+              <button
+                type="button"
+                class="delete"
+                @click.self.stop.prevent="del(entry)">
+                Slett
+              </button>
+            </td>
+          </tr>
+          <tr
+            ref="newRow"
+            class="input-row">
+            <slot
+              name="new"
+              v-bind:newEntry="newEntry"></slot>
+            <td class="action">
+              <button
+                type="button"
+                class="add"
+                @click.stop.prevent="add(newEntry)">
+                OK
+              </button>
+            </td>
+          </tr>
+        </table>
       </div>
 
       <div v-else>

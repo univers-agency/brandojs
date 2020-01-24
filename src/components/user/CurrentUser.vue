@@ -197,6 +197,7 @@ export default {
       .name {
         font-weight: normal;
         font-size: 18px;
+        margin-bottom: 6px;
         user-select: none;
       }
 
@@ -254,7 +255,7 @@ export default {
 
           a {
             display: block;
-            padding: 14px 0 8px calc(8px + 64px + 15px);
+            padding: 14px 0 14px calc(8px + 64px + 15px);
           }
         }
       }

@@ -454,7 +454,7 @@ export default {
 
 <style lang="postcss" scoped>
   .title {
-    @fontsize base/1;
+    @fontsize base;
 
     svg {
       display: inline-block;
@@ -463,7 +463,7 @@ export default {
 
       &.published {
         circle {
-          fill: #77ec4c;
+          fill: #8bd271;
         }
       }
 
@@ -480,7 +480,7 @@ export default {
       }
 
       circle {
-        fill: #77ec4c;
+        fill: #8bd271;
       }
     }
   }
@@ -532,7 +532,7 @@ export default {
     "pages.index": "Oversikt",
     "pages.actions": "Handlinger",
     "pages.new": "Ny side",
-    "pages.reprocess": "Behandle sider/seksjoner på nytt",
+    "pages.reprocess": "Behandle sider og seksjoner på nytt",
     "pages.delete-section": "Slett seksjon",
     "pages.edit-page": "Rediger side",
     "pages.new-section": "Ny seksjon",

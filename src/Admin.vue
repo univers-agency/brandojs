@@ -33,6 +33,7 @@
 
 import gql from 'graphql-tag'
 import { gsap } from 'gsap'
+import GET_IDENTITY from './gql/identity/IDENTITY_QUERY.graphql'
 
 export default {
   data () {
@@ -277,7 +278,7 @@ export default {
       `,
 
       update ({ me }) {
-        if (!this.initialized) {
+        if (!this.initialized && me) {
           this.$i18n.locale = me.language
           this.initialized = true
           this.initializeApp(me)
@@ -286,64 +287,15 @@ export default {
 
       skip () {
         console.log(this.$root.ready)
-        return !this.$root.ready
+        return !this.$root.ready || !this.token
       }
     },
 
     identity: {
-      query: gql`
-        query Identity {
-          identity {
-            id
-            type
-            name
-            alternate_name
-            email
-            phone
-            address
-            zipcode
-            city
-            country
-            description
-            title_prefix
-            title
-            title_postfix
-
-            image {
-              thumb: url(size: "original")
-              focal
-            }
-
-            logo {
-              thumb: url(size: "original")
-              focal
-            }
-
-            links {
-              id
-              name
-              url
-            }
-
-            metas {
-              id
-              key
-              value
-            }
-
-            configs {
-              id
-              key
-              value
-            }
-
-            url
-          }
-        }
-      `,
+      query: GET_IDENTITY,
 
       skip () {
-        return !this.token
+        return !this.$root.ready || !this.token
       }
     }
   }
@@ -354,25 +306,25 @@ export default {
   @europa base;
 
   @font-face {
-    font-family: 'Founders Grotesk';
-    src: url('/fonts/FoundersGrotesk-Regular.eot?#iefix') format('embedded-opentype'),  url('/fonts/FoundersGrotesk-Regular.otf')  format('opentype'),
-         url('/fonts/FoundersGrotesk-Regular.woff') format('woff'), url('/fonts/FoundersGrotesk-Regular.ttf')  format('truetype'), url('/fonts/FoundersGrotesk-Regular.svg#FoundersGrotesk-Regular') format('svg');
+    font-family: 'FG';
+    src: url('/fonts/FoundersGroteskWeb-Regular.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/FoundersGroteskWeb-Regular.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
   }
 
   @font-face {
-    font-family: 'Founders Grotesk';
-    src: url('/fonts/FoundersGrotesk-Medium.eot?#iefix') format('embedded-opentype'),  url('/fonts/FoundersGrotesk-Medium.otf')  format('opentype'),
-         url('/fonts/FoundersGrotesk-Medium.woff') format('woff'), url('/fonts/FoundersGrotesk-Medium.ttf')  format('truetype'), url('/fonts/FoundersGrotesk-Medium.svg#FoundersGrotesk-Medium') format('svg');
+    font-family: 'FG';
+    src: url('/fonts/FoundersGroteskWeb-Medium.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/FoundersGroteskWeb-Medium.woff2') format('woff2');
     font-weight: 500;
     font-style: normal;
   }
 
   @font-face {
-    font-family: 'Founders Grotesk';
-    src: url('/fonts/FoundersGrotesk-Light.eot?#iefix') format('embedded-opentype'),  url('/fonts/FoundersGrotesk-Light.otf')  format('opentype'),
-         url('/fonts/FoundersGrotesk-Light.woff') format('woff'), url('/fonts/FoundersGrotesk-Light.ttf')  format('truetype'), url('/fonts/FoundersGrotesk-Light.svg#FoundersGrotesk-Light') format('svg');
+    font-family: 'FG';
+    src: url('/fonts/FoundersGroteskWeb-Light.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/FoundersGroteskWeb-Light.woff2') format('woff2');
     font-weight: 200;
     font-style: normal;
   }
@@ -386,6 +338,7 @@ export default {
   }
 
   html {
+    line-height: 1.35;
     height: 100%;
   }
 
@@ -435,6 +388,14 @@ export default {
     .third {
       width: 33%;
     }
+  }
+
+  .half {
+    width: 50%;
+  }
+
+  .third {
+    width: 33%;
   }
 
   .toggle-menu {
@@ -517,6 +478,10 @@ export default {
     font-weight: 200;
   }
 
+  .pos-relative {
+    position: relative;
+  }
+
   .btn-primary {
     width: 100%;
     display: block;
@@ -525,7 +490,7 @@ export default {
     border: 1px solid theme(colors.dark);
     background-color: transparent;
     height: 60px;
-    padding-bottom: 0px;
+    padding-bottom: 8px;
     min-width: 205px;
     text-align: center;
     transition: background-color 0.25s ease, border-color 0.25s ease;
@@ -544,7 +509,7 @@ export default {
     border: 1px solid theme(colors.dark);
     background-color: transparent;
     height: 40px;
-    padding-bottom: 0px;
+    padding-bottom: 5px;
     text-align: center;
     transition: background-color 0.25s ease, border-color 0.25s ease;
 
@@ -688,7 +653,20 @@ export default {
     align-items: center;
     justify-content: space-between;
   }
+}
 
+.flex-v {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.flex-h {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .mt-3 {
@@ -697,6 +675,34 @@ export default {
 
 .mb-3 {
   margin-bottom: 25px;
+}
+
+.mb-xs {
+  @space margin-bottom xs;
+}
+
+.mb-sm {
+  @space margin-bottom sm;
+}
+
+.mb-md {
+  @space margin-bottom md;
+}
+
+.ml-xs {
+  @space margin-left xs;
+}
+
+.ml-sm {
+  @space margin-left sm;
+}
+
+.ml-md {
+  @space margin-left md;
+}
+
+.mr-1 {
+  margin-right: 5px;
 }
 
 .circle {
@@ -720,6 +726,10 @@ export default {
 
 .text-center {
   text-align: center !important;
+}
+
+.text-small {
+  @fontsize sm;
 }
 
 .badge {
@@ -1104,19 +1114,18 @@ export default {
   }
 
   &.iziToast-theme-brando {
-    color: white;
+    @color fg peach;
 
     > .iziToast-body .iziToast-message {
-      margin-left: 5px;
       @fontsize base;
+      margin-left: 5px;
     }
 
     &.iziToast-color-green {
-      background-color: theme(colors.blue);
+      @color bg blue;
 
       > .iziToast-body .iziToast-message {
-        color: theme(colors.peach);
-        margin-top: 3px;
+        @color fg peach;
       }
     }
 
@@ -1132,7 +1141,7 @@ export default {
     }
 
     .iziToast-icon {
-      color: #fff;
+      @color fg peach;
     }
 
     .iziToast-icon.ico-error {
@@ -1163,19 +1172,19 @@ export default {
 }
 
 input::-webkit-input-placeholder {
-  font-family: 'Founders Grotesk', sans-serif;
+  @font main;
   @fontsize base;
 }
 input:-ms-input-placeholder {
-  font-family: 'Founders Grotesk', sans-serif;
+  @font main;
   @fontsize base;
 }
 input:-moz-placeholder {
-  font-family: 'Founders Grotesk', sans-serif;
+  @font main;
   @fontsize base;
 }
 input::-moz-placeholder {
-  font-family: 'Founders Grotesk', sans-serif;
+  @font main;
   @fontsize base;
 }
 

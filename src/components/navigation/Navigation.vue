@@ -1,10 +1,14 @@
 <template>
   <transition
+    appear
     @beforeEnter="beforeEnter"
-    @enter="enter"
-    appear>
-    <section ref="nav" id="navigation">
-      <div id="navigation-content" ref="navContent">
+    @enter="enter">
+    <section
+      id="navigation"
+      ref="nav">
+      <div
+        id="navigation-content"
+        ref="navContent">
         <NavigationHeader ref="header" />
         <CurrentUser />
         <NavigationMenu ref="menu" />

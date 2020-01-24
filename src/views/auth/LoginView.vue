@@ -10,7 +10,7 @@
       <div
         ref="v"
         class="brando-versioning">
-        <i class="fa fa-fw fa-adjust" /> BRANDO V &copy; 2007&mdash;2019
+        <i class="fa fa-fw fa-adjust" /> BRANDO &copy; {{ new Date().getFullYear() }}
       </div>
 
       <div
@@ -32,7 +32,7 @@
               class="login-form">
               <form>
                 <div class="title">
-                  {{ $app.name }} // ADMINISTRATION
+                  {{ $app.name }}
                 </div>
 
                 <KInputEmail
@@ -55,7 +55,7 @@
                 <ButtonPrimary
                   :dark="true"
                   @click.native.prevent="login">
-                  Logg inn
+                  Login &rarr;
                 </ButtonPrimary>
               </div>
             </div>
@@ -201,8 +201,8 @@ export default {
       opacity: 0;
       position: absolute;
       bottom: 0;
+      left: 0;
       font-family: theme(typography.families.mono);
-      transform: translateX(-15px);
     }
 
     .login-container {
@@ -214,12 +214,19 @@ export default {
       @column 10/16;
       @column-offset 4/16;
       background-color: theme(colors.peach);
-      border: 1px solid theme(colors.dark);
+      box-shadow:
+        0 2.8px 2.2px rgba(0, 0, 0, 0.02),
+        0 6.7px 5.3px rgba(0, 0, 0, 0.028),
+        0 12.5px 10px rgba(0, 0, 0, 0.035),
+        0 22.3px 17.9px rgba(0, 0, 0, 0.042),
+        0 41.8px 33.4px rgba(0, 0, 0, 0.05),
+        0 100px 80px rgba(0, 0, 0, 0.07);
+
       display: flex;
 
       .figure-wrapper {
         @column 5/10;
-        padding: 48px;
+        padding: 75px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -239,7 +246,7 @@ export default {
       @space margin-bottom sm;
       font-family: theme(typography.families.mono);
       font-size: 20px;
-      text-transform: uppercase;
+      /* text-transform: uppercase; */
     }
   }
 </style>

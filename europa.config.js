@@ -62,13 +62,13 @@ module.exports = {
         desktop_xl: 16
       },
       gutters: {
-        iphone: '40px',
-        mobile: '40px',
-        ipad_portrait: '35px',
-        ipad_landscape: '35px',
-        desktop_md: '30px',
-        desktop_lg: '30px',
-        desktop_xl: '15px'
+        iphone: '1vw',
+        mobile: '1vw',
+        ipad_portrait: '1vw',
+        ipad_landscape: '1vw',
+        desktop_md: '1vw',
+        desktop_lg: '1vw',
+        desktop_xl: '1vw'
       }
     },
 
@@ -191,9 +191,9 @@ module.exports = {
           mobile: '20px',
           ipad_portrait: '20px',
           ipad_landscape: '20px',
-          desktop_md: '20px',
-          desktop_lg: '20px',
-          desktop_xl: '20px'
+          desktop_md: '21px',
+          desktop_lg: '21px',
+          desktop_xl: '22px'
         },
 
         lg: {
@@ -475,7 +475,7 @@ module.exports = {
 
       families: {
         main: [
-          'Founders Grotesk',
+          'FG',
           '-apple-system',
           'BlinkMacSystemFont',
           '"Segoe UI"',

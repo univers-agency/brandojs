@@ -6,7 +6,9 @@
     :helpText="helpText"
     :value="innerValue">
     <template v-slot="{ provider }">
-      <div class="image-preview-wrapper" v-if="provider">
+      <div
+        v-if="provider"
+        class="image-preview-wrapper">
         <PictureInput
           :id="id"
           ref="pictureInput"

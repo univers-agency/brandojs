@@ -510,10 +510,10 @@ export default {
 
 .file-selector-button {
   @space margin-top sm;
-  padding-top: 15px;
-  color: #ffffff;
+  @color fg peach;
+  @color bg blue;
+  padding-top: 10px;
   border: 1px solid theme(colors.blue);
-  background-color: theme(colors.blue);
   height: 60px;
   border-radius: 30px;
   padding-bottom: 0px;

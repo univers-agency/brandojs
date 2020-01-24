@@ -34,7 +34,7 @@ export default {
 
     header {
       display: flex;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       position: relative;
 
       h3 {

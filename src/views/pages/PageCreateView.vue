@@ -55,6 +55,15 @@ export default {
                 slug
                 language
                 data
+
+                creator {
+                  id
+                  full_name
+                  avatar {
+                    thumb: url(size: "xlarge")
+                  }
+                }
+
                 parent {
                   id
                   key
@@ -63,6 +72,7 @@ export default {
                   slug
                   data
                 }
+
                 children {
                   id
                   key
@@ -71,6 +81,7 @@ export default {
                   slug
                   data
                 }
+
                 fragments {
                   id
                   title
@@ -81,6 +92,7 @@ export default {
                   page_id
                   data
                 }
+
                 inserted_at
                 updated_at
                 deleted_at

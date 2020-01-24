@@ -209,7 +209,7 @@ export default {
     },
     zIndex: {
       type: Number,
-      default: 10000
+      default: 9000
     },
     alertOnError: {
       type: Boolean,
@@ -677,8 +677,8 @@ button {
   width: 100%;
   border: 1px solid theme(colors.dark);
   line-height: 1;
-  padding-top: 23px;
-  padding-bottom: 18px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   background-color: transparent;
   transition: background-color 0.5s ease;
 
@@ -712,7 +712,7 @@ button {
   width: 100%;
   height: 100%;
   position: relative;
-  z-index: 10001;
+  z-index: 9000;
   box-sizing: border-box;
   background-color: theme(colors.input);
 }
@@ -726,7 +726,7 @@ button {
   height: 100%;
   left: 0;
 
-  z-index: 10002;
+  z-index: 9001;
   pointer-events: none;
   padding: 4rem;
   box-sizing: border-box;

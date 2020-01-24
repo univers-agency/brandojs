@@ -31,7 +31,7 @@ export default {
 
 <style lang="postcss" scoped>
   a {
-    padding-top: 16px;
+    padding-top: 14px;
     display: inline-block;
   }
 
@@ -44,7 +44,9 @@ export default {
     border: 1px solid theme(colors.dark);
     background-color: transparent;
     height: 60px;
-    padding-bottom: 0px;
+    padding-bottom: 8px;
+    padding-left: 25px;
+    padding-right: 25px;
     min-width: 205px;
     text-align: center;
     transition: background-color 0.25s ease, border-color 0.25s ease;

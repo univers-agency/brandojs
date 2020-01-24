@@ -66,7 +66,7 @@ export default {
     background-color: transparent;
     height: 60px;
     border-radius: 30px;
-    padding-bottom: 0px;
+    padding-bottom: 9px;
     min-width: 205px;
     user-select: none;
     text-align: center;

@@ -20,9 +20,8 @@
         class="megaselect__display">
         <div
           v-show="!open"
-          class="megaselect__display__value"
-          style="margin-top: 4px">
-          {{ displayValue || "Ingen verdi" }}
+          class="megaselect__display__value">
+          {{ displayValue || "Ingen valgt verdi" }}
         </div>
         <div
           v-show="open"
@@ -340,12 +339,13 @@ export default {
 
 <style lang="postcss" scoped>
   .megaselect__display {
+    @fontsize base;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-left: 15px;
     padding-right: 15px;
-    height: 49px;
+    height: 50px;
     width: 100%;
     background-color: theme(colors.input);
     border: 0;
@@ -354,7 +354,7 @@ export default {
   .button-edit {
     @fontsize sm/1;
     border: 1px solid theme(colors.dark);
-    padding: 8px 12px 3px;
+    padding: 8px 12px 10px;
     transition: all 0.25s ease;
 
     &:hover {
@@ -363,9 +363,22 @@ export default {
     }
   }
 
-  .megaselect__option--selected,
-  .megaselect__option--highlight {
-    background-color: pink;
+  .megaselect__options__option {
+    @color bg peachDarker;
+    @color fg dark;
+    cursor: pointer;
+
+    &.megaselect__option--selected,
+    &.megaselect__option--highlight {
+      @color bg dark;
+      @color fg peach;
+    }
+  }
+
+  .megaselect__display {
+    .megaselect__display__value {
+      margin-bottom: 2px;
+    }
   }
 
   .search {

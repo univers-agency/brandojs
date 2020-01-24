@@ -4,12 +4,12 @@
     :data-level="level">
     <div class="list-tools">
       <div class="filter">
-        Filter
         <input
-          v-if="filter"
+          v-if="hasFilterListener"
           v-model="filterValue"
           placeholder="Filter"
-          type="text" />
+          type="text"
+          @input="filterInput" />
       </div>
       <transition name="fade">
         <div
@@ -96,8 +96,8 @@ export default {
     },
 
     filter: {
-      type: String,
-      default: null
+      type: Boolean,
+      default: false
     },
 
     status: {
@@ -141,14 +141,22 @@ export default {
 
   computed: {
     filteredEntries () {
-      if (this.filter && this.filterValue !== '') {
-        return this.entries.filter(e => e[this.filter].toLowerCase().includes(this.filterValue.toLowerCase()))
-      }
+      // if (this.filter && this.filterValue !== '') {
+      //   return this.entries.filter(e => e[this.filter].toLowerCase().includes(this.filterValue.toLowerCase()))
+      // }
       return this.entries
+    },
+
+    hasFilterListener () {
+      return this.$listeners && this.$listeners.filter
     }
   },
 
   methods: {
+    filterInput () {
+      this.$emit('filter', this.filterValue)
+    },
+
     clearSelection () {
       this.selectedRows = []
     },
@@ -204,6 +212,7 @@ export default {
   .list-tools {
     @row;
     @space margin-bottom xs;
+    min-height: 50px;
 
     .filter {
       @column 8/16;
@@ -213,7 +222,7 @@ export default {
       input {
         @fontsize lg;
         padding-top: 12px;
-        padding-bottom: 5px;
+        padding-bottom: 12px;
         padding-left: 15px;
         padding-right: 15px;
         margin-left: 15px;
@@ -242,12 +251,15 @@ export default {
 
   .list {
     &[data-level="1"] {
-      @space margin-top md;
+      @space margin-top sm;
     }
 
     &[data-level="2"] {
       .list-row {
         background-color: theme(colors.peach);
+      }
+      .list-tools {
+        display: none;
       }
     }
 
@@ -260,9 +272,10 @@ export default {
         border-top: 2px solid theme(colors.blue);
         content: '';
         position: absolute;
+        opacity: 0.5;
         right: 0;
         left: 0;
-        bottom: 0;
+        bottom: -2px;
         transition: right 350ms ease, color 550ms ease;
       }
 
@@ -302,12 +315,14 @@ export default {
     .list-header {
       @row;
       font-weight: 500;
+      padding-bottom: 10px;
       border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     }
 
     .list-row {
       border-bottom: 1px solid rgba(0, 0, 0, 0.2);
       background-color: theme(colors.peachLighter);
+      user-select: none;
 
       .center {
         display: flex;

@@ -28,16 +28,28 @@
         @ok="toggle()">
         <div class="card">
           <div class="card-header">
-            <span>{{ label }}</span>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              @click.prevent="toggle()">
-              Lukk
-            </button>
+            <span>{{  showCreateEntry ? createEntry : label }}</span>
+            <div>
+              <ButtonSecondary
+                v-if="createEntry"
+                @click="toggleCreateEntry">
+                <template v-if="!showCreateEntry">
+                  + {{ createEntry }}
+                </template>
+                <template v-else>
+                  Tilbake til listen
+                </template>
+              </ButtonSecondary>
+              <ButtonSecondary
+                @click.native.prevent="toggle()">
+                Lukk
+              </ButtonSecondary>
+            </div>
           </div>
           <div class="card-body">
-            <div class="row">
+            <div
+              v-if="!showCreateEntry"
+              class="row">
               <div
                 ref="list"
                 class="half options"
@@ -87,16 +99,42 @@
                       <CircleFilled />
                       <span>{{ s[optionLabelKey] }}</span>
                     </slot>
-                    <button
-                      slot
-                      type="button"
-                      class="remove"
-                      @click.stop="selectOption(s)">
+                    <ButtonSmall
+                      @click.native.stop="selectOption(s)">
                       Fjern
-                    </button>
+                    </ButtonSmall>
                   </div>
                 </transition-group>
               </div>
+            </div>
+            <div
+              v-else>
+              <div
+                v-if="similarEntries.length"
+                class="similar-box">
+                <div class="similar-header">
+                  <i class="fa fa-exclamation-circle text-danger" />
+                  Fant lignende objekter
+                </div>
+                <li
+                  v-for="s in similarEntries"
+                  :key="s[optionValueKey]"
+                  class="pos-relative">
+                  <span class="arrow">
+                    &rarr;
+                  </span>
+                  {{ s[optionLabelKey] }}
+                  <ButtonSmall
+                    @click.native.stop="selectSimilar(s)">
+                    Velg
+                  </ButtonSmall>
+                </li>
+              </div>
+
+              <slot
+                name="create"
+                v-bind:checkDupe="checkDupe"
+                v-bind:selectOption="selectCreatedOption"></slot>
             </div>
           </div>
         </div>
@@ -143,6 +181,11 @@ export default {
     options: {
       type: Array,
       default: () => []
+    },
+
+    createEntry: {
+      type: String,
+      default: null
     },
 
     disabled: {
@@ -217,7 +260,9 @@ export default {
       pointer: 0,
       pointerDirty: false,
       showPointer: true,
-      selected: []
+      showCreateEntry: false,
+      selected: [],
+      similarEntries: []
     }
   },
 
@@ -268,6 +313,35 @@ export default {
   },
 
   methods: {
+    selectSimilar (option) {
+      this.selectOption(option)
+      this.toggleCreateEntry()
+    },
+
+    selectCreatedOption (option) {
+      this.selectOption(option)
+      this.toggleCreateEntry()
+    },
+
+    checkDupe (name) {
+      if (name.length) {
+        this.notValid = false
+      }
+
+      this.similarEntries = []
+
+      this.options.forEach(option => {
+        const jd = this.$utils.jaroDistance(option[this.optionLabelKey], name)
+        if (jd > 0.95) {
+          this.similarEntries.push(option)
+        }
+      })
+    },
+
+    toggleCreateEntry () {
+      this.showCreateEntry = !this.showCreateEntry
+    },
+
     includes (str, query) {
       if (str === undefined) str = 'undefined'
       if (str === null) str = 'null'
@@ -285,6 +359,7 @@ export default {
     },
 
     toggle () {
+      this.showCreateEntry = false
       if (!this.open) {
         this.adjustPosition()
         this.open = true
@@ -396,7 +471,7 @@ export default {
     align-items: center;
     padding-left: 15px;
     padding-right: 15px;
-    height: 49px;
+    height: 50px;
     width: 100%;
     background-color: theme(colors.input);
     border: 0;
@@ -405,7 +480,7 @@ export default {
   .button-edit {
     @fontsize sm/1;
     border: 1px solid theme(colors.dark);
-    padding: 8px 12px 3px;
+    padding: 8px 12px 10px;
     transition: all 0.25s ease;
 
     &:hover {
@@ -461,23 +536,6 @@ export default {
     }
   }
 
-  button.remove {
-    position: absolute;
-    right: 0;
-    border: 1px solid theme(colors.dark);
-    color: theme(colors.dark);
-    font-size: 14px;
-    text-transform: uppercase;
-    padding: 5px 5px 1px;
-    margin-top: -2px;
-    transition: background-color 0.35s ease, color 0.35s ease;
-
-    &:hover {
-      background-color: theme(colors.dark);
-      color: theme(colors.peach);
-    }
-  }
-
   .search {
     @fontsize base/1;
     width: 100%;
@@ -486,5 +544,34 @@ export default {
     background-color: theme(colors.input);
     margin-bottom: 10px;
     padding: 8px 15px 4px;
+  }
+
+  .similar-box {
+    background-color: #ffff7e;
+    margin-left: -10px;
+    margin-right: -10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .similar-header {
+      margin-bottom: 15px;
+      font-weight: 500;
+
+      svg {
+        margin-right: 15px;
+      }
+    }
+
+    li {
+      list-style-type: none;
+      padding-top: 8px;
+      padding-bottom: 8px;
+
+      .arrow {
+        margin-right: 15px;
+      }
+    }
   }
 </style>

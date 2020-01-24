@@ -196,7 +196,7 @@ export default {
 
 <style lang="postcss" scoped>
   a {
-    padding-top: 13px;
+    padding-top: 11px;
     display: inline-block;
     font-weight: 300;
   }
@@ -211,7 +211,9 @@ export default {
     background-color: theme(colors.blue);
     height: 60px;
     border-radius: 30px;
-    padding-bottom: 0px;
+    padding-bottom: 6px;
+    padding-left: 25px;
+    padding-right: 25px;
     min-width: 205px;
     text-align: center;
     transition: background-color 0.25s ease, border-color 0.25s ease;

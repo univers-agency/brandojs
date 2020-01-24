@@ -4,14 +4,14 @@ export function datetime (dateTime) {
   if (dateTime === null) {
     return '<ingen dato/tid>'
   }
-  return moment.tz(dateTime, 'Europe/Oslo').format('DD.MM.YYYY → HH:mm')
+  return moment.tz(dateTime, 'Europe/Oslo').format('DD.MM.YY, HH:mm')
 }
 
 export function date (date) {
   if (date === null) {
     return '<ingen dato>'
   }
-  return moment.tz(date, 'Europe/Oslo').format('DD.MM.YYYY')
+  return moment.tz(date, 'Europe/Oslo').format('DD.MM.YY')
 }
 
 export function shortDate (date) {

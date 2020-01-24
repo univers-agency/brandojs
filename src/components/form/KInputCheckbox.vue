@@ -90,14 +90,15 @@ export default {
 
     input {
       margin-right: 17px;
+      margin-top: 4px;
     }
 
     label {
       display: flex;
 
-      span {
+      /* span {
         margin-top: -1px;
-      }
+      } */
     }
   }
 </style>

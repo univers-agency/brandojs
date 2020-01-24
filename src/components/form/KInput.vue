@@ -99,7 +99,7 @@ export default {
   input {
     @fontsize base;
     padding-top: 12px;
-    padding-bottom: 5px;
+    padding-bottom: 12px;
     padding-left: 15px;
     padding-right: 15px;
     width: 100%;

@@ -161,7 +161,7 @@ export default {
       justify-content: space-between;
       padding-left: 15px;
       border-left: 1px solid;
-      padding-top: 2px;
+      padding-top: 0;
       position: relative;
 
       .info {
@@ -169,10 +169,10 @@ export default {
         position: relative;
 
         .title {
+          @fontsize base;
           width: 100%;
           font-weight: normal;
-          padding-top: 3px;
-          font-size: 22px;
+          padding-top: 0;
           user-select: none;
           left: 0;
         }
@@ -225,7 +225,7 @@ export default {
           a, button {
             @fontsize base;
             display: block;
-            padding: 14px 0 8px calc(8px + 64px + 15px);
+            padding: 14px 15px 14px calc(8px + 64px + 15px);
             font-weight: 400;
             width: 100%;
           }

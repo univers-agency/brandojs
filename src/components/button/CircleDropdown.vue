@@ -163,7 +163,7 @@ export default {
     li {
       a, button {
         display: block;
-        padding: 15px 15px 11px;
+        padding: 15px;
         text-align: right;
         line-height: 1;
         float: right;

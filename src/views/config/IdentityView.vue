@@ -231,7 +231,6 @@
             </td>
           </template>
         </KInputTable>
-
       </template>
     </KForm>
   </div>
@@ -239,10 +238,8 @@
 
 <script>
 import gql from 'graphql-tag'
-// import nprogress from 'nprogress'
-// import { showError, validateImageParams, stripParams } from '../../utils'
-// import { alertError } from '../../utils/alerts'
-// import { identityAPI } from '../../api/identity'
+import GET_IDENTITY from '../../gql/identity/IDENTITY_QUERY.graphql'
+import IDENTITY_FRAGMENT from '../../gql/identity/IDENTITY_FRAGMENT.graphql'
 
 export default {
   data () {
@@ -260,14 +257,8 @@ export default {
     }
   },
 
-  // inject: [
-  //   'adminChannel'
-  // ],
-
   async created () {
     this.loading++
-    // const v = await identityAPI.getIdentity()
-    // this.identity = { ...v }
     this.loading--
   },
 
@@ -321,52 +312,10 @@ export default {
               updateIdentity(
                 identityParams: $identityParams,
               ) {
-                id
-                type
-                name
-                alternate_name
-                email
-                phone
-                address
-                zipcode
-                city
-                country
-                description
-                title_prefix
-                title
-                title_postfix
-
-                image {
-                  thumb: url(size: "original")
-                  focal
-                }
-
-                logo {
-                  thumb: url(size: "original")
-                  focal
-                }
-
-                links {
-                  id
-                  name
-                  url
-                }
-
-                metas {
-                  id
-                  key
-                  value
-                }
-
-                configs {
-                  id
-                  key
-                  value
-                }
-
-                url
+                ...identity
               }
             }
+            ${IDENTITY_FRAGMENT}
           `,
           variables: {
             identityParams: params
@@ -383,56 +332,7 @@ export default {
 
   apollo: {
     identity: {
-      query: gql`
-        query Identity {
-          identity {
-            id
-            type
-            name
-            alternate_name
-            email
-            phone
-            address
-            zipcode
-            city
-            country
-            description
-            title_prefix
-            title
-            title_postfix
-
-            image {
-              thumb: url(size: "original")
-              focal
-            }
-
-            logo {
-              thumb: url(size: "original")
-              focal
-            }
-
-            links {
-              id
-              name
-              url
-            }
-
-            metas {
-              id
-              key
-              value
-            }
-
-            configs {
-              id
-              key
-              value
-            }
-
-            url
-          }
-        }
-      `
+      query: GET_IDENTITY
     }
   }
 }

@@ -115,7 +115,7 @@ export default {
 
     .circle {
       display: inline-flex;
-      margin-top: -5px;
+      margin-top: 0;
       margin-left: 10px;
       margin-right: 10px;
       border-color: theme(colors.peach);

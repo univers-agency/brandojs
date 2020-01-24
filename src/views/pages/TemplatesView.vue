@@ -74,7 +74,7 @@ export default {
     .form-control {
       @fontsize sm;
       padding-top: 9px;
-      padding-bottom: 5px;
+      padding-bottom: 12px;
       padding-left: 15px;
       padding-right: 15px;
       width: 100%;

@@ -6,7 +6,9 @@
         @click="toggle">
         {{ item.name }}
       </dt>
-      <dd ref="dd" v-if="item.items">
+      <dd
+        v-if="item.items"
+        ref="dd">
         <ul>
           <li
             v-for="subitem in item.items"
@@ -36,15 +38,15 @@
 import { gsap } from 'gsap'
 
 export default {
-  data () {
-    return {
-      open: false
-    }
-  },
 
   props: {
     item: {
       required: true
+    }
+  },
+  data () {
+    return {
+      open: false
     }
   },
 
@@ -91,7 +93,7 @@ export default {
           width: 18px;
           height: 18px;
           opacity: 0;
-          margin-top: 6px;
+          margin-top: 12px;
           margin-left: -34px;
           transition: opacity 1s ease;
         }
@@ -123,7 +125,7 @@ export default {
             left: -30px;
             opacity: 0;
             transition: all 0.5s ease;
-            margin-top: 10px;
+            margin-top: 15px;
           }
 
           &:hover {

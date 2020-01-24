@@ -61,6 +61,7 @@
         <div class="half">
           <KInputImage
             v-model="user.avatar"
+            preview-key="xlarge"
             :label="$t('user.avatar')"
             :helpText="$t('user.avatar.help')"
             name="user[avatar]" />

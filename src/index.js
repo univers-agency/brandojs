@@ -1,6 +1,7 @@
 import '@univers-agency/villain-editor/dist/villain-editor.css'
 import 'vex-js/dist/css/vex.css'
 import 'izitoast/dist/css/iziToast.css'
+import 'flatpickr/dist/flatpickr.min.css'
 
 import Sortable from 'sortablejs'
 import VueShortkey from 'vue-shortkey'
@@ -24,7 +25,6 @@ import * as NavigationComponents from './components/navigation'
 import * as filters from './filters'
 
 import './plugins/fontawesome'
-import store from './store'
 import { utils } from './utils'
 import { alerts } from './utils/alerts'
 import defaultMenuSections from './menus'
@@ -131,7 +131,6 @@ export default {
     Vue.component('ValidationProvider', ValidationProvider)
 
     Vue.prototype.$apolloProvider = createProvider()
-    Vue.prototype.$store = store
     Vue.prototype.$utils = utils
     Vue.prototype.$alerts = alerts
     Vue.prototype.$toast = iziToast
