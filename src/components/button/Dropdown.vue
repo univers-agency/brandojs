@@ -90,21 +90,26 @@ export default {
 
   methods: {
     toggle () {
-      let lis = this.$refs.dropdownContent.querySelectorAll('li')
+      this.$nextTick(() => {
+        if (this.$refs.dropdownContent) {
+          const lis = this.$refs.dropdownContent.querySelectorAll('li')
 
-      gsap.to(this.$refs.el.querySelector('.dropdown-icon'), { duration: 0.35, rotate: '+=180' })
-      if (this.open) {
-        gsap.to(Array.from(lis).reverse(), { duration: 0.35, autoAlpha: 0, x: -15, stagger: 0.1 })
-        gsap.to(this.$refs.el, { ease: 'sine.in', duration: 0.35, delay: 0.2, height: this.height })
-        this.open = false
-      } else {
-        this.height = this.$refs.el.offsetHeight
+          gsap.to(this.$refs.el.querySelector('.dropdown-icon'), { duration: 0.35, rotate: '+=180' })
 
-        gsap.set(lis, { autoAlpha: 0, x: -15 })
-        gsap.to(this.$refs.el, { ease: 'sine.in', duration: 0.35, height: 'auto' })
-        gsap.to(lis, { duration: 0.35, delay: 0.2, autoAlpha: 1, x: 0, stagger: 0.1 })
-        this.open = true
-      }
+          if (this.open) {
+            gsap.to(Array.from(lis).reverse(), { duration: 0.35, autoAlpha: 0, x: -15, stagger: 0.1 })
+            gsap.to(this.$refs.el, { ease: 'sine.in', duration: 0.35, delay: 0.2, height: this.height })
+            this.open = false
+          } else {
+            this.height = this.$refs.el.offsetHeight
+
+            gsap.set(lis, { autoAlpha: 0, x: -15 })
+            gsap.to(this.$refs.el, { ease: 'sine.in', duration: 0.35, height: 'auto' })
+            gsap.to(lis, { duration: 0.35, delay: 0.2, autoAlpha: 1, x: 0, stagger: 0.1 })
+            this.open = true
+          }
+        }
+      })
     },
 
     focus () {

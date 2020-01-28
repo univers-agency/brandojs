@@ -20,7 +20,6 @@ export default {
 <style lang="postcss" scoped>
   svg {
     margin-right: 12px;
-    margin-top: -6px;
     circle {
       fill: theme(colors.blue);
     }

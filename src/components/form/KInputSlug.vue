@@ -33,8 +33,8 @@ export default {
     },
 
     from: {
-      type: String,
-      required: true
+      type: [String],
+      default: null
     },
 
     helpText: {

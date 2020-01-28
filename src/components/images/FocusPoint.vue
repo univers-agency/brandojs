@@ -80,7 +80,7 @@ export default {
     position: relative;
 
     &-pin {
-      z-index: 9990;
+      z-index: 12;
       position: absolute;
     }
 

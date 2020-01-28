@@ -3,6 +3,7 @@ import KFieldBase from './KFieldBase'
 import KInput from './KInput'
 import KInputDate from './KInputDate'
 import KInputDatetime from './KInputDatetime'
+import KInputEntries from './KInputEntries'
 import KInputSlug from './KInputSlug'
 import KInputTextarea from './KInputTextarea'
 import KInputEmail from './KInputEmail'
@@ -22,6 +23,7 @@ export {
   KInput,
   KInputDate,
   KInputDatetime,
+  KInputEntries,
   KInputSlug,
   KInputEmail,
   KInputPassword,

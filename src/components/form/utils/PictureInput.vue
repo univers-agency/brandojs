@@ -209,7 +209,7 @@ export default {
     },
     zIndex: {
       type: Number,
-      default: 9000
+      default: 10
     },
     alertOnError: {
       type: Boolean,
@@ -712,7 +712,7 @@ button {
   width: 100%;
   height: 100%;
   position: relative;
-  z-index: 9000;
+  z-index: 10;
   box-sizing: border-box;
   background-color: theme(colors.input);
 }

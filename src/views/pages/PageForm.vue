@@ -36,7 +36,8 @@
         <KInputSelect
           v-model="page.parent_id"
           :options="parents"
-          optionLabelKey="title"
+          option-value-key="id"
+          option-label-key="title"
           name="page[parent_id]"
           label="Tilhørende side">
           <template v-slot:label="{ option }">

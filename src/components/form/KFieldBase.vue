@@ -4,6 +4,7 @@
       ref="provider"
       v-slot="{ errors, failed }"
       :name="name"
+      :immediate="true"
       :vid="name"
       :rules="rules">
       <div class="label-wrapper">
@@ -114,6 +115,7 @@ export default {
           content: '';
           opacity: 0;
           position: absolute;
+          top: 5px;
           width: 13px;
           height: 13px;
           margin-top: 3px;

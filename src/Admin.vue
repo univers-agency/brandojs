@@ -465,8 +465,25 @@ export default {
     width: 1%;
   }
 
+  table.table-bordered {
+    td {
+      border: 1px solid #dee2e6;
+      vertical-align: middle;
+      padding: 0.75rem;
+      position: relative;
+    }
+  }
+
   p:last-of-type {
     margin-bottom: 0 !important;
+  }
+
+  .clearfix {
+    &::after {
+      display: block;
+      content: "";
+      clear: both;
+    }
   }
 
   h2 {
@@ -667,6 +684,11 @@ export default {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+}
+
+.fit {
+  white-space: nowrap;
+  width: 1%;
 }
 
 .mt-3 {
@@ -1186,6 +1208,10 @@ input:-moz-placeholder {
 input::-moz-placeholder {
   @font main;
   @fontsize base;
+}
+
+.avatar-sm {
+  max-width: 25px;
 }
 
 </style>

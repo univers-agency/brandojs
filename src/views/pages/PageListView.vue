@@ -176,7 +176,17 @@ export default {
 
   methods: {
     reprocess () {
-      //
+      this.adminChannel.channel
+        .push('page:rerender_all')
+        .receive('ok', payload => {
+          this.$toast.success({ message: 'Sidene ble gjengitt på nytt' })
+        })
+
+      this.adminChannel.channel
+        .push('page_fragment:rerender_all')
+        .receive('ok', payload => {
+          this.$toast.success({ message: 'Fragmentene ble gjengitt på nytt' })
+        })
     },
 
     sortPages (seq) {

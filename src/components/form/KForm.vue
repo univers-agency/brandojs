@@ -6,12 +6,18 @@
     <form>
       <ValidationObserver
         ref="observer">
-        <template v-slot>
+        <template v-slot="{ invalid }">
+          <h2
+            v-if="subForm"
+            :class="{ invalid }">
+            {{ subForm }}
+          </h2>
           <slot>
           </slot>
           <div class="row">
             <div class="half buttons">
               <ButtonPrimary
+                v-if="save"
                 v-shortkey="['meta', 's']"
                 :loading="loading"
                 @shortkey.native="validate"
@@ -19,6 +25,7 @@
                 {{ $t('save') }} (⌘S)
               </ButtonPrimary>
               <ButtonSecondary
+                v-if="back"
                 :to="back">
                 &larr; {{ backText }}
               </ButtonSecondary>
@@ -36,6 +43,16 @@ import { gsap } from 'gsap'
 
 export default {
   props: {
+    save: {
+      type: Boolean,
+      default: true
+    },
+
+    subForm: {
+      type: String,
+      default: null
+    },
+
     back: {
       type: [Object, Boolean]
     },
@@ -105,10 +122,12 @@ export default {
 <i18n>
 {
   "en": {
+    "add": "Add",
     "save": "Save",
     "back": "Back to index"
   },
   "nb": {
+    "add": "Legg til",
     "save": "Lagre",
     "back": "Tilbake til oversikten"
   }

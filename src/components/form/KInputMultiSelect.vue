@@ -155,8 +155,7 @@
       </div>
       <div
         class="multiselect">
-        <div
-          style="margin-top: 4px">
+        <div>
           {{ selected.length }} valgte
         </div>
         <button
@@ -191,6 +190,11 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+
+    multiple: {
+      type: Boolean,
+      default: true
     },
 
     helpText: {
@@ -385,6 +389,12 @@ export default {
       if (this.selected.includes(option)) {
         this.selected = this.selected.filter(s => s !== option)
       } else {
+        if (!this.multiple) {
+          if (this.selected.length) {
+            this.$alerts.alertError('OBS', 'Feltet er konfigurert til kun å ha én valgt verdi.')
+            return
+          }
+        }
         this.selected.push(option)
       }
     },
@@ -466,6 +476,7 @@ export default {
 
 <style lang="postcss" scoped>
   .multiselect {
+    @fontsize base/1;
     display: flex;
     justify-content: space-between;
     align-items: center;

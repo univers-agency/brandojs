@@ -8,40 +8,41 @@
     <template v-slot>
     </template>
     <template v-slot:outsideValidator>
-      <div v-if="innerValue && innerValue">
-        <table>
+      <div v-if="innerValue && !edit">
+        <table
+          v-if="innerValue.length"
+          class="table-bordered">
           <slot name="head"></slot>
           <tr
             v-for="(entry, idx) in innerValue"
             :key="idx">
             <slot
               name="row"
-              v-bind:entry="entry"></slot>
+              v-bind:entry="entry">
+              <td>{{ entry.id }}</td>
+            </slot>
             <td class="action">
-              <button
-                type="button"
-                class="delete"
-                @click.self.stop.prevent="del(entry)">
-                Slett
-              </button>
-            </td>
-          </tr>
-          <tr
-            ref="newRow"
-            class="input-row">
-            <slot
-              name="new"
-              v-bind:newEntry="newEntry"></slot>
-            <td class="action">
-              <button
-                type="button"
-                class="add"
-                @click.stop.prevent="add(newEntry)">
-                OK
-              </button>
+              <ButtonSmall
+                @click.native.stop.prevent="editEntry(entry)">
+                Endre
+              </ButtonSmall>
+              <ButtonSmall
+                @click.native.stop.prevent="removeEntry(entry)">
+                Fjern
+              </ButtonSmall>
             </td>
           </tr>
         </table>
+        <div v-else>
+          Ingen tilknyttede objekter
+        </div>
+      </div>
+
+      <div v-else-if="edit && editObject">
+        <slot
+          name="form"
+          v-bind:entry="editObject">
+        </slot>
       </div>
 
       <div v-else>
@@ -113,18 +114,8 @@ import slug from 'url-slug'
 export default {
   props: {
     value: {
-      type: Object,
-      default: () => {}
-    },
-
-    imageSeriesName: {
-      type: String,
-      required: true
-    },
-
-    imageCategorySlug: {
-      type: String,
-      required: true
+      type: Array,
+      default: () => []
     },
 
     showDelete: {
@@ -133,11 +124,6 @@ export default {
     },
 
     showUpload: {
-      type: Boolean,
-      default: true
-    },
-
-    showConfig: {
       type: Boolean,
       default: true
     },
@@ -166,7 +152,9 @@ export default {
     return {
       new: false,
       files: [],
-      config: {}
+      config: {},
+      edit: false,
+      editObject: null
     }
   },
 
@@ -186,11 +174,6 @@ export default {
   },
 
   watch: {
-    imageSeriesName (val) {
-      this.innerValue.name = val
-      this.innerValue.slug = slug(val)
-    },
-
     files (val) {
       if (val && val.length) {
         this.innerValue.images = []
@@ -208,36 +191,20 @@ export default {
   },
 
   created () {
-    if (this.value && this.value.id) {
+    if (this.value) {
       this.new = false
       this.innerValue = this.value
     } else {
       this.new = true
-      this.innerValue = {
-        image_category_id: null,
-        images: [],
-        name: null,
-        slug: null
-      }
+      this.innerValue = []
     }
   },
 
   mounted () {
     this.watchDrop(this.$el)
-    this.buildCfg()
   },
 
   methods: {
-    buildCfg () {
-      if (this.new && this.adminChannel) {
-        this.adminChannel.channel
-          .push('images:get_category_id_by_slug', { slug: this.imageCategorySlug })
-          .receive('ok', payload => {
-            this.innerValue.image_category_id = payload.category_id
-          })
-      }
-    },
-
     watchDrop (el) {
       if (this.dropElement) {
         try {
@@ -341,6 +308,20 @@ export default {
       } else if (dt.types.contains && dt.types.contains('Files')) {
         this.dropActive = true
       }
+    },
+
+    editEntry (entry) {
+      this.editObject = entry
+      this.edit = true
+    },
+
+    removeEntry (entry) {
+      const e = this.innerValue.find(e => e.id === entry.id)
+      const idx = this.innerValue.indexOf(e)
+      this.innerValue = [
+        ...this.innerValue.slice(0, idx),
+        ...this.innerValue.slice(idx + 1)
+      ]
     },
 
     onDragleave (e) {
@@ -568,6 +549,21 @@ table {
       border: 1px solid #dee2e6;
       vertical-align: middle;
       padding: 0.75rem;
+
+      &.action {
+        white-space: nowrap;
+        width: 1%;
+
+        padding-right: 0.75rem;
+        button {
+          position: relative;
+          margin-top: -12px;
+
+          + button {
+            margin-left: 5px;
+          }
+        }
+      }
     }
   }
 

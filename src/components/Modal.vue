@@ -238,7 +238,7 @@ export default {
       align-items: center;
 
       button {
-        max-width: 80px;
+        /* max-width: 80px; */
         background-color: transparent;
         border-color: theme(colors.peach);
         color: theme(colors.peach);

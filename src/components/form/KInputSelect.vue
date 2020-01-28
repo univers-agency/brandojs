@@ -16,30 +16,118 @@
         type="hidden">
     </template>
     <template v-slot:outsideValidator>
-      <div
-        class="megaselect__display">
-        <div
-          v-show="!open"
-          class="megaselect__display__value">
-          {{ displayValue || "Ingen valgt verdi" }}
+      <modal
+        v-if="open"
+        ref="modal"
+        v-shortkey="['esc']"
+        :large="true"
+        :show="true"
+        :chrome="false"
+        @shortkey.native="toggle"
+        @cancel="toggle()"
+        @ok="toggle()">
+        <div class="card">
+          <div class="card-header">
+            <span>{{  showCreateEntry ? createEntry : label }}</span>
+            <div>
+              <ButtonSecondary
+                v-if="createEntry"
+                @click="toggleCreateEntry">
+                <template v-if="!showCreateEntry">
+                  + {{ createEntry }}
+                </template>
+                <template v-else>
+                  Tilbake til listen
+                </template>
+              </ButtonSecondary>
+              <ButtonSecondary
+                @click.native.prevent="toggle()">
+                Lukk
+              </ButtonSecondary>
+            </div>
+          </div>
+          <div class="card-body">
+            <div
+              v-if="!showCreateEntry"
+              class="row">
+              <div
+                ref="list"
+                class="half options"
+                :style="{ maxHeight: optimizedHeight + 'px' }">
+                <div
+                  class="megaselect__search"
+                  style="line-height: 1.5">
+                  <input
+                    ref="search"
+                    v-model="searchString"
+                    name="search"
+                    placeholder="Søk..."
+                    autocomplete="off"
+                    spellcheck="false"
+                    class="search"
+                    type="text"
+                    @keydown.enter.prevent="searchEnter"
+                    @keydown.down.prevent="pointerForward()"
+                    @keydown.up.prevent="pointerBackward()"
+                    @focus="$event.target.select()">
+                </div>
+                <transition-group name="fade">
+                  <div
+                    v-for="(option, index) in filteredOptions"
+                    :key="option[optionValueKey]"
+                    ref="list"
+                    :class="optionHighlight(index, option)"
+                    class="options-option"
+                    @click="selectOption(option)">
+                    <slot
+                      name="label"
+                      v-bind:option="option">
+                      {{ option[optionLabelKey] }}
+                    </slot>
+                  </div>
+                </transition-group>
+              </div>
+            </div>
+            <div
+              v-else>
+              <div
+                v-if="similarEntries.length"
+                class="similar-box">
+                <div class="similar-header">
+                  <i class="fa fa-exclamation-circle text-danger" />
+                  Fant lignende objekter
+                </div>
+                <li
+                  v-for="s in similarEntries"
+                  :key="s[optionValueKey]"
+                  class="pos-relative">
+                  <span class="arrow">
+                    &rarr;
+                  </span>
+                  {{ s[optionLabelKey] }}
+                  <ButtonSmall
+                    @click.native.stop="selectSimilar(s)">
+                    Velg
+                  </ButtonSmall>
+                </li>
+              </div>
+
+              <slot
+                name="create"
+                v-bind:checkDupe="checkDupe"
+                v-bind:selectOption="selectCreatedOption"></slot>
+            </div>
+          </div>
         </div>
-        <div
-          v-show="open"
-          class="megaselect__search"
-          style="line-height: 1.5">
-          <input
-            ref="search"
-            v-model="searchString"
-            name="search"
-            placeholder="Søk..."
-            autocomplete="off"
-            spellcheck="false"
-            class="search"
-            type="text"
-            @keydown.enter.prevent="searchEnter"
-            @keydown.down.prevent="pointerForward()"
-            @keydown.up.prevent="pointerBackward()"
-            @focus="$event.target.select()">
+      </modal>
+      <div
+        class="multiselect">
+        <div>
+          <slot
+            name="selected"
+            v-bind:entry="selected">
+            <span>{{ selected ? selected[optionLabelKey] : 'Ingen valgt' }}</span>
+          </slot>
         </div>
         <button
           class="button-edit"
@@ -47,46 +135,31 @@
           {{ open ? 'Lukk' : 'Endre' }}
         </button>
       </div>
-
-      <div
-        v-if="open"
-        ref="list"
-        :style="{
-          maxHeight: optimizedHeight + 'px',
-          backgroundColor: '#ffe799',
-          overflowY: 'auto'
-        }"
-        class="megaselect__options__wrapper b-1">
-        <div
-          v-for="(option, index) in filteredOptions"
-          :key="option[optionValueKey]"
-          :class="optionHighlight(index, option)"
-          style="padding: 0.5rem 0.75rem"
-          class="megaselect__options__option"
-          @click="selectOption(option)"
-          @mouseenter.self="pointerSet(index)">
-          <slot
-            name="label"
-            v-bind:option="option">
-            {{ option[optionLabelKey] }}
-          </slot>
-        </div>
-      </div>
     </template>
   </KFieldBase>
 </template>
 
 <script>
-export default {
-  props: {
-    hasError: {
-      type: Boolean,
-      default: false
-    },
+import { gsap } from 'gsap'
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
+import Modal from '../Modal.vue'
 
+gsap.registerPlugin(ScrollToPlugin)
+
+export default {
+  components: {
+    Modal
+  },
+
+  props: {
     options: {
       type: Array,
       default: () => []
+    },
+
+    createEntry: {
+      type: String,
+      default: null
     },
 
     disabled: {
@@ -120,8 +193,8 @@ export default {
     },
 
     value: {
-      type: [String, Number],
-      default: ''
+      type: [Object, String, Number],
+      default: () => {}
     },
 
     optionValueKey: {
@@ -152,14 +225,19 @@ export default {
 
   data () {
     return {
+      object: false,
+      innerValue: null,
       open: false,
       displayValue: '',
       searchString: '',
       preferredOpenDirection: 'below',
       optimizedHeight: this.maxHeight,
-      pointer: 0,
+      pointer: -1,
       pointerDirty: false,
-      showPointer: true
+      showPointer: true,
+      showCreateEntry: false,
+      selected: [],
+      similarEntries: []
     }
   },
 
@@ -186,21 +264,80 @@ export default {
       options = this.filterOptions(options, normalizedSearch)
 
       return options.slice(0, this.optionsLimit)
-    },
+    }
+  },
 
-    innerValue: {
-      get () { return this.value },
-      set (innerValue) { this.$emit('input', innerValue) }
+  watch: {
+    selected (val) {
+      if (!val) {
+        return null
+      }
+
+      if (this.object) {
+        this.innerValue = val
+      } else {
+        if (typeof val === 'object') {
+          this.innerValue = val[this.optionValueKey]
+        } else {
+          this.innerValue = val
+        }
+      }
+
+      this.$emit('input', this.innerValue)
     }
   },
 
   created () {
-    this.innerValue = this.value
-    // look up the value
+    if (!this.value) {
+      this.selected = null
+      return
+    }
+    if (typeof this.value === 'object') {
+      this.object = true
+      this.selected = this.options.find(o => o[this.optionValueKey].toString() === this.value[this.optionValueKey].toString())
+    } else {
+      this.object = false
+      this.selected = this.options.find(o => {
+        if (!o[this.optionValueKey]) {
+          return false
+        }
+        return o[this.optionValueKey].toString() === this.value.toString()
+      })
+    }
+
     this.displayData()
   },
 
   methods: {
+    selectSimilar (option) {
+      this.selectOption(option)
+      this.toggleCreateEntry()
+    },
+
+    selectCreatedOption (option) {
+      this.selectOption(option)
+      this.toggleCreateEntry()
+    },
+
+    checkDupe (name) {
+      if (name.length) {
+        this.notValid = false
+      }
+
+      this.similarEntries = []
+
+      this.options.forEach(option => {
+        const jd = this.$utils.jaroDistance(option[this.optionLabelKey], name)
+        if (jd > 0.95) {
+          this.similarEntries.push(option)
+        }
+      })
+    },
+
+    toggleCreateEntry () {
+      this.showCreateEntry = !this.showCreateEntry
+    },
+
     includes (str, query) {
       if (str === undefined) str = 'undefined'
       if (str === null) str = 'null'
@@ -218,14 +355,31 @@ export default {
     },
 
     toggle () {
+      this.showCreateEntry = false
+
       if (!this.open) {
         this.adjustPosition()
         this.open = true
         // this.searchString = this.displayValue
-        this.$nextTick(() => this.$refs.search && this.$refs.search.focus())
+        this.$nextTick(() => {
+          this.$refs.search && this.$refs.search.focus()
+          this.scrollToSelected()
+        })
       } else {
         this.open = false
       }
+    },
+
+    scrollToSelected () {
+      if (!this.selected) {
+        return
+      }
+
+      gsap.to(this.$refs.list, { duration: 0.4, scrollTo: this.selectedIndex() * 43 })
+    },
+
+    selectedIndex () {
+      return this.options.indexOf(this.selected)
     },
 
     displayData () {
@@ -240,10 +394,9 @@ export default {
     },
 
     selectOption (option) {
-      this.displayValue = option[this.optionLabelKey]
-      this.searchString = ''
+      this.selected = option
+      this.pointerSet(this.options.indexOf(option))
       this.toggle()
-      this.innerValue = option[this.optionValueKey]
     },
 
     searchEnter () {
@@ -251,11 +404,7 @@ export default {
         if (this.filteredOptions.length === 1) {
           this.selectOption(this.filteredOptions[0])
         } else {
-          this.displayValue = this.filteredOptions[this.pointer][this.optionLabelKey]
-          // this.searchString = ''
-          this.toggle()
-          this.innerValue = this.filteredOptions[this.pointer][this.optionValueKey]
-          // this.selectOption(this.filteredOptions[this.pointer])
+          this.selectOption(this.filteredOptions[this.pointer])
         }
       }
     },
@@ -309,37 +458,33 @@ export default {
 
     optionHighlight (index, option) {
       return {
-        'megaselect__option--highlight': index === this.pointer && this.showPointer,
-        'megaselect__option--selected': this.isSelected(option)
+        'option-highlight': index === this.pointer && this.showPointer,
+        'option-selected': this.isSelected(option)
       }
     },
 
     isSelected (option) {
-      return this.innerValue === option[this.optionValueKey]
+      if (!this.innerValue) {
+        return false
+      }
+
+      if (this.object) {
+        return this.selected === option
+      } else {
+        return option[this.optionValueKey].toString() === this.innerValue.toString()
+      }
     },
 
     adjustPosition () {
-      if (typeof window === 'undefined') return
-
-      const spaceAbove = this.$el.getBoundingClientRect().top
-      const spaceBelow = window.innerHeight - this.$el.getBoundingClientRect().bottom
-      const hasEnoughSpaceBelow = spaceBelow > this.maxHeight
-
-      if (hasEnoughSpaceBelow || spaceBelow > spaceAbove || this.openDirection === 'below' || this.openDirection === 'bottom') {
-        this.preferredOpenDirection = 'below'
-        this.optimizedHeight = Math.min(spaceBelow - 40, this.maxHeight)
-      } else {
-        this.preferredOpenDirection = 'above'
-        this.optimizedHeight = Math.min(spaceAbove - 40, this.maxHeight)
-      }
+      this.optimizedHeight = 400
     }
   }
 }
 </script>
 
 <style lang="postcss" scoped>
-  .megaselect__display {
-    @fontsize base;
+  .multiselect {
+    @fontsize base/1;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -363,29 +508,89 @@ export default {
     }
   }
 
-  .megaselect__options__option {
-    @color bg peachDarker;
-    @color fg dark;
-    cursor: pointer;
-
-    &.megaselect__option--selected,
-    &.megaselect__option--highlight {
-      @color bg dark;
-      @color fg peach;
+  .selected-items {
+    .selected-item-row {
+      align-items: center;
+      line-height: 1;
+      display: flex;
+      padding-bottom: 9px;
     }
   }
 
-  .megaselect__display {
-    .megaselect__display__value {
-      margin-bottom: 2px;
+  .modal {
+    .options {
+      overflow-y: auto;
+      .options-option {
+        cursor: pointer;
+        color: theme(colors.dark);
+        background-color: theme(colors.peach);
+
+        user-select: none;
+        padding: 8px 15px 8px;
+
+        &.option-selected {
+          background-color: theme(colors.blue);
+          color: theme(colors.peach);
+        }
+
+        &.option-highlight {
+          background-color: theme(colors.blue);
+          color: theme(colors.peach);
+        }
+
+        &:hover {
+          color: theme(colors.peach);
+          background-color: theme(colors.dark);
+        }
+      }
+    }
+
+    .selected-items {
+      display: flex;
+      flex-direction: column;
+      align-items: space-between;
+      .selected-item-row {
+        padding-bottom: 15px;
+      }
     }
   }
 
   .search {
-    padding: 0;
+    @fontsize base/1;
+    width: 100%;
     border: 0;
-    margin: 0;
     outline: none;
-    background-color: transparent;
+    background-color: theme(colors.input);
+    margin-bottom: 10px;
+    padding: 8px 15px 4px;
+  }
+
+  .similar-box {
+    background-color: #ffff7e;
+    margin-left: -10px;
+    margin-right: -10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .similar-header {
+      margin-bottom: 15px;
+      font-weight: 500;
+
+      svg {
+        margin-right: 15px;
+      }
+    }
+
+    li {
+      list-style-type: none;
+      padding-top: 8px;
+      padding-bottom: 8px;
+
+      .arrow {
+        margin-right: 15px;
+      }
+    }
   }
 </style>
