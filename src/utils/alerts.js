@@ -1,6 +1,7 @@
 import vex from 'vex-js'
 import vexDialog from 'vex-dialog'
 
+console.log('here!!!!')
 vex.registerPlugin(vexDialog)
 vex.defaultOptions.className = 'vex-theme-kurtz'
 

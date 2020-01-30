@@ -1,7 +1,8 @@
-import '@univers-agency/villain-editor/dist/villain-editor.css'
 import 'vex-js/dist/css/vex.css'
 import 'izitoast/dist/css/iziToast.css'
 import 'flatpickr/dist/flatpickr.min.css'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
 
 import Sortable from 'sortablejs'
 import VueShortkey from 'vue-shortkey'

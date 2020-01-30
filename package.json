@@ -14,7 +14,6 @@
     "@fortawesome/vue-fontawesome": "^0.1.5",
     "@jacobmischka/vue-flatpickr": "^7.0.0",
     "@lifeomic/axios-fetch": "^1.4.2",
-    "@univers-agency/villain-editor": "^2.0.0-alpha",
     "apollo-absinthe-upload-link": "^1.5.0",
     "apollo-link": "^1.2.13",
     "apollo-link-error": "^1.1.12",
@@ -36,7 +35,20 @@
     "vue-router": "^3.1.5",
     "vue-shortkey": "^3.1.7",
     "vue-upload-component": "^2.8.20",
-    "vuex": "^3.1.2"
+    "vuex": "^3.1.2",
+
+    "autosize": "^4.0.2",
+    "codemirror": "^5.50.2",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.debounce": "^4.0.8",
+    "markdown-it": "^10.0.0",
+    "popper.js": "^1.16.0",
+    "timeago.js": "^4.0.2",
+    "v-tooltip": "^2.0.2",
+    "vex-dialog": "^1.1.0",
+    "vue-drag-drop": "^1.1.4",
+    "vue-quill-editor": "^3.0.6",
+    "vue-slide-up-down": "^2.0.1"
   },
   "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.5.0",

@@ -26,6 +26,26 @@ module.exports = {
         pending: '#f1ac00',
         published: '#0047fe',
         deleted: '#ff0000'
+      },
+
+      /*
+      $villain-background-color: #000 !default;
+      $villain-secondary-color: #94003e0d !default;
+      $villain-block-background-color: #fff !default;
+      $villain-available-block-color: $villain-main-color !default;
+      $villain-available-block-hover-col
+      */
+
+      villain: {
+        main: '#0047FF',
+        mainFaded: '#222222',
+        stripe: '#f7f7f7',
+        background: '#000',
+        secondary: '#94003e0d',
+        blockBackground: '#ffffff',
+        availableBlock: 'rgb(211, 0, 0)',
+        availableBlockHover: '#eeeeee',
+        popover: '#f9f9f9'
       }
     }),
 

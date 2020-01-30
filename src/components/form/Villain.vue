@@ -1,5 +1,7 @@
 <template>
-  <div class="villain-component" v-if="token">
+  <div
+    v-if="token"
+    class="villain-component">
     <KFieldBase
       :name="name"
       :label="label"
@@ -23,7 +25,7 @@
 
 <script>
 import gql from 'graphql-tag'
-import VillainEditor from '@univers-agency/villain-editor'
+import VillainEditor from '../villain/components/VillainEditor'
 
 export default {
   components: {

@@ -2,7 +2,7 @@
   <transition
     @beforeAppear="beforeAppear"
     @appear="appear">
-    <main>
+    <main class="clearfix">
       <GridDebug />
       <div
         ref="progress"

@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import VillainEditor from '@univers-agency/villain-editor'
+import VillainEditor from '../../components/villain/components/VillainEditor'
 import gql from 'graphql-tag'
 
 export default {
