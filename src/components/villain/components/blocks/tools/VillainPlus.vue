@@ -409,7 +409,7 @@ export default {
 
   circle {
     transition: fill 750ms ease;
-    fill: theme(colors.villain.mainFaded);
+    fill: theme(colors.villain.plus);
   }
 
   path {

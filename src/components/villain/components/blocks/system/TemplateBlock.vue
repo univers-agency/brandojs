@@ -23,19 +23,15 @@
         v-for="(v, idx) in localVars"
         :key="idx"
         class="form-group">
-        key is {{ idx }}
-        <template v-if="v.type === 'string'">
+        <template v-show="v.type === 'string'">
           <label>{{ v.label }} — ${{ idx }}</label>
           <input
             :key="'input-' + idx"
-            v-model="v.value"
+            v-model.lazy="v.value"
             type="text"
             class="form-control" />
         </template>
       </div>
-
-      {{ localVars }}
-      {{ block.data.vars }}
 
       <button
         class="btn-secondary"

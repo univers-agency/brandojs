@@ -31,13 +31,16 @@
           <div
             v-if="toggledImageUrl === i.url"
             class="villain-block-slideshow-image-overlay">
-            <template
-              @click.prevent.stop="edit(i, $event)">
-              <i class="fa fa-info-circle" />
+            <template>
+              <FontAwesomeIcon
+                icon="info-circle"
+                class="mr-2"
+                @click.prevent.stop="edit(i, $event)" />
             </template>
-            <template
-              @click="del(i)">
-              <i class="fa fa-trash" />
+            <template>
+              <FontAwesomeIcon
+                icon="trash"
+                @click="del(i)" />
             </template>
           </div>
           <img
@@ -188,23 +191,23 @@
 
       <div
         v-else-if="showImages && !listStyle"
-        class="villain-image-library row mt-4 justify-content-center">
+        class="villain-image-library row">
         <div
           class="col-12"
           style="text-align: center;padding-bottom: 20px;"
           @click="listStyle = true">
           <i class="fa fa-fw fa-list" />
         </div>
-        <div class="col-12 d-flex justify-content-center mb-4">
+        <div class="col-12 d-flex justify-content-center mb-2">
           <button
             type="button"
-            class="btn btn-primary mr-1"
+            class="btn btn-primary"
             @click="showUpload = true; showImages = false">
             Last opp bilder
           </button>
           <button
             type="button"
-            class="btn btn-primary ml-1"
+            class="btn btn-primary"
             @click="showTitles = true; showImages = false">
             Endre bildetekster
           </button>

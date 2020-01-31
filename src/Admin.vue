@@ -728,6 +728,10 @@ export default {
   margin-right: 5px;
 }
 
+.mb-2 {
+  margin-bottom: 25px;
+}
+
 .circle {
   width: 40px;
   height: 40px;

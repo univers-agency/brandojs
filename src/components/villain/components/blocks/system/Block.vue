@@ -97,7 +97,7 @@
       <div class="villain-block-config-content">
         <div
           class="villain-config-close-button"
-          @click="showConfig = false">
+          @click="closeConfig">
           <i class="fa fa-times" />
         </div>
 
@@ -120,7 +120,7 @@
           <div
             v-if="hasConfigSlot"
             class="villain-block-action villain-config"
-            @click="showConfig = false">
+            @click="closeConfig">
             <i class="fa fa-fw fa-cog" />
           </div>
           <div
@@ -155,6 +155,7 @@
 
 <script>
 import { VTooltip } from 'v-tooltip'
+import gsap from 'gsap'
 
 export default {
   directives: { popover: VTooltip },
@@ -191,7 +192,8 @@ export default {
       showHelp: false,
       dragEl: null,
       hovering: false,
-      moving: false
+      moving: false,
+      width: null
     }
   },
 
@@ -253,8 +255,20 @@ export default {
     },
 
     configBlock () {
-      this.showConfig = true
-      this.$emit('showConfig')
+      this.width = this.$el.clientWidth
+      gsap.set(this.$el, { zIndex: 99 })
+      gsap.to(this.$el, {
+        width: '750px',
+        backgroundColor: '#ffffff',
+        onComplete: () => {
+          this.showConfig = true
+          this.$emit('showConfig')
+        } })
+    },
+
+    closeConfig () {
+      this.showConfig = false
+      gsap.to(this.$el, { width: this.width, zIndex: 'none' })
     },
 
     deleteBlock () {
@@ -330,12 +344,12 @@ export default {
 }
 
 .villain-block {
-  background-color: #fff;
+  background-color: theme(colors.villain.blockBackground);
   padding: 1rem;
   padding-right: 2rem;
   min-height: 120px;
   position: relative;
-  border: 2px solid #fff;
+  border: 2px solid theme(colors.villain.blockBorder);
   transition: border 500ms ease;
 
   input:focus, textarea:focus {
@@ -407,6 +421,33 @@ export default {
   &.villain-block-config {
     padding: 2rem;
 
+    button + button {
+      margin-top: -1px;
+    }
+
+    .form-group {
+      text-align: left;
+      display: flex;
+      flex-wrap: wrap;
+
+      > .form-check {
+        width: 100%;
+      }
+
+    }
+
+    input.form-check-input {
+      display: inline-block;
+      width: auto;
+      margin-bottom: 0;
+    }
+
+    .form-check {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
     .villain-block-config-content {
       max-width: 600px;
       margin: 0 auto;
@@ -434,14 +475,12 @@ export default {
       }
 
       label {
-        border-bottom: 2px solid #feca1a;
+        border-bottom: 2px solid theme(colors.blue);
         color: #000;
-        font-size: 0.8rem;
-        letter-spacing: 1px;
+        font-size: 1.25rem;
         margin-bottom: 0.75rem;
         margin-left: 0rem;
         padding: 0.3rem 0;
-        text-transform: uppercase;
 
         &.form-check-label {
           background-color: transparent;
@@ -459,7 +498,7 @@ export default {
       .form-control {
         border: 0;
         border-radius: 0;
-        border: 1px solid #850038;
+        border: 1px solid #333333;
       }
 
       .display-icon {
@@ -474,10 +513,7 @@ export default {
 
       h5 {
         text-align: center;
-        font-size: 0.8rem;
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 1.2px;
+        font-size: 1.7rem;
         margin-bottom: 1.5rem;
         border-bottom: 2px solid #00000008;
         padding-bottom: 1.5rem;
@@ -548,6 +584,12 @@ export default {
 }
 
 .villain-image-library {
+  > .col-12 {
+    width: 100%;
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+
   .villain-image-table-selected {
     opacity: 0.5;
     cursor: not-allowed;

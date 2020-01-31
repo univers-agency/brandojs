@@ -471,7 +471,7 @@ export default {
     "footer footer";
 
   grid-template-columns: minmax(0, 1fr) 250px;
-  grid-template-rows: 50px 1fr 1fr 1fr 50px;
+  grid-template-rows: 50px 1fr 200px 200px 50px;
   grid-gap: 10px;
   height: 100vh;
 

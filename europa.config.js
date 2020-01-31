@@ -38,11 +38,13 @@ module.exports = {
 
       villain: {
         main: '#0047FF',
-        mainFaded: '#222222',
+        mainFaded: '#aaaaaa',
+        plus: '#222222',
         stripe: '#f7f7f7',
         background: '#000',
         secondary: '#94003e0d',
-        blockBackground: '#ffffff',
+        blockBackground: '#ffffffb3',
+        blockBorder: '#0047ff12',
         availableBlock: 'rgb(211, 0, 0)',
         availableBlockHover: '#eeeeee',
         popover: '#f9f9f9'
