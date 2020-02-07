@@ -6,12 +6,136 @@
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
     @delete="$emit('delete', $event)">
-    <quill-editor
-      ref="quill"
-      v-model="text"
-      :class="block.data.type"
-      :options="quillOptions">
-    </quill-editor>
+    <EditorMenuBar
+      v-slot="{ commands, isActive, focused }"
+      class="villain-text-editor-menubar"
+      :editor="editor">
+      <div
+        class="menubar is-hidden"
+        :class="{ 'is-focused': focused }">
+        <button
+          type="button"
+          class="menubar__button"
+          :class="{ 'is-active': isActive.bullet_list() }"
+          @click="commands.bullet_list">
+          <FontAwesomeIcon icon="list-ul" />
+        </button>
+
+        <button
+          type="button"
+          class="menubar__button"
+          :class="{ 'is-active': isActive.ordered_list() }"
+          @click="commands.ordered_list">
+          <FontAwesomeIcon icon="list-ol" />
+        </button>
+
+        <button
+          type="button"
+          class="menubar__button"
+          :class="{ 'is-active': isActive.blockquote() }"
+          @click="commands.blockquote">
+          <FontAwesomeIcon icon="quote-right" />
+        </button>
+      </div>
+    </EditorMenuBar>
+    <EditorMenuBubble
+      v-slot="{ commands, isActive, getMarkAttrs, menu }"
+      class="menububble"
+      :editor="editor"
+      @hide="hideLinkMenu">
+      <div
+        class="menububble"
+        :class="{ 'is-active': menu.isActive }"
+        :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`">
+        <form
+          v-if="linkMenuIsActive"
+          class="menububble__form"
+          @submit.prevent="setLinkUrl(commands.link, linkUrl)">
+          <input
+            ref="linkInput"
+            v-model="linkUrl"
+            class="menububble__input"
+            type="text"
+            placeholder="https://"
+            @keydown.esc="hideLinkMenu" />
+          <button
+            class="menububble__button"
+            type="button"
+            @click="setLinkUrl(commands.link, null)">
+            <FontAwesomeIcon icon="unlink" />
+          </button>
+        </form>
+
+        <template v-else>
+          <button
+            type="button"
+            class="menububble__button"
+            :class="{ 'is-active': isActive.bold() }"
+            @click="commands.bold">
+            <FontAwesomeIcon icon="bold" />
+          </button>
+
+          <button
+            type="button"
+            class="menububble__button"
+            :class="{ 'is-active': isActive.italic() }"
+            @click="commands.italic">
+            <FontAwesomeIcon icon="italic" />
+          </button>
+
+          <button
+            type="button"
+            class="menububble__button"
+            :class="{ 'is-active': isActive.strike() }"
+            @click="commands.strike">
+            <FontAwesomeIcon
+              icon="strikethrough"
+              size="sm" />
+          </button>
+
+          <button
+            type="button"
+            class="menububble__button"
+            :class="{ 'is-active': isActive.underline() }"
+            @click="commands.underline">
+            <FontAwesomeIcon
+              icon="underline"
+              size="sm" />
+          </button>
+
+          <button
+            type="button"
+            class="menububble__button"
+            :class="{ 'is-active': isActive.paragraph() }"
+            @click="commands.paragraph">
+            <FontAwesomeIcon
+              icon="paragraph"
+              size="sm" />
+          </button>
+
+          <button
+            type="button"
+            class="menububble__button"
+            :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+            @click="commands.heading({ level: 2 })">
+            <FontAwesomeIcon
+              icon="heading"
+              size="sm" />
+          </button>
+          <button
+            class="menububble__button"
+            :class="{ 'is-active': isActive.link() }"
+            @click="showLinkMenu(getMarkAttrs('link'))">
+            <FontAwesomeIcon
+              icon="link"
+              size="sm" />
+          </button>
+        </template>
+      </div>
+    </EditorMenuBubble>
+    <EditorContent
+      :editor="editor"
+      :class="'villain-text-editor ' + block.data.type" />
     <template slot="config">
       <div class="form-check">
         <input
@@ -54,27 +178,28 @@
 
 <script>
 import Block from '../system/Block'
-import { quillEditor } from 'vue-quill-editor'
-import Quill from 'quill'
+import {
+  Editor,
+  EditorContent,
+  EditorMenuBar,
+  EditorMenuBubble
+} from 'tiptap'
+
+import {
+  Blockquote,
+  BulletList,
+  HardBreak,
+  Heading,
+  ListItem,
+  OrderedList,
+  Bold,
+  Italic,
+  Strike,
+  Underline,
+  History
+} from 'tiptap-extensions'
+import Link from './textExtensions/Link.js'
 import MarkdownIt from 'markdown-it'
-
-const Link = Quill.import('formats/link')
-class linkType extends Link {
-  static create (value) {
-    let node = super.create(value)
-    value = this.sanitize(value)
-
-    if (value.startsWith('https://') || value.startsWith('http://')) {
-      node.className = 'link--external'
-    } else {
-      node.removeAttribute('target')
-    }
-    return node
-  }
-}
-
-Quill.register(linkType)
-
 const md = new MarkdownIt({ html: true })
 
 export default {
@@ -82,7 +207,9 @@ export default {
 
   components: {
     Block,
-    quillEditor
+    EditorContent,
+    EditorMenuBar,
+    EditorMenuBubble
   },
 
   props: {
@@ -99,17 +226,10 @@ export default {
 
   data () {
     return {
+      editor: null,
       customClass: '',
-      quillOptions: {
-        placeholder: 'Tekst her',
-        modules: {
-          toolbar: [
-            ['bold', 'italic', 'strike'],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-            ['link']
-          ]
-        }
-      }
+      linkUrl: null,
+      linkMenuIsActive: false
     }
   },
 
@@ -135,21 +255,124 @@ export default {
   },
 
   mounted () {
-    const quill = this.$refs.quill.quill
-
-    quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
-      let ops = []
-      delta.ops.forEach(op => {
-        if (op.insert && typeof op.insert === 'string') {
-          ops.push({
-            insert: op.insert
-          })
-        }
-      })
-      delta.ops = ops
-      return delta
+    this.editor = new Editor({
+      extensions: [
+        new Blockquote(),
+        new BulletList(),
+        new HardBreak(),
+        new Heading({ levels: [2] }),
+        new ListItem(),
+        new OrderedList(),
+        new Link({ openOnClick: false }),
+        new Bold(),
+        new Italic(),
+        new Strike(),
+        new Underline(),
+        new History()
+      ],
+      content: this.text,
+      onUpdate: ({ getHTML }) => {
+        this.text = getHTML()
+      }
     })
+  },
+
+  beforeDestroy () {
+    this.editor.destroy()
+  },
+
+  methods: {
+    showLinkMenu (attrs) {
+      this.linkUrl = attrs.href
+      this.linkMenuIsActive = true
+      this.$nextTick(() => {
+        this.$refs.linkInput.focus()
+      })
+    },
+    hideLinkMenu () {
+      this.linkUrl = null
+      this.linkMenuIsActive = false
+    },
+    setLinkUrl (command, url) {
+      command({ href: url })
+      this.hideLinkMenu()
+    }
   }
 }
 
 </script>
+
+<style lang="postcss" scoped>
+  .villain-text-editor-menubar {
+    margin-bottom: 30px;
+    transition: opacity 1s ease;
+
+    &.is-hidden {
+      opacity: 0.3;
+    }
+
+    &.is-focused {
+      opacity: 1;
+    }
+  }
+
+  .menububble {
+    position: absolute;
+    display: flex;
+    z-index: 20;
+    background: #000;
+    border-radius: 5px;
+    padding: .3rem;
+    margin-bottom: .5rem;
+    transform: translateX(-50%);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .2s,visibility .2s;
+
+    &.is-active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .menububble__form {
+      display: flex;
+      align-items: center;
+      width: 380px;
+
+      input {
+        margin-bottom: 0;
+      }
+    }
+
+    .menububble__button {
+      display: inline-flex;
+      background: transparent;
+      color: #fff;
+      padding: .2rem .5rem;
+      margin-right: .2rem;
+      border-radius: 3px;
+      cursor: pointer;
+
+      border: none;
+      opacity: 0.5;
+
+      &.is-active {
+        opacity: 1;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  button.menubar__button {
+    border: none;
+    margin-right: 20px;
+    opacity: 0.5;
+
+    &.is-active {
+      opacity: 1;
+    }
+  }
+</style>

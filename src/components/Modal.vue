@@ -159,7 +159,7 @@ export default {
         document.body.className += ' modal-open'
       } else {
         if (!this.duration) {
-          this.duration = window.getComputedStyle(this.$refs.dialog)['transition-duration'].replace('s', '') * 500
+          this.duration = window.getComputedStyle(this.$refs.dialog)['transition-duration'].replace('s', '') * 100
         }
 
         window.setTimeout(() => {

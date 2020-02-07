@@ -115,7 +115,6 @@ export default {
   },
 
   created () {
-    console.log(this.block)
     console.debug('<TemplateBlock /> created')
     this.deleteProps()
     this.createTemplateContentWrapperComponent()
@@ -125,11 +124,9 @@ export default {
   methods: {
     setLocalVars () {
       this.localVars = cloneDeep(this.block.data.vars)
-      console.log(this.localVars, 'is now')
     },
 
     updateVars () {
-      console.log('updating vars! :)')
       this.$set(this.block.data, 'vars', cloneDeep(this.localVars))
       this.refresh(false)
     },
@@ -210,7 +207,6 @@ export default {
       const srcWithReplacedVars = this.replaceVars()
       const srcWithReplacedVarsRefs = this.replaceRefs(srcWithReplacedVars)
       return srcWithReplacedVarsRefs
-      // return this.getSourceCode()
     },
 
     replaceVars () {

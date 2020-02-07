@@ -19,18 +19,16 @@
         <div class="villain-editor-autosave-list-popup-item-date">
           <i class="fa fa-fw fa-file mr-2" /> {{ format(a.timestamp, 'nb_NO') }}
         </div>
-        <button
-          type="button"
-          class="btn btn-outline-primary"
-          @click.prevent="restoreAutosave(a)">
+        <ButtonSmall
+          @click.native.prevent="restoreAutosave(a)">
           Gjenopprett denne versjonen
-        </button>
+        </ButtonSmall>
       </div>
     </div>
     <div class="villain-editor-toolbar">
       <div class="villain-editor-instructions">
         <i class="fa mr-2 fa-info-circle" />
-        Trykk på "+" under for å legge til en innholdsblokkz
+        Trykk på "+" under for å legge til en innholdsblokk
       </div>
       <div class="villain-editor-controls float-right">
         <div class="villain-editor-autosave-status">

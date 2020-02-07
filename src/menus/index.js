@@ -18,6 +18,11 @@ export default {
                 name: 'config-identity'
               }
             }, {
+              text: 'Globale variabler',
+              to: {
+                name: 'config-globals'
+              }
+            }, {
               text: 'Innholdsmaler',
               to: {
                 name: 'templates'
@@ -72,6 +77,11 @@ export default {
               text: 'Identity',
               to: {
                 name: 'config-identity'
+              }
+            }, {
+              text: 'Globals',
+              to: {
+                name: 'config-globals'
               }
             }, {
               text: 'Templates',

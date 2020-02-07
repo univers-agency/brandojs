@@ -36,6 +36,13 @@ fragment identity on Identity {
     value
   }
 
+  globals {
+    id
+    label
+    key
+    value
+  }
+
   configs {
     id
     key

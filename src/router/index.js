@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Dashboard from '../views/Dashboard'
 import ProfileView from '../views/users/ProfileView'
 import UserListView from '../views/users/UserListView'
 import IdentityView from '../views/config/IdentityView'
+import GlobalsView from '../views/config/GlobalsView'
 
 import TemplatesView from '../views/pages/TemplatesView'
 import PageListView from '../views/pages/PageListView'
@@ -47,6 +47,11 @@ const routes = [
     path: '/config/identity',
     name: 'config-identity',
     component: IdentityView
+  },
+  {
+    path: '/config/globals',
+    name: 'config-globals',
+    component: GlobalsView
   },
   {
     path: '/images',

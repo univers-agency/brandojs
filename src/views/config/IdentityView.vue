@@ -2,10 +2,10 @@
   <div>
     <ContentHeader>
       <template v-slot:title>
-        Identitet
+        Konfigurasjon
       </template>
       <template v-slot:subtitle>
-        Konfigurasjon
+        Identitet
       </template>
       <template v-slot:help>
         <p>

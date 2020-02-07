@@ -470,6 +470,7 @@ export default {
 
       .villain-config-content-buttons {
         margin: 0 auto;
+        margin-top: 20px;
         text-align: center;
 
       }
@@ -872,35 +873,36 @@ export default {
   font-style: italic;
 }
 
-.villain-editor {
-  .ql-container.ql-snow {
-    border: 0;
+.villain-text-editor {
+  strong {
+    font-weight: 500;
   }
 
-  .ql-toolbar.ql-snow {
-    border: 0;
-    border-bottom: 1px solid #eee;
-  }
+  p {
+    @fontsize base;
+    margin-bottom: 22px;
 
-  .ql-editor {
-    font-size: 1.2rem;
-
-    p {
-      margin-bottom: 1.5rem;
-      line-height: 1.55;
+    &:last-of-type {
+      margin-bottom: 0;
     }
 
     a {
-      text-decoration: none;
+      border-bottom: 2px solid theme(colors.peachDarkest);
+      padding-bottom: 3px;
     }
   }
 
-  .quill-editor.lead .ql-editor {
-    font-size: 2.2rem;
+  &.lead {
+    p {
+      @fontsize xl;
+    }
   }
 
-  .ql-snow .ql-tooltip a {
-    border: 0;
+  h2 {
+    @fontsize lg;
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 25px;
   }
 }
 
