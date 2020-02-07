@@ -163,11 +163,11 @@ export default {
     }
 
     input {
-      @fontsize base/1;
+      @fontsize sm/1;
       background-color: theme(colors.input);
       border: none;
       width: 100%;
-      padding: 6px 10px 2px;
+      padding: 6px 10px 6px;
     }
 
     button {
@@ -175,7 +175,7 @@ export default {
       &.delete, &.add {
         @fontsize sm/1;
         border: 1px solid theme(colors.dark);
-        padding: 6px 12px 2px;
+        padding: 6px 12px 6px;
         transition: all 0.25s ease;
       }
       &.delete {
