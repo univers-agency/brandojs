@@ -198,6 +198,7 @@ export default {
       }
 
       .bar {
+        margin-top: 5px;
         height: 2px;
         background-color: theme(colors.peach);
         transition: width 0.75s ease;

@@ -1,11 +1,19 @@
 <template>
   <div class="user-list">
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         Brukere
       </template>
-      <template v-slot:subtitle>
+      <template #subtitle>
         Administrasjon av brukere.
+      </template>
+      <template #help>
+        <div class="float-right">
+          <ButtonPrimary
+            :to="{ name: 'users-new' }">
+            + Ny bruker
+          </ButtonPrimary>
+        </div>
       </template>
     </ContentHeader>
 

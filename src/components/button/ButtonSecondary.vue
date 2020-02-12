@@ -43,10 +43,7 @@ export default {
     color: theme(colors.dark);
     border: 1px solid theme(colors.dark);
     background-color: transparent;
-    height: 60px;
-    padding-bottom: 8px;
-    padding-left: 25px;
-    padding-right: 25px;
+    padding: 15px 25px 16px;
     min-width: 205px;
     text-align: center;
     transition: background-color 0.25s ease, border-color 0.25s ease;

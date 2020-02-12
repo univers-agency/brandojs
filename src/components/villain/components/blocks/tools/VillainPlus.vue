@@ -75,6 +75,7 @@
               v-for="(tpls, key) in namespacedTemplates"
               v-if="key !== 'general'"
               :key="key"
+              class="villain-editor-plus-available-templates-group"
               @click="namespaceOpen === key ? namespaceOpen = null : namespaceOpen = key">
               <div
                 class="villain-editor-plus-available-templates-namespace">
@@ -88,8 +89,15 @@
                   :key="'key-' + idx"
                   class="villain-editor-plus-available-template"
                   @click="addTemplate(tp)">
-                  <div class="villain-editor-plus-available-templates-title">{{ tp.data.name }}</div>
-                  <div class="villain-editor-plus-available-templates-help">{{ tp.data.help_text }}</div>
+                  <div class="villain-editor-plus-available-template-svg">
+                    <div
+                      v-if="tp.data.svg"
+                      v-html="tp.data.svg" />
+                  </div>
+                  <div class="villain-editor-plus-available-template-content">
+                    <div class="villain-editor-plus-available-templates-title">{{ tp.data.name }}</div>
+                    <div class="villain-editor-plus-available-templates-help">{{ tp.data.help_text }}</div>
+                  </div>
                 </div>
               </VueSlideUpDown>
             </div>
@@ -99,8 +107,17 @@
               :key="'general-' + idx"
               class="villain-editor-plus-available-template"
               @click="addTemplate(tp)">
-              <div class="villain-editor-plus-available-templates-title">{{ tp.data.name }}</div>
-              {{ tp.data.help_text }}
+              <div
+                class="villain-editor-plus-available-template-svg"
+                :class="tp.data.svg ? '' : 'empty'">
+                <div
+                  v-if="tp.data.svg"
+                  v-html="tp.data.svg" />
+              </div>
+              <div class="villain-editor-plus-available-template-content">
+                <div class="villain-editor-plus-available-templates-title">{{ tp.data.name }}</div>
+                <div class="villain-editor-plus-available-templates-help">{{ tp.data.help_text }}</div>
+              </div>
             </div>
           </div>
           <div
@@ -319,10 +336,33 @@ export default {
   margin-top: 5px;
   font-size: 18px;
 
+  .villain-editor-plus-available-templates-group {
+    background-color: theme(colors.peach);
+  }
+
   .villain-editor-plus-available-template {
     cursor: pointer;
-    padding: 1rem 1rem 1rem calc(1rem + 60px);
+    padding: 1rem 1rem 1rem 1rem;
     text-align: left;
+    display: flex;
+    align-items: center;
+
+    .villain-editor-plus-available-template-svg {
+      width: 120px;
+      margin-right: 20px;
+      background-color: theme(colors.peach);
+
+      >>> svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+    }
+
+    .villain-editor-plus-available-template-content {
+      display: flex;
+      flex-direction: column;
+    }
 
     &:hover {
       color: #fff;
@@ -331,10 +371,13 @@ export default {
   }
 
   .villain-editor-plus-available-templates-title {
-    font-weight: bold;
-    text-transform: uppercase;
+    font-weight: 500;
     margin-bottom: 6px;
-    font-size: 15px;
+    font-size: 19px;
+  }
+
+  .villain-editor-plus-available-templates-help {
+    font-size: 14px;
   }
 
   .villain-editor-plus-available-templates-namespace {

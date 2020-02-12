@@ -45,16 +45,10 @@
           <i class="fa fa-fw fa-file" />
         </div>
         <div
-          v-if="!locked"
           v-popover="'Slett blokken'"
           class="villain-block-action villain-delete"
           @click="deleteBlock">
           <i class="fa fa-fw fa-trash-alt" />
-        </div>
-        <div
-          v-if="locked"
-          class="villain-block-action villain-locked">
-          <i class="fa fa-fw fa-lock" />
         </div>
       </div>
       <div class="villain-block-info">
@@ -90,53 +84,64 @@
       </div>
     </div>
 
-    <div
-      v-show="showConfig"
-      ref="config"
-      class="villain-block villain-block-config">
-      <div class="villain-block-config-content">
-        <div
-          class="villain-config-close-button"
-          @click="closeConfig">
-          <i class="fa fa-times" />
-        </div>
-
-        <h5>Konfigurasjon &mdash; {{ getBlockDisplayName(block.type) }}</h5>
-
-        <div
-          v-if="icon"
-          class="display-icon">
-          <i
-            :class="icon"
-            class="fa fa-fw" />
-        </div>
-
-        <slot name="config" />
-
-        <div class="villain-block-actions">
-          <div class="villain-block-action villain-move">
-            <i class="fa fa-fw fa-expand-arrows-alt" />
-          </div>
+    <modal
+      v-if="showConfig"
+      ref="modal"
+      v-shortkey="['esc']"
+      :large="true"
+      :show="true"
+      :chrome="false"
+      @shortkey.native="closeConfig"
+      @cancel="closeConfig"
+      @ok="closeConfig">
+      <div
+        v-show="showConfig"
+        ref="config"
+        class="villain-block villain-block-config">
+        <div class="villain-block-config-content">
           <div
-            v-if="hasConfigSlot"
-            class="villain-block-action villain-config"
+            class="villain-config-close-button"
             @click="closeConfig">
-            <i class="fa fa-fw fa-cog" />
+            <i class="fa fa-times" />
           </div>
+
+          <h5>Konfigurasjon &mdash; {{ getBlockDisplayName(block.type) }}</h5>
+
           <div
-            v-if="!locked"
-            class="villain-block-action villain-delete"
-            @click="deleteBlock">
-            <i class="fa fa-fw fa-trash-alt" />
+            v-if="icon"
+            class="display-icon">
+            <i
+              :class="icon"
+              class="fa fa-fw" />
           </div>
-          <div
-            v-if="locked"
-            class="villain-block-action villain-locked">
-            <i class="fa fa-fw fa-lock" />
+
+          <slot name="config" />
+
+          <div class="villain-block-actions">
+            <div class="villain-block-action villain-move">
+              <i class="fa fa-fw fa-expand-arrows-alt" />
+            </div>
+            <div
+              v-if="hasConfigSlot"
+              class="villain-block-action villain-config"
+              @click="closeConfig">
+              <i class="fa fa-fw fa-cog" />
+            </div>
+            <div
+              v-if="!locked"
+              class="villain-block-action villain-delete"
+              @click="deleteBlock">
+              <i class="fa fa-fw fa-trash-alt" />
+            </div>
+            <div
+              v-if="locked"
+              class="villain-block-action villain-locked">
+              <i class="fa fa-fw fa-lock" />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </modal>
     <template v-if="!locked">
       <VillainPlus
         v-if="block.type !== 'columns'"
@@ -155,10 +160,14 @@
 
 <script>
 import { VTooltip } from 'v-tooltip'
+import Modal from '../../../../Modal'
 import gsap from 'gsap'
 
 export default {
   directives: { popover: VTooltip },
+  components: {
+    Modal
+  },
 
   props: {
     block: {
@@ -186,6 +195,7 @@ export default {
       default: false
     }
   },
+
   data () {
     return {
       showConfig: false,
@@ -255,25 +265,17 @@ export default {
     },
 
     configBlock () {
-      this.width = this.$el.clientWidth
-      gsap.set(this.$el, { zIndex: 99 })
-      gsap.to(this.$el, {
-        width: '750px',
-        backgroundColor: '#ffffff',
-        onComplete: () => {
-          this.showConfig = true
-          this.$emit('showConfig')
-        } })
+      this.$emit('toggle-config', true)
     },
 
     closeConfig () {
-      this.showConfig = false
-      gsap.to(this.$el, { width: this.width, zIndex: 'none' })
+      this.$emit('toggle-config', false)
     },
 
     deleteBlock () {
       this.$alerts.alertConfirm('OBS!', 'Er du sikker på at du vil slette denne blokken?', data => {
         if (data) {
+          console.log('emitting delete!', this)
           this.$emit('delete', this.block)
         }
       })
@@ -347,7 +349,7 @@ export default {
   background-color: theme(colors.villain.blockBackground);
   padding: 1rem;
   padding-right: 2rem;
-  min-height: 120px;
+  min-height: 155px;
   position: relative;
   border: 2px solid theme(colors.villain.blockBorder);
   transition: border 500ms ease;
@@ -420,6 +422,7 @@ export default {
 
   &.villain-block-config {
     padding: 2rem;
+    background-color: #fff;
 
     button + button {
       margin-top: -1px;
@@ -449,7 +452,7 @@ export default {
     }
 
     .villain-block-config-content {
-      max-width: 600px;
+      /* max-width: 600px; */
       margin: 0 auto;
       padding: 2rem;
       position: relative;
@@ -514,7 +517,7 @@ export default {
 
       h5 {
         text-align: center;
-        font-size: 1.7rem;
+        font-size: 1.4rem;
         margin-bottom: 1.5rem;
         border-bottom: 2px solid #00000008;
         padding-bottom: 1.5rem;
@@ -530,6 +533,36 @@ export default {
 
   &[data-type="comment"] {
     background-color: lightyellow;
+  }
+
+  &[data-type="columns"] {
+    .row {
+      .col-2 {
+        width: 16%;
+        max-width: 16%;
+        flex-basis: 16%;
+      }
+      .col-3 {
+        width: 25%;
+        max-width: 25%;
+        flex-basis: 25%;
+      }
+      .col-4 {
+        width: 33%;
+        max-width: 33%;
+        flex-basis: 33%;
+      }
+      .col-6 {
+        width: 50%;
+        max-width: 50%;
+        flex-basis: 50%;
+      }
+      .col-12 {
+        width: 100%;
+        max-width: 100%;
+        flex-basis: 100%;
+      }
+    }
   }
 
   .villain-template-description, .villain-block-description {
@@ -563,7 +596,7 @@ export default {
     transition: 500ms opacity ease;
 
     .villain-block-action {
-      padding: .25rem .4rem;
+      padding: 12px 4px 0px;
       margin: .25rem 0;
       background-color: transparent;
       color: theme(colors.villain.mainFaded);
@@ -639,7 +672,6 @@ export default {
 }
 
 .villain-block-video {
-  padding: 2rem;
   padding-right: 0;
 
   .villain-block-video-content {
@@ -879,7 +911,7 @@ export default {
   }
 
   p {
-    @fontsize base;
+    @fontsize base(0.95);
     margin-bottom: 22px;
 
     &:last-of-type {
@@ -903,6 +935,14 @@ export default {
     font-weight: 500;
     margin-top: 0;
     margin-bottom: 25px;
+  }
+
+  h3 {
+    @fontsize sm;
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 5px;
+    text-transform: uppercase;
   }
 }
 
@@ -950,6 +990,10 @@ export default {
   .villain-timeline-item-content-inner {
     font-size: 95%;
   }
+}
+
+.villain-svg-input-wrapper {
+  width: 100%;
 }
 
 </style>

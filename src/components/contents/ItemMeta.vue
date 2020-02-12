@@ -13,7 +13,7 @@
           {{ user.full_name || 'Systemroboten' }}
         </div>
         <div class="time">
-          {{ getDate(entry.updated_at) }} <span>•</span> {{ getTime(entry.updated_at)}}
+          {{ getDate(entry.updated_at) }} <span>•</span> {{ getTime(entry.updated_at) }}
         </div>
       </div>
     </section>
@@ -65,7 +65,6 @@ export default {
       margin-right: 15px;
 
       .avatar {
-        margin-left: 7px;
         width: 48px;
         height: 48px;
 

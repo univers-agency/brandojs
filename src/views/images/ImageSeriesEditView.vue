@@ -40,6 +40,7 @@ export default {
         '__typename',
         'id',
         'creator',
+        'images',
         'deleted_at',
         'inserted_at'])
 

@@ -7,37 +7,47 @@
     icon="fa-video"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
+    @delete="$emit('delete', $event)"
+    @toggle-config="showConfig = $event">
     <div class="villain-block-description">
       Video
     </div>
     <div class="villain-block-video">
       <div
         v-if="html && block.data.source !== 'file'"
+        ref="preview"
         class="villain-block-video-content"
         v-html="html" />
       <div
         v-else-if="html && block.data.source === 'file'"
+        ref="preview"
         class="villain-block-video-file-content"
         v-html="html" />
-      <p
-        v-else>
-        Ingen gyldig video
-      </p>
+      <div
+        v-else
+        class="villain-block-image-empty">
+        <i class="fa fa-fw fa-video"></i>
+        <div class="actions">
+          <ButtonSecondary
+            @click="showConfig = true">
+            Konfigurér videoblokk
+          </ButtonSecondary>
+        </div>
+      </div>
     </div>
     <template slot="config">
+      <div class="desc">
+        Lim inn link til youtube, vimeo eller ekstern fil. <br>
+        F.eks <strong>http://www.youtube.com/watch?v=jlbunmCbTBA</strong>
+      </div>
       <div
         class="form-group">
-        <p>
-          Lim inn link til youtube, vimeo eller ekstern fil. <br>
-          F.eks <strong>http://www.youtube.com/watch?v=jlbunmCbTBA</strong>
-        </p>
         <template
           v-if="block.data.remote_id">
           <label>Eksisterende data ({{ block.data.source }})</label>
           <input
             v-model="block.data.remote_id"
-            class="form-control"
+            class="form-control disabled"
             disabled="true"
             type="input">
 
@@ -132,12 +142,16 @@ export default {
   created () {
     console.debug('<VideoBlock /> created')
 
-    if (!this.block.data.remote_id) {
-      this.showConfig = true
-    } else {
+    if (this.block.data.remote_id) {
       this.html = this.providers[this.block.data.source].html
         .replace('{{protocol}}', window.location.protocol)
         .replace('{{remote_id}}', this.block.data.remote_id)
+
+      setTimeout(() => {
+        const rect = this.$refs.preview.getBoundingClientRect()
+        this.$set(this.block.data, 'width', Math.round(rect.width))
+        this.$set(this.block.data, 'height', Math.round(rect.height))
+      }, 3500)
     }
   },
 
@@ -146,20 +160,25 @@ export default {
       let match
       let url = v.srcElement.value
 
-      for (let key of Object.keys(this.providers)) {
-        let provider = this.providers[key]
-        match = provider.regex.exec(url)
+      if (url.startsWith('https://player.vimeo.com/external/')) {
+        this.block.data.source = 'file'
+        this.block.data.remote_id = url
+        this.showConfig = false
+      } else {
+        for (let key of Object.keys(this.providers)) {
+          let provider = this.providers[key]
+          match = provider.regex.exec(url)
 
-        if (match !== null && match[1] !== undefined) {
-          this.block.data.source = key
-          this.block.data.remote_id = match[1]
-          this.showConfig = false
-          break
+          if (match !== null && match[1] !== undefined) {
+            this.block.data.source = key
+            this.block.data.remote_id = match[1]
+            this.showConfig = false
+            break
+          }
         }
-      }
-
-      if (!{}.hasOwnProperty.call(this.providers, this.block.data.source)) {
-        return false
+        if (!{}.hasOwnProperty.call(this.providers, this.block.data.source)) {
+          return false
+        }
       }
 
       this.html = this.providers[this.block.data.source].html
@@ -169,3 +188,32 @@ export default {
   }
 }
 </script>
+<style lang="postcss" scoped>
+  .disabled {
+    background-color: lightgrey;
+  }
+
+  .desc {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  .villain-block-image-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 30%;
+      height: 30%;
+      max-width: 250px;
+      margin-bottom: 25px;
+    }
+  }
+
+  .drop {
+    background-color: white;
+    margin-bottom: 20px;
+  }
+</style>

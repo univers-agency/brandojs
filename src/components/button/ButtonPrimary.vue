@@ -209,8 +209,8 @@ export default {
     color: theme(colors.peach);
     border: 1px solid theme(colors.blue);
     background-color: theme(colors.blue);
-    height: 60px;
     border-radius: 30px;
+    height: 60px;
     padding-bottom: 6px;
     padding-left: 25px;
     padding-right: 25px;

@@ -5,7 +5,8 @@
     :config="showConfig"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
+    @delete="$emit('delete', $event)"
+    @toggle-config="showConfig = $event">
     <div class="villain-block-description">
       Bildekarusell
     </div>
@@ -50,9 +51,13 @@
       </transition-group>
       <div
         v-else
-        class="d-flex justify-content-center">
-        <div class="d-inline-block">
-          Ingen bilder i karusellen
+        class="villain-block-image-empty">
+        <i class="fa fa-fw fa-images"></i>
+        <div class="actions">
+          <ButtonSecondary
+            @click="showConfig = true">
+            Konfigurér galleriblokk
+          </ButtonSecondary>
         </div>
       </div>
 
@@ -321,7 +326,6 @@ export default {
     this.getImages()
 
     if (!this.block.data.images.length) {
-      this.showConfig = true
       this.showImages = false
       this.showUpload = true
     }
@@ -538,3 +542,23 @@ export default {
   }
 }
 </script>
+<style lang="postcss" scoped>
+  .villain-block-image-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 30%;
+      height: 30%;
+      max-width: 250px;
+      margin-bottom: 25px;
+    }
+  }
+
+  .drop {
+    background-color: white;
+    margin-bottom: 20px;
+  }
+</style>

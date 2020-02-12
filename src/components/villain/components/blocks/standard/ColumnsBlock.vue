@@ -5,7 +5,8 @@
     :config="showConfig"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
+    @delete="$emit('delete', $event)"
+    @toggle-config="showConfig = $event">
     <!-- parse each block inside columns -->
     <div class="row">
       <div
@@ -126,16 +127,16 @@ export default {
 
       switch (parseInt(this.columnCount)) {
         case 1:
-          colClass = 'col-md-12'
+          colClass = 'col-12'
           break
         case 2:
-          colClass = 'col-md-6'
+          colClass = 'col-6'
           break
         case 3:
-          colClass = 'col-md-4'
+          colClass = 'col-4'
           break
         case 4:
-          colClass = 'col-md-3'
+          colClass = 'col-3'
           break
       }
 

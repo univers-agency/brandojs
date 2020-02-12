@@ -6,16 +6,24 @@
     icon="fa-compass"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
+    @delete="$emit('delete', $event)"
+    @toggle-config="showConfig = $event">
     <div class="villain-block-video">
       <div
         v-if="html"
         class="villain-block-video-content"
         v-html="html" />
-      <p
-        v-else>
-        Inget gyldig kart
-      </p>
+      <div
+        v-else
+        class="villain-block-empty">
+        <i class="fa fa-fw fa-map"></i>
+        <div class="actions">
+          <ButtonSecondary
+            @click="showConfig = true">
+            Konfigurér kartblokk
+          </ButtonSecondary>
+        </div>
+      </div>
     </div>
     <template slot="config">
       <div
@@ -91,9 +99,7 @@ export default {
   created () {
     console.debug('<MapBlock /> created')
 
-    if (!this.block.data.embed_url) {
-      this.showConfig = true
-    } else {
+    if (this.block.data.embed_url) {
       this.populateMap()
     }
   },
@@ -128,3 +134,20 @@ export default {
   }
 }
 </script>
+
+<style lang="postcss" scoped>
+  .villain-block-empty {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 30%;
+      height: 30%;
+      max-width: 250px;
+      margin-bottom: 25px;
+    }
+  }
+</style>

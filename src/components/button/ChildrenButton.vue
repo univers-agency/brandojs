@@ -1,15 +1,17 @@
 <template>
-  <button
-    type="button"
-    :class="{ active }"
-    @click.stop.prevent="clickHandler">
-    <template v-if="active">
-      Lukk
-    </template>
-    <template v-else>
-      +{{ length }} <slot></slot>
-    </template>
-  </button>
+  <div>
+    <button
+      type="button"
+      :class="{ active }"
+      @click.stop.prevent="clickHandler">
+      <template v-if="active">
+        Lukk
+      </template>
+      <template v-else>
+        + {{ length }} <slot></slot>
+      </template>
+    </button>
+  </div>
 </template>
 
 <script>
@@ -67,7 +69,8 @@ export default {
     height: 60px;
     border-radius: 30px;
     padding-bottom: 9px;
-    min-width: 205px;
+    padding-left: 25px;
+    padding-right: 25px;
     user-select: none;
     text-align: center;
     transition: background-color 0.25s ease, border-color 0.25s ease;
@@ -83,5 +86,10 @@ export default {
       border-color: theme(colors.dark);
       color: theme(colors.peach);
     }
+  }
+
+  div {
+    justify-content: center;
+    display: flex;
   }
 </style>

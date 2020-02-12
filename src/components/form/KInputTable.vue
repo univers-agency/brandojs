@@ -136,7 +136,12 @@ export default {
     tr {
       td {
         padding: 12px 0;
+        padding-right: 15px;
         border-bottom: 1px solid theme(colors.dark);
+
+        &:last-of-type {
+          padding-right: 0;
+        }
 
         &.action {
           width: 75px;

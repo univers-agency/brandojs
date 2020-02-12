@@ -4,7 +4,8 @@
     :parent="parent"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
+    @delete="$emit('delete', $event)"
+    @toggle-config="showConfig = $event">
     <ul class="villain-timeline">
       <li
         v-for="(item, idx) in block.data"

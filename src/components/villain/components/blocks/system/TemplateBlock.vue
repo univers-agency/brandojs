@@ -2,13 +2,17 @@
   <Block
     :block="block"
     :parent="parent"
+    :config="showConfig"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
+    @delete="$emit('delete', $event)"
+    @toggle-config="showConfig = $event">
     <div class="villain-template-description">
       {{ getBlockName }}
     </div>
-    <component :is="buildWrapper()" />
+    <component
+      :is="buildWrapper()"
+      @delete="deleteBlock($event)" />
     <template slot="config">
       <div>
         <label>Blokkvariabler</label>
@@ -82,6 +86,7 @@ export default {
 
   data () {
     return {
+      showConfig: false,
       customClass: '',
       uid: null,
       localVars: {}
@@ -178,6 +183,10 @@ export default {
         this.$delete(this.block.data, 'name')
       }
 
+      if (this.block.data.hasOwnProperty('svg')) {
+        this.$delete(this.block.data, 'svg')
+      }
+
       if (this.block.data.hasOwnProperty('help_text')) {
         this.$delete(this.block.data, 'help_text')
       }
@@ -239,7 +248,11 @@ export default {
     },
 
     replaceRef (exp, refName) {
-      return `<slot name="${refName}">REPLACE</slot>`
+      const ref = this.findRef(refName)
+      if (ref.deleted) {
+        return ''
+      }
+      return `<slot name="${refName}"></slot>`
     },
 
     findRef (refName) {
@@ -251,6 +264,9 @@ export default {
       let refs = {}
       for (let i = 0; i < this.block.data.refs.length; i++) {
         let ref = this.block.data.refs[i]
+        if (ref.deleted) {
+          continue
+        }
         refs[ref.name] = { ...ref.data, locked: true }
       }
 
@@ -259,13 +275,26 @@ export default {
       }
     },
 
-    buildSlots () {
+    buildSlots (copyMissing = true) {
       let template = ''
-      this.copyMissingRefs()
+      if (copyMissing) {
+        this.copyMissingRefs()
+      }
 
       for (let i = 0; i < this.block.data.refs.length; i++) {
         let ref = this.block.data.refs[i]
-        template += `<div slot="${ref.name}"><component is="${ref.data.type}Block" :block="refs.${ref.name}" /></div>`
+        if (ref.deleted) {
+          continue
+        }
+        template += `
+          <div slot="${ref.name}">
+            <component
+              is="${ref.data.type}Block"
+              data-ref="${ref.name}"
+              :block="refs.${ref.name}"
+              @delete="$emit('delete', {event: $event, ref: '${ref.name}'})" />
+          </div>
+        `
       }
       return template
     },
@@ -322,6 +351,10 @@ export default {
       Vue.component('TemplateContentWrapper', {
         template: replacedContent
       })
+    },
+
+    deleteBlock ({ ref, block }) {
+      this.$emit('delete', { ...this.block, ref })
     }
   }
 }

@@ -5,7 +5,9 @@
         Endre innholdsseksjon
       </template>
     </ContentHeader>
-    <PageSectionForm :page="pageFragment" :save="save" />
+    <PageSectionForm
+      :page="pageFragment"
+      :save="save" />
   </article>
 </template>
 
@@ -51,12 +53,18 @@ export default {
               ) {
                 id
                 title
-                data
-                key
                 parent_key
-                language
-                updated_at
                 page_id
+                key
+                language
+                wrapper
+                data
+                creator {
+                  id
+                  full_name
+                }
+                inserted_at
+                deleted_at
               }
             }
           `,

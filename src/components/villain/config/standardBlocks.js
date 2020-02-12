@@ -94,7 +94,9 @@ export default [
     component: 'Video',
     dataTemplate: {
       source: 'youtube',
-      remote_id: ''
+      remote_id: '',
+      width: null,
+      height: null
     }
   },
 

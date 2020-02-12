@@ -41,7 +41,7 @@
             <span>{{ entry.language }}</span>
           </div>
         </div>
-        <div class="col-5 title flex-h">
+        <div class="col-7 title flex-h">
           <router-link :to="{ name: 'pages-edit', params: { pageId: entry.id } }">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -58,18 +58,22 @@
           </router-link>
           <div class="badge">{{ entry.key }}</div>
         </div>
+        <div class="col-2">
+          <ChildrenButton
+            :id="entry.id"
+            :length="entry.fragments.length + entry.children.length"
+            :visible-children="visibleChildren">
+            <template>
+              <FontAwesomeIcon
+                icon="copy"
+                class="ml-2xs" />
+            </template>
+          </ChildrenButton>
+        </div>
         <div class="col-4">
           <ItemMeta
             :entry="entry"
             :user="entry.creator" />
-        </div>
-        <div class="col-4">
-          <ChildrenButton
-            :id="entry.id"
-            :length="entry.fragments.length"
-            :visible-children="visibleChildren">
-            <template>seksjoner</template>
-          </ChildrenButton>
         </div>
         <div class="col-1">
           <CircleDropdown>
@@ -113,8 +117,9 @@
         </div>
       </template>
       <template v-slot:children="{ entry }">
-        <template v-if="entry.fragments.length && visibleChildren.includes(entry.id)">
+        <template v-if="visibleChildren.includes(entry.id)">
           <ContentList
+            v-if="entry.fragments.length"
             :level="2"
             :entries="entry.fragments"
             :sortable="true"
@@ -150,6 +155,52 @@
                   </li>
                   <li>
                     <button @click="deleteSection(section)">{{ $t('pages.delete-section') }}</button>
+                  </li>
+                </CircleDropdown>
+              </div>
+            </template>
+          </ContentList>
+          <ContentList
+            v-if="entry.children.length"
+            :level="2"
+            :entries="entry.children">
+            <template v-slot:row="{ entry: subPage }">
+              <div class="col-1"></div>
+              <div class="col-1">
+                <div class="circle">
+                  <span>{{ entry.language }}</span>
+                </div>
+              </div>
+              <div class="col-8 title flex-h">
+                <router-link :to="{ name: 'pages-edit', params: { pageId: subPage.id } }">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12">
+                    <circle
+                      r="6"
+                      cy="6"
+                      cx="6"
+                      fill="#F4D37D" />
+                  </svg>
+                  {{ subPage.title }}
+                </router-link>
+                <div class="badge">{{ subPage.key }}</div>
+              </div>
+              <div class="col-5 flex-v">
+                <div class="badge">{{ $t('pages.subpage') }}</div>
+              </div>
+              <div class="col-1">
+                <CircleDropdown>
+                  <li>
+                    <router-link
+                      :to="{ name: 'pages-edit', params: { pageId: subPage.id } }">
+                      {{ $t('pages.edit-subpage') }}
+                    </router-link>
+                  </li>
+                  <li>
+                    <button @click="deletePage(subPage)">{{ $t('pages.delete-subpage') }}</button>
                   </li>
                 </CircleDropdown>
               </div>
@@ -534,7 +585,10 @@ export default {
     "pages.section-deleted": "Section deleted",
     "pages.are-you-sure-you-want-to-delete-this-page": "Are you sure you want to delete this page?",
     "pages.page-deleted": "Page deleted",
-    "pages.page-duplicated": "Page duplicated"
+    "pages.page-duplicated": "Page duplicated",
+    "pages.subpage": "Subpage",
+    "pages.edit-subpage": "Edit subpage",
+    "pages.delete-subpage": "Delete subpage"
   },
   "nb": {
     "pages.title": "Sider og seksjoner",
@@ -556,7 +610,10 @@ export default {
     "pages.section-deleted": "Seksjon slettet",
     "pages.are-you-sure-you-want-to-delete-this-page": "Er du sikker på at du vil slette denne siden?",
     "pages.page-deleted": "Siden ble slettet",
-    "pages.page-duplicated": "Siden ble duplisert"
+    "pages.page-duplicated": "Siden ble duplisert",
+    "pages.subpage": "Underside",
+    "pages.edit-subpage": "Endre underside",
+    "pages.delete-subpage": "Slett underside"
   }
 }
 </i18n>

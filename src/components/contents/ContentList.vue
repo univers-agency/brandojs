@@ -3,9 +3,13 @@
     class="list"
     :data-level="level">
     <div class="list-tools">
-      <div class="filter">
+      <div
+        v-if="hasFilterListener && filterKey"
+        class="filter">
+        <div class="filter-key">
+          {{ filterKey }}
+        </div>
         <input
-          v-if="hasFilterListener"
           v-model="filterValue"
           placeholder="Filter"
           type="text"
@@ -46,6 +50,8 @@
           set: storeOrder
         }
       }"
+      appear
+      name="fade"
       tag="div"
       :data-sort-src="sortParent"
       class="sort-container">
@@ -82,6 +88,13 @@
         </div>
       </div>
     </transition-group>
+    <div v-if="level === 1 && hasMoreListener">
+      <ButtonSecondary
+        class="mt-3"
+        @click="$emit('more')">
+        Last inn flere
+      </ButtonSecondary>
+    </div>
   </div>
 </template>
 
@@ -98,6 +111,14 @@ export default {
     filter: {
       type: Boolean,
       default: false
+    },
+
+    /*
+    Keys we can choose between for filtering
+    */
+    filterKeys: {
+      type: Array,
+      default: () => []
     },
 
     status: {
@@ -134,6 +155,7 @@ export default {
 
   data () {
     return {
+      filterKey: null,
       filterValue: '',
       selectedRows: []
     }
@@ -149,12 +171,26 @@ export default {
 
     hasFilterListener () {
       return this.$listeners && this.$listeners.filter
+    },
+
+    hasMoreListener () {
+      return this.$listeners && this.$listeners.more
+    }
+  },
+
+  created () {
+    if (this.filterKeys.length) {
+      this.filterKey = this.filterKeys[0]
+    }
+
+    if (this.hasFilterListener && !this.filterKeys.length) {
+      console.error('ContentList: No filterKeys set, but @filter listener provided!')
     }
   },
 
   methods: {
     filterInput () {
-      this.$emit('filter', this.filterValue)
+      this.$emit('filter', { [this.filterKey]: this.filterValue })
     },
 
     clearSelection () {
@@ -218,17 +254,30 @@ export default {
       @column 8/16;
       display: flex;
       align-items: center;
+      background-color: theme(colors.input);
 
       input {
-        @fontsize lg;
+        @fontsize base;
         padding-top: 12px;
         padding-bottom: 12px;
         padding-left: 15px;
         padding-right: 15px;
-        margin-left: 15px;
-        width: 100%;
         background-color: theme(colors.input);
+        width: 100%;
         border: 0;
+        border-left: 5px solid white;
+      }
+
+      .filter-key {
+        @font mono;
+        left: 15px;
+        font-size: 14px;
+        text-transform: uppercase;
+        border: 1px solid theme(colors.blue);
+        padding: 2px 5px 0px;
+        margin-top: 1px;
+        margin-left: 15px;
+        margin-right: 15px;
       }
     }
 
@@ -263,6 +312,12 @@ export default {
       }
     }
 
+    + .list {
+      .list-header:empty {
+        display: none;
+      }
+    }
+
     a.link {
       border-bottom: none;
       position: relative;
@@ -291,7 +346,6 @@ export default {
       border-bottom: none;
       position: relative;
       color: theme(colors.dark);
-      padding-top: 3px;
 
       &:after {
         border-top: 2px solid theme(colors.blue);
@@ -321,7 +375,7 @@ export default {
 
     .list-row {
       border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-      background-color: theme(colors.peachLighter);
+      background-color: white;
       user-select: none;
 
       .center {

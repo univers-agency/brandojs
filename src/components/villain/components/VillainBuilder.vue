@@ -6,6 +6,24 @@
           Editérer {<strong> {{ currentTemplate.data.class }} </strong>}
         </template>
       </span>
+      <div
+        v-if="currentTemplate"
+        class="villain-builder-svg">
+        <template v-if="currentTemplate.data.svg">
+          <div
+            @drop.prevent="dropSvg"
+            @dragover.prevent
+            v-html="currentTemplate.data.svg" />
+        </template>
+        <template v-else>
+          <div
+            class="villain-builder-svg-drop"
+            @drop.prevent="dropSvg"
+            @dragover.prevent>
+            Legg til ikon
+          </div>
+        </template>
+      </div>
     </div>
 
     <div class="villain-builder-editor-wrapper">
@@ -19,27 +37,68 @@
       <div class="villain-builder-aside-header">
         Maler
       </div>
-      <transition-group
-        v-sortable="{handle: 'li', animation: 500, store: {get: getOrder, set: storeOrder}}"
-        name="fade-move"
-        tag="ul">
-        <button
-          key="createTemplateButton"
-          type="button"
-          class="btn btn-primary btn-block mb-2"
-          @click="createTemplate">
-          Ny mal
-        </button>
 
+      <button
+        key="createTemplateButton"
+        type="button"
+        class="btn btn-primary btn-block mb-2"
+        @click="createTemplate">
+        Ny mal
+      </button>
+      <div
+        v-for="(templates, key) in namespacedTemplates"
+        v-if="key !== 'general'"
+        :key="key"
+        class="template-group"
+        @click="namespaceOpen.includes(key) ? namespaceOpen.splice(namespaceOpen.indexOf(key), 1) : namespaceOpen.push(key)">
+        <div
+          class="template-namespace">
+          <IconDropdown :open="namespaceOpen.includes(key)" /><strong>{{ key.toUpperCase() }}</strong>
+        </div>
+        <VueSlideUpDown
+          :active="namespaceOpen.includes(key)"
+          :duration="350">
+          <transition-group
+            v-sortable="{handle: 'li', animation: 500, store: {get: getOrder, set: storeOrder}}"
+            name="fade-move"
+            tag="ul">
+            <li
+              v-for="t in templates"
+              :key="t.data.id"
+              :data-id="t.data.id"
+              class="template-entry"
+              :class="isSelected(t) ? 'selected' : ''"
+              @click.stop="selectTemplate(t)">
+              <template v-if="t.data.svg">
+                <div
+                  class="template-svg"
+                  v-html="t.data.svg" />
+              </template>
+              <div class="template-class">
+                {{ t.data.name }}
+              </div>
+            </li>
+          </transition-group>
+        </VueSlideUpDown>
+      </div>
+      <template v-if="namespacedTemplates && namespacedTemplates.general">
         <li
-          v-for="t in templates"
-          :key="t.data.id"
+          v-for="(tp, idx) in namespacedTemplates.general"
+          :key="'general-' + idx"
           :data-id="t.data.id"
-          class="text-mono"
+          class="template-entry"
+          :class="isSelected(t) ? 'selected' : ''"
           @click="selectTemplate(t)">
-          {{ t.data.class }}
+          <template v-if="t.data.svg">
+            <div
+              class="template-svg"
+              v-html="t.data.svg" />
+          </template>
+          <div class="template-class">
+            {{ t.data.name }}
+          </div>
         </li>
-      </transition-group>
+      </template>
     </aside>
 
     <div class="villain-builder-refs">
@@ -72,7 +131,7 @@
           <li
             v-for="ref in currentTemplate.data.refs"
             :key="ref.name"
-            class="text-mono"
+            class="text-mono padded"
             @click="selectRef(ref)">
             %{<strong>{{ ref.name }}</strong>}
             <button
@@ -81,6 +140,13 @@
               class="btn btn-negative btn-sm"
               @click.prevent.stop="saveRef()">
               Lagre
+            </button>
+            <button
+              v-if="prevRefName === ref.name"
+              type="button"
+              class="btn btn-negative btn-sm"
+              @click.prevent.stop="delRef(ref)">
+              Slett
             </button>
           </li>
         </ul>
@@ -103,7 +169,7 @@
           <li
             v-for="(val, variable) in currentTemplate.data.vars"
             :key="variable"
-            class="text-mono"
+            class="text-mono padded"
             @click="selectVar(variable)">
             ${<strong>{{ variable }}</strong>}
             <button
@@ -180,10 +246,12 @@
       </div>
       <div class="villain-builder-save-wrapper">
         <button
+          v-shortkey="['meta', 's']"
           type="button"
           class="btn btn-outline-primary"
+          @shortkey="saveTemplate()"
           @click="saveTemplate()">
-          Lagre
+          Lagre (⌘S)
         </button>
       </div>
     </div>
@@ -192,6 +260,8 @@
 
 <script>
 
+import VueSlideUpDown from 'vue-slide-up-down'
+import IconDropdown from '../components/icons/IconDropdown'
 import CodeMirror from 'codemirror'
 import 'codemirror/mode/htmlmixed/htmlmixed.js'
 import 'codemirror/mode/javascript/javascript.js'
@@ -202,6 +272,11 @@ import storeTemplate from '../utils/storeTemplate'
 import storeTemplateSequence from '../utils/storeTemplateSequence'
 
 export default {
+  components: {
+    VueSlideUpDown,
+    IconDropdown
+  },
+
   data () {
     return {
       hoveredBlock: 'Velg blokk',
@@ -219,7 +294,21 @@ export default {
       prevRefName: null,
       prevVarName: null,
       templates: [],
-      templateSequence: []
+      templateSequence: [],
+      namespaceOpen: []
+    }
+  },
+
+  computed: {
+    namespacedTemplates () {
+      if (!this.templates.length) {
+        return null
+      }
+      return this.templates.reduce((objectsByKeyValue, obj) => {
+        const value = obj.data.namespace
+        objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj)
+        return objectsByKeyValue
+      }, {})
     }
   },
 
@@ -275,6 +364,34 @@ export default {
   },
 
   methods: {
+    isSelected (t) {
+      return t === this.currentTemplate
+    },
+
+    dropSvg (e) {
+      console.log(e.dataTransfer.files)
+      if (e.dataTransfer.files.length > 1) {
+        this.$alerts.alertError('Feil', 'Slipp kun én fil her.')
+        return
+      }
+
+      const f = e.dataTransfer.files[0]
+
+      if (f.type !== 'image/svg+xml') {
+        this.$alerts.alertError('Feil', 'Kun SVG-fil tillatt')
+        return
+      }
+
+      const reader = new FileReader()
+
+      reader.onload = event => {
+        console.log(event.target.result)
+        this.currentTemplate.data.svg = event.target.result
+      }
+
+      reader.readAsText(f)
+    },
+
     createVar () {
       this.$alerts.alertPrompt('Variabelnavn', ({ data }) => {
         if (data) {
@@ -323,6 +440,7 @@ export default {
           help_text: 'Hjelpetekst',
           name: 'Navn på mal',
           namespace: 'general',
+          svg: null,
           refs: [],
           vars: {}
         }
@@ -370,6 +488,17 @@ export default {
           ]
           this.resetRef()
         }
+      }
+    },
+
+    delRef (ref) {
+      let idx = this.currentTemplate.data.refs.indexOf(ref)
+      if (idx >= 0) {
+        this.currentTemplate.data.refs = [
+          ...this.currentTemplate.data.refs.slice(0, idx),
+          ...this.currentTemplate.data.refs.slice(idx + 1)
+        ]
+        this.resetRef()
       }
     },
 
@@ -446,7 +575,7 @@ export default {
         }
       }
 
-      let result = await storeTemplate(this.currentTemplate, this.headers.extra, this.urls.templates)
+      let result = await storeTemplate(this.currentTemplate, this.headers.extra, this.urls.templates, this.$toast)
       if (result.status === 200) {
         this.templates = await fetchTemplates('all', this.headers.extra, this.urls.templates)
       }
@@ -471,9 +600,9 @@ export default {
     "footer footer";
 
   grid-template-columns: minmax(0, 1fr) 250px;
-  grid-template-rows: 50px 1fr 200px 200px 50px;
+  grid-template-rows: 160px 1fr auto auto 50px;
   grid-gap: 10px;
-  height: 100vh;
+  height: 100%;
 
   .text-mono {
     font-family: "SF Mono", "Menlo", "Monaco", "Inconsolata", "Fira Mono", "Droid Sans Mono", "Source Code Pro", monospace;
@@ -508,11 +637,29 @@ export default {
 
   .villain-builder-header {
     grid-area: header;
-    align-self: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
 
     border-bottom: 1px solid gray;
     padding-top: 10px;
     padding-bottom: 10px;
+
+    .villain-builder-svg {
+      display: inline-block;
+      width: 250px !important;
+
+      >>> svg {
+        width: 250px !important;
+        height: 100% !important;
+      }
+
+      .villain-builder-svg-drop {
+        width: 250px;
+        height: 85px;
+        background-color: gray;
+      }
+    }
   }
 
   aside {
@@ -538,21 +685,74 @@ export default {
       margin-bottom: 1rem;
     }
 
+    .template-namespace {
+      cursor: pointer;
+      background-color: theme(colors.blue);
+      text-align: center;
+      font-weight: 300;
+      color: theme(colors.peach);
+      padding-top: 15px;
+      padding-bottom: 15px;
+      margin-bottom: 5px;
+      position: relative;
+      height: 58px;
+
+      strong {
+        position: absolute;
+        left: 0;
+        width: 100%;
+      }
+
+      .svg-icon {
+        width: 30px;
+        height: 30px;
+        float: left;
+        margin-right: 30px;
+        margin-left: 15px;
+        fill: theme(colors.peach);
+      }
+    }
+
     ul {
       margin: 0;
       padding: 0;
       li {
-        font-size: 16px;
+        font-size: 17px;
+        font-weight: 400;
         cursor: pointer;
         list-style-type: none;
         text-align: center;
-        padding: 1rem .5rem;
         margin-bottom: .5rem;
         z-index: 9999;
         background-color: black;
         color: white;
+
+        &.selected {
+          background-color: theme(colors.blue);
+        }
+
+        .template-svg {
+          >>> svg {
+            width: 100%;
+            height: 100%;
+          }
+        }
+
+        .template-class {
+          padding-top: 15px;
+          padding-bottom: 15px;
+          padding-left: 10px;
+          padding-right: 10px;
+        }
       }
     }
+  }
+
+  .padded {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   .villain-builder-block-attributes {

@@ -73,7 +73,10 @@ export default {
           opacity: 1,
           x: 0,
           delay: 0.2 * el.dataset.index,
-          onComplete: done
+          onComplete: () => {
+            TweenMax.set(el, { clearProps: 'transform' })
+            done()
+          }
         })
     },
 

@@ -2,10 +2,12 @@
   <Block
     :block="block"
     :parent="parent"
+    :config="showConfig"
     icon="fa-paragraph"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
+    @delete="$emit('delete', $event)"
+    @toggle-config="showConfig = $event">
     <EditorMenuBar
       v-slot="{ commands, isActive, focused }"
       class="villain-text-editor-menubar"
@@ -123,6 +125,15 @@
               size="sm" />
           </button>
           <button
+            type="button"
+            class="menububble__button"
+            :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+            @click="commands.heading({ level: 3 })">
+            <FontAwesomeIcon
+              icon="heading"
+              size="sm" />
+          </button>
+          <button
             class="menububble__button"
             :class="{ 'is-active': isActive.link() }"
             @click="showLinkMenu(getMarkAttrs('link'))">
@@ -229,7 +240,8 @@ export default {
       editor: null,
       customClass: '',
       linkUrl: null,
-      linkMenuIsActive: false
+      linkMenuIsActive: false,
+      showConfig: false
     }
   },
 
@@ -260,7 +272,7 @@ export default {
         new Blockquote(),
         new BulletList(),
         new HardBreak(),
-        new Heading({ levels: [2] }),
+        new Heading({ levels: [2, 3] }),
         new ListItem(),
         new OrderedList(),
         new Link({ openOnClick: false }),

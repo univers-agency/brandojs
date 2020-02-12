@@ -33,13 +33,19 @@
           </template>
           <template v-slot:row="{ entry }">
             <td>
-              {{ entry.label }}
+              <input
+                v-model="entry.label"
+                type="text">
             </td>
             <td>
-              {{ entry.key }}
+              <input
+                v-model="entry.key"
+                type="text">
             </td>
             <td>
-              {{ entry.value }}
+              <input
+                v-model="entry.value"
+                type="text">
             </td>
           </template>
           <template v-slot:new="{ newEntry }">

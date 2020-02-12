@@ -5,8 +5,21 @@
     :config="showConfig"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
+    @delete="$emit('delete', $event)"
+    @toggle-config="showConfig = $event">
+    <div
+      v-if="!block.data.length"
+      class="villain-block-empty">
+      <i class="fa fa-fw fa-table"></i>
+      <div class="actions">
+        <ButtonSecondary
+          @click="showConfig = true">
+          Konfigurér datatabell
+        </ButtonSecondary>
+      </div>
+    </div>
     <transition-group
+      v-else
       v-sortable="{handle: '.villain-block-datatable-item', animation: 500, store: {get: getOrder, set: storeOrder}}"
       class="villain-block-datatable"
       name="fade-move"
@@ -44,23 +57,19 @@
                 type="input" />
             </td>
             <td>
-              <button
-                type="button"
-                class="btn btn-outline-primary btn-small"
+              <ButtonSecondary
                 @click="deleteItem(item)">
                 <i class="fa fa-times" />
-              </button>
+              </ButtonSecondary>
             </td>
           </tr>
         </tbody>
       </table>
       <div class="d-flex justify-content-center">
-        <button
-          type="button"
-          class="btn btn-outline-primary"
+        <ButtonSecondary
           @click="addItem">
           Legg til ny linje
-        </button>
+        </ButtonSecondary>
       </div>
     </template>
   </Block>
@@ -98,10 +107,6 @@ export default {
 
   created () {
     console.debug('<DatatableBlock /> created')
-
-    if (!this.block.data.length) {
-      this.showConfig = true
-    }
   },
 
   methods: {
@@ -141,3 +146,39 @@ export default {
   }
 }
 </script>
+
+<style lang="postcss" scoped>
+  .villain-block-config-content {
+    table {
+      margin-right: 0;
+      width: 100%;
+    }
+    td button {
+      margin-bottom: 15px;
+      border: none;
+      width: 35px;
+      min-width: 35px;
+    }
+  }
+
+  .desc {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  .villain-block-empty {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 30%;
+      height: 30%;
+      max-width: 250px;
+      margin-bottom: 25px;
+    }
+  }
+
+</style>

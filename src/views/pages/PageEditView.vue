@@ -1,11 +1,40 @@
 <template>
-  <article>
+  <article :key="'edit-' + page.id">
     <ContentHeader>
       <template v-slot:title>
         Endre innholdsside
       </template>
     </ContentHeader>
-    <PageForm :page="page" :save="save" />
+    <PageForm
+      :page="page"
+      :save="save" />
+
+    <div
+      v-if="pageWithChildren && pageWithChildren.children.length"
+      class="subpages">
+      <h2>{{ $t('pages.subpages') }}</h2>
+      <ContentList
+        :entries="pageWithChildren.children">
+        <template v-slot:row="{ entry }">
+          <div class="col-1">
+            <div class="circle">
+              <span>{{ entry.language }}</span>
+            </div>
+          </div>
+          <div class="col-11 title">
+            <router-link :to="{ name: 'pages-edit', params: { pageId: entry.id } }">
+              {{ entry.title }}
+            </router-link><br>
+            <div class="badge">{{ entry.key }}</div>
+          </div>
+          <div class="col-4">
+            <ItemMeta
+              :entry="entry"
+              :user="entry.creator" />
+          </div>
+        </template>
+      </ContentList>
+    </div>
   </article>
 </template>
 
@@ -126,11 +155,57 @@ export default {
       skip () {
         return !this.pageId
       }
+    },
+
+    pageWithChildren: {
+      query: gql`
+        query Page ($pageId: ID!) {
+          pageWithChildren: page (pageId: $pageId) {
+            id
+            children {
+              id
+              title
+              key
+              language
+
+              creator {
+                id
+                full_name
+                avatar {
+                  thumb: url(size: "xlarge")
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables () {
+        return {
+          pageId: this.pageId
+        }
+      },
+
+      skip () {
+        return !this.pageId
+      }
     }
   }
 }
 </script>
 
 <style lang="postcss" scoped>
-
+  .subpages {
+    @space margin-top lg;
+  }
 </style>
+
+<i18n>
+{
+  "en": {
+    "pages.subpages": "Subpages"
+  },
+  "nb": {
+    "pages.subpages": "Undersider"
+  }
+}
+</i18n>

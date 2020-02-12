@@ -11,14 +11,18 @@
     </div>
     <div class="villain-block-image">
       <img
-        v-if="block.data.url"
+        v-if="block.data.url && block.data.url !== ''"
         :src="block.data.url"
         class="img-fluid">
       <div
         v-else
-        class="d-flex justify-content-center">
-        <div class="d-inline-block">
-          Inget bilde
+        class="villain-block-image-empty">
+        <i class="fa fa-fw fa-image"></i>
+        <div class="actions">
+          <ButtonSecondary
+            @click="showConfig = true">
+            Konfigurér bildeblokk
+          </ButtonSecondary>
         </div>
       </div>
     </div>
@@ -255,10 +259,6 @@ export default {
 
   created () {
     console.debug('<ImageBlock /> created')
-
-    if (!this.block.data.url) {
-      this.showConfig = true
-    }
   },
 
   methods: {
@@ -381,3 +381,23 @@ export default {
   }
 }
 </script>
+<style lang="postcss" scoped>
+  .villain-block-image-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 30%;
+      height: 30%;
+      max-width: 250px;
+      margin-bottom: 25px;
+    }
+  }
+
+  .drop {
+    background-color: white;
+    margin-bottom: 20px;
+  }
+</style>

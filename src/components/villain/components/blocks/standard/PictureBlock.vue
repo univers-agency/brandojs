@@ -5,7 +5,8 @@
     :config="showConfig"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
+    @delete="$emit('delete', $event)"
+    @toggle-config="showConfig = $event">
     <div class="villain-block-description">
       Bildefigur
     </div>
@@ -16,9 +17,13 @@
         class="img-fluid">
       <div
         v-else
-        class="d-flex justify-content-center">
-        <div class="d-inline-block">
-          Inget bilde
+        class="villain-block-image-empty">
+        <i class="fa fa-fw fa-portrait"></i>
+        <div class="actions">
+          <ButtonSecondary
+            @click="showConfig = true">
+            Konfigurér bildeblokk
+          </ButtonSecondary>
         </div>
       </div>
     </div>
@@ -284,10 +289,6 @@ export default {
 
   created () {
     console.debug('<PictureBlock /> created')
-
-    if (!this.block.data.url) {
-      this.showConfig = true
-    }
   },
 
   methods: {
@@ -411,3 +412,23 @@ export default {
   }
 }
 </script>
+<style lang="postcss" scoped>
+  .villain-block-image-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 30%;
+      height: 30%;
+      max-width: 250px;
+      margin-bottom: 25px;
+    }
+  }
+
+  .drop {
+    background-color: white;
+    margin-bottom: 20px;
+  }
+</style>

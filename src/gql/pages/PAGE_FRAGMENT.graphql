@@ -1,0 +1,66 @@
+fragment page on Page {
+  id
+  key
+  title
+  slug
+  language
+  data
+  css_classes
+
+  creator {
+    id
+    full_name
+    avatar {
+      thumb: url(size: "xlarge")
+    }
+  }
+
+  parent {
+    id
+    key
+    language
+    title
+    data
+    slug
+  }
+
+  children {
+    id
+    key
+    title
+    slug
+    language
+    data
+
+    creator {
+      id
+      full_name
+      avatar {
+        thumb: url(size: "xlarge")
+      }
+    }
+  }
+
+  fragments {
+    id
+    title
+    key
+    parent_key
+    language
+    updated_at
+    page_id
+    data
+
+    creator {
+      id
+      full_name
+      avatar {
+        thumb: url(size: "xlarge")
+      }
+    }
+  }
+
+  inserted_at
+  updated_at
+  deleted_at
+}

@@ -8,6 +8,7 @@
     v-else
     :class="fullscreen ? 'villain-fullscreen': ''"
     class="villain-editor">
+    <div class="villain-editor-backdrop" />
     <div
       v-if="showAutosaves"
       class="villain-editor-autosave-list-popup">
@@ -324,6 +325,8 @@ export default {
         let bx = cloneDeep(val)
         if (bx.length) {
           this.$emit('input', JSON.stringify(bx.map(b => this.stripMeta(b)), null, 2))
+        } else {
+          this.$emit('input', null)
         }
         return val
       },
@@ -750,7 +753,7 @@ export default {
       }
     },
 
-    deleteBlock ({ uid }) {
+    deleteBlock ({ uid, ref }) {
       let block = this.blocks.find(b => {
         if (b.type === 'columns') {
           for (let col of b.data) {
@@ -768,11 +771,41 @@ export default {
         return b.uid === uid
       })
       if (block) {
-        let idx = this.blocks.indexOf(block)
-        this.blocks = [
-          ...this.blocks.slice(0, idx),
-          ...this.blocks.slice(idx + 1)
-        ]
+        if (ref) {
+          let idx = this.blocks.indexOf(block)
+          console.log('idx', idx)
+          // a TemplateBlock that wants to get rid of a ref!
+          let foundRef = block.data.refs.find(r => r.name === ref)
+          let refIdx = block.data.refs.indexOf(foundRef)
+
+          if (refIdx > -1) {
+            this.blocks = [
+              ...this.blocks.slice(0, idx),
+              {
+                ...block,
+                data: {
+                  ...block.data,
+                  refs: [
+                    ...block.data.refs.slice(0, refIdx),
+                    { ...foundRef, deleted: true },
+                    ...block.data.refs.slice(refIdx + 1)
+                  ]
+                }
+              },
+              ...this.blocks.slice(idx + 1)
+            ]
+
+            console.log(this.blocks)
+          } else {
+            console.log('ref not found...')
+          }
+        } else {
+          let idx = this.blocks.indexOf(block)
+          this.blocks = [
+            ...this.blocks.slice(0, idx),
+            ...this.blocks.slice(idx + 1)
+          ]
+        }
       }
     },
 
@@ -784,6 +817,18 @@ export default {
 }
 </script>
 <style lang="postcss">
+.villain-editor-backdrop {
+  z-index: 25;
+  background-color: theme(colors.blue);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  display: none;
+}
+
 .tooltip {
   font-size: 16px;
   display: block !important;
@@ -1062,6 +1107,11 @@ export default {
     opacity: 0;
     transform: scale(0.85);
   }
+}
+
+select.form-control {
+  clear: both;
+  width: 100%;
 }
 
 </style>

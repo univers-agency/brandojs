@@ -712,6 +712,10 @@ export default {
   @space margin-bottom md;
 }
 
+.ml-2xs {
+  @space margin-left xs/2;
+}
+
 .ml-xs {
   @space margin-left xs;
 }
@@ -1296,21 +1300,6 @@ input::-moz-placeholder {
     -moz-animation: blink 1.06s steps(1) infinite;
     animation: blink 1.06s steps(1) infinite;
     background-color: #7e7;
-  }
-  @-moz-keyframes blink {
-    0% {}
-    50% { background-color: transparent; }
-    100% {}
-  }
-  @-webkit-keyframes blink {
-    0% {}
-    50% { background-color: transparent; }
-    100% {}
-  }
-  @keyframes blink {
-    0% {}
-    50% { background-color: transparent; }
-    100% {}
   }
 
   /* Can style cursor different in overwrite (non-insert) mode */

@@ -4,7 +4,8 @@
     :parent="parent"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
+    @delete="$emit('delete', $event)"
+    @toggle-config="showConfig = $event">
     <div class="villain-block-divider">
       <hr>
     </div>
