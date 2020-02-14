@@ -100,6 +100,13 @@ export default {
       type: Object
     },
 
+    // is the series inside a form?
+    // we handle the upload differently
+    inForm: {
+      type: Boolean,
+      default: false
+    },
+
     showHeader: {
       type: Boolean,
       default: true
@@ -187,31 +194,32 @@ export default {
     },
 
     addImageToSeries (image) {
-      console.log('image we are adding', image)
-
       const store = this.$apolloProvider.defaultClient.store.cache
 
-      // check if we have a category with this series
-      let query = {
-        query: GET_IMAGE_CATEGORY,
-        variables: {
-          categoryId: parseInt(this.imageSeries.image_category_id)
+      if (!this.inForm) {
+        // check if we have a category with this series
+        let query = {
+          query: GET_IMAGE_CATEGORY,
+          variables: {
+            categoryId: parseInt(this.imageSeries.image_category_id)
+          }
         }
-      }
 
-      try {
-        let data = store.readQuery(query)
-        const series = data.imageCategory.image_series.find(s => parseInt(s.id) === parseInt(image.image_series_id))
-        console.log('found series', series)
-        series.images.unshift(image)
+        try {
+          let data = store.readQuery(query)
+          const series = data.imageCategory.image_series.find(s => parseInt(s.id) === parseInt(image.image_series_id))
+          series.images.unshift(image)
 
-        store.writeQuery({
-          ...query,
-          data
-        })
-      } catch (err) {
-        console.log(err)
-        // not in store
+          store.writeQuery({
+            ...query,
+            data
+          })
+        } catch (err) {
+          console.log(err)
+          // not in store
+        }
+      } else {
+        this.imageSeries.images.push(image)
       }
     },
 

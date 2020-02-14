@@ -33,7 +33,8 @@
       v-if="pages"
       :entries="pages"
       :sortable="true"
-      filter="title"
+      :filter-keys="['title']"
+      @filter="filter = $event"
       @sort="sortPages">
       <template v-slot:row="{ entry }">
         <div class="col-1">
@@ -219,7 +220,9 @@ import GET_PAGES from '../../gql/pages/PAGES_QUERY.graphql'
 export default {
   data () {
     return {
-      visibleChildren: []
+      visibleChildren: [],
+      filter: null,
+      offset: 0
     }
   },
 
@@ -507,7 +510,15 @@ export default {
 
   apollo: {
     pages: {
-      query: GET_PAGES
+      query: GET_PAGES,
+      debounce: 750,
+      variables () {
+        return {
+          limit: 100,
+          offset: this.offset,
+          filter: this.filter
+        }
+      }
     }
   }
 }

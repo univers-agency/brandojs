@@ -38,6 +38,7 @@ export default [
       sizes: null,
       title: '',
       credits: '',
+      alt: '',
       class: 'img-fluid',
       series_slug: 'post'
     }
@@ -63,6 +64,7 @@ export default [
       sizes: null,
       title: '',
       credits: '',
+      alt: '',
       img_class: 'img-fluid',
       picture_class: '',
       srcset: '',

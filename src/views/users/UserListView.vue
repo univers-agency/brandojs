@@ -73,6 +73,7 @@
 <script>
 
 import gql from 'graphql-tag'
+import GET_USERS from '../../gql/users/USERS_QUERY.graphql'
 
 export default {
   data () {
@@ -111,23 +112,7 @@ export default {
 
   apollo: {
     users: {
-      query: gql`
-        query Users {
-          users {
-            id
-            full_name
-            email
-            avatar {
-              focal
-              thumb: url(size: "thumb")
-            }
-            role
-            language
-            active
-            deleted_at
-          }
-        }
-      `
+      query: GET_USERS
     }
   }
 }

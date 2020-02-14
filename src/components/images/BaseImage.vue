@@ -49,18 +49,20 @@
                 v-model="img.image.title"
                 :value="img.image.title"
                 name="img.image[title]"
-                label="Evt. beskrivelse"
-                placeholder="Evt. beskrivelse"
-                data-vv-name="img.image[title]"
-                data-vv-value-path="innerValue" />
+                label="Bildetekst"
+                placeholder="Bildetekst" />
               <KInput
                 v-model="img.image.credits"
                 :value="img.image.credits"
                 name="img.image[credits]"
                 label="Evt. kreditering"
-                placeholder="Evt. kreditering"
-                data-vv-name="img.image[credits]"
-                data-vv-value-path="innerValue" />
+                placeholder="Evt. kreditering" />
+              <KInput
+                v-model="img.image.alt"
+                :value="img.image.alt"
+                name="img.image[alt]"
+                label="Alt tekst"
+                placeholder="Beskrivelse av hva som er på bildet" />
 
               <div class="info">
                 <dt>
@@ -121,6 +123,7 @@
 
 <script>
 
+import gql from 'graphql-tag'
 import moment from 'moment-timezone'
 import Modal from '../Modal.vue'
 import FocusPoint from './FocusPoint.vue'
@@ -194,8 +197,54 @@ export default {
       })
     },
 
-    saveEdit () {
-      this.adminChannel.channel.push('image:update', this.img)
+    async saveEdit () {
+      const imageMetaParams = {
+        alt: this.img.image.alt,
+        credits: this.img.image.credits,
+        title: this.img.image.title,
+        focal: this.img.image.focal
+      }
+      const imageParams = this.$utils.stripParams(this.img, ['__typename', 'id', 'deleted_at'])
+      this.$utils.validateImageParams(imageParams, ['image'])
+      try {
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation UpdateImageMeta($imageId: ID!, $imageMetaParams: ImageMetaParams) {
+              updateImageMeta(
+                imageId: $imageId,
+                imageMetaParams: $imageMetaParams
+              ) {
+                id
+                image {
+                  path
+                  credits
+                  title
+                  alt
+                  focal
+                  width
+                  height
+                  sizes
+                  thumb: url(size: "thumb")
+                  medium: url(size: "medium")
+                }
+                image_series_id
+                sequence
+                updated_at
+                deleted_at
+              }
+            }
+          `,
+          variables: {
+            imageMetaParams,
+            imageId: this.img.id
+          }
+        })
+
+        this.$toast.success({ message: 'Serie oppdatert' })
+        this.$router.push({ name: 'images' })
+      } catch (err) {
+        this.$utils.showError(err)
+      }
 
       this.showEdit = false
       this.selected = false
@@ -290,7 +339,7 @@ export default {
         button {
           margin-left: 15px;
           border: 1px solid theme(colors.blue);
-          padding: 8px 15px 3px;
+          padding: 8px 15px 8px;
         }
       }
     }

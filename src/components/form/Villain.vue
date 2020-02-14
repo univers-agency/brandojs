@@ -98,7 +98,6 @@ export default {
     innerValue: {
       get () { return this.value },
       set (innerValue) {
-        console.log('set', innerValue)
         this.$emit('input', innerValue)
       }
     }

@@ -26,6 +26,7 @@ fragment image_series on ImageSeries {
       path
       credits
       title
+      alt
       focal
       width
       height

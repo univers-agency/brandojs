@@ -1,5 +1,5 @@
-query Pages {
-  pages {
+query Pages ($limit: Int, $offset: Int, $filter: PageFilter) {
+  pages (limit: $limit, offset: $offset, filter: $filter) {
     id
     key
     title

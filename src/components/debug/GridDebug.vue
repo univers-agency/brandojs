@@ -1,8 +1,9 @@
 <template>
   <div
+    v-shortkey.push="['ctrl', 'g']"
     :class="{ visible }"
     class="dbg-grid"
-    v-shortkey.push="['ctrl', 'g']" @shortkey="toggle">
+    @shortkey="toggle">
     <b></b>
     <b></b>
     <b></b>
@@ -28,10 +29,6 @@ export default {
     return {
       visible: false
     }
-  },
-
-  created () {
-    console.log('GridDebug')
   },
 
   methods: {

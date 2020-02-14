@@ -220,6 +220,7 @@ export default {
                   path
                   credits
                   title
+                  alt
                   focal
                   width
                   height
@@ -429,7 +430,7 @@ export default {
           }
 
           const newFile = {
-            active: true,
+            active: false,
             success: false,
             error: false,
             id: Math.random().toString(36).substr(2),

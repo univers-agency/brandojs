@@ -10,8 +10,7 @@
       :class="{ open: open }"
       class="current-user"
       @click="toggle"
-      @keyup.enter="toggle"
-      @focus="focus">
+      @keyup.enter="toggle">
       <section class="button">
         <section class="avatar-wrapper">
           <div class="avatar">
@@ -106,10 +105,6 @@ export default {
         gsap.to(lis, { duration: 0.35, delay: 0.2, autoAlpha: 1, x: 0, stagger: 0.1 })
         this.open = true
       }
-    },
-
-    focus () {
-      console.log('focus!')
     }
   },
 
@@ -204,7 +199,7 @@ export default {
       .role {
         font-family: 'Maison Neue', monospace;
         font-size: 12px;
-        opacity: 70%;
+        opacity: 0.7;
         user-select: none;
         text-transform: uppercase;
       }

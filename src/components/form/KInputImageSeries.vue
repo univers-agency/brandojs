@@ -9,9 +9,13 @@
     </template>
     <template v-slot:outsideValidator>
       <div v-if="innerValue && innerValue.id">
+        <ImageSelection
+          :selected-images="selectedImages"
+          @delete="removeDeletedImage" />
         <ImageSeries
-          :selected-images="[]"
+          :selected-images="selectedImages"
           :show-header="false"
+          :in-form="true"
           :show-delete="showDelete"
           :show-config="showConfig"
           :show-upload="showUpload"
@@ -140,7 +144,8 @@ export default {
     return {
       new: false,
       files: [],
-      config: {}
+      config: {},
+      selectedImages: []
     }
   },
 
@@ -202,6 +207,15 @@ export default {
   },
 
   methods: {
+    removeDeletedImage ({ id, imageSeriesId }) {
+      const foundImg = this.innerValue.images.find(img => parseInt(img.id) === parseInt(id))
+      const idx = this.innerValue.images.indexOf(foundImg)
+      this.innerValue.images = [
+        ...this.innerValue.images.slice(0, idx),
+        ...this.innerValue.images.slice(idx + 1)
+      ]
+    },
+
     buildCfg () {
       if (this.new && this.adminChannel) {
         this.adminChannel.channel

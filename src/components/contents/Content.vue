@@ -82,10 +82,8 @@ export default {
   watch: {
     showProgress (val) {
       if (val) {
-        console.log('play progress')
         this.progressTimeline.play()
       } else {
-        console.log('reverse progress')
         this.progressTimeline.reverse()
       }
     }
@@ -147,7 +145,6 @@ export default {
     },
 
     leave (el, done) {
-      console.log('leave')
       const tl = gsap.timeline({
         onComplete: done
       })

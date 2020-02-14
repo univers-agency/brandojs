@@ -48,9 +48,7 @@ export default {
   },
 
   watch: {
-    loading (value) {
-      console.log('loading is', value)
-    },
+    loading (value) {},
 
     fullscreen (value) {
       if (value) {
@@ -286,7 +284,6 @@ export default {
       },
 
       skip () {
-        console.log(this.$root.ready)
         return !this.$root.ready || !this.token
       }
     },

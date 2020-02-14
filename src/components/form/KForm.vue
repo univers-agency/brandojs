@@ -1,7 +1,6 @@
 <template>
   <transition
     appear
-    @beforeEnter="beforeEnter"
     @enter="enter">
     <form>
       <ValidationObserver
@@ -73,7 +72,11 @@ export default {
 
   mounted () {
     const fields = this.$el.querySelectorAll('.field-wrapper')
-    gsap.set(fields, { autoAlpha: 0, x: -15 })
+    this.$nextTick(() => {
+      if (fields) {
+        gsap.set(fields, { autoAlpha: 0, x: -15 })
+      }
+    })
   },
 
   methods: {
@@ -91,14 +94,13 @@ export default {
       this.loading = status
     },
 
-    beforeEnter (el) {
-
-    },
-
     enter (el, done) {
       const fields = el.querySelectorAll('.field-wrapper')
-
-      gsap.to(fields, { duration: 0.5, autoAlpha: 1, x: 0, stagger: '0.05', clearProps: 'all' })
+      this.$nextTick(() => {
+        if (fields) {
+          gsap.to(fields, { duration: 0.5, autoAlpha: 1, x: 0, stagger: '0.05', clearProps: 'all', onComplete: done })
+        }
+      })
     }
   }
 }

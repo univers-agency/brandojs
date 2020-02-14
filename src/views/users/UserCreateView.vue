@@ -18,6 +18,8 @@
 
 import gql from 'graphql-tag'
 import UserForm from './UserForm'
+import GET_USERS from '../../gql/users/USERS_QUERY.graphql'
+import USER_FRAGMENT from '../../gql/users/USER_FRAGMENT.graphql'
 
 export default {
   components: {
@@ -32,6 +34,10 @@ export default {
     }
   },
 
+  fragments: {
+    user: USER_FRAGMENT
+  },
+
   methods: {
     async save () {
       const userParams = this.$utils.stripParams(this.user, ['__typename', 'password_confirm', 'id', 'active', 'deleted_at'])
@@ -44,20 +50,30 @@ export default {
               createUser(
                 userParams: $userParams
               ) {
-                id
-                language
-                full_name
-                email
-                avatar {
-                  focal
-                  thumb: url(size: "xlarge")
-                }
-                role
+                ...user
               }
             }
+            ${USER_FRAGMENT}
           `,
           variables: {
             userParams
+          },
+          update: (store, { data: { createUser } }) => {
+            try {
+              const query = {
+                query: GET_USERS
+              }
+              const data = store.readQuery(query)
+              data.users.push(createUser)
+              // Write back to the cache
+              store.writeQuery({
+                ...query,
+                data
+              })
+            } catch (e) {
+              console.log(e)
+              // ignore errors. usually means it's just not in cache.
+            }
           }
         })
 

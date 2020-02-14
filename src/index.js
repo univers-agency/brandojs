@@ -30,6 +30,10 @@ import { utils } from './utils'
 import { alerts } from './utils/alerts'
 import defaultMenuSections from './menus'
 
+import { gsap, CSSPlugin } from 'gsap'
+
+gsap.registerPlugin(CSSPlugin)
+
 iziToast.settings({
   position: 'topRight',
   title: '',
