@@ -163,7 +163,7 @@
           v-model="block.data.type"
           class="form-check-input"
           type="radio"
-          value="lead">
+          value="lede">
         <label class="form-check-label">
           Ingress
         </label>

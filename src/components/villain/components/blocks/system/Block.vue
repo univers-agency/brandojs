@@ -924,7 +924,7 @@ export default {
     }
   }
 
-  &.lead {
+  &.lead, &.lede {
     p {
       @fontsize xl;
     }
