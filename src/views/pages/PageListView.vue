@@ -222,7 +222,8 @@ export default {
     return {
       visibleChildren: [],
       filter: null,
-      offset: 0
+      offset: 0,
+      limit: 100
     }
   },
 
@@ -249,7 +250,14 @@ export default {
         .receive('ok', payload => {
           this.$toast.success({ message: this.$t('pages.sequence-updated') })
 
-          const query = { query: GET_PAGES }
+          const query = {
+            query: GET_PAGES,
+            variables: {
+              limit: this.limit,
+              offset: this.offset,
+              filter: this.filter
+            }
+          }
           const store = this.$apolloProvider.defaultClient.store.cache
           const data = store.readQuery(query)
 
@@ -270,7 +278,14 @@ export default {
         .receive('ok', payload => {
           this.$toast.success({ message: this.$t('pages.sequence-updated') })
 
-          const query = { query: GET_PAGES }
+          const query = {
+            query: GET_PAGES,
+            variables: {
+              limit: this.limit,
+              offset: this.offset,
+              filter: this.filter
+            }
+          }
           const store = this.$apolloProvider.defaultClient.store.cache
           const data = store.readQuery(query)
 
@@ -363,7 +378,12 @@ export default {
 
           update: (store, { data: { duplicatePage } }) => {
             const query = {
-              query: GET_PAGES
+              query: GET_PAGES,
+              variables: {
+                limit: this.limit,
+                offset: this.offset,
+                filter: this.filter
+              }
             }
 
             const data = store.readQuery(query)
@@ -414,7 +434,12 @@ export default {
 
                 update: (store, { data: { deletePageFragment } }) => {
                   const query = {
-                    query: GET_PAGES
+                    query: GET_PAGES,
+                    variables: {
+                      limit: this.limit,
+                      offset: this.offset,
+                      filter: this.filter
+                    }
                   }
                   const data = store.readQuery(query)
                   const page = data.pages.find(
@@ -477,7 +502,12 @@ export default {
 
                 update: (store, { data: { deletePage } }) => {
                   const query = {
-                    query: GET_PAGES
+                    query: GET_PAGES,
+                    variables: {
+                      limit: this.limit,
+                      offset: this.offset,
+                      filter: this.filter
+                    }
                   }
 
                   const data = store.readQuery(query)
@@ -514,7 +544,7 @@ export default {
       debounce: 750,
       variables () {
         return {
-          limit: 100,
+          limit: this.limit,
           offset: this.offset,
           filter: this.filter
         }

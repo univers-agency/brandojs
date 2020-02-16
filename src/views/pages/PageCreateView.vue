@@ -105,7 +105,12 @@ export default {
 
           update: (store, { data: { createPage } }) => {
             const query = {
-              query: GET_PAGES
+              query: GET_PAGES,
+              variables: {
+                limit: 100,
+                offset: 0,
+                filter: null
+              }
             }
             const data = store.readQuery(query)
             data.pages.push(createPage)
