@@ -54,7 +54,7 @@
 import Block from '../system/Block'
 
 export default {
-  name: 'ImageBlock',
+  name: 'MapBlock',
 
   components: {
     Block

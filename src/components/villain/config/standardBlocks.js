@@ -74,6 +74,20 @@ export default [
   },
 
   {
+    name: 'Datakilde',
+    icon: 'fa-database',
+    component: 'Datasource',
+    dataTemplate: {
+      module: null,
+      type: null,
+      query: null,
+      template: null,
+      wrapper: null,
+      description: null
+    }
+  },
+
+  {
     name: 'Svg',
     icon: 'fa-code',
     component: 'Svg',

@@ -243,6 +243,7 @@ export default {
         border-color: theme(colors.peach);
         color: theme(colors.peach);
         height: 40px;
+        padding: 0 5px !important;
 
         &:hover {
           background-color: theme(colors.peach);

@@ -4,6 +4,11 @@
       <span class="text-mono">
         <template v-if="currentTemplate">
           Editérer {<strong> {{ currentTemplate.data.class }} </strong>}
+          <ButtonSmall
+            position="static"
+            @click.native="deleteTemplate(currentTemplate)">
+            Slett
+          </ButtonSmall>
         </template>
       </span>
       <div
@@ -64,8 +69,8 @@
             tag="ul">
             <li
               v-for="t in templates"
-              :key="t.data.id"
-              :data-id="t.data.id"
+              :key="t && t.data && t.data.id"
+              :data-id="t && t.data && t.data.id"
               class="template-entry"
               :class="isSelected(t) ? 'selected' : ''"
               @click.stop="selectTemplate(t)">
@@ -82,22 +87,29 @@
         </VueSlideUpDown>
       </div>
       <template v-if="namespacedTemplates && namespacedTemplates.general">
-        <li
-          v-for="(tp, idx) in namespacedTemplates.general"
-          :key="'general-' + idx"
-          :data-id="t.data.id"
-          class="template-entry"
-          :class="isSelected(t) ? 'selected' : ''"
-          @click="selectTemplate(t)">
-          <template v-if="t.data.svg">
-            <div
-              class="template-svg"
-              v-html="t.data.svg" />
-          </template>
-          <div class="template-class">
-            {{ t.data.name }}
-          </div>
-        </li>
+        <div class="template-group">
+          <transition-group
+            v-sortable="{handle: 'li', animation: 500, store: {get: getOrder, set: storeOrder}}"
+            name="fade-move"
+            tag="ul">
+            <li
+              v-for="(tp, idx) in namespacedTemplates.general"
+              :key="'general-' + idx"
+              :data-id="tp.data && tp.data.id"
+              class="template-entry"
+              :class="isSelected(tp) ? 'selected' : ''"
+              @click="selectTemplate(tp)">
+              <template v-if="tp.data.svg">
+                <div
+                  class="template-svg"
+                  v-html="tp.data.svg" />
+              </template>
+              <div class="template-class">
+                {{ tp.data.name }}
+              </div>
+            </li>
+          </transition-group>
+        </div>
       </template>
     </aside>
 
@@ -269,6 +281,7 @@ import 'codemirror/addon/display/autorefresh.js'
 
 import fetchTemplates from '../utils/fetchTemplates'
 import storeTemplate from '../utils/storeTemplate'
+import deleteTemplate from '../utils/deleteTemplate'
 import storeTemplateSequence from '../utils/storeTemplateSequence'
 
 export default {
@@ -429,6 +442,17 @@ export default {
     storeOrder (sortable) {
       this.templateSequence = sortable.toArray()
       storeTemplateSequence(this.templateSequence, this.headers.extra, this.urls.templateSequence)
+    },
+
+    deleteTemplate (tpl) {
+      this.$alerts.alertConfirm('OBS!', 'Er du sikker på at du vil slette denne malen?', async data => {
+        if (data) {
+          let result = await deleteTemplate(tpl, this.headers.extra, this.urls.templates, this.$toast)
+          if (result.status === 200) {
+            this.templates = await fetchTemplates('all', this.headers.extra, this.urls.templates)
+          }
+        }
+      })
     },
 
     createTemplate () {
@@ -657,7 +681,10 @@ export default {
       .villain-builder-svg-drop {
         width: 250px;
         height: 85px;
-        background-color: gray;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: theme(colors.peach);
       }
     }
   }

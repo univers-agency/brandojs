@@ -1,4 +1,5 @@
 import ItemMeta from './ItemMeta'
+import CheckOrX from './CheckOrX'
 import ContentHeader from './ContentHeader'
 import ContentList from './ContentList'
 import Content from './Content'
@@ -8,6 +9,7 @@ import Status from './Status'
 
 export {
   ItemMeta,
+  CheckOrX,
   ContentHeader,
   ContentList,
   Content,

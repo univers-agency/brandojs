@@ -2,12 +2,14 @@
   <router-link
     v-if="to"
     class="small"
+    :class="{static: position === 'static'}"
     :to="to">
     <slot></slot>
   </router-link>
   <button
     v-else
     type="button"
+    :class="{static: position === 'static'}"
     class="small">
     <slot></slot>
   </button>
@@ -18,6 +20,10 @@ export default {
   props: {
     to: {
       type: [Object, Boolean]
+    },
+    position: {
+      type: String,
+      default: 'absolute'
     }
   }
 }
@@ -34,6 +40,10 @@ export default {
     padding: 4px 7px 4px;
     margin-top: -2px;
     transition: background-color 0.35s ease, color 0.35s ease;
+
+    &.static {
+      position: static;
+    }
 
     &:hover {
       background-color: theme(colors.dark);

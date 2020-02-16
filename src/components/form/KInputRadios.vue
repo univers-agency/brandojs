@@ -6,21 +6,26 @@
     :helpText="helpText"
     :value="value">
     <template v-slot>
-      <div class="radios-wrapper">
+      <div
+        v-if="options.length"
+        class="radios-wrapper">
         <div
           v-for="o in options"
-          :key="o.value"
+          :key="o[optionValueKey]"
           class="form-check">
           <label class="form-check-label">
             <input
               v-model="innerValue"
               :name="name"
-              :value="o.value"
+              :value="o[optionValueKey]"
               class="form-check-input"
               type="radio">
-            <span class="label-text">{{ o.name }}</span>
+            <span class="label-text">{{ o[optionLabelKey] }}</span>
           </label>
         </div>
+      </div>
+      <div v-else>
+        Ingen tilgjengelige valg
       </div>
     </template>
   </KFieldBase>
@@ -68,7 +73,17 @@ export default {
     value: {
       type: [String, Number],
       default: ''
-    }
+    },
+
+    optionValueKey: {
+      type: String,
+      default: 'value'
+    },
+
+    optionLabelKey: {
+      type: String,
+      default: 'name'
+    },
   },
 
   data () {

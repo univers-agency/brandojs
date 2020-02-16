@@ -85,7 +85,12 @@ export default {
           },
           update: (store, { data: { createPageFragment } }) => {
             const query = {
-              query: GET_PAGES
+              query: GET_PAGES,
+              variables: {
+                limit: 100,
+                offset: 0,
+                filter: null
+              }
             }
             const data = store.readQuery(query)
             const page = data.pages.find(page => parseInt(page.id) === parseInt(this.pageId))

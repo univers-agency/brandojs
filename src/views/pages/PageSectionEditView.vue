@@ -64,6 +64,7 @@ export default {
                   full_name
                 }
                 inserted_at
+                updated_at
                 deleted_at
               }
             }
@@ -76,7 +77,12 @@ export default {
 
           update: (store, { data: { updatePageFragment } }) => {
             const query = {
-              query: GET_PAGES
+              query: GET_PAGES,
+              variables: {
+                limit: 100,
+                offset: 0,
+                filter: null
+              }
             }
             const data = store.readQuery(query)
             const page = data.pages.find(page => parseInt(page.id) === parseInt(this.pageFragment.page_id))

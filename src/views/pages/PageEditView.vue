@@ -1,5 +1,7 @@
 <template>
-  <article :key="'edit-' + page.id">
+  <article
+    v-if="pageId"
+    :key="'edit-' + pageId">
     <ContentHeader>
       <template v-slot:title>
         Endre innholdsside

@@ -28,9 +28,7 @@
             { name: 'Bedrift', value: 'corporation' }
           ]"
           name="identity[type]"
-          label="Type"
-          data-vv-name="identity[type]"
-          data-vv-value-path="innerValue" />
+          label="Type" />
 
         <div class="row">
           <div class="half">
