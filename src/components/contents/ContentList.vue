@@ -2,7 +2,9 @@
   <div
     class="list"
     :data-level="level">
-    <div class="list-tools">
+    <div
+      v-if="selectable"
+      class="list-tools">
       <div
         v-if="hasFilterListener && filterKey"
         class="filter">
@@ -73,7 +75,7 @@
           <template v-if="status">
             <div class="col-1">
               <Status
-                class="float-right"
+                :center="true"
                 :status="entry.status" />
             </div>
           </template>
@@ -111,6 +113,11 @@ export default {
     filter: {
       type: Boolean,
       default: false
+    },
+
+    selectable: {
+      type: Boolean,
+      default: true
     },
 
     /*
@@ -198,6 +205,9 @@ export default {
     },
 
     select (id) {
+      if (!this.selectable) {
+        return
+      }
       if (this.level > 1) {
         return
       }
@@ -318,26 +328,30 @@ export default {
       }
     }
 
-    a.link {
+    a.link, a.entry-link {
       border-bottom: none;
       position: relative;
       color: theme(colors.dark);
+      text-decoration: underline;
+      text-decoration-color: transparent;
+      transition: text-decoration-color 1s ease;
 
       &:after {
-        border-top: 2px solid theme(colors.blue);
-        content: '';
-        position: absolute;
-        opacity: 0.5;
+        content: '↗';
+        opacity: 0.4;
         right: 0;
-        left: 0;
-        bottom: -2px;
-        transition: right 350ms ease, color 550ms ease;
+        color: theme(colors.dark);
+        transform: scale(0.8) translateY(2px) rotate(0deg);
+        transition: transform 250ms ease, opacity 250ms ease, color 250ms ease;
+        display: inline-block;
       }
 
       &:hover {
+        text-decoration-color: theme(colors.blue);
         &:after {
-          right: 100%;
-          color: theme(colors.blue)
+          opacity: 1;
+          transform: scale(0.8) translateY(2px) rotate(45deg);
+          /* transition: transform 250ms ease, opacity 250ms ease, color 250ms ease; */
         }
       }
     }
@@ -346,24 +360,6 @@ export default {
       border-bottom: none;
       position: relative;
       color: theme(colors.dark);
-
-      &:after {
-        border-top: 2px solid theme(colors.blue);
-        content: '';
-        position: absolute;
-        right: 100%;
-        bottom: 0;
-        transition: right 350ms ease, color 550ms ease;
-      }
-
-      &:hover {
-        &:after {
-          transition: right 350ms ease, color 550ms ease;
-          right: 0;
-          left: 0;
-          color: theme(colors.blue)
-        }
-      }
     }
 
     .list-header {

@@ -71,7 +71,7 @@
                     @keydown.up.prevent="pointerBackward()"
                     @focus="$event.target.select()">
                 </div>
-                <transition-group name="fade">
+                <transition-group name="fadefast">
                   <div
                     v-for="(option, index) in filteredOptions"
                     :key="option[optionValueKey]"

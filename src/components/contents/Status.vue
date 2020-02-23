@@ -36,6 +36,9 @@ export default {
   div {
     display: flex;
     align-items: center;
+    border: 1px solid #eeeeee;
+    padding: 12px 0;
+    border-radius: 50px;
 
     &.center {
       justify-content: center;

@@ -1,6 +1,6 @@
 <template>
   <transition
-    :duration="500"
+    :duration="250"
     appear
     name="fade">
     <div
@@ -159,7 +159,7 @@ export default {
         document.body.className += ' modal-open'
       } else {
         if (!this.duration) {
-          this.duration = window.getComputedStyle(this.$refs.dialog)['transition-duration'].replace('s', '') * 100
+          this.duration = window.getComputedStyle(this.$refs.dialog)['transition-duration'].replace('s', '') * 10
         }
 
         window.setTimeout(() => {

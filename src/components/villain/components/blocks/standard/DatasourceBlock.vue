@@ -61,6 +61,11 @@
         name="data[query]"
         label="Spørring" />
 
+      <KInput
+        v-model="block.data.arg"
+        name="data[arg]"
+        label="Argument" />
+
       <KInputSelect
         v-model="block.data.template"
         rules="required"
@@ -110,7 +115,13 @@ export default {
 
     'block.data.type'(val) {
       this.getModuleQueries(val)
-    }
+    },
+
+    'block.data.arg'(val) {
+      if (val === '') {
+        this.block.data.arg = null
+      }
+    },
   },
 
   data () {

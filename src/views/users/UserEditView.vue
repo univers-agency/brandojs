@@ -35,7 +35,9 @@ export default {
   },
 
   methods: {
-    async save () {
+    async save (setLoader) {
+      setLoader(true)
+
       const userParams = this.$utils.stripParams(this.user, ['__typename', 'password_confirm', 'id', 'active', 'deleted_at'])
       this.$utils.validateImageParams(userParams, ['avatar'])
 
@@ -65,10 +67,12 @@ export default {
           }
         })
 
+        setLoader(false)
         this.$toast.success({ message: 'Bruker oppdatert' })
         this.$router.push({ name: 'users' })
       } catch (err) {
         this.$utils.showError(err)
+        setLoader(false)
       }
     }
   },

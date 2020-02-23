@@ -330,6 +330,10 @@ export default {
     transition: opacity 0.35s;
   }
 
+  .fadefast-enter-active, .fadefast-leave-active {
+    transition: opacity 0.15s;
+  }
+
   .fade-move-move {
     transition: transform 0.35s;
   }
@@ -350,29 +354,6 @@ export default {
 
   .text-mono {
     font-family: theme(typography.families.mono);
-  }
-
-  a.link {
-    border-bottom: none;
-    position: relative;
-    color: theme(colors.dark);
-
-    &:after {
-      border-top: 2px solid theme(colors.blue);
-      content: '';
-      position: absolute;
-      right: 0;
-      left: 0;
-      bottom: 0;
-      transition: right 350ms ease, color 550ms ease;
-    }
-
-    &:hover {
-      &:after {
-        right: 100%;
-        color: theme(colors.blue)
-      }
-    }
   }
 
   .row {
@@ -682,11 +663,18 @@ export default {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+  &.jc-none {
+   justify-content: unset;
+  }
 }
 
 .fit {
   white-space: nowrap;
   width: 1%;
+}
+
+.mt-2 {
+  margin-top: 15px;
 }
 
 .mt-3 {

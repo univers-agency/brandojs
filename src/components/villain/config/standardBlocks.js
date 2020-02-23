@@ -83,6 +83,7 @@ export default [
       query: null,
       template: null,
       wrapper: null,
+      arg: null,
       description: null
     }
   },

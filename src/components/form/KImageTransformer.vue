@@ -1,3 +1,9 @@
+<!--
+Drop images on this component.
+After the files are dropped, the `transform` prop function is called on the files.
+Then value is set to the transformed result
+-->
+
 <template>
   <KFieldBase
     :name="name"
@@ -8,7 +14,7 @@
     <template v-slot>
     </template>
     <template v-slot:outsideValidator>
-      <div v-if="innerValue && !edit">
+      <div v-if="innerValue">
         <table
           v-if="innerValue.length"
           class="table-bordered">
@@ -23,67 +29,25 @@
             </slot>
             <td class="action">
               <ButtonSmall
-                @click.native.stop.prevent="editEntry(entry)">
-                Endre
-              </ButtonSmall>
-              <ButtonSmall
                 @click.native.stop.prevent="removeEntry(entry)">
                 Fjern
               </ButtonSmall>
             </td>
           </tr>
         </table>
-        <div v-else>
-          Ingen tilknyttede objekter
-        </div>
       </div>
 
-      <div class="inline-form" v-else-if="edit && editObject">
+      <!-- <div v-else-if="edit && editObject">
         <slot
           name="form"
-          v-bind:entry="editObject"
-          v-bind:closeForm="closeForm">
+          v-bind:entry="editObject">
         </slot>
-      </div>
+      </div> -->
 
-      <div v-else>
+      <div>
         <div
           class="dropzone">
           <div class="upload">
-            <div v-show="files.length">
-              <table
-                class="table table-bordered text-sm">
-                <tr
-                  v-for="file in files"
-                  :key="file.id"
-                  :data-id="file.id">
-                  <td class="fit">
-                    <img
-                      v-if="file.thumb"
-                      :src="file.thumb"
-                      width="40"
-                      height="auto">
-                  </td>
-                  <td class="name">
-                    <span>{{ file.name }}</span>
-                  </td>
-                  <td class="fit filesize">
-                    {{ file.size | formatSize }}
-                  </td>
-                  <td
-                    class="fit">
-                    —
-                  </td>
-                </tr>
-              </table>
-              <div class="button-group">
-                <ButtonSecondary
-                  :narrow="false"
-                  @click.native.prevent="clearFiles">
-                  Fjern filer
-                </ButtonSecondary>
-              </div>
-            </div>
             <div
               v-if="!files.length"
               class="droparea">
@@ -117,6 +81,11 @@ export default {
     value: {
       type: Array,
       default: () => []
+    },
+
+    transform: {
+      type: Function,
+      required: true
     },
 
     showDelete: {
@@ -179,12 +148,12 @@ export default {
       if (val && val.length) {
         this.innerValue.images = []
         val.forEach((v, idx) => {
-          console.log(idx)
           this.innerValue.images.push({
             image: v.file,
             sequence: idx
           })
         })
+        this.innerValue = this.transform(val)
       } else {
         this.innerValue.images = []
       }
@@ -314,10 +283,6 @@ export default {
     editEntry (entry) {
       this.editObject = entry
       this.edit = true
-    },
-
-    closeForm () {
-      this.edit = false
     },
 
     removeEntry (entry) {
@@ -516,7 +481,8 @@ export default {
   display: inline-block;
 
   &:hover {
-    background-color: theme(colors.dark);
+    @color fg peach;
+    @color bg dark;
     border-color: theme(colors.dark);
   }
 }
@@ -547,7 +513,6 @@ input[type=file] {
 
 table {
   width: 100%;
-  @fontsize sm;
 
   &.table-bordered {
     td {
@@ -573,6 +538,11 @@ table {
   }
 
   tr {
+    &:nth-of-type(odd) {
+      td {
+        background-color: theme(colors.peach);
+      }
+    }
     td {
       &:first-of-type {
         width: 65px;
@@ -616,10 +586,5 @@ table {
       margin-left: -1px;
     }
   }
-}
-
-.inline-form {
-  border: 1px solid theme(color.blue);
-  padding: 0.5rem 1rem;
 }
 </style>
