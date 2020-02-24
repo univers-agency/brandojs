@@ -43,5 +43,9 @@ export default {
       @font mono xs/1;
       text-transform: uppercase;
     }
+
+    & + .checkorx {
+      margin-top: 5px;
+    }
   }
 </style>
