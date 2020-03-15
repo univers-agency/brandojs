@@ -91,7 +91,7 @@
     <template slot="config">
       <div
         v-if="showTitles">
-        <table
+        <!-- <table
           class="table villain-image-table">
           <tr
             v-for="i in block.data.images"
@@ -110,7 +110,32 @@
                 type="input">
             </td>
           </tr>
-        </table>
+        </table> -->
+
+        <KInputTable
+          v-model="block.data.images"
+          name="data[images]"
+          label="Bildetekster"
+          :delete-rows="false"
+          :new-rows="false">
+          <template v-slot:row="{ entry }">
+            <td>
+              <img style="width: 50px" :src="entry.sizes.thumb">
+            </td>
+            <td>
+              <KInput
+                :invert="true"
+                v-model="entry.title"
+                name="entry[title]"
+                placeholder="Bildetekst"
+                label="Bildetekst"
+              />
+            </td>
+          </template>
+          <template v-slot:new="">
+          </template>
+        </KInputTable>
+
         <button
           type="button"
           class="btn btn-primary"
@@ -560,5 +585,9 @@ export default {
   .drop {
     background-color: white;
     margin-bottom: 20px;
+  }
+
+  .image-caption {
+    align-self: center;
   }
 </style>

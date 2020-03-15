@@ -11,7 +11,7 @@
         :id="id"
         ref="input"
         v-model="innerValue"
-        :class="{ monospace }"
+        :class="{ monospace, invert }"
         :placeholder="placeholder"
         :maxlength="maxlength"
         :name="name"
@@ -57,6 +57,11 @@ export default {
     },
 
     monospace: {
+      type: Boolean,
+      default: false
+    },
+
+    invert: {
       type: Boolean,
       default: false
     },
@@ -111,6 +116,11 @@ export default {
       font-family: theme(typography.families.mono);
       padding-bottom: 12px;
       padding-top: 16px;
+    }
+
+    &.invert {
+      @color fg input;
+      @color bg dark;
     }
   }
 </style>

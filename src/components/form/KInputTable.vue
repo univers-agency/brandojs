@@ -16,7 +16,7 @@
         <slot
           name="row"
           v-bind:entry="entry"></slot>
-        <td class="action">
+        <td class="action" v-if="deleteRows">
           <button
             type="button"
             class="delete"
@@ -26,6 +26,7 @@
         </td>
       </tr>
       <tr
+        v-if="newRows"
         ref="newRow"
         class="input-row">
         <slot
@@ -60,6 +61,16 @@ export default {
     name: {
       type: String,
       required: true
+    },
+
+    newRows: {
+      type: Boolean,
+      default: true
+    },
+
+    deleteRows: {
+      type: Boolean,
+      default: true
     },
 
     value: {

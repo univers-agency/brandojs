@@ -40,39 +40,35 @@
         Lim inn link til youtube, vimeo eller ekstern fil. <br>
         F.eks <strong>http://www.youtube.com/watch?v=jlbunmCbTBA</strong>
       </div>
-      <div
-        class="form-group">
+      <div>
         <template
           v-if="block.data.remote_id">
-          <label>Eksisterende data ({{ block.data.source }})</label>
-          <input
+          <KInput
             v-model="block.data.remote_id"
-            class="form-control disabled"
-            disabled="true"
-            type="input">
+            name="data[remote_id]"
+            :label="`Eksisterende data — ${block.data.source}`"
+            placeholder="ID" />
 
-          <label class="mt-3">Link videoen til denne adressen:</label>
-          <input
+          <KInput
             v-model="block.data.link"
-            class="form-control"
-            type="input">
-
-          <label class="mt-3">Lim inn ny adresse</label>
+            name="data[link]"
+            label="Link video til denne URL"
+            placeholder="google.com" />
         </template>
-        <input
+
+        <KInput
           v-model="url"
-          class="form-control"
-          type="input"
-          @input="parseUrl">
+          name="url"
+          label="Lim inn videoens adresse"
+          placeholder="Videoadresse"
+          @input="parseUrl" />
       </div>
-      <div
-        v-if="block.data.url"
-        class="form-group">
-        <label>CSS klasser</label>
-        <input
+      <div v-if="block.data.url">
+        <KInput
           v-model="block.data.class"
-          class="form-control"
-          type="input">
+          name="data[class]"
+          label="Ekstra CSS klasser"
+          placeholder="CSS klasser" />
       </div>
     </template>
   </Block>
@@ -158,7 +154,8 @@ export default {
   methods: {
     parseUrl (v) {
       let match
-      let url = v.srcElement.value
+      let url = this.url
+      console.log('...')
 
       if (url.startsWith('https://player.vimeo.com/external/')) {
         this.block.data.source = 'file'
@@ -172,7 +169,9 @@ export default {
           if (match !== null && match[1] !== undefined) {
             this.block.data.source = key
             this.block.data.remote_id = match[1]
-            this.showConfig = false
+            if (key !== 'file') {
+              this.showConfig = false
+            }
             break
           }
         }

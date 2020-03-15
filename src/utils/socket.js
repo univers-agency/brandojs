@@ -32,7 +32,7 @@ export default {
           if (!connectionEstablishedOnce) {
             console.log('==> WS failed—trying longpoll')
             socket.disconnect(null, 3000)
-            socket = new Socket('/socket', { transport: LongPoll, params: { guardian_token: token } })
+            socket = new Socket('/admin/socket', { transport: LongPoll, params: { guardian_token: token } })
             socket.onOpen(() => onConnectionEstablished(socket, true))
             socket.connect()
           } else {

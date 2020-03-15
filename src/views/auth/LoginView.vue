@@ -213,6 +213,7 @@ export default {
     .login-box {
       @column 10/16;
       @column-offset 4/16;
+      max-width: 920px !important;
       background-color: theme(colors.peach);
       box-shadow:
         0 2.8px 2.2px rgba(0, 0, 0, 0.02),

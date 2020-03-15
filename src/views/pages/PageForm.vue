@@ -76,8 +76,17 @@
 
 <script>
 import gql from 'graphql-tag'
+import LivePreview from '../../mixins/LivePreview'
 
 export default {
+  mixins: [
+    LivePreview({
+      schema: 'Brando.Pages.Page',
+      prop: 'page',
+      key: 'data'
+    })
+  ],
+
   props: {
     page: {
       type: Object,

@@ -108,7 +108,7 @@ export default {
           }
         })
 
-        this.$toast.success({ message: 'Seksjon opprettet' })
+        this.$toast.success({ message: 'Seksjon oppdatert' })
         this.$router.push({ name: 'pages' })
       } catch (err) {
         this.$utils.showError(err)

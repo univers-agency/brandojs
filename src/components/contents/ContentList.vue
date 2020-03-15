@@ -6,9 +6,11 @@
       v-if="selectable"
       class="list-tools">
       <div
-        v-if="hasFilterListener && filterKey"
+        v-if="shouldFilter && filterKey"
         class="filter">
-        <div class="filter-key">
+        <div
+          class="filter-key"
+          @click="changeFilterKey">
           {{ filterKey }}
         </div>
         <input
@@ -120,6 +122,11 @@ export default {
       default: true
     },
 
+    queryVars: {
+      type: Object,
+      default: () => {}
+    },
+
     /*
     Keys we can choose between for filtering
     */
@@ -176,8 +183,8 @@ export default {
       return this.entries
     },
 
-    hasFilterListener () {
-      return this.$listeners && this.$listeners.filter
+    shouldFilter () {
+      return this.$parent.queryVars.hasOwnProperty('filter')
     },
 
     hasMoreListener () {
@@ -190,14 +197,28 @@ export default {
       this.filterKey = this.filterKeys[0]
     }
 
-    if (this.hasFilterListener && !this.filterKeys.length) {
+    if (this.shouldFilter && !this.filterKeys.length) {
       console.error('ContentList: No filterKeys set, but @filter listener provided!')
     }
   },
 
   methods: {
+    changeFilterKey () {
+      if (this.filterKeys.length <= 1) {
+        return
+      }
+
+      const idx = this.filterKeys.findIndex(k => k === this.filterKey)
+      if (idx !== this.filterKeys.length - 1) {
+        this.filterKey = this.filterKeys[idx + 1]
+      } else {
+        this.filterKey = this.filterKeys[0]
+      }
+    },
+
     filterInput () {
-      this.$emit('filter', { [this.filterKey]: this.filterValue })
+      const queryVars = { ...this.$parent.queryVars, filter: { [this.filterKey]: this.filterValue }}
+      this.$emit('updateQuery', queryVars)
     },
 
     clearSelection () {
@@ -280,6 +301,8 @@ export default {
 
       .filter-key {
         @font mono;
+        cursor: pointer;
+        user-select: none;
         left: 15px;
         font-size: 14px;
         text-transform: uppercase;

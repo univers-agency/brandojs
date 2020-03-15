@@ -2,37 +2,46 @@
   <transition
     appear
     @enter="enter">
-    <form>
-      <ValidationObserver
-        ref="observer">
-        <template v-slot="{ invalid }">
-          <h2
-            v-if="subForm"
-            :class="{ invalid }">
-            {{ subForm }}
-          </h2>
-          <slot>
-          </slot>
-          <div class="row">
-            <div class="half buttons">
-              <ButtonPrimary
-                v-if="save"
-                v-shortkey="['meta', 's']"
-                :loading="loading"
-                @shortkey.native="validate"
-                @click="validate">
-                {{ $t('save') }} (⌘S)
-              </ButtonPrimary>
-              <ButtonSecondary
-                v-if="back"
-                :to="back">
-                &larr; {{ backText }}
-              </ButtonSecondary>
+    <div class="form-wrapper">
+      <form>
+        <ValidationObserver
+          ref="observer">
+          <template v-slot="{ invalid }">
+            <h2
+              v-if="subForm"
+              :class="{ invalid }">
+              {{ subForm }}
+            </h2>
+            <slot>
+            </slot>
+            <div class="row">
+              <div class="half buttons">
+                <ButtonPrimary
+                  v-if="save"
+                  v-shortkey="['meta', 's']"
+                  :loading="loading"
+                  @shortkey.native="validate"
+                  @click="validate">
+                  {{ $t('save') }} (⌘S)
+                </ButtonPrimary>
+                <ButtonSecondary
+                  v-if="back"
+                  :to="back">
+                  &larr; {{ backText }}
+                </ButtonSecondary>
+              </div>
             </div>
-          </div>
-        </template>
-      </ValidationObserver>
-    </form>
+          </template>
+        </ValidationObserver>
+      </form>
+      <template v-if="livePreview">
+        <FontAwesomeIcon
+          @click="openLivePreview"
+          :class="{ active: $parent.livePreviewReady }"
+          class="live-preview-icon"
+          icon="eye" />
+      </template>
+    </div>
   </transition>
 </template>
 
@@ -66,7 +75,8 @@ export default {
 
   data () {
     return {
-      loading: false
+      loading: false,
+      livePreview: false
     }
   },
 
@@ -77,9 +87,20 @@ export default {
         gsap.set(fields, { autoAlpha: 0, x: -15 })
       }
     })
+    if (this.$parent.hasOwnProperty('livePreview')) {
+      this.livePreview = true
+    }
   },
 
   methods: {
+    openLivePreview () {
+      window.open(
+        '/__livepreview?key=' + this.$parent.livePreviewCacheKey,
+        '_blank',
+        'location=no,menubar=no,resizable=yes,status=no'
+      )
+    },
+
     async validate () {
       const isValid = await this.$refs.observer.validate()
       if (!isValid) {
@@ -107,6 +128,20 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+  .form-wrapper {
+    display: flex;
+  }
+
+  .live-preview-icon {
+    @space right container;
+    position: absolute;
+    opacity: 0.3;
+
+    &.active {
+      opacity: 1;
+    }
+  }
+
   .buttons {
     @space margin-top sm;
     display: flex;
