@@ -151,41 +151,17 @@
       :editor="editor"
       :class="'villain-text-editor ' + block.data.type" />
     <template slot="config">
-      <div class="form-check">
-        <input
-          v-model="block.data.type"
-          class="form-check-input"
-          type="radio"
-          value="paragraph">
-        <label class="form-check-label">
-          Paragraf/brødtekst
-        </label>
-      </div>
-      <div class="form-check">
-        <input
-          v-model="block.data.type"
-          class="form-check-input"
-          type="radio"
-          value="lede">
-        <label class="form-check-label">
-          Ingress
-        </label>
-      </div>
-      <div class="form-check">
-        <input
-          v-model="block.data.type"
-          :value="customClass"
-          class="form-check-input"
-          type="radio">
-        <label class="form-check-label">
-          <div class="form-group">
-            <input
-              v-model="customClass"
-              class="form-control"
-              type="input">
-          </div>
-        </label>
-      </div>
+      <KInputRadios
+        v-model="block.data.type"
+        name="data[type]"
+        rules="required"
+        :options="[
+          { label: 'Paragraf/brødtekst', value: 'paragraph' },
+          { label: 'Ingress', value: 'lede' }
+        ]"
+        optionValueKey="value"
+        optionLabelKey="label"
+        label="Teksttype" />
     </template>
   </Block>
 </template>

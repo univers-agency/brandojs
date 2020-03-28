@@ -12,7 +12,7 @@
     <div
       v-if="showAutosaves"
       class="villain-editor-autosave-list-popup">
-      <strong>Autolagrede versjoner</strong>
+      Autolagrede versjoner
       <div
         v-for="(a, idx) in autosaveEntries"
         :key="idx"

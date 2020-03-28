@@ -3,7 +3,6 @@
     ref="wrapper"
     class="villain-block-wrapper">
     <div
-      v-show="!showConfig"
       ref="content"
       :class="hovering ? 'villain-hover' : ''"
       :data-type="block.type"
@@ -42,7 +41,7 @@
         <div
           v-if="hasConfigSlot && block.type !== 'template'"
           class="villain-block-action villain-config"
-          @click="configBlock">
+          @click="showConfig = true">
           <FontAwesomeIcon
             v-popover.left="'Endre blokkens oppsettsvalg'"
             icon="cog"
@@ -52,7 +51,7 @@
         <div
           v-else-if="hasConfigSlot && block.type === 'template'"
           class="villain-block-action villain-config"
-          @click="configBlock">
+          @click="showConfig = true">
           <FontAwesomeIcon
             v-popover.left="'Endre malens oppsettsvalg'"
             icon="file"
@@ -102,64 +101,62 @@
       </div>
     </div>
 
-    <modal
+
+    <VillainModal
       v-if="showConfig"
       ref="modal"
       v-shortkey="['esc']"
-      :large="true"
+      :large="false"
       :show="true"
       :chrome="false"
       @shortkey.native="closeConfig"
       @cancel="closeConfig"
       @ok="closeConfig">
+      <template #header>
+        <h5>{{ getBlockDisplayName(block.type) }}</h5>
+      </template>
       <div
-        v-show="showConfig"
         ref="config"
-        class="villain-block villain-block-config">
+        class="villain-block-config">
         <div class="villain-block-config-content">
-          <div
-            class="villain-config-close-button"
-            @click="closeConfig">
-            <i class="fa fa-times" />
-          </div>
-
-          <h5>Konfigurasjon &mdash; {{ getBlockDisplayName(block.type) }}</h5>
-
-          <div
-            v-if="icon"
-            class="display-icon">
-            <i
-              :class="icon"
-              class="fa fa-fw" />
-          </div>
-
           <slot name="config" />
 
           <div class="villain-block-actions">
-            <div class="villain-block-action villain-move">
-              <i class="fa fa-fw fa-expand-arrows-alt" />
-            </div>
             <div
               v-if="hasConfigSlot"
-              class="villain-block-action villain-config"
-              @click="closeConfig">
-              <i class="fa fa-fw fa-cog" />
+              class="villain-block-action villain-config">
+              <FontAwesomeIcon
+                v-popover.left="'Lukk konfigurasjon'"
+                icon="cog"
+                size="xs"
+                fixed-width
+                @click="closeConfig" />
             </div>
             <div
               v-if="!locked"
               class="villain-block-action villain-delete"
               @click="deleteBlock">
-              <i class="fa fa-fw fa-trash-alt" />
+              <FontAwesomeIcon
+                v-popover.left="'Slett blokken'"
+                icon="trash-alt"
+                size="xs"
+                fixed-width
+                @click="deleteBlock" />
             </div>
             <div
               v-if="locked"
               class="villain-block-action villain-locked">
-              <i class="fa fa-fw fa-lock" />
+              <FontAwesomeIcon
+                v-popover.left="'Blokken er låst'"
+                icon="lock"
+                size="xs"
+                fixed-width />
             </div>
           </div>
         </div>
       </div>
-    </modal>
+    </VillainModal>
+
     <template v-if="!locked">
       <VillainPlus
         v-if="block.type !== 'columns'"
@@ -178,13 +175,13 @@
 
 <script>
 import { VTooltip } from 'v-tooltip'
-import Modal from '../../../../Modal'
+import VillainModal from '../tools/VillainModal'
 import gsap from 'gsap'
 
 export default {
   directives: { popover: VTooltip },
   components: {
-    Modal
+    VillainModal
   },
 
   props: {
@@ -240,10 +237,6 @@ export default {
   },
 
   watch: {
-    config (v) {
-      this.showConfig = v
-    },
-
     help (v) {
       this.showHelp = v
     }
@@ -252,12 +245,6 @@ export default {
   inject: [
     'available'
   ],
-
-  created () {
-    if (this.config) {
-      this.showConfig = true
-    }
-  },
 
   mounted () {
     this.$refs.content.addEventListener('mouseover', this.onMouseOver)
@@ -282,12 +269,12 @@ export default {
       this.showHelp = true
     },
 
-    configBlock () {
-      this.$emit('toggle-config', true)
-    },
-
-    closeConfig () {
-      this.$emit('toggle-config', false)
+    async closeConfig () {
+      console.log('calling closeModal')
+      await this.$refs.modal.closeModal()
+      this.showConfig = false
+      console.log('set config to false')
+      // this.$emit('toggle-config', false)
     },
 
     deleteBlock () {
@@ -437,117 +424,6 @@ export default {
       .villain-help-content-buttons {
         margin: 0 auto;
         text-align: center;
-      }
-    }
-  }
-
-  &.villain-block-config {
-    padding: 2rem;
-    background-color: #fff;
-
-    button + button {
-      margin-top: -1px;
-    }
-
-    .form-group {
-      text-align: left;
-      display: flex;
-      flex-wrap: wrap;
-
-      > .form-check {
-        width: 100%;
-      }
-    }
-
-    input.form-check-input {
-      display: inline-block;
-      width: auto;
-      margin-bottom: 0;
-    }
-
-    .form-check {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .villain-block-config-content {
-      margin: 0 auto;
-      padding: 2rem;
-      position: relative;
-      background-color: theme(colors.villain.secondary);
-
-      .villain-config-close-button {
-        position: absolute;
-        top: 21px;
-        right: 31px;
-        font-size: 25px;
-        opacity: 0.5;
-
-        &:hover {
-          opacity: 1;
-          cursor: pointer;
-        }
-      }
-
-      .villain-config-content-buttons {
-        margin: 0 auto;
-        margin-top: 20px;
-        text-align: center;
-      }
-
-      .help-text {
-        font-size: 18px;
-      }
-
-      input[type="text"], textarea {
-        background-color: #ffffff;
-        font-size: 18px;
-      }
-
-      label {
-        border-bottom: 2px solid theme(colors.blue);
-        color: #000;
-        font-size: 18px;
-        margin-bottom: 0.75rem;
-        margin-left: 0rem;
-        padding: 0.3rem 0;
-
-        &.form-check-label {
-          border: 0;
-          background-color: transparent;
-          color: #000;
-          margin-left: .75rem;
-          margin-bottom: 0rem;
-        }
-      }
-
-      p {
-        text-align: center;
-      }
-
-      .form-control {
-        border: 0;
-        border-radius: 0;
-        border: 1px solid #333333;
-      }
-
-      .display-icon {
-        margin: 0 auto;
-        display: inherit;
-        align-self: center;
-        justify-self: center;
-        font-size: 12rem;
-        text-align: center;
-        color: theme(colors.villain.main);
-      }
-
-      h5 {
-        text-align: center;
-        font-size: 1.4rem;
-        margin-bottom: 1.5rem;
-        border-bottom: 2px solid #00000008;
-        padding-bottom: 1.5rem;
       }
     }
   }

@@ -66,13 +66,13 @@
           </template>
         </p>
       </div>
+
       <div
         v-if="showImages && listStyle"
-        class="villain-image-library mt-4">
-        <div
-          style="text-align: center;padding-bottom: 20px;"
-          @click="listStyle = false">
-          <i class="fa fa-fw fa-th" />
+        class="villain-image-library">
+        <div class="col-12 mb-3">
+          <ButtonSecondary @click="listStyle = false">Vis thumbnails</ButtonSecondary>
+          <ButtonSecondary @click="showImages = false">Skjul bildeliste</ButtonSecondary>
         </div>
         <table
           class="table villain-image-table">
@@ -105,17 +105,15 @@
 
       <div
         v-else-if="showImages && !listStyle"
-        class="villain-image-library row mt-4">
-        <div
-          class="col-12"
-          style="text-align: center;padding-bottom: 20px;"
-          @click="listStyle = true">
-          <i class="fa fa-fw fa-list" />
+        class="villain-image-library">
+        <div class="col-12 mb-3">
+          <ButtonSecondary @click="listStyle = true">Vis listevisning</ButtonSecondary>
+          <ButtonSecondary @click="showImages = false">Skjul bildeliste</ButtonSecondary>
         </div>
         <div
           v-for="i in images"
           :key="i.id"
-          class="col-3 mb-3">
+          class="col-3">
           <img
             :src="i.thumb"
             class="img-fluid"
@@ -124,118 +122,86 @@
       </div>
 
       <div v-else>
-        <div
-          v-if="block.data.url"
-          class="form-group">
-          <label>Kilde</label>
-          <input
-            v-model="block.data.url"
-            class="form-control"
-            type="input">
-        </div>
+        <div class="row">
+          <div>
+            <div v-if="block.data.url">
+              <KInputToggle
+                v-model="advancedConfig"
+                name="config[advanced]"
+                label="Vis avansert konfigurasjon" />
 
-        <div
-          v-if="block.data.url"
-          class="form-group">
-          <label>Tittel</label>
-          <input
-            v-model="block.data.title"
-            class="form-control"
-            type="input">
-        </div>
+              <KInput
+                v-model="block.data.title"
+                name="data[title]"
+                label="Tittel"
+                placeholder="Tittel" />
 
-        <div
-          v-if="block.data.url"
-          class="form-group">
-          <label>Alt tekst (vises om bildet ikke laster)</label>
-          <input
-            v-model="block.data.alt"
-            class="form-control"
-            type="input">
-        </div>
+              <KInput
+                v-model="block.data.alt"
+                name="data[alt]"
+                label="Alt. tekst (om bildet ikke laster)"
+                placeholder="Alt. tekst" />
 
-        <div
-          v-if="block.data.url"
-          class="form-group">
-          <label>Krediteringer</label>
-          <input
-            v-model="block.data.credits"
-            class="form-control"
-            type="input">
-        </div>
-        <div
-          v-if="block.data.url && block.data.sizes"
-          class="form-group">
-          <label>Størrelse</label>
-          <select
-            v-model="block.data.url"
-            class="form-control">
-            <option
-              :value="originalUrl">
-              orginal
-            </option>
-            <option
-              v-for="(size, key) in block.data.sizes"
-              :key="key"
-              :value="size">
-              {{ key }}
-            </option>
-          </select>
-        </div>
+              <KInput
+                v-model="block.data.credits"
+                name="data[credits]"
+                label="Krediteringer"
+                placeholder="Krediteringer" />
 
-        <div
-          v-if="block.data.url"
-          class="form-group">
-          <label>Media queries</label>
-          <textarea
-            v-model="block.data.media_queries"
-            class="form-control"></textarea>
-        </div>
+              <div v-show="advancedConfig">
+                <KInput
+                  v-model="block.data.url"
+                  name="data[url]"
+                  label="Kilde (avansert)"
+                  placeholder="Kilde" />
 
-        <div
-          v-if="block.data.url"
-          class="form-group">
-          <label>Sourcesets</label>
-          <textarea
-            v-model="block.data.srcset"
-            class="form-control"></textarea>
-        </div>
+                <KInputTextarea
+                  v-model="block.data.media_queries"
+                  name="data[media_queries]"
+                  label="Media Queries (avansert)" />
 
-        <div
-          v-if="block.data.url"
-          class="form-group">
-          <label>CSS klasser (img)</label>
-          <input
-            v-model="block.data.img_class"
-            class="form-control"
-            type="input">
-        </div>
+                <KInputTextarea
+                  v-model="block.data.srcset"
+                  name="data[srcset]"
+                  label="Srcset (avansert)" />
 
-        <div
-          v-if="block.data.url"
-          class="form-group">
-          <label>CSS klasser (picture)</label>
-          <input
-            v-model="block.data.picture_class"
-            class="form-control"
-            type="input">
-        </div>
+                <KInput
+                  v-model="block.data.img_class"
+                  name="data[img_class]"
+                  label="CSS klasser (img)"
+                  placeholder="classname1 classname2" />
 
-        <div class="villain-config-content-buttons">
-          <button
-            v-if="!showImages"
-            type="button"
-            class="btn btn-primary"
-            @click="getImages">
-            Velg bilde fra bildebibliotek
-          </button>
-          <button
-            v-if="block.data.url !== ''"
-            type="button"
-            class="btn btn-primary ml-3"
-            @click="resetImage">
-            Nullstill bildeblokk
-          </button>
+                <KInput
+                  v-model="block.data.picture_class"
+                  name="data[picture_class]"
+                  label="CSS klasser (picture)"
+                  placeholder="classname1 classname2" />
+              </div>
+            </div>
+
+            <div class="villain-config-content-buttons">
+              <button
+                v-if="!showImages"
+                type="button"
+                class="btn btn-primary"
+                @click="getImages">
+                Velg bilde fra bildebibliotek
+              </button>
+              <button
+                v-if="block.data.url !== ''"
+                type="button"
+                class="btn btn-primary ml-3"
+                @click="resetImage">
+                Nullstill bildeblokk
+              </button>
+            </div>
+          </div>
+          <div class="shaded preview-image" v-if="block.data.url">
+            <img
+              v-if="block.data.url"
+              :src="block.data.url"
+              class="img-fluid" />
+          </div>
         </div>
       </div>
     </template>
@@ -268,6 +234,7 @@ export default {
 
   data () {
     return {
+      advancedConfig: false,
       customClass: '',
       uid: null,
       showConfig: false,
@@ -434,6 +401,23 @@ export default {
     min-width: auto;
     max-width: 40vw;
     margin: 0 auto;
+  }
+
+  .preview-image {
+    padding: 1rem;
+  }
+
+  .shaded {
+    background-color: #fafafa;
+  }
+
+  .villain-image-library {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .mb-3 {
+    margin-bottom: 15px;
   }
 
   .villain-block-image-empty {

@@ -2,11 +2,9 @@
   <Block
     :block="block"
     :parent="parent"
-    :config="showConfig"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)"
-    @toggle-config="showConfig = $event">
+    @delete="$emit('delete', $event)">
     <div class="villain-block-description">
       Overskrift (H{{ block.data.level }})
     </div>
@@ -28,7 +26,7 @@
           { label: 'H3', value: 3 },
           { label: 'H4', value: 4 },
           { label: 'H5', value: 5 },
-          { label: 'H6', value: 6 },
+          { label: 'H6', value: 6 }
         ]"
         optionValueKey="value"
         optionLabelKey="label"
