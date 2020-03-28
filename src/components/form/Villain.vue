@@ -182,8 +182,6 @@ export default {
     input, textarea {
       display: block;
       width: 100%;
-      padding: 12px 15px 12px;
-      margin-bottom: 15px;
     }
 
     select {

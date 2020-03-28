@@ -425,6 +425,17 @@ export default {
 }
 </script>
 <style lang="postcss" scoped>
+  .img-fluid {
+    min-width: auto;
+    max-width: 100%;
+  }
+
+  .villain-block-picture {
+    min-width: auto;
+    max-width: 40vw;
+    margin: 0 auto;
+  }
+
   .villain-block-image-empty {
     display: flex;
     flex-direction: column;

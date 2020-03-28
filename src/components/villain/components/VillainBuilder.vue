@@ -441,7 +441,7 @@ export default {
 
     storeOrder (sortable) {
       this.templateSequence = sortable.toArray()
-      storeTemplateSequence(this.templateSequence, this.headers.extra, this.urls.templateSequence)
+      storeTemplateSequence(this.templateSequence, this.headers.extra, this.urls.templateSequence, this.$toast)
     },
 
     deleteTemplate (tpl) {

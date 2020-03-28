@@ -78,7 +78,6 @@ export default {
 
     dt {
       @fontsize nav.mainItem;
-      /* font-weight: 200; */
       color: theme(colors.dark);
       cursor: pointer;
       user-select: none;

@@ -82,6 +82,15 @@ const defaultOptions = {
   },
 
   onCacheInit: cache => {
+    console.debug('// PATCHING CACHE IN INIT.')
+    cache.originalReadQuery = cache.readQuery
+    cache.readQuery = (...args) => {
+      try {
+        return cache.originalReadQuery(...args)
+      } catch (err) {
+        return undefined
+      }
+    }
     const data = {
       token: null,
       fullscreen: false

@@ -15,7 +15,7 @@
             <slot>
             </slot>
             <div class="row">
-              <div class="half buttons">
+              <div class="buttons">
                 <ButtonPrimary
                   v-if="save"
                   v-shortkey="['meta', 's']"
@@ -34,7 +34,7 @@
           </template>
         </ValidationObserver>
       </form>
-      <template v-if="livePreview">
+      <template v-if="livePreview && $parent.livePreviewReady">
         <FontAwesomeIcon
           @click="openLivePreview"
           :class="{ active: $parent.livePreviewReady }"
@@ -132,6 +132,10 @@ export default {
     display: flex;
   }
 
+  form {
+    width: 100%;
+  }
+
   .live-preview-icon {
     @space right container;
     position: absolute;
@@ -148,8 +152,6 @@ export default {
     justify-content: space-between;
 
     > * {
-      width: 50%;
-
       &:nth-child(2) {
         margin-left: 15px;
       }

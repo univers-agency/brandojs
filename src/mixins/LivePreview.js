@@ -39,15 +39,22 @@ export default function ({schema, prop, key}) {
         this.adminChannel.channel
           .push('livepreview:initialize', { schema, prop, key, entry })
           .receive('ok', payload => {
-            console.log('ok', payload)
-            this.livePreviewCacheKey = payload.cache_key
-            this.livePreviewReady = true
+            if (payload.cache_key) {
+              this.livePreviewCacheKey = payload.cache_key
+              this.livePreviewReady = true
+            } else {
+              this.livePreviewReady = false
+            }
           })
       },
 
       updateLivePreview (entry) {
         // send off entry for rendering
         // TODO: Maybe diff this against the last sent data and only send the diff?
+        if (!this.livePreviewReady) {
+          return
+        }
+
         this.adminChannel.channel
           .push('livepreview:render', { schema, prop, key, entry, cache_key: this.livePreviewCacheKey })
       }

@@ -113,12 +113,16 @@ export default {
               }
             }
             const data = store.readQuery(query)
-            data.pages.push(createPage)
-            // Write back to the cache
-            store.writeQuery({
-              ...query,
-              data
-            })
+            console.log('data', data)
+            if (data) {
+              data.pages.push(createPage)
+              // Write back to the cache
+
+              store.writeQuery({
+                ...query,
+                data
+              })
+            }
           }
         })
 

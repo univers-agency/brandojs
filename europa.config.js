@@ -6,8 +6,8 @@ module.exports = {
       ipad_portrait: '768px',
       ipad_landscape: '1024px',
       desktop_md: '1200px',
-      desktop_lg: '1530px',
-      desktop_xl: '1920px'
+      desktop_lg: '1400px',
+      desktop_xl: '1600px'
     },
 
     colors: () => ({
@@ -24,8 +24,8 @@ module.exports = {
       status: {
         draft: '#636363',
         pending: '#f1ac00',
-        published: '#0047fe',
-        deleted: '#ff0000'
+        published: '#8bd271',
+        disabled: '#9a0000'
       },
 
       /*
@@ -44,7 +44,7 @@ module.exports = {
         background: '#000',
         secondary: '#94003e0d',
         blockBackground: '#ffffffb3',
-        blockBorder: '#0047ff12',
+        blockBorder: '#9a9a9a26',
         availableBlock: 'rgb(211, 0, 0)',
         availableBlockHover: '#eeeeee',
         popover: '#f9f9f9'
@@ -121,19 +121,19 @@ module.exports = {
             'line-height': '140%'
           },
           mobile: {
-            'font-size': '16px',
+            'font-size': '15px',
             'line-height': '140%'
           },
           ipad_portrait: {
-            'font-size': '16px',
+            'font-size': '15px',
             'line-height': '140%'
           },
           ipad_landscape: {
-            'font-size': '16px',
+            'font-size': '15px',
             'line-height': '140%'
           },
           desktop_md: {
-            'font-size': '16px',
+            'font-size': '15px',
             'line-height': '140%'
           },
           desktop_lg: {
@@ -164,7 +164,7 @@ module.exports = {
             'line-height': '40px'
           },
           desktop_md: {
-            'font-size': '28px',
+            'font-size': '24px',
             'line-height': '40px'
           },
           desktop_lg: {
@@ -209,11 +209,11 @@ module.exports = {
         },
 
         base: {
-          iphone: '20px',
-          mobile: '20px',
-          ipad_portrait: '20px',
-          ipad_landscape: '20px',
-          desktop_md: '21px',
+          iphone: '16px',
+          mobile: '16px',
+          ipad_portrait: '17px',
+          ipad_landscape: '18px',
+          desktop_md: '19px',
           desktop_lg: '21px',
           desktop_xl: '22px'
         },
@@ -244,23 +244,23 @@ module.exports = {
 
         xl: { //
           iphone: {
-            'font-size': '40px',
+            'font-size': '24px',
             'font-weight': '200'
           },
           mobile: {
-            'font-size': '40px',
+            'font-size': '24px',
             'font-weight': '200'
           },
           ipad_portrait: {
-            'font-size': '40px',
+            'font-size': '28px',
             'font-weight': '200'
           },
           ipad_landscape: {
-            'font-size': '40px',
+            'font-size': '32px',
             'font-weight': '200'
           },
           desktop_md: {
-            'font-size': '40px',
+            'font-size': '36px',
             'font-weight': '200'
           },
           desktop_lg: {

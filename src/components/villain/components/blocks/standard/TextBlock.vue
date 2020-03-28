@@ -8,6 +8,9 @@
     @move="$emit('move', $event)"
     @delete="$emit('delete', $event)"
     @toggle-config="showConfig = $event">
+    <div class="villain-block-description">
+      Tekst ({{ block.data.type }})
+    </div>
     <EditorMenuBar
       v-slot="{ commands, isActive, focused }"
       class="villain-text-editor-menubar"
@@ -316,7 +319,7 @@ export default {
 
 <style lang="postcss" scoped>
   .villain-text-editor-menubar {
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     transition: opacity 1s ease;
 
     &.is-hidden {

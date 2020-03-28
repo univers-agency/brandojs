@@ -11,83 +11,39 @@
       Overskrift (H{{ block.data.level }})
     </div>
     <textarea
+      rows="1"
       ref="txt"
       v-model="block.data.text"
       :style="'font-size: ' + fontSize + 'rem'"
       class="villain-header-input">
     </textarea>
     <template slot="config">
-      <div class="form-group">
-        <label>Størrelse</label>
-        <div class="form-check">
-          <input
-            v-model="block.data.level"
-            class="form-check-input"
-            type="radio"
-            value="1">
-          <label class="form-check-label">
-            H1
-          </label>
-        </div>
-        <div class="form-check">
-          <input
-            v-model="block.data.level"
-            class="form-check-input"
-            type="radio"
-            value="2">
-          <label class="form-check-label">
-            H2
-          </label>
-        </div>
-        <div class="form-check">
-          <input
-            v-model="block.data.level"
-            class="form-check-input"
-            type="radio"
-            value="3">
-          <label class="form-check-label">
-            H3
-          </label>
-        </div>
-        <div class="form-check">
-          <input
-            v-model="block.data.level"
-            class="form-check-input"
-            type="radio"
-            value="4">
-          <label class="form-check-label">
-            H4
-          </label>
-        </div>
-        <div class="form-check">
-          <input
-            v-model="block.data.level"
-            class="form-check-input"
-            type="radio"
-            value="5">
-          <label class="form-check-label">
-            H5
-          </label>
-        </div>
-        <div class="form-check">
-          <input
-            v-model="block.data.level"
-            class="form-check-input"
-            type="radio"
-            value="6">
-          <label class="form-check-label">
-            H6
-          </label>
-        </div>
-      </div>
+      <KInputRadios
+        v-model="block.data.level"
+        name="data[level]"
+        rules="required"
+        :options="[
+          { label: 'H1', value: 1 },
+          { label: 'H2', value: 2 },
+          { label: 'H3', value: 3 },
+          { label: 'H4', value: 4 },
+          { label: 'H5', value: 5 },
+          { label: 'H6', value: 6 },
+        ]"
+        optionValueKey="value"
+        optionLabelKey="label"
+        label="Størrelse" />
 
-      <div class="form-group">
-        <label>CSS klasser</label>
-        <input
-          v-model="block.data.class"
-          class="form-control"
-          type="input">
-      </div>
+      <KInput
+        v-model="block.data.id"
+        name="data[id]"
+        label="Id"
+        help-text="Kan brukes som lenkemål (#id-navn-her)" />
+
+      <KInput
+        v-model="block.data.class"
+        name="data[class]"
+        label="CSS klasser" />
     </template>
   </Block>
 </template>

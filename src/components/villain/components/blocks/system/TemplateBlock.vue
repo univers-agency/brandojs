@@ -20,22 +20,10 @@
           class="btn-secondary"
           type="button"
           @click.prevent="refetchVars">
-          Hent variabler
+          Hent variabler på nytt
         </button>
       </div>
-      <div
-        v-for="(v, idx) in localVars"
-        :key="idx"
-        class="form-group">
-        <template v-show="v.type === 'string'">
-          <label>{{ v.label }} — ${{ idx }}</label>
-          <input
-            :key="'input-' + idx"
-            v-model.lazy="v.value"
-            type="text"
-            class="form-control" />
-        </template>
-      </div>
+
 
       <button
         class="btn-secondary"
@@ -328,6 +316,7 @@ export default {
     },
 
     buildWrapper () {
+      console.log('-- buildWrapper()')
       const builtSlots = this.buildSlots()
       let template = `
         <TemplateContentWrapper>

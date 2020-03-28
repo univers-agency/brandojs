@@ -1,6 +1,5 @@
 <template>
-  <div
-    :class="{ center }">
+  <div>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="12"
@@ -22,11 +21,6 @@ export default {
     status: {
       type: String,
       required: true
-    },
-
-    center: {
-      type: Boolean,
-      default: false
     }
   }
 }
@@ -35,21 +29,9 @@ export default {
 <style lang="postcss" scoped>
   div {
     display: flex;
-    align-items: center;
-    border: 1px solid #eeeeee;
-    padding: 12px 0;
-    border-radius: 50px;
-
-    &.center {
-      justify-content: center;
-      svg {
-        margin-right: 0;
-      }
-    }
   }
 
   svg {
-    margin-right: 12px;
     circle {
       fill: theme(colors.blue);
 
@@ -65,8 +47,8 @@ export default {
         fill: theme(colors.status.published);
       }
 
-      &.deleted {
-        fill: theme(colors.status.deleted);
+      &.disabled {
+        fill: theme(colors.status.disabled);
       }
     }
   }

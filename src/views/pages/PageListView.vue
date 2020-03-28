@@ -33,8 +33,9 @@
       v-if="pages"
       :entries="pages"
       :sortable="true"
+      :status="true"
       :filter-keys="['title']"
-      @filter="filter = $event"
+      @updateQuery="queryVars = $event"
       @sort="sortPages">
       <template v-slot:row="{ entry }">
         <div class="col-1">
@@ -43,32 +44,19 @@
           </div>
         </div>
         <div class="col-7 title flex-h">
-          <router-link :to="{ name: 'pages-edit', params: { pageId: entry.id } }">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="12"
-              height="12"
-              viewBox="0 0 12 12">
-              <circle
-                r="6"
-                cy="6"
-                cx="6"
-                fill="#F4D37D" />
-            </svg>
+          <router-link
+            :to="{ name: 'pages-edit', params: { pageId: entry.id } }"
+            class="link name-link">
             {{ entry.title }}
           </router-link>
           <div class="badge">{{ entry.key }}</div>
         </div>
         <div class="col-2">
           <ChildrenButton
+            v-show="entry.fragments.length + entry.children.length"
             :id="entry.id"
             :length="entry.fragments.length + entry.children.length"
             :visible-children="visibleChildren">
-            <template>
-              <FontAwesomeIcon
-                icon="copy"
-                class="ml-2xs" />
-            </template>
           </ChildrenButton>
         </div>
         <div class="col-4">
@@ -174,17 +162,6 @@
               </div>
               <div class="col-8 title flex-h">
                 <router-link :to="{ name: 'pages-edit', params: { pageId: subPage.id } }">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12">
-                    <circle
-                      r="6"
-                      cy="6"
-                      cx="6"
-                      fill="#F4D37D" />
-                  </svg>
                   {{ subPage.title }}
                 </router-link>
                 <div class="badge">{{ subPage.key }}</div>
@@ -221,9 +198,11 @@ export default {
   data () {
     return {
       visibleChildren: [],
-      filter: null,
-      offset: 0,
-      limit: 100
+      queryVars: {
+        filter: null,
+        offset: 0,
+        limit: 100
+      }
     }
   },
 
@@ -252,11 +231,7 @@ export default {
 
           const query = {
             query: GET_PAGES,
-            variables: {
-              limit: this.limit,
-              offset: this.offset,
-              filter: this.filter
-            }
+            variables: this.queryVars
           }
           const store = this.$apolloProvider.defaultClient.store.cache
           const data = store.readQuery(query)
@@ -280,11 +255,7 @@ export default {
 
           const query = {
             query: GET_PAGES,
-            variables: {
-              limit: this.limit,
-              offset: this.offset,
-              filter: this.filter
-            }
+            variables: this.queryVars
           }
           const store = this.$apolloProvider.defaultClient.store.cache
           const data = store.readQuery(query)
@@ -379,11 +350,7 @@ export default {
           update: (store, { data: { duplicatePage } }) => {
             const query = {
               query: GET_PAGES,
-              variables: {
-                limit: this.limit,
-                offset: this.offset,
-                filter: this.filter
-              }
+              variables: this.queryVars
             }
 
             const data = store.readQuery(query)
@@ -435,11 +402,7 @@ export default {
                 update: (store, { data: { deletePageFragment } }) => {
                   const query = {
                     query: GET_PAGES,
-                    variables: {
-                      limit: this.limit,
-                      offset: this.offset,
-                      filter: this.filter
-                    }
+                    variables: this.queryVars
                   }
                   const data = store.readQuery(query)
                   const page = data.pages.find(
@@ -503,11 +466,7 @@ export default {
                 update: (store, { data: { deletePage } }) => {
                   const query = {
                     query: GET_PAGES,
-                    variables: {
-                      limit: this.limit,
-                      offset: this.offset,
-                      filter: this.filter
-                    }
+                    variables: this.queryVars
                   }
 
                   const data = store.readQuery(query)
@@ -543,11 +502,7 @@ export default {
       query: GET_PAGES,
       debounce: 750,
       variables () {
-        return {
-          limit: this.limit,
-          offset: this.offset,
-          filter: this.filter
-        }
+        return this.queryVars
       }
     }
   }
@@ -557,34 +512,6 @@ export default {
 <style lang="postcss" scoped>
   .title {
     @fontsize base;
-
-    svg {
-      display: inline-block;
-      margin-top: -3px;
-      margin-right: 3px;
-
-      &.published {
-        circle {
-          fill: #8bd271;
-        }
-      }
-
-      &.draft {
-        circle {
-          fill: #949494;
-        }
-      }
-
-      &.waiting {
-        circle {
-          fill: #fda23a;
-        }
-      }
-
-      circle {
-        fill: #8bd271;
-      }
-    }
   }
 
   .arrow {

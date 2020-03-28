@@ -3,23 +3,39 @@
     class="list"
     :data-level="level">
     <div
-      v-if="selectable"
       class="list-tools">
       <div
-        v-if="shouldFilter && filterKey"
-        class="filter">
-        <div
-          class="filter-key"
-          @click="changeFilterKey">
-          {{ filterKey }}
-        </div>
-        <input
-          v-model="filterValue"
-          placeholder="Filter"
-          type="text"
-          @input="filterInput" />
+        v-if="shouldStatus"
+        class="status">
+        <StatusLine
+          @statusUpdate="changeStatus"
+          :all="true"
+          :val="$parent.queryVars.status" />
       </div>
-      <transition name="fade">
+      <div
+        v-if="shouldFilter"
+        class="filters">
+        <div
+          v-for="(v, k) in filters"
+          :key="k"
+          class="filter">
+          <div
+            class="filter-key"
+            @click="changeFilterKey(k)">
+            {{ k }}
+          </div>
+          <input
+            v-model="filters[k]"
+            :placeholder="$t('filter-placeholder')"
+            type="text"
+            @input="filterInput" />
+        </div>
+      </div>
+      <div
+        class="order">
+        <FontAwesomeIcon icon="sort-alpha-down" />
+      </div>
+      <transition name="fade" v-if="selectable">
         <div
           v-if="selectedRows.length"
           class="selected">
@@ -27,7 +43,7 @@
           <div class="circle">
             <span>{{ selectedRows.length }}</span>
           </div> valgte utfør handling &rarr;
-          <CircleDropdown>
+          <CircleDropdown :inverted="true">
             <slot
               name="selected"
               v-bind:clearSelection="clearSelection"
@@ -75,7 +91,7 @@
             </div>
           </template>
           <template v-if="status">
-            <div class="col-1">
+            <div class="status">
               <Status
                 :center="true"
                 :status="entry.status" />
@@ -169,8 +185,7 @@ export default {
 
   data () {
     return {
-      filterKey: null,
-      filterValue: '',
+      filters: {},
       selectedRows: []
     }
   },
@@ -184,7 +199,11 @@ export default {
     },
 
     shouldFilter () {
-      return this.$parent.queryVars.hasOwnProperty('filter')
+      return this.$parent?.queryVars?.hasOwnProperty('filter')
+    },
+
+    shouldStatus () {
+      return this.$parent?.queryVars?.hasOwnProperty('status')
     },
 
     hasMoreListener () {
@@ -194,30 +213,41 @@ export default {
 
   created () {
     if (this.filterKeys.length) {
-      this.filterKey = this.filterKeys[0]
-    }
-
-    if (this.shouldFilter && !this.filterKeys.length) {
-      console.error('ContentList: No filterKeys set, but @filter listener provided!')
+      this.filters[this.filterKeys[0]] = ''
     }
   },
 
   methods: {
-    changeFilterKey () {
+    changeStatus (status) {
+      const queryVars = { ...this.$parent.queryVars, status}
+      this.$emit('updateQuery', queryVars)
+    },
+
+    changeFilterKey (key, val) {
       if (this.filterKeys.length <= 1) {
         return
       }
 
-      const idx = this.filterKeys.findIndex(k => k === this.filterKey)
+      const idx = this.filterKeys.findIndex(k => k === key)
+      console.log(idx)
       if (idx !== this.filterKeys.length - 1) {
-        this.filterKey = this.filterKeys[idx + 1]
+        delete this.filters[key]
+        this.filters = {
+          ...this.filters,
+          [this.filterKeys[idx + 1]]: val
+        }
+
       } else {
-        this.filterKey = this.filterKeys[0]
+        delete this.filters[key]
+        this.filters = {
+          ...this.filters,
+          [this.filterKeys[0]]: val
+        }
       }
     },
 
     filterInput () {
-      const queryVars = { ...this.$parent.queryVars, filter: { [this.filterKey]: this.filterValue }}
+      const queryVars = { ...this.$parent.queryVars, filter: this.filters}
       this.$emit('updateQuery', queryVars)
     },
 
@@ -277,12 +307,25 @@ export default {
 
 <style lang="postcss">
   .list-tools {
-    @row;
     @space margin-bottom xs;
+    display: flex;
     min-height: 50px;
 
+    .order {
+      padding: 0 15px;
+      min-height: 52px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      background-color: theme(colors.input);
+      border-left: 5px solid #ffffff;
+    }
+
+    .filters {
+      width: 100%;
+    }
+
     .filter {
-      @column 8/16;
       display: flex;
       align-items: center;
       background-color: theme(colors.input);
@@ -296,7 +339,7 @@ export default {
         background-color: theme(colors.input);
         width: 100%;
         border: 0;
-        border-left: 5px solid white;
+        border-left: 1px solid theme(colors.peachDarker);
       }
 
       .filter-key {
@@ -315,14 +358,30 @@ export default {
     }
 
     .selected {
-      @column 8/16;
+      @container;
       display: flex;
       align-items: center;
       justify-content: flex-end;
+      margin-top: 25px;
+      padding-right: 15px;
+      padding-top: 25px;
+      padding-bottom: 25px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 5;
+      background-color: theme(colors.dark);
+      color: theme(colors.peach);
 
       .circle {
         margin-left: 15px;
         margin-right: 15px;
+        border: 1px solid theme(colors.peach);
+
+        span {
+          color: theme(colors.peach);
+        }
       }
 
       .wrapper {
@@ -417,7 +476,23 @@ export default {
         @space padding-bottom xs;
         align-items: center;
         min-height: 50px;
+
+        .status {
+          position: absolute;
+          margin-left: -30px;
+        }
       }
     }
   }
 </style>
+
+<i18n>
+{
+  "en": {
+    "filter-placeholder": "Search"
+  },
+  "nb": {
+    "filter-placeholder": "Søk"
+  }
+}
+</i18n>

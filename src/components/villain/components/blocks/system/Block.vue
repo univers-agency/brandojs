@@ -13,42 +13,60 @@
         <div
           v-if="!locked"
           ref="handle"
-          v-popover="'Skift blokkens posisjon'"
           class="villain-block-action villain-move">
-          <i class="fa fa-fw fa-arrows-alt" />
+          <FontAwesomeIcon
+            v-popover.left="'Skift blokkens posisjon'"
+            icon="arrows-alt"
+            size="xs"
+            fixed-width />
         </div>
         <div
           v-if="locked"
           ref="handle"
           class="villain-block-action villain-locked">
-          <i class="fa fa-fw fa-lock" />
+          <FontAwesomeIcon
+            icon="lock"
+            size="xs"
+            fixed-width />
         </div>
         <div
           v-if="hasHelpSlot"
-          v-popover="'Vis hjelp for blokken'"
           class="villain-block-action villain-help"
           @click="helpBlock">
-          <i class="fa fa-fw fa-question-circle" />
+          <FontAwesomeIcon
+            v-popover.left="'Vis hjelp for blokken'"
+            icon="question-circle"
+            size="xs"
+            fixed-width />
         </div>
         <div
           v-if="hasConfigSlot && block.type !== 'template'"
-          v-popover="'Endre blokkens oppsettsvalg'"
           class="villain-block-action villain-config"
           @click="configBlock">
-          <i class="fa fa-fw fa-cog" />
+          <FontAwesomeIcon
+            v-popover.left="'Endre blokkens oppsettsvalg'"
+            icon="cog"
+            size="xs"
+            fixed-width />
         </div>
         <div
           v-else-if="hasConfigSlot && block.type === 'template'"
-          v-popover="'Endre malens oppsettsvalg'"
           class="villain-block-action villain-config"
           @click="configBlock">
-          <i class="fa fa-fw fa-file" />
+          <FontAwesomeIcon
+            v-popover.left="'Endre malens oppsettsvalg'"
+            icon="file"
+            size="xs"
+            fixed-width />
         </div>
         <div
-          v-popover="'Slett blokken'"
           class="villain-block-action villain-delete"
           @click="deleteBlock">
-          <i class="fa fa-fw fa-trash-alt" />
+          <FontAwesomeIcon
+            v-popover.left="'Slett blokken'"
+            icon="trash-alt"
+            size="xs"
+            fixed-width />
         </div>
       </div>
       <div class="villain-block-info">
@@ -349,9 +367,10 @@ export default {
   background-color: theme(colors.villain.blockBackground);
   padding: 1rem;
   padding-right: 2rem;
-  min-height: 155px;
+  min-height: 105px;
   position: relative;
-  border: 2px solid theme(colors.villain.blockBorder);
+  border: 1px solid theme(colors.villain.blockBorder);
+  border-radius: 10px;
   transition: border 500ms ease;
 
   input:focus, textarea:focus {
@@ -392,12 +411,14 @@ export default {
   }
 
   &.villain-hover {
-    border: 2px solid theme(colors.villain.main);
+    border: 1px solid theme(colors.villain.main);
+
     > .villain-block-actions {
       opacity: 1;
     }
 
     .villain-template-description, .villain-block-description {
+      transition: opacity 300ms ease;
       opacity: 1;
     }
   }
@@ -436,7 +457,6 @@ export default {
       > .form-check {
         width: 100%;
       }
-
     }
 
     input.form-check-input {
@@ -452,7 +472,6 @@ export default {
     }
 
     .villain-block-config-content {
-      /* max-width: 600px; */
       margin: 0 auto;
       padding: 2rem;
       position: relative;
@@ -475,22 +494,30 @@ export default {
         margin: 0 auto;
         margin-top: 20px;
         text-align: center;
+      }
 
+      .help-text {
+        font-size: 18px;
+      }
+
+      input[type="text"], textarea {
+        background-color: #ffffff;
+        font-size: 18px;
       }
 
       label {
         border-bottom: 2px solid theme(colors.blue);
         color: #000;
-        font-size: 1.25rem;
+        font-size: 18px;
         margin-bottom: 0.75rem;
         margin-left: 0rem;
         padding: 0.3rem 0;
 
         &.form-check-label {
+          border: 0;
           background-color: transparent;
           color: #000;
           margin-left: .75rem;
-          border: 0;
           margin-bottom: 0rem;
         }
       }
@@ -566,17 +593,23 @@ export default {
   }
 
   .villain-template-description, .villain-block-description {
-    background-color: #e4e4e4;
+    background-color: #fafafa;
     color: #000;
     font-size: 9px;
+    border-radius: 8px 0 0 0;
     padding: 3px 5px;
     font-weight: normal;
     display: inline-block;
     position: absolute;
     top: 0;
     left: 0;
-    text-transform: uppercase;
     opacity: 0;
+    transition: opacity 300ms ease;
+    text-transform: uppercase;
+
+    &:before {
+      content: '→';
+    }
   }
 
   .villain-block-info {
@@ -596,8 +629,7 @@ export default {
     transition: 500ms opacity ease;
 
     .villain-block-action {
-      padding: 12px 4px 0px;
-      margin: .25rem 0;
+      padding: 3px 6px;
       background-color: transparent;
       color: theme(colors.villain.mainFaded);
 
@@ -859,7 +891,8 @@ export default {
 .villain-header-input {
   border: 0;
   width: 100%;
-  padding: 1rem;
+  padding: 0;
+  line-height: 1.1;
 }
 
 .villain-markdown-input,

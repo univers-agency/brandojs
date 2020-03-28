@@ -960,6 +960,11 @@ export default {
     z-index: 999999;
   }
 
+  /* decrease spacing inside templates */
+  [data-type="template"] .villain-block-wrapper {
+    margin: 0 0 15px 0;
+  }
+
   .villain-editor-autosave-list-popup {
     padding: 2rem 3rem;
     min-width: 650px;
@@ -1010,6 +1015,7 @@ export default {
     text-align: center;
 
     .villain-editor-instructions {
+      font-size: 18px;
       padding: .1rem .5rem;
       display: inline-block;
       background-color: theme(colors.villain.blockBackground);

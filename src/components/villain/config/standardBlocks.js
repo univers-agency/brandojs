@@ -16,7 +16,8 @@ export default [
     dataTemplate: {
       'text': 'Overskrift',
       'level': 1,
-      'class': ''
+      'class': null,
+      'id': null
     }
   },
 

@@ -1,6 +1,6 @@
 import { alerts } from '../../../utils/alerts'
 
-export default async function storeTemplateSequence (sequence, extraHeaders, url) {
+export default async function storeTemplateSequence (sequence, extraHeaders, url, toast) {
   let request
   let headers = new Headers()
   headers.append('accept', 'application/json, text/javascript, */*; q=0.01')
@@ -20,7 +20,7 @@ export default async function storeTemplateSequence (sequence, extraHeaders, url
     let data = await response.json()
 
     if (data.status === 200) {
-      alerts.alertSuccess('OK', 'Rekkefølgen ble lagret')
+      toast.success({ message: 'Rekkefølgen ble lagret' })
       return data
     }
   } catch (e) {

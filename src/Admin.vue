@@ -33,6 +33,7 @@
 
 import gql from 'graphql-tag'
 import { gsap } from 'gsap'
+import getCSSVar from './utils/getCSSVar'
 import GET_IDENTITY from './gql/identity/IDENTITY_QUERY.graphql'
 
 export default {
@@ -51,15 +52,19 @@ export default {
     loading (value) {},
 
     fullscreen (value) {
+      const main = document.querySelector('main')
+      const navigation = document.querySelector('#navigation')
+
       if (value) {
         if (this.$refs.nav) {
-          gsap.to('#navigation', { ease: 'power2.in', duration: 0.35, xPercent: '-100' })
-          gsap.to('main', { ease: 'power2.in', duration: 0.35, marginLeft: 0 })
+          gsap.to(navigation, { ease: 'power2.in', duration: 0.35, xPercent: '-100' })
+          gsap.to(main, { ease: 'power2.in', duration: 0.35, marginLeft: 0 })
         }
       } else {
         if (this.$refs.nav) {
-          gsap.to('#navigation', { ease: 'power2.in', duration: 0.35, xPercent: '0' })
-          gsap.to('main', { ease: 'power2.in', duration: 0.35, marginLeft: 370 })
+          const marginLeft = getCSSVar(main, '--main-margin-left')
+          gsap.to(navigation, { ease: 'power2.in', duration: 0.35, xPercent: '0' })
+          gsap.to(main, { ease: 'power2.in', duration: 0.35, marginLeft })
         }
       }
     },
@@ -434,7 +439,15 @@ export default {
     }
 
     main {
-      margin-left: 370px;
+      @responsive desktop_xl { --main-margin-left: 370px }
+      @responsive desktop_lg { --main-margin-left: 370px }
+      @responsive desktop_md { --main-margin-left: 330px }
+      @responsive ipad_landscape { --main-margin-left: 330px }
+      @responsive ipad_portrait { --main-margin-left: 0 }
+      @responsive mobile { --main-margin-left: 0 }
+      @responsive iphone { --main-margin-left: 0 }
+
+      margin-left: var(--main-margin-left);
     }
   }
 
@@ -1354,6 +1367,7 @@ input::-moz-placeholder {
      the editor. You probably shouldn't touch them. */
 
   .CodeMirror {
+    display: grid;
     position: relative;
     overflow: hidden;
     background: white;

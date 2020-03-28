@@ -6,6 +6,7 @@ import Content from './Content'
 import CircleFilled from './CircleFilled'
 import DetailField from './DetailField'
 import Status from './Status'
+import StatusLine from './StatusLine'
 
 export {
   ItemMeta,
@@ -15,5 +16,6 @@ export {
   Content,
   CircleFilled,
   DetailField,
-  Status
+  Status,
+  StatusLine
 }

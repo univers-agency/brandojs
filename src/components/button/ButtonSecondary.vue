@@ -40,6 +40,7 @@ export default {
   }
 
   button, a {
+    white-space: nowrap;
     color: theme(colors.dark);
     border: 1px solid theme(colors.dark);
     background-color: transparent;
