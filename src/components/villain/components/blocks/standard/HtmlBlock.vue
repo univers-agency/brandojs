@@ -17,9 +17,6 @@
         ref="txt"
         class="villain-html-input"></textarea>
     </div>
-    <template slot="config">
-      This is the config contents!
-    </template>
   </Block>
 </template>
 

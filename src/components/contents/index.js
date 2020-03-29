@@ -5,6 +5,7 @@ import ContentList from './ContentList'
 import Content from './Content'
 import CircleFilled from './CircleFilled'
 import DetailField from './DetailField'
+import KModal from './KModal'
 import Status from './Status'
 import StatusLine from './StatusLine'
 
@@ -16,6 +17,7 @@ export {
   Content,
   CircleFilled,
   DetailField,
+  KModal,
   Status,
   StatusLine
 }

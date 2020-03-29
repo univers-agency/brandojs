@@ -20,15 +20,6 @@
             fixed-width />
         </div>
         <div
-          v-if="locked"
-          ref="handle"
-          class="villain-block-action villain-locked">
-          <FontAwesomeIcon
-            icon="lock"
-            size="xs"
-            fixed-width />
-        </div>
-        <div
           v-if="hasHelpSlot"
           class="villain-block-action villain-help"
           @click="helpBlock">
@@ -102,13 +93,12 @@
     </div>
 
 
-    <VillainModal
+    <KModal
       v-if="showConfig"
+      ok-text="Lukk konfigurasjon"
+      :ok="true"
       ref="modal"
       v-shortkey="['esc']"
-      :large="false"
-      :show="true"
-      :chrome="false"
       @shortkey.native="closeConfig"
       @cancel="closeConfig"
       @ok="closeConfig">
@@ -143,19 +133,10 @@
                 fixed-width
                 @click="deleteBlock" />
             </div>
-            <div
-              v-if="locked"
-              class="villain-block-action villain-locked">
-              <FontAwesomeIcon
-                v-popover.left="'Blokken er låst'"
-                icon="lock"
-                size="xs"
-                fixed-width />
-            </div>
           </div>
         </div>
       </div>
-    </VillainModal>
+    </KModal>
 
     <template v-if="!locked">
       <VillainPlus
@@ -175,15 +156,10 @@
 
 <script>
 import { VTooltip } from 'v-tooltip'
-import VillainModal from '../tools/VillainModal'
 import gsap from 'gsap'
 
 export default {
   directives: { popover: VTooltip },
-  components: {
-    VillainModal
-  },
-
   props: {
     block: {
       type: Object,
@@ -249,9 +225,12 @@ export default {
   mounted () {
     this.$refs.content.addEventListener('mouseover', this.onMouseOver)
     this.$refs.content.addEventListener('mouseleave', this.onMouseLeave)
-    this.$refs.handle.addEventListener('dragstart', this.onDragStart)
-    this.$refs.handle.addEventListener('dragend', this.onDragEnd)
-    this.$refs.handle.addEventListener('mousedown', this.onMouseDown)
+
+    if (this.$refs.handle) {
+      this.$refs.handle.addEventListener('dragstart', this.onDragStart)
+      this.$refs.handle.addEventListener('dragend', this.onDragEnd)
+      this.$refs.handle.addEventListener('mousedown', this.onMouseDown)
+    }
   },
 
   methods: {

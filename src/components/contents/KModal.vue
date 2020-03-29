@@ -1,20 +1,27 @@
 <template>
-  <div class="villain-modal" ref="wrapper">
-    <div class="villain-modal__bg" ref="bg"></div>
-    <div class="villain-modal__modal" ref="modal">
-      <div class="villain-modal__modal__header">
+  <div class="kmodal" ref="wrapper">
+    <div class="kmodal__bg" ref="bg"></div>
+    <div class="kmodal__modal" ref="modal">
+      <div class="kmodal__modal__header">
         <slot name="header"></slot>
       </div>
 
-      <div class="villain-modal__modal__content">
+      <div class="kmodal__modal__content">
         <slot></slot>
       </div>
 
-      <div class="villain-modal__modal__footer">
+      <div class="kmodal__modal__footer">
         <slot name="footer">
-          <ButtonSecondary
+          <ButtonPrimary
+            v-if="ok"
             @click="$emit('ok')">
-            Lukk konfigurasjon
+            {{ okText }}
+          </ButtonPrimary>
+
+          <ButtonSecondary
+            v-if="cancel"
+            @click="$emit('cancel')">
+            {{ cancelText }}
           </ButtonSecondary>
         </slot>
       </div>
@@ -25,7 +32,33 @@
 <script>
 import gsap from 'gsap'
 export default {
-  name: 'VillainModal',
+  name: 'KModal',
+
+  props: {
+    okText: {
+      type: String,
+      required: false,
+      default: 'OK'
+    },
+
+    ok: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+
+    cancelText: {
+      type: String,
+      required: false,
+      default: 'Lukk'
+    },
+
+    cancel: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
+  },
 
   mounted () {
     const timeline = gsap.timeline()
@@ -33,8 +66,9 @@ export default {
     gsap.set(this.$refs.modal, { y: 40 })
 
     timeline
-      .to(this.$refs.bg, { opacity: 0.8, duration: 0.25 })
-      .to(this.$refs.modal, { opacity: 1, y: 0, duration: 0.25 })
+      .to(this.$refs.bg, { opacity: 0.8, duration: 0.25, ease: 'sine.in' })
+      .to(this.$refs.modal, { opacity: 1, duration: 0.25, ease: 'none' }, '-=0.1')
+      .to(this.$refs.modal, { y: 0, duration: 0.25, ease: 'circ.out' }, '<')
   },
 
   methods: {
@@ -42,8 +76,9 @@ export default {
       return new Promise((resolve, reject) => {
         const timeline = gsap.timeline()
         timeline
-          .to(this.$refs.modal, { opacity: 0, y: 40, duration: 0.25 })
-          .to(this.$refs.bg, { opacity: 0, duration: 0.25 })
+          .to(this.$refs.modal, { opacity: 0, duration: 0.25, ease: 'none' })
+          .to(this.$refs.modal, { y: 40, duration: 0.25, ease: 'circ.in' }, '<')
+          .to(this.$refs.bg, { opacity: 0, duration: 0.4, ease: 'sine.in'}, '<')
           .call(() => {
             return resolve()
           })
@@ -54,7 +89,7 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-  .villain-modal {
+  .kmodal {
     display: flex;
     position: fixed;
     top: 0;

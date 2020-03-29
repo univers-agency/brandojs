@@ -835,10 +835,10 @@ export default {
   z-index: 10000;
 
   .tooltip-inner {
-    background: black;
-    color: white;
-    border-radius: 16px;
-    padding: 7px 10px 7px;
+    @color fg peach;
+    @color bg blue;
+    border-radius: 12px;
+    padding: 5px 15px 5px;
   }
 
   .tooltip-arrow {
@@ -847,7 +847,7 @@ export default {
     border-style: solid;
     position: absolute;
     margin: 5px;
-    border-color: black;
+    border-color: theme(colors.blue);
     z-index: 1;
   }
 
