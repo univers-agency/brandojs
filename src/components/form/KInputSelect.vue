@@ -16,110 +16,99 @@
         type="hidden">
     </template>
     <template v-slot:outsideValidator>
-      <modal
+      <KModal
         v-if="open"
         ref="modal"
+        ok-text="Lukk"
         v-shortkey="['esc']"
-        :large="true"
-        :show="true"
-        :chrome="false"
         @shortkey.native="toggle"
-        @cancel="toggle()"
         @ok="toggle()">
-        <div class="card">
-          <div class="card-header">
-            <span>{{  showCreateEntry ? createEntry : label }}</span>
-            <div>
-              <ButtonSecondary
-                v-if="createEntry"
-                @click="toggleCreateEntry">
-                <template v-if="!showCreateEntry">
-                  + {{ createEntry }}
-                </template>
-                <template v-else>
-                  Tilbake til listen
-                </template>
-              </ButtonSecondary>
-              <ButtonSecondary
-                @click.native.prevent="toggle()">
-                Lukk
-              </ButtonSecondary>
-            </div>
+        <template #header>
+          {{  showCreateEntry ? createEntry : label }}
+          <div>
+            <ButtonSecondary
+              v-if="createEntry"
+              @click="toggleCreateEntry">
+              <template v-if="!showCreateEntry">
+                + {{ createEntry }}
+              </template>
+              <template v-else>
+                Tilbake til listen
+              </template>
+            </ButtonSecondary>
           </div>
-          <div class="card-body">
+        </template>
+        <div
+          v-if="!showCreateEntry"
+          class="row">
+          <div
+            ref="list"
+            class="options"
+            :style="{ maxHeight: optimizedHeight + 'px' }">
             <div
-              v-if="!showCreateEntry"
-              class="row">
+              class="megaselect__search"
+              style="line-height: 1.5">
+              <input
+                ref="search"
+                v-model="searchString"
+                name="search"
+                placeholder="Søk..."
+                autocomplete="off"
+                spellcheck="false"
+                class="search"
+                type="text"
+                @keydown.enter.prevent="searchEnter"
+                @keydown.down.prevent="pointerForward()"
+                @keydown.up.prevent="pointerBackward()"
+                @focus="$event.target.select()">
+            </div>
+            <transition-group name="fadefast">
               <div
+                v-for="(option, index) in filteredOptions"
+                :key="option[optionValueKey]"
                 ref="list"
-                class="half options"
-                :style="{ maxHeight: optimizedHeight + 'px' }">
-                <div
-                  class="megaselect__search"
-                  style="line-height: 1.5">
-                  <input
-                    ref="search"
-                    v-model="searchString"
-                    name="search"
-                    placeholder="Søk..."
-                    autocomplete="off"
-                    spellcheck="false"
-                    class="search"
-                    type="text"
-                    @keydown.enter.prevent="searchEnter"
-                    @keydown.down.prevent="pointerForward()"
-                    @keydown.up.prevent="pointerBackward()"
-                    @focus="$event.target.select()">
-                </div>
-                <transition-group name="fadefast">
-                  <div
-                    v-for="(option, index) in filteredOptions"
-                    :key="option[optionValueKey]"
-                    ref="list"
-                    :class="optionHighlight(index, option)"
-                    class="options-option"
-                    @click="selectOption(option)">
-                    <slot
-                      name="label"
-                      v-bind:option="option">
-                      {{ option[optionLabelKey] }}
-                    </slot>
-                  </div>
-                </transition-group>
+                :class="optionHighlight(index, option)"
+                class="options-option"
+                @click="selectOption(option)">
+                <slot
+                  name="label"
+                  v-bind:option="option">
+                  {{ option[optionLabelKey] }}
+                </slot>
               </div>
-            </div>
-            <div
-              v-else>
-              <div
-                v-if="similarEntries.length"
-                class="similar-box">
-                <div class="similar-header">
-                  <i class="fa fa-exclamation-circle text-danger" />
-                  Fant lignende objekter
-                </div>
-                <li
-                  v-for="s in similarEntries"
-                  :key="s[optionValueKey]"
-                  class="pos-relative">
-                  <span class="arrow">
-                    &rarr;
-                  </span>
-                  {{ s[optionLabelKey] }}
-                  <ButtonSmall
-                    @click.native.stop="selectSimilar(s)">
-                    Velg
-                  </ButtonSmall>
-                </li>
-              </div>
-
-              <slot
-                name="create"
-                v-bind:checkDupe="checkDupe"
-                v-bind:selectOption="selectCreatedOption"></slot>
-            </div>
+            </transition-group>
           </div>
         </div>
-      </modal>
+        <div
+          v-else>
+          <div
+            v-if="similarEntries.length"
+            class="similar-box">
+            <div class="similar-header">
+              <i class="fa fa-exclamation-circle text-danger" />
+              Fant lignende objekter
+            </div>
+            <li
+              v-for="s in similarEntries"
+              :key="s[optionValueKey]"
+              class="pos-relative">
+              <span class="arrow">
+                &rarr;
+              </span>
+              {{ s[optionLabelKey] }}
+              <ButtonSmall
+                @click.native.stop="selectSimilar(s)">
+                Velg
+              </ButtonSmall>
+            </li>
+          </div>
+
+          <slot
+            name="create"
+            v-bind:checkDupe="checkDupe"
+            v-bind:selectOption="selectCreatedOption"></slot>
+        </div>
+      </KModal>
       <div
         class="multiselect">
         <div>
@@ -360,13 +349,14 @@ export default {
       if (!this.open) {
         this.adjustPosition()
         this.open = true
-        // this.searchString = this.displayValue
         this.$nextTick(() => {
           this.$refs.search && this.$refs.search.focus()
           this.scrollToSelected()
         })
       } else {
-        this.open = false
+        this.$refs.modal.close().then(() => {
+          this.open = false
+        })
       }
     },
 
@@ -517,31 +507,29 @@ export default {
     }
   }
 
-  .modal {
-    .options {
-      overflow-y: auto;
-      .options-option {
-        cursor: pointer;
-        color: theme(colors.dark);
-        background-color: theme(colors.peach);
+  .options {
+    overflow-y: auto;
+    .options-option {
+      cursor: pointer;
+      color: theme(colors.dark);
+      background-color: theme(colors.peach);
 
-        user-select: none;
-        padding: 8px 15px 8px;
+      user-select: none;
+      padding: 8px 15px 8px;
 
-        &.option-selected {
-          background-color: theme(colors.blue);
-          color: theme(colors.peach);
-        }
+      &.option-selected {
+        background-color: theme(colors.blue);
+        color: theme(colors.peach);
+      }
 
-        &.option-highlight {
-          background-color: theme(colors.blue);
-          color: theme(colors.peach);
-        }
+      &.option-highlight {
+        background-color: theme(colors.blue);
+        color: theme(colors.peach);
+      }
 
-        &:hover {
-          color: theme(colors.peach);
-          background-color: theme(colors.dark);
-        }
+      &:hover {
+        color: theme(colors.peach);
+        background-color: theme(colors.dark);
       }
     }
 

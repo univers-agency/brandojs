@@ -249,11 +249,8 @@ export default {
     },
 
     async closeConfig () {
-      console.log('calling closeModal')
-      await this.$refs.modal.closeModal()
+      await this.$refs.modal.close()
       this.showConfig = false
-      console.log('set config to false')
-      // this.$emit('toggle-config', false)
     },
 
     deleteBlock () {

@@ -103,7 +103,7 @@ export default {
   },
 
   created () {
-    console.log('created <ModalAddArtist />')
+    console.log('created <KEntryModal />')
   },
 
   inject: [

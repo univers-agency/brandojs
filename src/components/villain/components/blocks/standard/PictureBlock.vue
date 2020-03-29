@@ -407,10 +407,6 @@ export default {
     padding: 1rem;
   }
 
-  .shaded {
-    background-color: #fafafa;
-  }
-
   .villain-image-library {
     display: flex;
     flex-wrap: wrap;

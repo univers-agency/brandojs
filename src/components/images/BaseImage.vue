@@ -10,84 +10,68 @@
       @click.stop.prevent="editImage">
       <i class="fa fa-search fa-fw" />
     </div>
-    <modal
+    <KModal
       v-if="showEdit"
       ref="modal"
-      :chrome="false"
-      :large="true"
-      :show="true"
+      ok-text="Lagre"
+      @ok="saveEdit"
       @cancel="closeEdit">
-      <div class="card">
-        <div class="card-header">
-          Bildedetaljer
+      <template #header>
+        Bildedetaljer
+      </template>
+      <div class="row">
+        <div>
+          <KInput
+            v-model="img.image.title"
+            :value="img.image.title"
+            name="img.image[title]"
+            label="Bildetekst"
+            placeholder="Bildetekst" />
+          <KInput
+            v-model="img.image.credits"
+            :value="img.image.credits"
+            name="img.image[credits]"
+            label="Evt. kreditering"
+            placeholder="Evt. kreditering" />
+          <KInput
+            v-model="img.image.alt"
+            :value="img.image.alt"
+            name="img.image[alt]"
+            label="Alt tekst"
+            placeholder="Beskrivelse av hva som er på bildet" />
+
+          <div class="info">
+            <dt>
+              Filnavn
+            </dt>
+            <dd>
+              {{ img.image.path }}
+            </dd>
+          </div>
         </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="half">
-              <FocusPoint v-model="img.image.focal">
-                <img
-                  :src="'/media/' + img.image.path"
-                  class="img-fluid">
-              </FocusPoint>
+        <div class="shaded">
+          <FocusPoint v-model="img.image.focal">
+            <img
+              :src="'/media/' + img.image.path"
+              class="img-fluid">
+          </FocusPoint>
 
-              <div class="row info">
-                <div class="col-md-6">
-                  <dt>
-                    Dimensjoner
-                  </dt>
-                  <dd v-if="img.image.width && img.image.height">
-                    {{ img.image.width }}x{{ img.image.height }}
-                  </dd>
-                  <dd v-else>
-                    Ingen dimensjoner
-                  </dd>
-                </div>
-              </div>
-            </div>
-            <div class="half">
-              <KInput
-                v-model="img.image.title"
-                :value="img.image.title"
-                name="img.image[title]"
-                label="Bildetekst"
-                placeholder="Bildetekst" />
-              <KInput
-                v-model="img.image.credits"
-                :value="img.image.credits"
-                name="img.image[credits]"
-                label="Evt. kreditering"
-                placeholder="Evt. kreditering" />
-              <KInput
-                v-model="img.image.alt"
-                :value="img.image.alt"
-                name="img.image[alt]"
-                label="Alt tekst"
-                placeholder="Beskrivelse av hva som er på bildet" />
-
-              <div class="info">
-                <dt>
-                  Filnavn
-                </dt>
-                <dd>
-                  {{ img.image.path }}
-                </dd>
-              </div>
-
-              <button
-                class="btn btn-outline-secondary btn-block"
-                @click.prevent="saveEdit">
-                Lagre
-              </button>
-              <button
-                class="btn btn-outline-secondary btn-block"
-                @click.prevent="closeEdit">
-                Lukk
-              </button>
+          <div class="row info">
+            <div class="col-md-6">
+              <dt>
+                Dimensjoner
+              </dt>
+              <dd v-if="img.image.width && img.image.height">
+                {{ img.image.width }}x{{ img.image.height }}
+              </dd>
+              <dd v-else>
+                Ingen dimensjoner
+              </dd>
             </div>
           </div>
         </div>
       </div>
-    </modal>
+    </KModal>
 
     <template v-if="displayList">
       <div
@@ -190,10 +174,12 @@ export default {
     },
 
     closeEdit () {
-      this.$nextTick(() => {
-        this.showEdit = false
-        this.selected = false
-        this.showOverlay = false
+      this.$refs.modal.close().then(() => {
+        this.$nextTick(() => {
+          this.showEdit = false
+          this.selected = false
+          this.showOverlay = false
+        })
       })
     },
 
@@ -240,7 +226,7 @@ export default {
           }
         })
 
-        this.$toast.success({ message: 'Serie oppdatert' })
+        this.$toast.success({ message: 'Bilde oppdatert' })
         this.$router.push({ name: 'images' })
       } catch (err) {
         this.$utils.showError(err)

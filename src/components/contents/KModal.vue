@@ -13,13 +13,13 @@
       <div class="kmodal__modal__footer">
         <slot name="footer">
           <ButtonPrimary
-            v-if="ok"
+            v-if="hasOKListener"
             @click="$emit('ok')">
             {{ okText }}
           </ButtonPrimary>
 
           <ButtonSecondary
-            v-if="cancel"
+            v-if="hasCancelListener"
             @click="$emit('cancel')">
             {{ cancelText }}
           </ButtonSecondary>
@@ -41,22 +41,19 @@ export default {
       default: 'OK'
     },
 
-    ok: {
-      type: Boolean,
-      required: false,
-      default: true
-    },
-
     cancelText: {
       type: String,
       required: false,
       default: 'Lukk'
-    },
+    }
+  },
 
-    cancel: {
-      type: Boolean,
-      required: false,
-      default: false
+  computed:{
+    hasOKListener () {
+      return this.$listeners && this.$listeners.ok
+    },
+    hasCancelListener () {
+      return this.$listeners && this.$listeners.cancel
     }
   },
 
@@ -72,7 +69,7 @@ export default {
   },
 
   methods: {
-    closeModal () {
+    close () {
       return new Promise((resolve, reject) => {
         const timeline = gsap.timeline()
         timeline
@@ -177,14 +174,24 @@ export default {
 
       &__content {
         overflow-y: auto;
+        background-color: white;
+        padding: 1rem 1.75rem;
+
+        button + button {
+          margin-top: -1px;
+        }
 
         .row {
           display: grid;
-          grid-template-columns: minmax(200px, 450px) minmax(200px, 450px)
+          grid-template-columns: repeat(auto-fit, minmax(250px, 450px));
         }
 
         .field-wrapper {
           margin-bottom: 20px;
+        }
+
+        .shaded {
+          background-color: #fafafa;
         }
       }
 
@@ -192,31 +199,10 @@ export default {
         padding: 1rem 1.75rem;
         background-color: #ffffffe0;
         border-radius: 0 0 15px 15px;
-      }
-    }
-  }
 
-  .villain-block-config {
-    background-color: #fff;
-
-    button + button {
-      margin-top: -1px;
-    }
-
-    .villain-block-config-content {
-      margin: 0 auto;
-      padding: 1rem 1.75rem;
-      position: relative;
-      background-color: #ffffff;
-
-      .villain-config-content-buttons {
-        margin: 0 auto;
-        margin-top: 20px;
-        text-align: center;
-      }
-
-      .help-text {
-        font-size: 18px;
+        button + button {
+          margin-left: 10px;
+        }
       }
     }
   }
