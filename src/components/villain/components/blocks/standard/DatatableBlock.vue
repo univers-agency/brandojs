@@ -1,19 +1,18 @@
 <template>
   <Block
+    ref="block"
     :block="block"
     :parent="parent"
-    :config="showConfig"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)"
-    @toggle-config="showConfig = $event">
+    @delete="$emit('delete', $event)">
     <div
       v-if="!block.data.length"
       class="villain-block-empty">
       <i class="fa fa-fw fa-table"></i>
       <div class="actions">
         <ButtonSecondary
-          @click="showConfig = true">
+          @click="$refs.block.openConfig()">
           Konfigurér datatabell
         </ButtonSecondary>
       </div>
@@ -45,16 +44,16 @@
             v-for="(item, idx) in block.data"
             :key="idx + 'cfg'">
             <td>
-              <input
+              <KInput
                 v-model="item.key"
-                class="form-control"
-                type="input">
+                :name="`item[${idx}][key]`"
+                placeholder="Nøkkel" />
             </td>
             <td>
-              <input
+              <KInput
                 v-model="item.value"
-                class="form-control"
-                type="input" />
+                :name="`item[${idx}][value]`"
+                placeholder="Verdi" />
             </td>
             <td>
               <ButtonSecondary
@@ -148,6 +147,27 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+  .villain-block-datatable {
+    margin: 0 auto;
+
+    .villain-block-datatable-item {
+      padding: 0 2rem;
+
+      &:hover {
+        cursor: move;
+      }
+
+      .villain-block-datatable-item-key {
+        font-weight: 500;
+        padding-right: 2rem;
+        text-align: right;
+      }
+      .villain-block-datatable-item-value {
+        padding-left: 2rem;
+      }
+    }
+  }
+
   .villain-block-config-content {
     table {
       margin-right: 0;

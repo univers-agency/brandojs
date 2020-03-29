@@ -1,12 +1,11 @@
 <template>
   <Block
+    ref="block"
     :block="block"
     :parent="parent"
-    :config="showConfig"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)"
-    @toggle-config="showConfig = $event">
+    @delete="$emit('delete', $event)">
     <div class="villain-block-description">
       Bildefigur
     </div>
@@ -18,10 +17,38 @@
       <div
         v-else
         class="villain-block-image-empty">
-        <i class="fa fa-fw fa-portrait"></i>
+        <drop
+          class="drop"
+          @dragover="dragOver = true"
+          @dragleave="dragOver = false"
+          @drop="handleDrop">
+          <template v-if="dragOver">
+            <FontAwesomeIcon
+              icon="cloud-upload-alt"
+              size="8x"
+              fixed-width />
+          </template>
+          <template
+            v-else>
+            <template v-if="uploading">
+              <FontAwesomeIcon
+                icon="circle-notch"
+                spin
+                size="8x"
+                fixed-width />
+            </template>
+            <template v-else>
+              <FontAwesomeIcon
+                icon="image"
+                size="8x"
+                fixed-width />
+            </template>
+          </template>
+        </drop>
+
         <div class="actions">
           <ButtonSecondary
-            @click="showConfig = true">
+            @click="$refs.block.openConfig()">
             Konfigurér bildeblokk
           </ButtonSecondary>
         </div>
@@ -38,20 +65,27 @@
             @dragleave="dragOver = false"
             @drop="handleDrop">
             <template v-if="dragOver">
-              <i class="fa fa-fw fa-cloud-upload-alt"></i>
+              <FontAwesomeIcon
+                icon="cloud-upload-alt"
+                fixed-width />
             </template>
             <template
               v-else>
               <template v-if="uploading">
-                <i class="fa fa-fw fa-circle-notch fa-spin"></i>
+                <FontAwesomeIcon
+                  icon="circle-notch"
+                  spin
+                  fixed-width />
               </template>
               <template v-else>
-                <i class="fa fa-fw fa-image"></i>
+                <FontAwesomeIcon
+                  icon="image"
+                  fixed-width />
               </template>
             </template>
           </drop>
         </div>
-        <p class="text-center">
+        <div class="text-center mb-2">
           <template
             v-if="dragOver">
             Slipp for å laste opp!
@@ -64,7 +98,7 @@
               Dra bildet du vil laste opp hit &uarr;
             </template>
           </template>
-        </p>
+        </div>
       </div>
 
       <div
@@ -122,7 +156,7 @@
       </div>
 
       <div v-else>
-        <div class="row">
+        <div class="panes">
           <div>
             <div v-if="block.data.url">
               <KInputToggle
@@ -328,6 +362,7 @@ export default {
 
     handleDrop (data, event) {
       event.preventDefault()
+      this.$refs.block.openConfig()
       const files = event.dataTransfer.files
 
       if (files.length > 1) {
@@ -423,7 +458,6 @@ export default {
     justify-content: center;
 
     svg {
-      width: 30%;
       height: 30%;
       max-width: 250px;
       margin-bottom: 25px;
@@ -431,7 +465,6 @@ export default {
   }
 
   .drop {
-    background-color: white;
     margin-bottom: 20px;
   }
 </style>

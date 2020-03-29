@@ -114,7 +114,15 @@ export default {
       font-size: 17px;
     }
 
+    & >>> .label-wrapper span {
+      font-size: 17px;
+    }
+
     & >>> .help-text {
+      font-size: 17px;
+    }
+
+    & >>> .multiselect > div > span {
       font-size: 17px;
     }
 
@@ -148,6 +156,7 @@ export default {
       z-index: 99999;
       opacity: 0;
       max-height: 90vh;
+      max-width: 80vw;
       min-width: 450px;
       border-radius: 15px;
 
@@ -170,20 +179,39 @@ export default {
         background-color: #ffffff;
         border-bottom: 1px solid #efefef;
         border-radius: 15px 15px 0 0;
+
+        button {
+          font-size: 17px;
+          padding: 10px 17px;
+          min-width: auto;
+        }
       }
 
       &__content {
         overflow-y: auto;
         background-color: white;
         padding: 1rem 1.75rem;
+        position: relative;
 
         button + button {
           margin-top: -1px;
         }
 
-        .row {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 450px));
+        & >>> .panes {
+          /* display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 450px)); */
+          display: flex;
+          flex-wrap: nowrap;
+
+          > * {
+            min-width: 450px;
+            max-width: 450px;
+            flex-grow: 0;
+
+            &:nth-child(2) {
+              padding-left: 1rem;
+            }
+          }
         }
 
         .field-wrapper {
@@ -192,6 +220,17 @@ export default {
 
         .shaded {
           background-color: #fafafa;
+        }
+
+        & >>> .display-icon {
+          width: 100%;
+
+          svg {
+            width: 100%;
+            height: 100%;
+            padding: 1rem 3rem;
+            pointer-events: none;
+          }
         }
       }
 

@@ -7,7 +7,9 @@
       :immediate="true"
       :vid="name"
       :rules="rules">
-      <div class="label-wrapper">
+      <div
+        v-if="label"
+        class="label-wrapper">
         <label
           :for="id"
           class="control-label"

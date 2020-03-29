@@ -1,12 +1,11 @@
 <template>
   <Block
+    ref="block"
     :block="block"
     :parent="parent"
-    :config="showConfig"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)"
-    @toggle-config="showConfig = $event">
+    @delete="$emit('delete', $event)">
     <div class="villain-block-description">
       Datakilde<span v-if="block.data.description"> — {{ block.data.description }}</span>
     </div>
@@ -24,64 +23,69 @@
         <i class="fa fa-fw fa-database"></i>
         <div class="actions">
           <ButtonSecondary
-            @click="showConfig = true">
+            @click="$refs.block.openConfig()">
             Konfigurér datakilde
           </ButtonSecondary>
         </div>
       </div>
     </div>
     <template slot="config">
-      <KInput
-        v-model="block.data.description"
-        rules="required"
-        name="data[description]"
-        label="Beskrivelse"
-        placeholder="Beskrivelse av datakilden" />
+      <div class="panes">
+        <div>
+          <KInput
+            v-model="block.data.description"
+            rules="required"
+            name="data[description]"
+            label="Beskrivelse"
+            placeholder="Beskrivelse av datakilden" />
 
-      <KInputRadios
-        v-model="block.data.module"
-        rules="required"
-        :options="availableModules"
-        optionValueKey="module"
-        optionLabelKey="module"
-        name="data[module]"
-        label="Kildemodul" />
+          <KInputRadios
+            v-model="block.data.module"
+            rules="required"
+            :options="availableModules"
+            optionValueKey="module"
+            optionLabelKey="module"
+            name="data[module]"
+            label="Kildemodul" />
 
-      <KInputRadios
-        v-model="block.data.type"
-        rules="required"
-        :options="availableModuleTypes"
-        name="data[type]"
-        label="Type" />
+          <KInputRadios
+            v-model="block.data.type"
+            rules="required"
+            :options="availableModuleTypes"
+            name="data[type]"
+            label="Type" />
 
-      <KInputRadios
-        v-model="block.data.query"
-        rules="required"
-        :options="availableModuleQueries"
-        name="data[query]"
-        label="Spørring" />
+          <KInputRadios
+            v-model="block.data.query"
+            rules="required"
+            :options="availableModuleQueries"
+            name="data[query]"
+            label="Spørring" />
 
-      <KInput
-        v-model="block.data.arg"
-        name="data[arg]"
-        label="Argument" />
+          <KInput
+            v-model="block.data.arg"
+            name="data[arg]"
+            label="Argument" />
+        </div>
+        <div>
+          <KInputSelect
+            v-model="block.data.template"
+            rules="required"
+            :options="templates"
+            optionValueKey="id"
+            optionLabelKey="name"
+            name="data[template]"
+            label="Mal" />
 
-      <KInputSelect
-        v-model="block.data.template"
-        rules="required"
-        :options="templates"
-        optionValueKey="id"
-        optionLabelKey="name"
-        name="data[template]"
-        label="Mal" />
-
-      <KInputTextarea
-        v-model="block.data.wrapper"
-        :monospace="true"
-        :rows="8"
-        name="data[wrapper]"
-        label="Wrapper"
-        help-text="Bruk ${CONTENT} for innhold" />
+          <KInputTextarea
+            v-model="block.data.wrapper"
+            :monospace="true"
+            :rows="8"
+            name="data[wrapper]"
+            label="Wrapper"
+            help-text="Bruk ${CONTENT} for innhold" />
+        </div>
+      </div>
     </template>
   </Block>
 </template>

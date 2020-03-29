@@ -1,11 +1,11 @@
 <template>
   <Block
+    ref="block"
     :block="block"
     :parent="parent"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)"
-    @toggle-config="showConfig = $event">
+    @delete="$emit('delete', $event)">
     <textarea
       v-model="block.data.text"
       class="villain-blockquote-content" />
@@ -13,13 +13,10 @@
       v-model="block.data.cite"
       class="villain-blockquote-cite">
     <template slot="config">
-      <div class="form-group">
-        <label>CSS klasser</label>
-        <input
-          v-model="block.data.class"
-          class="form-control"
-          type="input">
-      </div>
+      <KInput
+        v-model="block.data.class"
+        name="data[class]"
+        label="CSS klasser" />
     </template>
   </Block>
 </template>

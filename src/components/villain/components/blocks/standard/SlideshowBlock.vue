@@ -1,14 +1,13 @@
 <template>
   <Block
+    ref="block"
     :block="block"
     :parent="parent"
-    :config="showConfig"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)"
-    @toggle-config="showConfig = $event">
+    @delete="$emit('delete', $event)">
     <div class="villain-block-description">
-      Bildekarusell
+      Galleriblokk
     </div>
     <div
       ref="block"
@@ -24,23 +23,17 @@
           :key="i.url"
           :data-id="i.url"
           class="villain-block-slideshow-image"
-
           @mouseover.stop="imgHover(i, $event)"
           @mouseout="imgLeave"
           @click="toggleImage(i)">
-          <i class="fa fa-info-circle info" />
+          <i class="fa fa-trash info" />
           <div
             v-if="toggledImageUrl === i.url"
             class="villain-block-slideshow-image-overlay">
             <template>
               <FontAwesomeIcon
-                icon="info-circle"
-                class="mr-2"
-                @click.prevent.stop="edit(i, $event)" />
-            </template>
-            <template>
-              <FontAwesomeIcon
                 icon="trash"
+                size="4x"
                 @click="del(i)" />
             </template>
           </div>
@@ -55,35 +48,9 @@
         <i class="fa fa-fw fa-images"></i>
         <div class="actions">
           <ButtonSecondary
-            @click="showConfig = true">
+            @click="$refs.block.openConfig()">
             Konfigurér galleriblokk
           </ButtonSecondary>
-        </div>
-      </div>
-
-      <div
-        v-show="editImage"
-        ref="popup-wrapper"
-        class="villain-block-slideshow-popup-wrapper">
-        <div
-          ref="popup"
-          class="villain-block-slideshow-popup">
-          <div class="form-group">
-            <label>Endre tittel/bildetekst</label>
-            <div
-              ref="wrapper"
-              class="villain-markdown-input-wrapper">
-              <textarea
-                ref="txt"
-                class="villain-markdown-input"></textarea>
-            </div>
-            <button
-              type="button"
-              class="btn btn-primary mt-2"
-              @click="editImage = null; toggledImageUrl = null">
-              OK
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -91,27 +58,6 @@
     <template slot="config">
       <div
         v-if="showTitles">
-        <!-- <table
-          class="table villain-image-table">
-          <tr
-            v-for="i in block.data.images"
-            :key="i.url"
-            :data-id="i.url"
-            class="villain-block-slideshow-image">
-            <td class="fit">
-              <img
-                :src="i.url"
-                class="img-fluid" />
-            </td>
-            <td class="fit">
-              <input
-                v-model="i.title"
-                class="form-control"
-                type="input">
-            </td>
-          </tr>
-        </table> -->
-
         <KInputTable
           v-model="block.data.images"
           name="data[images]"
@@ -119,18 +65,31 @@
           :delete-rows="false"
           :new-rows="false">
           <template v-slot:row="{ entry }">
-            <td>
-              <img style="width: 50px" :src="entry.sizes.thumb">
-            </td>
-            <td>
-              <KInput
-                :invert="true"
-                v-model="entry.title"
-                name="entry[title]"
-                placeholder="Bildetekst"
-                label="Bildetekst"
-              />
-            </td>
+            <div class="panes">
+              <div>
+                <td>
+                  <img :src="entry.sizes.thumb">
+                </td>
+              </div>
+              <div>
+                <td>
+                  <KInput
+                    v-model="entry.title"
+                    name="entry[title]"
+                    placeholder="Bildetekst"
+                    label="Bildetekst"
+                  />
+
+                  <KInput
+                    v-model="entry.alt"
+                    name="entry[alt]"
+                    placeholder="Alt tekst"
+                    label="Alt. tekst"
+                    help-text="Beskrivelse av bildet for universell utforming"
+                  />
+                </td>
+              </div>
+            </div>
           </template>
           <template v-slot:new="">
           </template>
@@ -161,12 +120,12 @@
                 <i class="fa fa-fw fa-circle-notch fa-spin"></i>
               </template>
               <template v-else>
-                <i class="fa fa-fw fa-image"></i>
+                <i class="fa fa-fw fa-images"></i>
               </template>
             </template>
           </drop>
         </div>
-        <p class="text-center">
+        <div class="text-center mb-3">
           <template
             v-if="dragOver">
             Slipp for å laste opp!
@@ -179,15 +138,21 @@
               Dra bildene du vil laste opp hit &uarr;
             </template>
           </template>
-        </p>
+        </div>
       </div>
       <div
         v-if="showImages && listStyle"
         class="villain-image-library mt-4">
-        <div
-          style="text-align: center;padding-bottom: 20px;"
-          @click="listStyle = false">
-          <i class="fa fa-fw fa-th" />
+        <div class="buttons col-12 mb-3">
+          <ButtonSecondary @click="listStyle = false">
+            Vis som grid
+          </ButtonSecondary>
+          <ButtonSecondary @click="showUpload = true; showImages = false">
+            Last opp bilder
+          </ButtonSecondary>
+          <ButtonSecondary @click="showTitles = true; showImages = false">
+            Endre bildetekster
+          </ButtonSecondary>
         </div>
         <table
           class="table villain-image-table">
@@ -222,30 +187,21 @@
       <div
         v-else-if="showImages && !listStyle"
         class="villain-image-library row">
-        <div
-          class="col-12"
-          style="text-align: center;padding-bottom: 20px;"
-          @click="listStyle = true">
-          <i class="fa fa-fw fa-list" />
-        </div>
-        <div class="col-12 d-flex justify-content-center mb-2">
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="showUpload = true; showImages = false">
+        <div class="buttons col-12 mb-3">
+          <ButtonSecondary @click="listStyle = true">
+            Vis som liste
+          </ButtonSecondary>
+          <ButtonSecondary @click="showUpload = true; showImages = false">
             Last opp bilder
-          </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="showTitles = true; showImages = false">
+          </ButtonSecondary>
+          <ButtonSecondary @click="showTitles = true; showImages = false">
             Endre bildetekster
-          </button>
+          </ButtonSecondary>
         </div>
         <div
           v-for="i in images"
           :key="i.id"
-          class="col-3 mb-3">
+          class="imgthumb mb-3">
           <img
             :src="i.thumb"
             :class="alreadySelected(i) ? 'villain-image-table-selected' : ''"
@@ -357,43 +313,6 @@ export default {
   },
 
   methods: {
-    edit (img, event) {
-      const rect = this.$refs.block.getBoundingClientRect()
-      const y = event.clientY - rect.top
-      TweenMax.set(this.$refs.popup, { autoAlpha: 0, top: y })
-
-      if (this.codeMirror) {
-        this.codeMirror.toTextArea()
-      }
-
-      this.codeMirror = CodeMirror.fromTextArea(this.$refs.txt, {
-        autoRefresh: true,
-        mode: 'gfm',
-        theme: 'duotone-light',
-        tabSize: 2,
-        line: true,
-        gutters: ['CodeMirror-linenumbers'],
-        matchBrackets: true,
-        showCursorWhenSelecting: true,
-        styleActiveLine: true,
-        lineNumbers: true,
-        styleSelectedText: true
-      })
-
-      this.codeMirror.setValue(img.title || '')
-      this.codeMirror.refresh()
-
-      TweenMax.to(this.$refs.popup, 0.7, { delay: 0.3, autoAlpha: 1 })
-
-      this.editImage = img
-
-      this.codeMirror.on('change', cm => {
-        if (this.editImage) {
-          this.editImage.title = cm.getValue()
-        }
-      })
-    },
-
     toggleImage (img) {
       if (this.toggledImageUrl === img.url) {
         this.toggledImageUrl = null
@@ -568,6 +487,10 @@ export default {
 }
 </script>
 <style lang="postcss" scoped>
+  .imgthumb {
+    width: 150px;
+  }
+
   .villain-block-image-empty {
     display: flex;
     flex-direction: column;

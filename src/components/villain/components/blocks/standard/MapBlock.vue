@@ -1,13 +1,12 @@
 <template>
   <Block
+    ref="block"
     :block="block"
     :parent="parent"
-    :config="showConfig"
     icon="fa-compass"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)"
-    @toggle-config="showConfig = $event">
+    @delete="$emit('delete', $event)">
     <div class="villain-block-video">
       <div
         v-if="html"
@@ -19,7 +18,7 @@
         <i class="fa fa-fw fa-map"></i>
         <div class="actions">
           <ButtonSecondary
-            @click="showConfig = true">
+            @click="$refs.block.openConfig()">
             Konfigurér kartblokk
           </ButtonSecondary>
         </div>
@@ -28,23 +27,20 @@
     <template slot="config">
       <div
         class="form-group">
-        <p>
-          Lim inn embed-link fra Google Maps
-        </p>
-        <input
+        <KInput
           v-model="url"
-          class="form-control"
-          type="input"
-          @input="parseUrl">
+          name="url"
+          label="URL"
+          help-text="Lim inn embed-link fra Google Maps"
+          @input="parseUrl" />
       </div>
       <div
         v-if="block.data.url"
         class="form-group">
-        <label>CSS klasser</label>
-        <input
+        <KInput
           v-model="block.data.class"
-          class="form-control"
-          type="input">
+          name="data[class]"
+          label="CSS klasser" />
       </div>
     </template>
   </Block>
@@ -107,7 +103,7 @@ export default {
   methods: {
     parseUrl (v) {
       let match
-      let url = v.srcElement.value
+      let url = this.url
 
       for (let key of Object.keys(this.providers)) {
         let provider = this.providers[key]

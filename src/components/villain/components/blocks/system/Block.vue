@@ -32,7 +32,7 @@
         <div
           v-if="hasConfigSlot && block.type !== 'template'"
           class="villain-block-action villain-config"
-          @click="showConfig = true">
+          @click="openConfig">
           <FontAwesomeIcon
             v-popover.left="'Endre blokkens oppsettsvalg'"
             icon="cog"
@@ -42,7 +42,7 @@
         <div
           v-else-if="hasConfigSlot && block.type === 'template'"
           class="villain-block-action villain-config"
-          @click="showConfig = true">
+          @click="openConfig">
           <FontAwesomeIcon
             v-popover.left="'Endre malens oppsettsvalg'"
             icon="file"
@@ -95,12 +95,10 @@
 
     <KModal
       v-if="showConfig"
-      ok-text="Lukk konfigurasjon"
-      :ok="true"
-      ref="modal"
       v-shortkey="['esc']"
+      ref="modal"
+      ok-text="Lukk konfigurasjon"
       @shortkey.native="closeConfig"
-      @cancel="closeConfig"
       @ok="closeConfig">
       <template #header>
         <h5>{{ getBlockDisplayName(block.type) }}</h5>
@@ -110,30 +108,6 @@
         class="villain-block-config">
         <div class="villain-block-config-content">
           <slot name="config" />
-
-          <div class="villain-block-actions">
-            <div
-              v-if="hasConfigSlot"
-              class="villain-block-action villain-config">
-              <FontAwesomeIcon
-                v-popover.left="'Lukk konfigurasjon'"
-                icon="cog"
-                size="xs"
-                fixed-width
-                @click="closeConfig" />
-            </div>
-            <div
-              v-if="!locked"
-              class="villain-block-action villain-delete"
-              @click="deleteBlock">
-              <FontAwesomeIcon
-                v-popover.left="'Slett blokken'"
-                icon="trash-alt"
-                size="xs"
-                fixed-width
-                @click="deleteBlock" />
-            </div>
-          </div>
         </div>
       </div>
     </KModal>
@@ -209,6 +183,10 @@ export default {
 
     locked () {
       return this.block.hasOwnProperty('locked') && this.block.locked
+    },
+
+    hasConfigListener () {
+      return this.$listeners && this.$listeners.config
     }
   },
 
@@ -246,6 +224,15 @@ export default {
 
     helpBlock () {
       this.showHelp = true
+    },
+
+    openConfig () {
+      this.showConfig = true
+      if (this.hasConfigListener) {
+        this.$nextTick(() => {
+          this.$emit('config')
+        })
+      }
     },
 
     async closeConfig () {
@@ -719,27 +706,6 @@ export default {
   }
 }
 
-.villain-block-datatable {
-  margin: 0 auto;
-
-  .villain-block-datatable-item {
-    padding: 0 2rem;
-
-    &:hover {
-      cursor: move;
-    }
-
-    .villain-block-datatable-item-key {
-      font-weight: bold;
-      padding-right: 2rem;
-      text-align: right;
-    }
-    .villain-block-datatable-item-value {
-      padding-left: 2rem;
-    }
-  }
-}
-
 .villain-header-input {
   border: 0;
   width: 100%;
@@ -828,52 +794,6 @@ export default {
     margin-top: 0;
     margin-bottom: 5px;
     text-transform: uppercase;
-  }
-}
-
-.villain-timeline {
-  list-style: none;
-}
-.villain-timeline > li {
-  margin-bottom: 60px;
-}
-
-/* for Desktop */
-@media ( min-width : 640px ){
-  .villain-timeline > li {
-    overflow: hidden;
-    margin: 0;
-    position: relative;
-  }
-  .villain-timeline-item-date {
-    width: 110px;
-    float: left;
-    margin-top: 21px;
-    font-size: 85%;
-    font-weight: bold;
-  }
-  .villain-timeline-item-content {
-    width: 75%;
-    float: left;
-    border-left: 3px #e5e5d1 solid;
-    padding-left: 30px;
-    min-height: 60px;
-    display: flex;
-    align-items: center;
-  }
-  .villain-timeline-item-content:before {
-    content: '';
-    width: 12px;
-    height: 12px;
-    background: theme(colors.villain.main);
-    position: absolute;
-    left: 106px;
-    top: 24px;
-    border-radius: 100%;
-  }
-
-  .villain-timeline-item-content-inner {
-    font-size: 95%;
   }
 }
 

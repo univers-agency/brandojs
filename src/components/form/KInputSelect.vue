@@ -40,7 +40,7 @@
         </template>
         <div
           v-if="!showCreateEntry"
-          class="row">
+          class="panes">
           <div
             ref="list"
             class="options"

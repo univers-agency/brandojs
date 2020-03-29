@@ -1,14 +1,13 @@
 <template>
   <Block
+    ref="block"
     :block="block"
     :parent="parent"
-    :config="showConfig"
     :show-ok="true"
     icon="fa-video"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)"
-    @toggle-config="showConfig = $event">
+    @delete="$emit('delete', $event)">
     <div class="villain-block-description">
       Video
     </div>
@@ -29,7 +28,7 @@
         <i class="fa fa-fw fa-video"></i>
         <div class="actions">
           <ButtonSecondary
-            @click="showConfig = true">
+            @click="$refs.block.openConfig()">
             Konfigurér videoblokk
           </ButtonSecondary>
         </div>
@@ -193,7 +192,6 @@ export default {
   }
 
   .desc {
-    text-align: center;
     margin-bottom: 25px;
   }
 

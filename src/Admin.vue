@@ -343,6 +343,17 @@ export default {
     transition: transform 0.35s;
   }
 
+  strong {
+    font-weight: 500;
+  }
+
+  .drop {
+    overflow: hidden;
+    svg {
+      pointer-events: none;
+    }
+  }
+
   html {
     line-height: 1.35;
     height: 100%;
@@ -692,6 +703,10 @@ export default {
 
 .mt-3 {
   margin-top: 25px;
+}
+
+.mb-2 {
+  margin-bottom: 15px !important;
 }
 
 .mb-3 {

@@ -2,11 +2,10 @@
   <Block
     :block="block"
     :parent="parent"
-    :config="showConfig"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
     @delete="$emit('delete', $event)"
-    @toggle-config="showConfig = $event">
+    @config="bindEditor">
     <div class="villain-block-description">
       SVG
     </div>
@@ -16,24 +15,22 @@
       v-html="block.data.code">
     </div>
     <template slot="config">
-      <div class="form-group">
+      <div class="form-group mb-2">
         <label>SVG kode</label>
         <div
           ref="wrapper"
           class="villain-svg-input-wrapper">
           <textarea
+            rows="5"
             ref="txt"
             class="villain-svg-input"></textarea>
         </div>
       </div>
 
-      <div class="form-group">
-        <label>CSS klasser</label>
-        <input
-          v-model="block.data.class"
-          class="form-control"
-          type="input">
-      </div>
+      <KInput
+        v-model="block.data.class"
+        name="data[class]"
+        label="CSS klasser" />
     </template>
   </Block>
 </template>
@@ -79,26 +76,28 @@ export default {
     console.debug('<SvgBlock /> created')
   },
 
-  mounted () {
-    this.codeMirror = CodeMirror.fromTextArea(this.$refs.txt, {
-      autoRefresh: true,
-      mode: 'htmlmixed',
-      theme: 'duotone-light',
-      tabSize: 2,
-      line: true,
-      gutters: ['CodeMirror-linenumbers'],
-      matchBrackets: true,
-      showCursorWhenSelecting: true,
-      styleActiveLine: true,
-      lineNumbers: true,
-      styleSelectedText: true
-    })
+  methods: {
+    bindEditor () {
+      this.codeMirror = CodeMirror.fromTextArea(this.$refs.txt, {
+        autoRefresh: true,
+        mode: 'htmlmixed',
+        theme: 'duotone-light',
+        tabSize: 2,
+        line: true,
+        gutters: ['CodeMirror-linenumbers'],
+        matchBrackets: true,
+        showCursorWhenSelecting: true,
+        styleActiveLine: true,
+        lineNumbers: true,
+        styleSelectedText: true
+      })
 
-    this.codeMirror.setValue(this.block.data.code)
+      this.codeMirror.setValue(this.block.data.code)
 
-    this.codeMirror.on('change', cm => {
-      this.block.data.code = cm.getValue()
-    })
+      this.codeMirror.on('change', cm => {
+        this.block.data.code = cm.getValue()
+      })
+    }
   }
 }
 </script>

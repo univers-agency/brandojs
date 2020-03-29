@@ -145,10 +145,15 @@ export default {
     width: 100%;
 
     tr {
+      border-bottom: 1px solid #ccc;
+
       td {
         padding: 12px 0;
         padding-right: 15px;
-        border-bottom: 1px solid theme(colors.dark);
+
+        & >>> .field-wrapper {
+          margin-bottom: 15px;
+        }
 
         &:last-of-type {
           padding-right: 0;

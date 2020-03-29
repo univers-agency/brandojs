@@ -31,11 +31,12 @@ export default {
 
 <style lang="postcss" scoped>
   button.small, a.small {
-    position: absolute;
-    right: 0;
+    margin-left: auto;
     border: 1px solid theme(colors.dark);
     color: theme(colors.dark);
     font-size: 14px;
+    float: right;
+    display: inline-block;
     text-transform: uppercase;
     padding: 4px 7px 4px;
     margin-top: -2px;

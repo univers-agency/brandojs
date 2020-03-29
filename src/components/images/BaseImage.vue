@@ -19,7 +19,7 @@
       <template #header>
         Bildedetaljer
       </template>
-      <div class="row">
+      <div class="panes">
         <div>
           <KInput
             v-model="img.image.title"

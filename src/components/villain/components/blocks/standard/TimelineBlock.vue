@@ -26,32 +26,29 @@
         v-for="(item, idx) in block.data"
         :key="idx + 'cfg'"
         class="form-group">
-        <label>Punktoverskrift</label>
-        <input
+        <KInput
           v-model="item.caption"
-          class="form-control"
-          type="input">
+          label="Datapunkt"
+          :name="`data[caption][${idx}]`" />
 
-        <label>Innhold</label>
-        <textarea
+        <KInputTextarea
           v-model="item.text"
-          rows="2"
-          class="form-control">
-        </textarea>
-        <button
-          type="button"
-          class="btn btn-outline-primary btn-small mt-2"
+          :rows="2"
+          label="Innhold"
+          :name="`data[text][${idx}]`" />
+
+        <ButtonSecondary
           @click="deleteItem(item)">
-          Slett
-        </button>
+          Slett punkt
+        </ButtonSecondary>
+
         <hr />
+
       </div>
-      <button
-        type="button"
-        class="btn btn-outline-primary"
+      <ButtonSecondary
         @click="addItem">
-        Legg til nytt tidslinjepunkt
-      </button>
+        Nytt punkt
+      </ButtonSecondary>
     </template>
   </Block>
 </template>
@@ -109,3 +106,51 @@ export default {
   }
 }
 </script>
+
+<style lang="postcss" scoped>
+  .villain-timeline {
+    list-style: none;
+  }
+  .villain-timeline > li {
+    margin-bottom: 60px;
+  }
+
+  /* for Desktop */
+  @media ( min-width : 640px ){
+    .villain-timeline > li {
+      overflow: hidden;
+      margin: 0;
+      position: relative;
+    }
+    .villain-timeline-item-date {
+      width: 110px;
+      float: left;
+      margin-top: 21px;
+      font-size: 85%;
+      font-weight: 500;
+    }
+    .villain-timeline-item-content {
+      width: 75%;
+      float: left;
+      border-left: 3px #e5e5d1 solid;
+      padding-left: 30px;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+    }
+    .villain-timeline-item-content:before {
+      content: '';
+      width: 12px;
+      height: 12px;
+      background: theme(colors.villain.main);
+      position: absolute;
+      left: 106px;
+      top: 24px;
+      border-radius: 100%;
+    }
+
+    .villain-timeline-item-content-inner {
+      font-size: 95%;
+    }
+  }
+</style>
