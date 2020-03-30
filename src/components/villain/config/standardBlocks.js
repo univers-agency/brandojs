@@ -4,8 +4,8 @@ export default [
     icon: 'fa-paragraph',
     component: 'Text',
     dataTemplate: {
-      'text': '',
-      'type': 'paragraph'
+      text: '',
+      type: 'paragraph'
     }
   },
 
@@ -14,10 +14,10 @@ export default [
     icon: 'fa-heading',
     component: 'Header',
     dataTemplate: {
-      'text': 'Overskrift',
-      'level': 1,
-      'class': null,
-      'id': null
+      text: 'Overskrift',
+      level: 1,
+      class: null,
+      id: null
     }
   },
 
@@ -26,7 +26,7 @@ export default [
     icon: 'fa-minus',
     component: 'Divider',
     dataTemplate: {
-      'text': '-------------'
+      text: '-------------'
     }
   },
 
@@ -94,8 +94,8 @@ export default [
     icon: 'fa-code',
     component: 'Svg',
     dataTemplate: {
-      'code': 'Lim inn svg tag her',
-      'class': ''
+      code: 'Lim inn svg tag her',
+      class: ''
     }
   },
 
@@ -133,8 +133,8 @@ export default [
     icon: 'fa-quote-right',
     component: 'Blockquote',
     dataTemplate: {
-      'text': 'Sitat',
-      'cite': 'Sitatforfatter'
+      text: 'Sitat',
+      cite: 'Sitatforfatter'
     }
   },
 
@@ -144,8 +144,8 @@ export default [
     component: 'Timeline',
     dataTemplate: [
       {
-        'caption': '2018',
-        'text': 'Tekst om hendelsen'
+        caption: '2018',
+        text: 'Tekst om hendelsen'
       }
     ]
   },
@@ -162,7 +162,7 @@ export default [
     icon: 'fa-code',
     component: 'Markdown',
     dataTemplate: {
-      'text': '## Markdown code'
+      text: '## Markdown code'
     }
   },
 
@@ -171,7 +171,7 @@ export default [
     icon: 'fa-file-code',
     component: 'Html',
     dataTemplate: {
-      'text': 'html'
+      text: 'html'
     }
   },
 
@@ -180,7 +180,7 @@ export default [
     icon: 'fa-comment',
     component: 'Comment',
     dataTemplate: {
-      'text': 'Kommentar...'
+      text: 'Kommentar...'
     }
   }
 ]

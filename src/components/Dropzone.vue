@@ -291,9 +291,9 @@ export default {
     },
 
     addDataTransfer (dataTransfer) {
-      let files = []
+      const files = []
       if (dataTransfer.items && dataTransfer.items.length) {
-        let items = []
+        const items = []
         for (let i = 0; i < dataTransfer.items.length; i++) {
           let item = dataTransfer.items[i]
           if (item.getAsEntry) {
@@ -308,8 +308,8 @@ export default {
           }
         }
         return new Promise((resolve, reject) => {
-          let forEach = (i) => {
-            let item = items[i]
+          const forEach = (i) => {
+            const item = items[i]
             if (!item || (this.maximum > 0 && files.length >= this.maximum)) {
               return resolve(this.add(files))
             }
@@ -360,7 +360,7 @@ export default {
       if (!e.dataTransfer) {
         return
       }
-      let dt = e.dataTransfer
+      const dt = e.dataTransfer
       if (dt.files && dt.files.length) {
         this.dropActive = true
       } else if (!dt.types) {

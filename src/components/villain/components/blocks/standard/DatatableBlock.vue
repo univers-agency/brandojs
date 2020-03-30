@@ -117,7 +117,7 @@ export default {
       this.sortedArray = sortable.toArray()
       let newOrder = []
       this.sortedArray.forEach(x => {
-        let i = this.block.data.find(i => i.key + i.value === x)
+        const i = this.block.data.find(i => i.key + i.value === x)
         newOrder = [
           ...newOrder,
           i
@@ -134,8 +134,8 @@ export default {
     },
 
     deleteItem (item) {
-      let i = this.block.data.find(b => b === item)
-      let idx = this.block.data.indexOf(i)
+      const i = this.block.data.find(b => b === item)
+      const idx = this.block.data.indexOf(i)
 
       this.block.data = [
         ...this.block.data.slice(0, idx),

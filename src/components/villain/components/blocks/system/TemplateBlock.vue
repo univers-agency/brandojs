@@ -24,7 +24,6 @@
         </button>
       </div>
 
-
       <button
         class="btn-secondary"
         type="button"
@@ -125,11 +124,11 @@ export default {
     },
 
     replaceRefWithSource (ref) {
-      let foundTemplate = this.available.templates.find(t => t.data.id === this.block.data.id)
-      let foundRef = foundTemplate.data.refs.find(r => r.name === ref.name)
+      const foundTemplate = this.available.templates.find(t => t.data.id === this.block.data.id)
+      const foundRef = foundTemplate.data.refs.find(r => r.name === ref.name)
 
       // replace our ref with foundRef
-      let refIdx = this.block.data.refs.indexOf(ref)
+      const refIdx = this.block.data.refs.indexOf(ref)
 
       const newRefs = [
         ...this.block.data.refs.slice(0, refIdx),
@@ -142,7 +141,7 @@ export default {
     },
 
     refetchVars () {
-      let foundTemplate = this.available.templates.find(t => t.data.id === this.block.data.id)
+      const foundTemplate = this.available.templates.find(t => t.data.id === this.block.data.id)
       this.$set(this.block.data, 'vars', foundTemplate.data.vars)
       this.refresh(false)
       this.setLocalVars()
@@ -207,8 +206,8 @@ export default {
     },
 
     replaceVars () {
-      let srcCode = this.getSourceCode()
-      let replacedVarsCode = srcCode.replace(/\${(\w+)}/g, this.replaceVar)
+      const srcCode = this.getSourceCode()
+      const replacedVarsCode = srcCode.replace(/\${(\w+)}/g, this.replaceVar)
 
       return replacedVarsCode
     },
@@ -230,7 +229,7 @@ export default {
     },
 
     replaceRefs (srcCode) {
-      let replacedRefsCode = srcCode.replace(/%{(\w+)}/g, this.replaceRef)
+      const replacedRefsCode = srcCode.replace(/%{(\w+)}/g, this.replaceRef)
 
       return replacedRefsCode
     },
@@ -249,9 +248,9 @@ export default {
 
     buildData () {
       // build it by {refname: data}
-      let refs = {}
+      const refs = {}
       for (let i = 0; i < this.block.data.refs.length; i++) {
-        let ref = this.block.data.refs[i]
+        const ref = this.block.data.refs[i]
         if (ref.deleted) {
           continue
         }
@@ -270,7 +269,7 @@ export default {
       }
 
       for (let i = 0; i < this.block.data.refs.length; i++) {
-        let ref = this.block.data.refs[i]
+        const ref = this.block.data.refs[i]
         if (ref.deleted) {
           continue
         }
@@ -302,8 +301,8 @@ export default {
         return
       }
 
-      let templateSourceRefs = foundTemplate.data.refs
-      let blockRefs = this.block.data.refs
+      const templateSourceRefs = foundTemplate.data.refs
+      const blockRefs = this.block.data.refs
 
       for (let i = 0; i < templateSourceRefs.length; i++) {
         if (!blockRefs.find(b => b.name === templateSourceRefs[i].name)) {
@@ -316,15 +315,14 @@ export default {
     },
 
     buildWrapper () {
-      console.log('-- buildWrapper()')
       const builtSlots = this.buildSlots()
-      let template = `
+      const template = `
         <TemplateContentWrapper>
           ${builtSlots}
         </TemplateContentWrapper>
       `
 
-      let data = this.buildData()
+      const data = this.buildData()
 
       return {
         name: 'buildwrapper',

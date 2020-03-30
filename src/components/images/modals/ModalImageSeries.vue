@@ -75,7 +75,7 @@ export default {
 
     sortCallback ({ imageSeries, ids }) {
       for (let i = 0; i < ids.length; i++) {
-        let imageId = ids[i]
+        const imageId = ids[i]
         const img = imageSeries.images.find(i => parseInt(i.id) === parseInt(imageId))
         const imgIdx = imageSeries.images.indexOf(img)
         imageSeries = {

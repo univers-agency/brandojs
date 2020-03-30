@@ -19,8 +19,8 @@
       <KModal
         v-if="open"
         ref="modal"
-        ok-text="Lukk"
         v-shortkey="['esc']"
+        ok-text="Lukk"
         @shortkey.native="toggle"
         @ok="toggle()">
         <template #header>
@@ -131,15 +131,10 @@
 <script>
 import { gsap } from 'gsap'
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
-import Modal from '../Modal.vue'
 
 gsap.registerPlugin(ScrollToPlugin)
 
 export default {
-  components: {
-    Modal
-  },
-
   props: {
     options: {
       type: Array,

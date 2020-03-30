@@ -1,5 +1,5 @@
 export default function pathJoin (...args) {
-  let str = args.map((part, i) => {
+  const str = args.map((part, i) => {
     if (i === 0) {
       return part.trim().replace(/[/]*$/g, '')
     } else {

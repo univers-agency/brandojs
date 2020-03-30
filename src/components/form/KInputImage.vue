@@ -134,7 +134,7 @@ export default {
     } else {
       this.prefill = this.value ? this.value[this.previewKey] : null
       if (this.value) {
-        this.focal = this.value['focal'] ? this.value['focal'] : null
+        this.focal = this.value.focal ? this.value.focal : null
       } else {
         this.focal = { x: 50, y: 50 }
       }

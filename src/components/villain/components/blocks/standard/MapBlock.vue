@@ -103,10 +103,10 @@ export default {
   methods: {
     parseUrl (v) {
       let match
-      let url = this.url
+      const url = this.url
 
-      for (let key of Object.keys(this.providers)) {
-        let provider = this.providers[key]
+      for (const key of Object.keys(this.providers)) {
+        const provider = this.providers[key]
         match = provider.regex.exec(url)
 
         if (match !== null && match[1] !== undefined) {

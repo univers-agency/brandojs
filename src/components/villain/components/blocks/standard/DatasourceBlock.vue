@@ -112,22 +112,6 @@ export default {
     }
   },
 
-  watch: {
-    'block.data.module'(val) {
-      this.getModuleKeys(val)
-    },
-
-    'block.data.type'(val) {
-      this.getModuleQueries(val)
-    },
-
-    'block.data.arg'(val) {
-      if (val === '') {
-        this.block.data.arg = null
-      }
-    },
-  },
-
   data () {
     return {
       customClass: '',
@@ -138,6 +122,22 @@ export default {
       availableModuleTypes: [],
       availableModuleQueries: [],
       templates: []
+    }
+  },
+
+  watch: {
+    'block.data.module' (val) {
+      this.getModuleKeys(val)
+    },
+
+    'block.data.type' (val) {
+      this.getModuleQueries(val)
+    },
+
+    'block.data.arg' (val) {
+      if (val === '') {
+        this.block.data.arg = null
+      }
     }
   },
 
@@ -192,7 +192,7 @@ export default {
 
     createUID () {
       return (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase()
-    },
+    }
   }
 }
 </script>

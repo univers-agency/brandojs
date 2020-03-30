@@ -51,8 +51,7 @@
         Ny mal
       </button>
       <div
-        v-for="(templates, key) in namespacedTemplates"
-        v-if="key !== 'general'"
+        v-for="(templates, key) in nonGeneralNamespacedTemplates"
         :key="key"
         class="template-group"
         @click="namespaceOpen.includes(key) ? namespaceOpen.splice(namespaceOpen.indexOf(key), 1) : namespaceOpen.push(key)">
@@ -322,6 +321,15 @@ export default {
         objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj)
         return objectsByKeyValue
       }, {})
+    },
+
+    nonGeneralNamespacedTemplates () {
+      if (this.namespacedTemplates) {
+        const { general, ...other } = this.namespacedTemplates
+        return other
+      } else {
+        return null
+      }
     }
   },
 
@@ -447,7 +455,7 @@ export default {
     deleteTemplate (tpl) {
       this.$alerts.alertConfirm('OBS!', 'Er du sikker på at du vil slette denne malen?', async data => {
         if (data) {
-          let result = await deleteTemplate(tpl, this.headers.extra, this.urls.templates, this.$toast)
+          const result = await deleteTemplate(tpl, this.headers.extra, this.urls.templates, this.$toast)
           if (result.status === 200) {
             this.templates = await fetchTemplates('all', this.headers.extra, this.urls.templates)
           }
@@ -503,7 +511,7 @@ export default {
       // find ref to replace
       const oldRef = this.currentTemplate.data.refs.find(r => r.name === this.prevRefName)
       if (oldRef) {
-        let idx = this.currentTemplate.data.refs.indexOf(oldRef)
+        const idx = this.currentTemplate.data.refs.indexOf(oldRef)
         if (idx >= 0) {
           this.currentTemplate.data.refs = [
             ...this.currentTemplate.data.refs.slice(0, idx),
@@ -516,7 +524,7 @@ export default {
     },
 
     delRef (ref) {
-      let idx = this.currentTemplate.data.refs.indexOf(ref)
+      const idx = this.currentTemplate.data.refs.indexOf(ref)
       if (idx >= 0) {
         this.currentTemplate.data.refs = [
           ...this.currentTemplate.data.refs.slice(0, idx),
@@ -599,7 +607,7 @@ export default {
         }
       }
 
-      let result = await storeTemplate(this.currentTemplate, this.headers.extra, this.urls.templates, this.$toast)
+      const result = await storeTemplate(this.currentTemplate, this.headers.extra, this.urls.templates, this.$toast)
       if (result.status === 200) {
         this.templates = await fetchTemplates('all', this.headers.extra, this.urls.templates)
       }

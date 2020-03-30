@@ -8,9 +8,9 @@
         v-if="shouldStatus"
         class="status">
         <StatusLine
-          @statusUpdate="changeStatus"
           :all="true"
-          :val="$parent.queryVars.status" />
+          :val="$parent.queryVars.status"
+          @statusUpdate="changeStatus" />
       </div>
       <div
         v-if="shouldFilter"
@@ -35,7 +35,9 @@
         class="order">
         <FontAwesomeIcon icon="sort-alpha-down" />
       </div>
-      <transition name="fade" v-if="selectable">
+      <transition
+        v-if="selectable"
+        name="fade">
         <div
           v-if="selectedRows.length"
           class="selected">
@@ -219,7 +221,7 @@ export default {
 
   methods: {
     changeStatus (status) {
-      const queryVars = { ...this.$parent.queryVars, status}
+      const queryVars = { ...this.$parent.queryVars, status }
       this.$emit('updateQuery', queryVars)
     },
 
@@ -236,7 +238,6 @@ export default {
           ...this.filters,
           [this.filterKeys[idx + 1]]: val
         }
-
       } else {
         delete this.filters[key]
         this.filters = {
@@ -247,7 +248,7 @@ export default {
     },
 
     filterInput () {
-      const queryVars = { ...this.$parent.queryVars, filter: this.filters}
+      const queryVars = { ...this.$parent.queryVars, filter: this.filters }
       this.$emit('updateQuery', queryVars)
     },
 

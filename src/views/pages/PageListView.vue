@@ -201,7 +201,8 @@ export default {
       queryVars: {
         filter: null,
         offset: 0,
-        limit: 100
+        limit: 100,
+        status: 'all'
       }
     }
   },

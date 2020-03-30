@@ -323,7 +323,7 @@ export default {
   },
   methods: {
     updateStrings () {
-      for (let s in this.customStrings) {
+      for (const s in this.customStrings) {
         if (s in this.strings && typeof this.customStrings[s] === 'string') {
           this.strings[s] = this.customStrings[s]
         }
@@ -371,7 +371,7 @@ export default {
     },
 
     onFileChange (e, prefill) {
-      let files = e.target.files || e.dataTransfer.files
+      const files = e.target.files || e.dataTransfer.files
       if (!files.length) {
         return
       }
@@ -445,15 +445,15 @@ export default {
     loadImage (file) {
       this.getEXIFOrientation(file, orientation => {
         this.setOrientation(orientation)
-        let reader = new FileReader()
+        const reader = new FileReader()
         reader.onload = e => {
           this.image = e.target.result
           this.$emit('change', this.image)
           this.imageObject = new Image()
           this.imageObject.onload = () => {
             if (this.autoToggleAspectRatio) {
-              let canvasOrientation = this.getOrientation(this.canvasWidth, this.canvasHeight)
-              let imageOrientation = this.getOrientation(this.imageObject.width, this.imageObject.height)
+              const canvasOrientation = this.getOrientation(this.canvasWidth, this.canvasHeight)
+              const imageOrientation = this.getOrientation(this.imageObject.width, this.imageObject.height)
               if (canvasOrientation !== imageOrientation) {
                 this.rotateCanvas()
               }
@@ -472,7 +472,7 @@ export default {
       this.imageRatio = image.width / image.height
       this.previewWidth = 450
       this.previewHeight = 450
-      let orientation = this.getOrientation(image.width, image.height)
+      const orientation = this.getOrientation(image.width, image.height)
 
       switch (orientation) {
         case 'portrait':
@@ -527,13 +527,13 @@ export default {
         this.drawImage(this.imageObject)
       }
 
-      let newOrientation = this.getOrientation(this.canvasWidth, this.canvasHeight)
+      const newOrientation = this.getOrientation(this.canvasWidth, this.canvasHeight)
       this.$emit('aspectratiochange', newOrientation)
     },
 
     resizeCanvas () {
-      let previewRatio = this.canvasWidth / this.canvasHeight
-      let newWidth = this.$refs.container.clientWidth
+      const previewRatio = this.canvasWidth / this.canvasHeight
+      const newWidth = this.$refs.container.clientWidth
       if (!this.toggleAspectRatio && newWidth === this.containerWidth) {
         return
       }
@@ -643,7 +643,7 @@ export default {
         }
         return
       }
-      let headers = new Headers()
+      const headers = new Headers()
       headers.append('Accept', 'image/*')
       fetch(source, {
         method: 'GET',
@@ -653,7 +653,7 @@ export default {
         return response.blob()
       })
         .then(imageBlob => {
-          let e = { target: { files: [] } }
+          const e = { target: { files: [] } }
           const fileName = options.fileName || source.split('/').slice(-1)[0]
           let mediaType = options.mediaType || ('image/' + (options.fileType || fileName.split('.').slice(-1)[0]))
           mediaType = mediaType.replace('jpg', 'jpeg')

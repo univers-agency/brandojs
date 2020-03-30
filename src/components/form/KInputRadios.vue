@@ -83,7 +83,7 @@ export default {
     optionLabelKey: {
       type: String,
       default: 'name'
-    },
+    }
   },
 
   data () {

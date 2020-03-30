@@ -109,13 +109,11 @@
 
 import gql from 'graphql-tag'
 import moment from 'moment-timezone'
-import Modal from '../Modal.vue'
 import FocusPoint from './FocusPoint.vue'
 
 export default {
   components: {
-    FocusPoint,
-    Modal
+    FocusPoint
   },
 
   props: {
@@ -244,7 +242,7 @@ export default {
         if (this.selected) {
           this.selectedImages.push(this)
         } else {
-          let idx = this.selectedImages.indexOf(this)
+          const idx = this.selectedImages.indexOf(this)
           this.selectedImages.splice(idx, 1)
         }
       }

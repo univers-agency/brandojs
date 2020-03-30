@@ -9,9 +9,9 @@
       Overskrift (H{{ block.data.level }})
     </div>
     <textarea
-      rows="1"
       ref="txt"
       v-model="block.data.text"
+      rows="1"
       :style="'font-size: ' + fontSize + 'rem'"
       class="villain-header-input">
     </textarea>

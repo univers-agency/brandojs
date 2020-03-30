@@ -121,19 +121,19 @@ import getTimestamp from '../utils/getTimestamp.js'
 import { AUTOSAVE_INTERVAL } from '../config/autoSave.js'
 import { TweenMax } from 'gsap'
 
-for (let key in standardComponents) {
+for (const key in standardComponents) {
   if (standardComponents.hasOwnProperty(key)) {
     Vue.component(key, standardComponents[key])
   }
 }
 
-for (let key in systemComponents) {
+for (const key in systemComponents) {
   if (systemComponents.hasOwnProperty(key)) {
     Vue.component(key, systemComponents[key])
   }
 }
 
-for (let key in toolsComponents) {
+for (const key in toolsComponents) {
   if (toolsComponents.hasOwnProperty(key)) {
     Vue.component(key, toolsComponents[key])
   }
@@ -241,7 +241,7 @@ export default {
   computed: {
     src: {
       get () {
-        let bx = cloneDeep(this.blocks)
+        const bx = cloneDeep(this.blocks)
         return JSON.stringify(bx.map(b => this.stripMeta(b)), null, 2)
       },
 
@@ -322,7 +322,7 @@ export default {
     blocks: {
       handler: function (val, oldVal) {
         this.lastEdit = getTimestamp()
-        let bx = cloneDeep(val)
+        const bx = cloneDeep(val)
         if (bx.length) {
           this.$emit('input', JSON.stringify(bx.map(b => this.stripMeta(b)), null, 2))
         } else {
@@ -392,8 +392,8 @@ export default {
     validateBlock (block) {
       const bpBlock = this.availableBlocks.find(b => b.component.toLowerCase() === block.type)
       if (bpBlock) {
-        let blueprint = bpBlock.dataTemplate
-        for (let blueprintProp in blueprint) {
+        const blueprint = bpBlock.dataTemplate
+        for (const blueprintProp in blueprint) {
           if (!block.data.hasOwnProperty(blueprintProp)) {
             this.$set(block.data, blueprintProp, blueprint[blueprintProp])
             console.debug(`==> Added missing property '${blueprintProp}' to '${block.type}'`)
@@ -402,10 +402,9 @@ export default {
         }
       } else {
         if (block.type === 'template') {
-          console.log(block.data)
           if (block.data.refs && block.data.refs.length) {
             for (let idx = 0; idx < block.data.refs.length; idx++) {
-              let refBlock = block.data.refs[idx].data
+              const refBlock = block.data.refs[idx].data
               this.validateBlock(refBlock)
             }
           }
@@ -464,7 +463,7 @@ export default {
       if (this.showSource) {
         this.showSource = false
       } else {
-        let bx = cloneDeep(this.blocks)
+        const bx = cloneDeep(this.blocks)
         this.updatedSource = JSON.stringify(bx.map(b => this.stripMeta(b)), null, 2)
         this.showSource = true
         autosize(this.$refs.tasource)
@@ -472,7 +471,7 @@ export default {
     },
 
     refresh (animate = true) {
-      let bx = cloneDeep(this.blocks)
+      const bx = cloneDeep(this.blocks)
       this.updatedSource = JSON.stringify(bx.map(b => this.stripMeta(b)), null, 2)
       this.blocks = JSON.parse(this.updatedSource)
       this.blocks = this.addUIDs()
@@ -522,7 +521,7 @@ export default {
         if (blockTpl.component === 'Columns' || blockTpl.component === 'Timeline' || blockTpl.component === 'Datatable') {
           block = {
             type: blockTpl.component.toLowerCase(),
-            data: [ ...blockTpl.dataTemplate ],
+            data: [...blockTpl.dataTemplate],
             uid: blockTpl.uid
           }
         } else {
@@ -556,10 +555,10 @@ export default {
 
       if (parent) {
         // child of a column
-        let mainBlock = this.blocks.find(b => {
+        const mainBlock = this.blocks.find(b => {
           if (b.type === 'columns') {
-            for (let key of Object.keys(b.data)) {
-              let x = b.data[key]
+            for (const key of Object.keys(b.data)) {
+              const x = b.data[key]
               if (x.uid === parent) {
                 return x
               }
@@ -569,19 +568,19 @@ export default {
         let parentBlock = null
         if (mainBlock) {
           // we have the main block -- add to the correct parent
-          for (let key of Object.keys(mainBlock.data)) {
-            let y = mainBlock.data[key]
+          for (const key of Object.keys(mainBlock.data)) {
+            const y = mainBlock.data[key]
             if (y.uid === parent) {
               parentBlock = y
             }
           }
 
           if (after) {
-            let p = parentBlock.data.find(b => b.uid === after)
+            const p = parentBlock.data.find(b => b.uid === after)
             if (!p) {
               console.error('--- NO UID FOR "AFTER"-BLOCK')
             }
-            let idx = parentBlock.data.indexOf(p)
+            const idx = parentBlock.data.indexOf(p)
 
             if (idx + 1 === parentBlock.data.length) {
               // index is last, just add to list
@@ -609,11 +608,11 @@ export default {
       }
 
       if (after) {
-        let p = this.blocks.find(b => b.uid === after)
+        const p = this.blocks.find(b => b.uid === after)
         if (!p) {
           console.error('--- NO UID FOR "AFTER"-BLOCK')
         }
-        let idx = this.blocks.indexOf(p)
+        const idx = this.blocks.indexOf(p)
 
         if (idx + 1 === this.blocks.length) {
           // index is last, just add to list
@@ -655,10 +654,10 @@ export default {
       */
       if (parent) {
         // child of a column
-        let mainBlock = this.blocks.find(b => {
+        const mainBlock = this.blocks.find(b => {
           if (b.type === 'columns') {
-            for (let key of Object.keys(b.data)) {
-              let x = b.data[key]
+            for (const key of Object.keys(b.data)) {
+              const x = b.data[key]
               if (x.uid === parent) {
                 return x
               }
@@ -669,19 +668,19 @@ export default {
         let parentBlock = null
         if (mainBlock) {
           // we have the main block -- add to the correct parent
-          for (let key of Object.keys(mainBlock.data)) {
-            let y = mainBlock.data[key]
+          for (const key of Object.keys(mainBlock.data)) {
+            const y = mainBlock.data[key]
             if (y.uid === parent) {
               parentBlock = y
             }
           }
 
           if (after) {
-            let p = parentBlock.data.find(b => b.uid === after)
+            const p = parentBlock.data.find(b => b.uid === after)
             if (!p) {
               console.error('--- NO UID FOR "AFTER"-BLOCK')
             }
-            let idx = parentBlock.data.indexOf(p)
+            const idx = parentBlock.data.indexOf(p)
 
             if (idx + 1 === parentBlock.data.length) {
               // index is last, just add to list
@@ -712,7 +711,7 @@ export default {
       ** Block is moved after another block, but not to a columns object
       */
       if (after) {
-        let p = this.blocks.find(b => b.uid === after)
+        const p = this.blocks.find(b => b.uid === after)
         if (!p) {
           if (this.blocks.length) {
             console.error('--- NO UID FOR "AFTER"-BLOCK')
@@ -728,7 +727,7 @@ export default {
             return
           }
         }
-        let parentIdx = this.blocks.indexOf(p)
+        const parentIdx = this.blocks.indexOf(p)
 
         if (parentIdx + 1 === this.blocks.length) {
           // index is last, just add to list
@@ -754,12 +753,12 @@ export default {
     },
 
     deleteBlock ({ uid, ref }) {
-      let block = this.blocks.find(b => {
+      const block = this.blocks.find(b => {
         if (b.type === 'columns') {
-          for (let col of b.data) {
-            for (let colBlock of col.data) {
+          for (const col of b.data) {
+            for (const colBlock of col.data) {
               if (colBlock.uid === uid) {
-                let colIdx = col.data.indexOf(colBlock)
+                const colIdx = col.data.indexOf(colBlock)
                 col.data = [
                   ...col.data.slice(0, colIdx),
                   ...col.data.slice(colIdx + 1)
@@ -772,11 +771,11 @@ export default {
       })
       if (block) {
         if (ref) {
-          let idx = this.blocks.indexOf(block)
+          const idx = this.blocks.indexOf(block)
           console.log('idx', idx)
           // a TemplateBlock that wants to get rid of a ref!
-          let foundRef = block.data.refs.find(r => r.name === ref)
-          let refIdx = block.data.refs.indexOf(foundRef)
+          const foundRef = block.data.refs.find(r => r.name === ref)
+          const refIdx = block.data.refs.indexOf(foundRef)
 
           if (refIdx > -1) {
             this.blocks = [
@@ -800,7 +799,7 @@ export default {
             console.log('ref not found...')
           }
         } else {
-          let idx = this.blocks.indexOf(block)
+          const idx = this.blocks.indexOf(block)
           this.blocks = [
             ...this.blocks.slice(0, idx),
             ...this.blocks.slice(idx + 1)

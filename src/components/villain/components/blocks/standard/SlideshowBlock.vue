@@ -77,16 +77,14 @@
                     v-model="entry.title"
                     name="entry[title]"
                     placeholder="Bildetekst"
-                    label="Bildetekst"
-                  />
+                    label="Bildetekst" />
 
                   <KInput
                     v-model="entry.alt"
                     name="entry[alt]"
                     placeholder="Alt tekst"
                     label="Alt. tekst"
-                    help-text="Beskrivelse av bildet for universell utforming"
-                  />
+                    help-text="Beskrivelse av bildet for universell utforming" />
                 </td>
               </div>
             </div>
@@ -239,11 +237,6 @@
 </template>
 
 <script>
-import { TweenMax } from 'gsap'
-import CodeMirror from 'codemirror'
-import 'codemirror/mode/gfm/gfm.js'
-import 'codemirror/addon/display/autorefresh.js'
-
 import Block from '../system/Block'
 import { Drop } from 'vue-drag-drop'
 
@@ -322,9 +315,9 @@ export default {
     },
 
     del (img) {
-      let i = this.block.data.images.find(i => i.url === img.url)
+      const i = this.block.data.images.find(i => i.url === img.url)
       if (i) {
-        let idx = this.block.data.images.indexOf(i)
+        const idx = this.block.data.images.indexOf(i)
         this.block.data.images = [
           ...this.block.data.images.slice(0, idx),
           ...this.block.data.images.slice(idx + 1)
@@ -351,7 +344,7 @@ export default {
       this.sortedArray = sortable.toArray()
       let newImages = []
       this.sortedArray.forEach(x => {
-        let i = this.block.data.images.find(i => i.url === x)
+        const i = this.block.data.images.find(i => i.url === x)
         newImages = [
           ...newImages,
           i
@@ -371,21 +364,20 @@ export default {
     },
 
     async getImages () {
-      let request
-      let headers = new Headers()
+      const headers = new Headers()
       headers.append('accept', 'application/json, text/javascript, */*; q=0.01')
 
       if (this.headers.extra) {
-        for (let key of Object.keys(this.headers.extra)) {
+        for (const key of Object.keys(this.headers.extra)) {
           headers.append(key, this.headers.extra[key])
         }
       }
 
-      request = new Request(this.browseURL, { headers })
+      const request = new Request(this.browseURL, { headers })
 
       try {
-        let response = await fetch(request)
-        let data = await response.json()
+        const response = await fetch(request)
+        const data = await response.json()
 
         if (data.images.length) {
           this.images = data.images
@@ -421,12 +413,11 @@ export default {
     },
 
     async upload (f) {
-      let request
-      let headers = new Headers()
+      const headers = new Headers()
       headers.append('accept', 'application/json, text/javascript, */*; q=0.01')
 
       if (this.headers.extra) {
-        for (let key of Object.keys(this.headers.extra)) {
+        for (const key of Object.keys(this.headers.extra)) {
           headers.append(key, this.headers.extra[key])
         }
       }
@@ -436,13 +427,13 @@ export default {
       formData.append('name', f.name)
       formData.append('uid', this.createUID())
 
-      request = new Request(this.uploadURL, { headers, method: 'post', body: formData })
+      const request = new Request(this.uploadURL, { headers, method: 'post', body: formData })
 
       try {
         this.dragOver = false
         this.uploading = true
-        let response = await fetch(request)
-        let data = await response.json()
+        const response = await fetch(request)
+        const data = await response.json()
 
         if (data.status === 200) {
           this.block.data.images = [

@@ -163,14 +163,10 @@ export default {
     },
 
     async initializeApp (me) {
-      try {
-        this.connectSocket().then(() => {
-          this.joinAdminChannel(me)
-          this.joinUserChannel(me)
-        })
-      } catch (err) {
-        throw err
-      }
+      this.connectSocket().then(() => {
+        this.joinAdminChannel(me)
+        this.joinUserChannel(me)
+      })
     },
 
     toggleFocus () {
@@ -181,9 +177,9 @@ export default {
       this.userChannel = this.$socket.channel(`user:${me.id}`, {})
       this.userChannel.join()
         .receive('ok', userId => {
-          console.debug(`== Ble medlem av brukerkanal:${me.id} med bruker:${userId}`)
+          console.debug(`==> Joined user_channel:${me.id} with user:${userId}`)
         })
-        .receive('error', resp => { console.error('!! Kunne ikke påmeldes ', resp) })
+        .receive('error', resp => { console.error('!! Failed to join ', resp) })
 
       this.userChannel.on('progress:show', payload => {
         this.showProgress = true
@@ -196,7 +192,7 @@ export default {
 
       this.userChannel.on('progress:update', payload => {
         let percent = 0
-        if (payload.hasOwnProperty('percent')) {
+        if (Object.prototype.hasOwnProperty.call(payload, 'percent')) {
           percent = payload.percent
           if (percent === 100) {
             setTimeout(() => {
@@ -204,7 +200,7 @@ export default {
             }, 1200)
           }
         }
-        if (payload.hasOwnProperty('key')) {
+        if (Object.prototype.hasOwnProperty.call(payload, 'key')) {
           this.$set(this.progressStatus, payload.key, { content: payload.status, percent: percent })
         } else {
           this.$set(this.progressStatus, 'default', { content: payload.status, percent: percent })
@@ -216,10 +212,10 @@ export default {
       this.adminChannel = this.$socket.channel('admin', {})
       this.adminChannel.join()
         .receive('ok', userId => {
-          console.debug(`== Ble medlem av adminkanal med bruker:${userId}`)
+          console.debug(`==> Joined admin channel with user:${userId}`)
           this.loading = 0
         })
-        .receive('error', resp => { console.error('!! Kunne ikke påmeldes ', resp) })
+        .receive('error', resp => { console.error('!! Failed to join ', resp) })
 
       // receive initial presence data from server, sent after join
       this.adminChannel.on('admin:presence_state', state => {

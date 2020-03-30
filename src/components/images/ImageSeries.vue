@@ -198,7 +198,7 @@ export default {
 
       if (!this.inForm) {
         // check if we have a category with this series
-        let query = {
+        const query = {
           query: GET_IMAGE_CATEGORY,
           variables: {
             categoryId: parseInt(this.imageSeries.image_category_id)
@@ -206,7 +206,7 @@ export default {
         }
 
         try {
-          let data = store.readQuery(query)
+          const data = store.readQuery(query)
           const series = data.imageCategory.image_series.find(s => parseInt(s.id) === parseInt(image.image_series_id))
           series.images.unshift(image)
 

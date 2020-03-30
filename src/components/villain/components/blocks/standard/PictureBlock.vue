@@ -230,7 +230,9 @@
               </button>
             </div>
           </div>
-          <div class="shaded preview-image" v-if="block.data.url">
+          <div
+            v-if="block.data.url"
+            class="shaded preview-image">
             <img
               v-if="block.data.url"
               :src="block.data.url"
@@ -317,21 +319,20 @@ export default {
     },
 
     async getImages () {
-      let request
-      let headers = new Headers()
+      const headers = new Headers()
       headers.append('accept', 'application/json, text/javascript, */*; q=0.01')
 
       if (this.headers.extra) {
-        for (let key of Object.keys(this.headers.extra)) {
+        for (const key of Object.keys(this.headers.extra)) {
           headers.append(key, this.headers.extra[key])
         }
       }
 
-      request = new Request(this.browseURL, { headers })
+      const request = new Request(this.browseURL, { headers })
 
       try {
-        let response = await fetch(request)
-        let data = await response.json()
+        const response = await fetch(request)
+        const data = await response.json()
 
         if (data.images.length) {
           this.images = data.images
@@ -376,12 +377,11 @@ export default {
     },
 
     async upload (f) {
-      let request
-      let headers = new Headers()
+      const headers = new Headers()
       headers.append('accept', 'application/json, text/javascript, */*; q=0.01')
 
       if (this.headers.extra) {
-        for (let key of Object.keys(this.headers.extra)) {
+        for (const key of Object.keys(this.headers.extra)) {
           headers.append(key, this.headers.extra[key])
         }
       }
@@ -391,13 +391,13 @@ export default {
       formData.append('name', f.name)
       formData.append('uid', this.createUID())
 
-      request = new Request(this.uploadURL, { headers, method: 'post', body: formData })
+      const request = new Request(this.uploadURL, { headers, method: 'post', body: formData })
 
       try {
         this.dragOver = false
         this.uploading = true
-        let response = await fetch(request)
-        let data = await response.json()
+        const response = await fetch(request)
+        const data = await response.json()
         if (data.status === 200) {
           this.showImages = false
           this.uploading = false

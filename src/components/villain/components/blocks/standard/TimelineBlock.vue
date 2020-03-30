@@ -43,7 +43,6 @@
         </ButtonSecondary>
 
         <hr />
-
       </div>
       <ButtonSecondary
         @click="addItem">
@@ -95,8 +94,8 @@ export default {
     },
 
     deleteItem (item) {
-      let i = this.block.data.find(b => b === item)
-      let idx = this.block.data.indexOf(i)
+      const i = this.block.data.find(b => b === item)
+      const idx = this.block.data.indexOf(i)
 
       this.block.data = [
         ...this.block.data.slice(0, idx),

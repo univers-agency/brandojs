@@ -103,7 +103,8 @@ export default {
     closeContent () {
       if (this.open) {
         this.open = false
-        gsap.to(this.$refs.content, { opacity: 0,
+        gsap.to(this.$refs.content, {
+          opacity: 0,
           x: -15,
           onComplete: () => {
             gsap.set(this.$refs.content, { display: 'none' })

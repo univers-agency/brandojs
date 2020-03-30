@@ -36,10 +36,10 @@
       </form>
       <template v-if="livePreview && $parent.livePreviewReady">
         <FontAwesomeIcon
-          @click="openLivePreview"
           :class="{ active: $parent.livePreviewReady }"
           class="live-preview-icon"
-          icon="eye" />
+          icon="eye"
+          @click="openLivePreview" />
       </template>
     </div>
   </transition>

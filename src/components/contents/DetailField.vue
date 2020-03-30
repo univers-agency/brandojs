@@ -4,7 +4,9 @@
       {{ label }}
     </dt>
     <dd>
-      <slot name="actions" :field="value"></slot>
+      <slot
+        name="actions"
+        :field="value"></slot>
       <slot :field="value">
         <template v-if="value">
           {{ value }}

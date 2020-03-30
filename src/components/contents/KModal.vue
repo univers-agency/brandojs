@@ -1,7 +1,13 @@
 <template>
-  <div class="kmodal" ref="wrapper">
-    <div class="kmodal__bg" ref="bg"></div>
-    <div class="kmodal__modal" ref="modal">
+  <div
+    ref="wrapper"
+    class="kmodal">
+    <div
+      ref="bg"
+      class="kmodal__bg"></div>
+    <div
+      ref="modal"
+      class="kmodal__modal">
       <div class="kmodal__modal__header">
         <slot name="header"></slot>
       </div>
@@ -48,7 +54,7 @@ export default {
     }
   },
 
-  computed:{
+  computed: {
     hasOKListener () {
       return this.$listeners && this.$listeners.ok
     },
@@ -75,7 +81,7 @@ export default {
         timeline
           .to(this.$refs.modal, { opacity: 0, duration: 0.25, ease: 'none' })
           .to(this.$refs.modal, { y: 40, duration: 0.25, ease: 'circ.in' }, '<')
-          .to(this.$refs.bg, { opacity: 0, duration: 0.4, ease: 'sine.in'}, '<')
+          .to(this.$refs.bg, { opacity: 0, duration: 0.4, ease: 'sine.in' }, '<')
           .call(() => {
             return resolve()
           })
@@ -168,7 +174,6 @@ export default {
         0 41.8px 33.4px rgba(0, 0, 0, 0.115),
         0 100px 80px rgba(0, 0, 0, 0.16)
       ;
-
 
       &__header {
         @fontsize lg;

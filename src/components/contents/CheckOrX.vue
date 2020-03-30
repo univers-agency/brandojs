@@ -1,7 +1,14 @@
 <template>
   <article class="checkorx">
-    <FontAwesomeIcon class="icon" :icon="val ? 'check' : 'times'" fixed-width />
-    <div class="label" v-if="label">{{ label }}</div>
+    <FontAwesomeIcon
+      class="icon"
+      :icon="val ? 'check' : 'times'"
+      fixed-width />
+    <div
+      v-if="label"
+      class="label">
+      {{ label }}
+    </div>
   </article>
 </template>
 

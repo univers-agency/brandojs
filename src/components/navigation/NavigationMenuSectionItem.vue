@@ -52,7 +52,7 @@ export default {
 
   methods: {
     toggle () {
-      let lis = this.$refs.dd.querySelectorAll('li')
+      const lis = this.$refs.dd.querySelectorAll('li')
 
       if (this.open) {
         gsap.to(Array.from(lis).reverse(), { duration: 0.35, autoAlpha: 0, x: -15, stagger: 0.1 })

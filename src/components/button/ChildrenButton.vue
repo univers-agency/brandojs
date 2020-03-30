@@ -44,7 +44,7 @@ export default {
       if (this.active) {
         this.visibleChildren.push(this.id)
       } else {
-        let idx = this.visibleChildren.indexOf(this.id)
+        const idx = this.visibleChildren.indexOf(this.id)
         this.visibleChildren.splice(idx, 1)
       }
     }

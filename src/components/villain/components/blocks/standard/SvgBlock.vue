@@ -21,8 +21,8 @@
           ref="wrapper"
           class="villain-svg-input-wrapper">
           <textarea
-            rows="5"
             ref="txt"
+            rows="5"
             class="villain-svg-input"></textarea>
         </div>
       </div>

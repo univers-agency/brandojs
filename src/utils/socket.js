@@ -1,7 +1,6 @@
 /* TODO: extract to vue-phoenix-socket */
 
-import { Socket } from 'phoenix'
-import { resolve } from 'any-promise'
+import { Socket, LongPoll } from 'phoenix'
 
 export default {
   // The install method will be called with the Vue constructor as

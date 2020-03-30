@@ -8,7 +8,9 @@
         Endre brukerinfo
       </template>
     </ContentHeader>
-    <UserForm :user="user" :save="save" />
+    <UserForm
+      :user="user"
+      :save="save" />
   </article>
 </template>
 

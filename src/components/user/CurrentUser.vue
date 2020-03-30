@@ -90,7 +90,7 @@ export default {
     },
 
     toggle () {
-      let lis = this.$refs.dropdownContent.querySelectorAll('li')
+      const lis = this.$refs.dropdownContent.querySelectorAll('li')
 
       gsap.to(this.$refs.el.querySelector('.dropdown-icon'), { duration: 0.35, rotate: '+=180' })
       if (this.open) {

@@ -16,7 +16,9 @@
         <slot
           name="row"
           v-bind:entry="entry"></slot>
-        <td class="action" v-if="deleteRows">
+        <td
+          v-if="deleteRows"
+          class="action">
           <button
             type="button"
             class="delete"

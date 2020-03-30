@@ -120,49 +120,47 @@ export default {
       fmData.append('email', this.user.email)
       fmData.append('password', this.user.password)
 
-      try {
-        const response = await fetch('/admin/auth/login', {
-          method: 'post',
-          body: fmData
-        })
+      const response = await fetch('/admin/auth/login', {
+        method: 'post',
+        body: fmData
+      })
 
-        const json = await response.json()
+      const json = await response.json()
 
-        switch (response.status) {
-          case 401:
-            this.$alerts.alertError('Feil', 'Feil brukernavn eller passord')
-            break
-          case 201:
-            if (json) {
-              this.loggingIn = true
-              await onLogin(this.$apolloProvider.defaultClient)
-              localStorage.setItem('token', json.jwt)
+      switch (response.status) {
+        case 401:
+          this.$alerts.alertError('Feil', 'Feil brukernavn eller passord')
+          break
+        case 201:
+          if (json) {
+            this.loggingIn = true
+            await onLogin(this.$apolloProvider.defaultClient)
+            localStorage.setItem('token', json.jwt)
 
-              gsap.to(this.$refs.loginBox, { autoAlpha: 0, y: -60 })
-              gsap.to(this.$refs.login, { autoAlpha: 0,
-                delay: 0.5,
-                onComplete: () => {
-                  this.$apollo.mutate({
-                    mutation: gql`
+            gsap.to(this.$refs.loginBox, { autoAlpha: 0, y: -60 })
+            gsap.to(this.$refs.login, {
+              autoAlpha: 0,
+              delay: 0.5,
+              onComplete: () => {
+                this.$apollo.mutate({
+                  mutation: gql`
                       mutation setToken ($value: String!) {
                         tokenSet (value: $value) @client
                       }
                     `,
-                    variables: {
-                      value: localStorage.getItem('token')
-                    }
-                  })
-                  this.$root.ready = true
-                  this.$router.push({ name: 'dashboard' })
-                } })
-            }
-            break
-          case 423:
-            this.$alerts.alertError('Feil', 'Låst konto')
-            break
-        }
-      } catch (err) {
-        throw err
+                  variables: {
+                    value: localStorage.getItem('token')
+                  }
+                })
+                this.$root.ready = true
+                this.$router.push({ name: 'dashboard' })
+              }
+            })
+          }
+          break
+        case 423:
+          this.$alerts.alertError('Feil', 'Låst konto')
+          break
       }
     },
 
@@ -172,7 +170,7 @@ export default {
         queryDict[item.split('=')[0]] = item.split('=')[1]
       })
 
-      if (queryDict['expired']) {
+      if (queryDict.expired) {
         return true
       }
       return false

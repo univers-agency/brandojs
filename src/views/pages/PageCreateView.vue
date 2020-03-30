@@ -17,6 +17,13 @@ import gql from 'graphql-tag'
 import GET_PAGES from '../../gql/pages/PAGES_QUERY.graphql'
 import PageForm from './PageForm'
 
+const DEFAULT_VARIABLES = {
+  limit: 100,
+  offset: 0,
+  filter: null,
+  status: 'all'
+}
+
 export default {
   components: {
     PageForm
@@ -106,11 +113,7 @@ export default {
           update: (store, { data: { createPage } }) => {
             const query = {
               query: GET_PAGES,
-              variables: {
-                limit: 100,
-                offset: 0,
-                filter: null
-              }
+              variables: DEFAULT_VARIABLES
             }
             const data = store.readQuery(query)
             console.log('data', data)

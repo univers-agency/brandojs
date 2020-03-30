@@ -27,7 +27,7 @@ export default {
   props: {
     val: {
       type: String
-    },
+    }
   },
 
   data () {
@@ -51,7 +51,7 @@ export default {
         disabled: {
           label: this.$t('status-disabled'),
           value: 'disabled'
-        },
+        }
       }
     }
   },

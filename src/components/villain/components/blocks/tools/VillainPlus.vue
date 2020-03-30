@@ -72,8 +72,7 @@
             ref="templates"
             class="villain-editor-plus-available-templates">
             <div
-              v-for="(tpls, key) in namespacedTemplates"
-              v-if="key !== 'general'"
+              v-for="(tpls, key) in nonGeneralNamespacedTemplates"
               :key="key"
               class="villain-editor-plus-available-templates-group"
               @click="namespaceOpen === key ? namespaceOpen = null : namespaceOpen = key">
@@ -181,6 +180,11 @@ export default {
         objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj)
         return objectsByKeyValue
       }, {})
+    },
+
+    nonGeneralNamespacedTemplates () {
+      const { general, ...other } = this.namespacedTemplates
+      return other
     }
   },
 
@@ -214,13 +218,13 @@ export default {
       if (this.showingTemplates) {
         setTimeout(() => {
           if (this.$refs.templates) {
-            let elTop = this.$refs.templates.getBoundingClientRect().top
-            let docBot = document.body.scrollTop + window.innerHeight
-            let elHeight = this.$refs.templates.clientHeight
-            let elBot = elTop + elHeight
+            const elTop = this.$refs.templates.getBoundingClientRect().top
+            const docBot = document.body.scrollTop + window.innerHeight
+            const elHeight = this.$refs.templates.clientHeight
+            const elBot = elTop + elHeight
 
             if (elBot > docBot) {
-              let distance = elBot - docBot
+              const distance = elBot - docBot
               window.scrollBy({
                 top: distance,
                 behavior: 'smooth'
@@ -236,13 +240,13 @@ export default {
 
       if (this.active && this.$refs.blocks) {
         setTimeout(() => {
-          let elTop = this.$refs.blocks.getBoundingClientRect().top
-          let docBot = document.body.scrollTop + window.innerHeight
-          let elHeight = this.$refs.blocks.clientHeight
-          let elBot = elTop + elHeight
+          const elTop = this.$refs.blocks.getBoundingClientRect().top
+          const docBot = document.body.scrollTop + window.innerHeight
+          const elHeight = this.$refs.blocks.clientHeight
+          const elBot = elTop + elHeight
 
           if (elBot > docBot) {
-            let distance = elBot - docBot
+            const distance = elBot - docBot
             window.scrollBy({
               top: distance,
               behavior: 'smooth'
@@ -259,13 +263,13 @@ export default {
     },
 
     addBlock (b) {
-      let block = { ...b, uid: createUID() }
+      const block = { ...b, uid: createUID() }
       this.active = false
       this.$emit('add', { block: block, after: this.after, parent: this.parent })
     },
 
     addTemplate (tp) {
-      let block = { ...tp, uid: createUID() }
+      const block = { ...tp, uid: createUID() }
       this.active = false
       this.showingTemplates = false
       this.$emit('add', { block: block, after: this.after, parent: this.parent })
@@ -274,8 +278,8 @@ export default {
     onDrop (ev) {
       ev.preventDefault()
 
-      let blockData = ev.dataTransfer.getData('application/villain')
-      let block = JSON.parse(blockData)
+      const blockData = ev.dataTransfer.getData('application/villain')
+      const block = JSON.parse(blockData)
 
       ev.currentTarget.classList.remove('villain-drag-over')
       this.draggingOver = false

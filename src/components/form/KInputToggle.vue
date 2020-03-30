@@ -10,7 +10,9 @@
         <div
           class="form-check">
           <label class="form-check-label">
-            <div :class="classBindings" @click="toggle">
+            <div
+              :class="classBindings"
+              @click="toggle">
               <div class="toggle-indicator"></div>
             </div>
             <input
@@ -66,7 +68,7 @@ export default {
       return this.name.replace('[', '_').replace(']', '_')
     },
 
-    classBindings() {
+    classBindings () {
       return {
         toggle: true,
         active: this.innerValue
@@ -89,10 +91,10 @@ export default {
   },
 
   methods: {
-    toggle() {
+    toggle () {
       this.innerValue = !this.innerValue
     }
-  },
+  }
 }
 </script>
 

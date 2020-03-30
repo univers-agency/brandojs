@@ -92,11 +92,10 @@
       </div>
     </div>
 
-
     <KModal
       v-if="showConfig"
-      v-shortkey="['esc']"
       ref="modal"
+      v-shortkey="['esc']"
       ok-text="Lukk konfigurasjon"
       @shortkey.native="closeConfig"
       @ok="closeConfig">
@@ -130,7 +129,6 @@
 
 <script>
 import { VTooltip } from 'v-tooltip'
-import gsap from 'gsap'
 
 export default {
   directives: { popover: VTooltip },
@@ -174,15 +172,15 @@ export default {
 
   computed: {
     hasConfigSlot () {
-      return this.$slots.hasOwnProperty('config')
+      return Object.prototype.hasOwnProperty.call(this.$slots, 'config')
     },
 
     hasHelpSlot () {
-      return this.$slots.hasOwnProperty('help')
+      return Object.prototype.hasOwnProperty.call(this.$slots, 'help')
     },
 
     locked () {
-      return this.block.hasOwnProperty('locked') && this.block.locked
+      return Object.prototype.hasOwnProperty.call(this.block, 'locked') && this.block.locked
     },
 
     hasConfigListener () {
@@ -213,7 +211,7 @@ export default {
 
   methods: {
     getBlockDisplayName (blkType) {
-      let foundBlock = this.available.blocks.find(b => {
+      const foundBlock = this.available.blocks.find(b => {
         return b.component.toLowerCase() === blkType
       })
       if (foundBlock) {
@@ -252,10 +250,10 @@ export default {
     onDragStart (ev) {
       ev.stopPropagation()
 
-      let data = this.block
-      let block = this.$refs.content
-      let handle = this.$refs.handle
-      let hCR = handle.getBoundingClientRect()
+      const data = this.block
+      const block = this.$refs.content
+      const handle = this.$refs.handle
+      const hCR = handle.getBoundingClientRect()
 
       this.dragEl = block.cloneNode(true)
       this.dragEl.classList.add('villain-drag-element')

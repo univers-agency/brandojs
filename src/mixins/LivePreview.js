@@ -1,7 +1,7 @@
 import debounce from 'lodash.debounce'
-import morphdom from 'morphdom'
+// import morphdom from 'morphdom'
 
-export default function ({schema, prop, key}) {
+export default function ({ schema, prop, key }) {
   return {
     data () {
       return {
@@ -49,12 +49,12 @@ export default function ({schema, prop, key}) {
       },
 
       updateLivePreview (entry) {
-        // send off entry for rendering
-        // TODO: Maybe diff this against the last sent data and only send the diff?
         if (!this.livePreviewReady) {
           return
         }
 
+        // send off entry for rendering
+        // TODO: Maybe diff this against the last sent data and only send the diff?
         this.adminChannel.channel
           .push('livepreview:render', { schema, prop, key, entry, cache_key: this.livePreviewCacheKey })
       }

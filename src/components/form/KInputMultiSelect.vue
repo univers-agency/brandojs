@@ -158,13 +158,8 @@
 </template>
 
 <script>
-import Modal from '../Modal.vue'
 
 export default {
-  components: {
-    Modal
-  },
-
   props: {
     options: {
       type: Array,

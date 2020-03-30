@@ -153,7 +153,7 @@ export default {
   methods: {
     parseUrl (v) {
       let match
-      let url = this.url
+      const url = this.url
       console.log('...')
 
       if (url.startsWith('https://player.vimeo.com/external/')) {
@@ -161,8 +161,8 @@ export default {
         this.block.data.remote_id = url
         this.showConfig = false
       } else {
-        for (let key of Object.keys(this.providers)) {
-          let provider = this.providers[key]
+        for (const key of Object.keys(this.providers)) {
+          const provider = this.providers[key]
           match = provider.regex.exec(url)
 
           if (match !== null && match[1] !== undefined) {

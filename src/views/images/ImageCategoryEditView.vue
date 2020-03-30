@@ -5,7 +5,9 @@
         Endre bildekategori
       </template>
     </ContentHeader>
-    <ImageCategoryForm :image-category="imageCategory" :save="save" />
+    <ImageCategoryForm
+      :image-category="imageCategory"
+      :save="save" />
   </article>
 </template>
 
