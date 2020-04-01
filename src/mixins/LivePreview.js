@@ -1,5 +1,4 @@
 import debounce from 'lodash.debounce'
-// import morphdom from 'morphdom'
 
 export default function ({ schema, prop, key }) {
   return {
@@ -9,7 +8,8 @@ export default function ({ schema, prop, key }) {
         livePreviewReady: false,
         livePreviewWrapper: null,
         livePreviewCacheKey: null,
-        livePreviewFirstRun: true
+        livePreviewFirstRun: true,
+        livePreviewActivated: false
       }
     },
 
@@ -50,6 +50,10 @@ export default function ({ schema, prop, key }) {
 
       updateLivePreview (entry) {
         if (!this.livePreviewReady) {
+          return
+        }
+
+        if (!this.livePreviewActivated) {
           return
         }
 

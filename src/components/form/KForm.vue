@@ -99,6 +99,8 @@ export default {
         '_blank',
         'location=no,menubar=no,resizable=yes,status=no'
       )
+
+      this.$parent.livePreviewActivated = true
     },
 
     async validate () {
