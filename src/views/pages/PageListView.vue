@@ -37,6 +37,14 @@
       :filter-keys="['title']"
       @updateQuery="queryVars = $event"
       @sort="sortPages">
+      <template #selected="{ entries, clearSelection}">
+        <li>
+          <button
+            @click="deleteEntries(entries, clearSelection)">
+            Slett sider
+          </button>
+        </li>
+      </template>
       <template v-slot:row="{ entry }">
         <div class="col-1">
           <div class="circle">
@@ -53,9 +61,9 @@
         </div>
         <div class="col-2">
           <ChildrenButton
-            v-show="entry.fragments.length + entry.children.length"
+            v-show="(entry.fragments ? entry.fragments.length : 0) + (entry.children ? entry.children.length : 0)"
             :id="entry.id"
-            :length="entry.fragments.length + entry.children.length"
+            :length="(entry.fragments ? entry.fragments.length : 0) + (entry.children ? entry.children.length : 0)"
             :visible-children="visibleChildren">
           </ChildrenButton>
         </div>
@@ -98,7 +106,7 @@
             <li>
               <button
                 type="button"
-                @click="deletePage(entry)">
+                @click="deleteEntry(entry.id)">
                 {{ $t('pages.delete-page') }}
               </button>
             </li>
@@ -178,7 +186,7 @@
                     </router-link>
                   </li>
                   <li>
-                    <button @click="deletePage(subPage)">{{ $t('pages.delete-subpage') }}</button>
+                    <button @click="deleteEntry(subPage.id)">{{ $t('pages.delete-subpage') }}</button>
                   </li>
                 </CircleDropdown>
               </div>
@@ -193,6 +201,7 @@
 <script>
 import gql from 'graphql-tag'
 import GET_PAGES from '../../gql/pages/PAGES_QUERY.graphql'
+import PAGE_FRAGMENT from '../../gql/pages/PAGE_FRAGMENT.graphql'
 
 export default {
   data () {
@@ -201,13 +210,17 @@ export default {
       queryVars: {
         filter: null,
         offset: 0,
-        limit: 100,
-        status: 'all'
+        limit: 50,
+        status: 'published'
       }
     }
   },
 
   inject: ['adminChannel'],
+
+  fragments: {
+    user: PAGE_FRAGMENT
+  },
 
   methods: {
     reprocess () {
@@ -281,95 +294,23 @@ export default {
     },
 
     async duplicatePage (page) {
+      console.log('DUP PAGE CALLED')
       try {
         await this.$apollo.mutate({
           mutation: gql`
             mutation DuplicatePage($pageId: ID!) {
               duplicatePage(pageId: $pageId) {
-                id
-                key
-                title
-                slug
-                language
-                data
-
-                creator {
-                  id
-                  full_name
-                  avatar {
-                    thumb: url(size: "xlarge")
-                  }
-                }
-
-                parent {
-                  id
-                  key
-                  language
-                  title
-                  data
-                  slug
-                }
-
-                children {
-                  id
-                  key
-                  language
-                  data
-                  title
-                  slug
-                }
-
-                fragments {
-                  id
-                  title
-                  key
-                  parent_key
-                  language
-                  updated_at
-                  page_id
-                  data
-
-                  creator {
-                    id
-                    full_name
-                    avatar {
-                      thumb: url(size: "xlarge")
-                    }
-                  }
-                }
-
-                inserted_at
-                updated_at
-                deleted_at
+                ...page
               }
             }
+            ${PAGE_FRAGMENT}
           `,
           variables: {
             pageId: page.id
           },
 
           update: (store, { data: { duplicatePage } }) => {
-            const query = {
-              query: GET_PAGES,
-              variables: this.queryVars
-            }
-
-            const data = store.readQuery(query)
-            const idx = data.pages.findIndex(
-              p => parseInt(p.id) === parseInt(page.id)
-            )
-
-            data.pages = [
-              ...data.pages.slice(0, idx),
-              duplicatePage,
-              ...data.pages.slice(idx)
-            ]
-
-            // Write back to the cache
-            store.writeQuery({
-              ...query,
-              data
-            })
+            this.$apollo.queries.pages.refresh()
           }
         })
 
@@ -443,58 +384,76 @@ export default {
       )
     },
 
-    async deletePage (page) {
-      this.$alerts.alertConfirm(
-        'OBS',
-        this.$t('pages.are-you-sure-you-want-to-delete-this-page'),
-        async confirm => {
+    async deleteEntry (entryId, override) {
+      const fn = async () => {
+        try {
+          await this.$apollo.mutate({
+            mutation: gql`
+              mutation DeletePage($pageId: ID!) {
+                deletePage(pageId: $pageId) {
+                  id
+                }
+              }
+            `,
+            variables: {
+              pageId: entryId
+            },
+
+            update: (store, { data: { deletePage } }) => {
+              const query = {
+                query: GET_PAGES,
+                variables: this.queryVars
+              }
+
+              const data = store.readQuery(query)
+              const idx = data.pages.findIndex(
+                p => parseInt(p.id) === parseInt(entryId)
+              )
+
+              data.pages = [
+                ...data.pages.slice(0, idx),
+                ...data.pages.slice(idx + 1)
+              ]
+
+              // Write back to the cache
+              store.writeQuery({
+                ...query,
+                data
+              })
+            }
+          })
+
+          this.$toast.success({ message: this.$t('pages.page-deleted') })
+        } catch (err) {
+          this.$utils.showError(err)
+        }
+      }
+
+      if (override) {
+        fn()
+      } else {
+        this.$alerts.alertConfirm('OBS', this.$t('pages.delete-confirm'), async confirm => {
           if (!confirm) {
             return false
           } else {
-            try {
-              await this.$apollo.mutate({
-                mutation: gql`
-                  mutation DeletePage($pageId: ID!) {
-                    deletePage(pageId: $pageId) {
-                      id
-                    }
-                  }
-                `,
-                variables: {
-                  pageId: page.id
-                },
-
-                update: (store, { data: { deletePage } }) => {
-                  const query = {
-                    query: GET_PAGES,
-                    variables: this.queryVars
-                  }
-
-                  const data = store.readQuery(query)
-                  const idx = data.pages.findIndex(
-                    p => parseInt(p.id) === parseInt(page.id)
-                  )
-
-                  data.pages = [
-                    ...data.pages.slice(0, idx),
-                    ...data.pages.slice(idx + 1)
-                  ]
-
-                  // Write back to the cache
-                  store.writeQuery({
-                    ...query,
-                    data
-                  })
-                }
-              })
-
-              this.$toast.success({ message: this.$t('pages.page-deleted') })
-            } catch (err) {
-              this.$utils.showError(err)
-            }
+            fn()
           }
+        })
+      }
+    },
+
+    deleteEntries (entries, clearSelection) {
+      this.$alerts.alertConfirm('OBS', this.$t('pages.delete-confirm-many'), async data => {
+        if (!data) {
+          return
         }
-      )
+
+        entries.forEach(async id => {
+          this.deleteEntry(id, true)
+        })
+
+        clearSelection()
+      })
     }
   },
 
@@ -552,7 +511,8 @@ export default {
     "pages.edit-page": "Edit page",
     "pages.reprocess-page": "Reprocess page",
     "pages.section-deleted": "Section deleted",
-    "pages.are-you-sure-you-want-to-delete-this-page": "Are you sure you want to delete this page?",
+    "pages.delete-confirm": "Are you sure you want to delete this page?",
+    "pages.delete-confirm-many": "Are you sure you want to delete these pages?",
     "pages.page-deleted": "Page deleted",
     "pages.page-duplicated": "Page duplicated",
     "pages.subpage": "Subpage",
@@ -577,7 +537,8 @@ export default {
     "pages.edit-section": "Rediger seksjon",
     "pages.reprocess-page": "Behandle siden på nytt",
     "pages.section-deleted": "Seksjon slettet",
-    "pages.are-you-sure-you-want-to-delete-this-page": "Er du sikker på at du vil slette denne siden?",
+    "pages.delete-confirm": "Er du sikker på at du vil slette denne siden?",
+    "pages.delete-confirm-many": "Er du sikker på at du vil slette disse sidene?",
     "pages.page-deleted": "Siden ble slettet",
     "pages.page-duplicated": "Siden ble duplisert",
     "pages.subpage": "Underside",
