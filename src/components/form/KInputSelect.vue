@@ -268,31 +268,42 @@ export default {
       }
 
       this.$emit('input', this.innerValue)
+    },
+
+    options (newVal, oldVal) {
+      if (!oldVal.length && newVal.length) {
+        // options has been initialized
+        this.initialize()
+      }
     }
   },
 
   created () {
-    if (!this.value) {
-      this.selected = null
-      return
-    }
-    if (typeof this.value === 'object') {
-      this.object = true
-      this.selected = this.options.find(o => o[this.optionValueKey].toString() === this.value[this.optionValueKey].toString())
-    } else {
-      this.object = false
-      this.selected = this.options.find(o => {
-        if (!o[this.optionValueKey]) {
-          return false
-        }
-        return o[this.optionValueKey].toString() === this.value.toString()
-      })
-    }
-
-    this.displayData()
+    this.initialize()
   },
 
   methods: {
+    initialize () {
+      if (!this.value) {
+        this.selected = null
+        return
+      }
+      if (typeof this.value === 'object') {
+        this.object = true
+        this.selected = this.options.find(o => o[this.optionValueKey].toString() === this.value[this.optionValueKey].toString())
+      } else {
+        this.object = false
+        this.selected = this.options.find(o => {
+          if (!o[this.optionValueKey]) {
+            return false
+          }
+          return o[this.optionValueKey].toString() === this.value.toString()
+        })
+      }
+
+      this.displayData()
+    },
+
     selectSimilar (option) {
       this.selectOption(option)
       this.toggleCreateEntry()

@@ -285,22 +285,32 @@ export default {
       this.innerValue = val.map(v => v[this.optionValueKey])
 
       this.$emit('input', this.innerValue)
+    },
+
+    options (newVal, oldVal) {
+      if (!oldVal.length && newVal.length) {
+        // options has been initialized
+        this.initialize()
+      }
     }
   },
 
   created () {
-    console.log('val', this.value)
-    this.selected = this.value.map(v => {
-      if (typeof v === 'object') {
-        return v
-      } else {
-        return this.options.find(o => o[this.optionValueKey].toString() === v.toString())
-      }
-    })
-    this.displayData()
+    this.initialize()
   },
 
   methods: {
+    initialize () {
+      this.selected = this.value.map(v => {
+        if (typeof v === 'object') {
+          return v
+        } else {
+          return this.options.find(o => o[this.optionValueKey].toString() === v.toString())
+        }
+      })
+      this.displayData()
+    },
+
     selectSimilar (option) {
       this.selectOption(option)
       this.toggleCreateEntry()
