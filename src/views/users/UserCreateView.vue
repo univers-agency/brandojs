@@ -40,7 +40,7 @@ export default {
 
   methods: {
     async save () {
-      const userParams = this.$utils.stripParams(this.user, ['__typename', 'password_confirm', 'id', 'active', 'deleted_at'])
+      const userParams = this.$utils.stripParams(this.user, ['__typename', 'password_confirm', 'id', 'deleted_at'])
       this.$utils.validateImageParams(userParams, ['avatar'])
 
       try {
@@ -83,23 +83,6 @@ export default {
         this.$utils.showError(err)
       }
     }
-  },
-
-  apollo: {
-    me: gql`query Me {
-      me {
-        id
-        full_name
-        email
-        avatar {
-          focal
-          thumb: url(size: "xlarge")
-        }
-        role
-        language
-        active
-      }
-    }`
   }
 }
 </script>
