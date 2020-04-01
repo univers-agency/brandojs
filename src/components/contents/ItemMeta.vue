@@ -91,9 +91,8 @@ export default {
       }
 
       .time {
-        /* font-family: 'Maison Neue', monospace; */
         font-size: 14px;
-        opacity: 70%;
+        opacity: 0.7;
         user-select: none;
         text-transform: uppercase;
 
