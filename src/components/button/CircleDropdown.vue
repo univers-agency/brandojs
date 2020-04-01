@@ -52,7 +52,7 @@
     <ul
       ref="content"
       class="dropdown-content"
-      @click="closeContent">
+      @click.stop="closeContent">
       <slot></slot>
     </ul>
   </div>
@@ -94,9 +94,6 @@ export default {
       if (contentRect.height + buttonBottom > window.innerHeight) {
         gsap.set(this.$refs.content, { top: (contentRect.height + 10) * -1 })
       }
-      console.log(buttonBottom)
-      console.log(contentRect)
-      console.log(window.innerHeight)
       gsap.to(this.$refs.content, { opacity: 1, x: 0 })
     },
 
