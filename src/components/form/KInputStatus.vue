@@ -84,7 +84,8 @@ export default {
       options: [
         { value: 'draft', label: 'Kladd' },
         { value: 'pending', label: 'Venter' },
-        { value: 'published', label: 'Publisert' }
+        { value: 'published', label: 'Publisert' },
+        { value: 'disabled', label: 'Deaktivert' }
       ]
     }
   },
@@ -100,11 +101,6 @@ export default {
     }
   },
 
-  // mounted () {
-  //   gsap.set(this.$refs.input, { width: 0 })
-  //   gsap.to(this.$refs.input, { ease: 'sine.easeOut', width: '100%' })
-  // },
-
   created () {
     if (this.value) {
       this.innerValue = this.value
@@ -112,6 +108,7 @@ export default {
   }
 }
 </script>
+
 <style lang="postcss" scoped>
   .radios-wrapper {
     margin-top: 8px;
@@ -152,8 +149,8 @@ export default {
         fill: theme(colors.status.published);
       }
 
-      &.deleted {
-        fill: theme(colors.status.deleted);
+      &.disabled {
+        fill: theme(colors.status.disabled);
       }
     }
   }
