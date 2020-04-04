@@ -85,7 +85,8 @@
         class="list-row">
         <div
           class="main-content"
-          @click.stop="select(entry[entryKey])">
+          @mouseover="selectIfMousePressed($event, entry[entryKey])"
+          @mousedown.stop="select(entry[entryKey])">
           <template v-if="sortable">
             <div class="col-1">
               <SequenceHandle
@@ -267,6 +268,12 @@ export default {
         this.selectedRows = this.selectedRows.filter(r => r !== id)
       } else {
         this.selectedRows.push(id)
+      }
+    },
+
+    selectIfMousePressed (e, id) {
+      if ((e.buttons === 1) && (e.fromElement.className === e.toElement.className)) {
+        this.select(id)
       }
     },
 
@@ -465,10 +472,9 @@ export default {
 
       &.selected {
         background-color: theme(colors.peachDarker);
-        margin-left: -25px;
-        margin-right: -25px;
-        padding-left: 25px;
-        padding-right: 25px;
+        transition: background-color 250ms ease;
+        /* padding-left: 25px;
+        padding-right: 25px; */
       }
 
       .main-content {
