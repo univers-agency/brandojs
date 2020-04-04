@@ -5,6 +5,7 @@ import KInput from './KInput'
 import KInputDate from './KInputDate'
 import KInputDatetime from './KInputDatetime'
 import KInputEntries from './KInputEntries'
+import KInputNumber from './KInputNumber'
 import KInputSlug from './KInputSlug'
 import KInputTextarea from './KInputTextarea'
 import KInputEmail from './KInputEmail'
@@ -38,6 +39,7 @@ export {
   KInputImageSeries,
   KInputSelect,
   KInputMultiSelect,
+  KInputNumber,
   KInputTable,
   KInputToggle,
   KInputTextarea,
