@@ -1,8 +1,11 @@
 <template>
-  <article class="checkorx">
+  <article
+    v-if="show"
+    class="checkorx">
     <FontAwesomeIcon
       class="icon"
       :icon="val ? 'check' : 'times'"
+      size="xs"
       fixed-width />
     <div
       v-if="label"
@@ -24,6 +27,20 @@ export default {
     val: {
       type: Boolean,
       required: true
+    },
+
+    hideFalse: {
+      type: Boolean,
+      default: false
+    }
+  },
+
+  computed: {
+    show () {
+      if (this.hideFalse && this.val === false) {
+        return false
+      }
+      return true
     }
   },
 
@@ -44,10 +61,11 @@ export default {
     .icon + .label {
       margin-left: 7px;
       padding-right: 5px;
+      padding-top: 1px;
     }
 
     .label {
-      @font mono xs/1;
+      @font mono xs(0.85)/1;
       text-transform: uppercase;
     }
 
