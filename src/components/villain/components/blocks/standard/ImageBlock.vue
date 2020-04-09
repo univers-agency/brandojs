@@ -1,8 +1,8 @@
 <template>
   <Block
+    ref="block"
     :block="block"
     :parent="parent"
-    :config="showConfig"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
     @delete="$emit('delete', $event)">
@@ -11,16 +11,43 @@
     </div>
     <div class="villain-block-image">
       <img
-        v-if="block.data.url && block.data.url !== ''"
-        :src="block.data.url"
+        v-if="previewUrl && previewUrl !== ''"
+        :src="previewUrl"
         class="img-fluid">
       <div
         v-else
         class="villain-block-image-empty">
-        <i class="fa fa-fw fa-image"></i>
+        <drop
+          class="drop"
+          @dragover="dragOver = true"
+          @dragleave="dragOver = false"
+          @drop="handleDrop">
+          <template v-if="dragOver">
+            <FontAwesomeIcon
+              icon="cloud-upload-alt"
+              size="8x"
+              fixed-width />
+          </template>
+          <template
+            v-else>
+            <template v-if="uploading">
+              <FontAwesomeIcon
+                icon="circle-notch"
+                spin
+                size="8x"
+                fixed-width />
+            </template>
+            <template v-else>
+              <FontAwesomeIcon
+                icon="image"
+                size="8x"
+                fixed-width />
+            </template>
+          </template>
+        </drop>
         <div class="actions">
           <ButtonSecondary
-            @click="showConfig = true">
+            @click="$refs.block.openConfig()">
             Konfigurér bildeblokk
           </ButtonSecondary>
         </div>
@@ -37,20 +64,27 @@
             @dragleave="dragOver = false"
             @drop="handleDrop">
             <template v-if="dragOver">
-              <i class="fa fa-fw fa-cloud-upload-alt"></i>
+              <FontAwesomeIcon
+                icon="cloud-upload-alt"
+                fixed-width />
             </template>
             <template
               v-else>
               <template v-if="uploading">
-                <i class="fa fa-fw fa-circle-notch fa-spin"></i>
+                <FontAwesomeIcon
+                  icon="circle-notch"
+                  spin
+                  fixed-width />
               </template>
               <template v-else>
-                <i class="fa fa-fw fa-image"></i>
+                <FontAwesomeIcon
+                  icon="image"
+                  fixed-width />
               </template>
             </template>
           </drop>
         </div>
-        <p class="text-center">
+        <div class="text-center mb-2">
           <template
             v-if="dragOver">
             Slipp for å laste opp!
@@ -63,7 +97,7 @@
               Dra bildet du vil laste opp hit &uarr;
             </template>
           </template>
-        </p>
+        </div>
       </div>
       <div
         v-if="showImages && listStyle"
@@ -104,17 +138,15 @@
 
       <div
         v-else-if="showImages && !listStyle"
-        class="villain-image-library row mt-4">
-        <div
-          class="col-12"
-          style="text-align: center;padding-bottom: 20px;"
-          @click="listStyle = true">
-          <i class="fa fa-fw fa-list" />
+        class="villain-image-library">
+        <div class="col-12 mb-3">
+          <ButtonSecondary @click="listStyle = true">Vis listevisning</ButtonSecondary>
+          <ButtonSecondary @click="showImages = false">Skjul bildeliste</ButtonSecondary>
         </div>
         <div
           v-for="i in images"
           :key="i.id"
-          class="col-3 mb-3">
+          class="col-2">
           <img
             :src="i.thumb"
             class="img-fluid"
@@ -123,79 +155,86 @@
       </div>
 
       <div v-else>
-        <div
-          v-if="block.data.url"
-          class="form-group">
-          <label>Kilde</label>
-          <input
-            v-model="block.data.url"
-            class="form-control"
-            type="input">
-        </div>
+        <div class="panes">
+          <div>
+            <div v-if="block.data.url">
+              <KInputToggle
+                v-model="advancedConfig"
+                name="config[advanced]"
+                label="Vis avansert konfigurasjon" />
 
-        <div
-          v-if="block.data.url"
-          class="form-group">
-          <label>Tittel</label>
-          <input
-            v-model="block.data.title"
-            class="form-control"
-            type="input">
-        </div>
+              <KInput
+                v-model="block.data.title"
+                name="data[title]"
+                label="Tittel"
+                placeholder="Tittel" />
 
-        <div
-          v-if="block.data.url"
-          class="form-group">
-          <label>Krediteringer</label>
-          <input
-            v-model="block.data.credits"
-            class="form-control"
-            type="input">
-        </div>
-        <div
-          v-if="block.data.sizes"
-          class="form-group">
-          <label>Størrelse</label>
-          <select
-            v-model="block.data.url"
-            class="form-control">
-            <option
-              :value="originalUrl">
-              orginal
-            </option>
-            <option
-              v-for="(size, key) in block.data.sizes"
-              :key="key"
-              :value="size">
-              {{ key }}
-            </option>
-          </select>
-        </div>
+              <KInput
+                v-model="block.data.credits"
+                name="data[credits]"
+                label="Krediteringer"
+                placeholder="Krediteringer" />
 
-        <div
-          v-if="block.data.url"
-          class="form-group">
-          <label>CSS klasser</label>
-          <input
-            v-model="block.data.class"
-            class="form-control"
-            type="input">
-        </div>
-        <div class="villain-config-content-buttons">
-          <button
-            v-if="!showImages"
-            type="button"
-            class="btn btn-primary"
-            @click="getImages">
-            Velg bilde fra bildebibliotek
-          </button>
-          <button
-            v-if="block.data.url !== ''"
-            type="button"
-            class="btn btn-primary ml-3"
-            @click="resetImage">
-            Nullstill bildeblokk
-          </button>
+              <div v-show="advancedConfig">
+                <KInput
+                  v-model="block.data.url"
+                  name="data[url]"
+                  label="Kilde (avansert)"
+                  placeholder="Kilde" />
+
+                <div
+                  v-if="block.data.sizes"
+                  class="form-group">
+                  <label>Størrelse</label>
+                  <select
+                    v-model="block.data.url"
+                    class="form-control">
+                    <option
+                      :value="originalUrl">
+                      orginal
+                    </option>
+                    <option
+                      v-for="(size, key) in block.data.sizes"
+                      :key="key"
+                      :value="size">
+                      {{ key }}
+                    </option>
+                  </select>
+
+                  <KInput
+                    v-model="block.data.class"
+                    name="data[class]"
+                    label="CSS klasser (img)"
+                    placeholder="classname1 classname2" />
+                </div>
+              </div>
+            </div>
+
+            <div class="villain-config-content-buttons">
+              <button
+                v-if="!showImages"
+                type="button"
+                class="btn btn-primary"
+                @click="getImages">
+                Velg bilde fra bildebibliotek
+              </button>
+              <button
+                v-if="block.data.url !== ''"
+                type="button"
+                class="btn btn-primary ml-3"
+                @click="resetImage">
+                Nullstill bildeblokk
+              </button>
+            </div>
+          </div>
+          <div
+            v-if="block.data.url"
+            class="shaded preview-image">
+            <img
+              v-if="block.data.url"
+              :src="block.data.url"
+              class="img-fluid" />
+          </div>
         </div>
       </div>
     </template>
@@ -228,6 +267,7 @@ export default {
 
   data () {
     return {
+      advancedConfig: false,
       customClass: '',
       uid: null,
       showConfig: false,
@@ -242,12 +282,28 @@ export default {
   },
 
   computed: {
+    seriesSlug () {
+      return this.block.data.series_slug ? this.block.data.series_slug : 'post'
+    },
+
     browseURL () {
-      return this.urls.browse + this.block.data.series_slug
+      return this.urls.browse + this.seriesSlug
     },
 
     uploadURL () {
-      return `${this.urls.base}upload/${this.block.data.series_slug}`
+      return `${this.urls.base}upload/${this.seriesSlug}`
+    },
+
+    previewUrl () {
+      if (!this.block.data.sizes && !this.block.data.url) {
+        return null
+      }
+
+      if (this.block.data.sizes.xlarge) {
+        return this.block.data.sizes.xlarge
+      } else {
+        return this.block.data.url
+      }
     }
   },
 
@@ -380,6 +436,19 @@ export default {
 }
 </script>
 <style lang="postcss" scoped>
+  .preview-image {
+    padding: 1rem;
+  }
+
+  .villain-image-library {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .mb-3 {
+    margin-bottom: 15px;
+  }
+
   .villain-block-image-empty {
     display: flex;
     flex-direction: column;
@@ -387,7 +456,6 @@ export default {
     justify-content: center;
 
     svg {
-      width: 30%;
       height: 30%;
       max-width: 250px;
       margin-bottom: 25px;
@@ -395,7 +463,6 @@ export default {
   }
 
   .drop {
-    background-color: white;
     margin-bottom: 20px;
   }
 </style>

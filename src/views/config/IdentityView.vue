@@ -330,7 +330,8 @@ export default {
 
   apollo: {
     identity: {
-      query: GET_IDENTITY
+      query: GET_IDENTITY,
+      fetchPolicy: 'no-cache'
     }
   }
 }

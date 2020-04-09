@@ -18,6 +18,7 @@
 
 import gql from 'graphql-tag'
 import UserForm from './UserForm'
+import GET_USER from '../../gql/users/USER_QUERY.graphql'
 
 export default {
   components: {
@@ -52,14 +53,6 @@ export default {
                 userParams: $userParams
               ) {
                 id
-                language
-                full_name
-                email
-                avatar {
-                  focal
-                  thumb: url(size: "xlarge")
-                }
-                role
               }
             }
           `,
@@ -81,21 +74,8 @@ export default {
 
   apollo: {
     user: {
-      query: gql`
-        query User ($userId: ID!) {
-          user (userId: $userId) {
-            id
-            full_name
-            email
-            avatar {
-              focal
-              thumb: url(size: "xlarge")
-            }
-            role
-            language
-          }
-        }
-      `,
+      query: GET_USER,
+      fetchPolicy: 'no-cache',
       variables () {
         return {
           userId: this.userId

@@ -104,13 +104,12 @@ export default {
 
   methods: {
     beforeAppear (el) {
-      gsap.set(el, { y: 60, autoAlpha: 0, filter: 'blur(60px)' })
+      gsap.set(el, { y: 60, autoAlpha: 0 })
     },
 
     appear (el, done) {
       gsap.to(el, { delay: 1, y: 0, ease: 'sine.out' })
       gsap.to(el, { delay: 1, autoAlpha: 1, ease: 'sine.in' })
-      gsap.to(el, { delay: 1, filter: 'blur(0px)' })
       gsap.to(this.$refs.v, { delay: 1.5, autoAlpha: 1, x: 0 })
     },
 
@@ -144,10 +143,10 @@ export default {
               onComplete: () => {
                 this.$apollo.mutate({
                   mutation: gql`
-                      mutation setToken ($value: String!) {
-                        tokenSet (value: $value) @client
-                      }
-                    `,
+                    mutation setToken ($value: String!) {
+                      tokenSet (value: $value) @client
+                    }
+                  `,
                   variables: {
                     value: localStorage.getItem('token')
                   }

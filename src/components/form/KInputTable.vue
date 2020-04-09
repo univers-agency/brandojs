@@ -80,6 +80,11 @@ export default {
       default: () => []
     },
 
+    idKey: {
+      type: String,
+      default: 'id'
+    },
+
     helpText: {
       type: String,
       default: null
@@ -120,8 +125,14 @@ export default {
     },
 
     del (entry) {
-      const e = this.innerValue.find(e => e.id === entry.id)
+      if (!entry[this.idKey]) {
+        console.error('==> KInputTable: no idkey found!', this.idKey)
+        return
+      }
+
+      const e = this.innerValue.find(e => e[this.idKey] === entry[this.idKey])
       const idx = this.innerValue.indexOf(e)
+
       this.innerValue = [
         ...this.innerValue.slice(0, idx),
         ...this.innerValue.slice(idx + 1)

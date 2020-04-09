@@ -103,8 +103,14 @@ export default [
     name: 'Datatabell',
     icon: 'fa-table',
     component: 'Datatable',
-    dataTemplate: []
+    dataTemplate: {
+      rows: []
+    }
   },
+
+  // dataTemplate: {
+  //   rows: []
+  // }
 
   {
     name: 'Video',

@@ -92,7 +92,6 @@ export default {
 
   .focus-point {
     cursor: pointer;
-    background-color: red;
 
     &-pin {
       transition: all .35s ease;

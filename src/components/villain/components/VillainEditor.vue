@@ -392,6 +392,17 @@ export default {
     validateBlock (block) {
       const bpBlock = this.availableBlocks.find(b => b.component.toLowerCase() === block.type)
       if (bpBlock) {
+        switch (block.type) {
+          case 'datatable':
+            if (Array.isArray(block.data)) {
+              console.log('==> Converting datatable [] to new format {}')
+              const rows = block.data
+              this.$set(block, 'data', { rows })
+              this.needsRefresh = true
+            }
+            break
+        }
+
         const blueprint = bpBlock.dataTemplate
         for (const blueprintProp in blueprint) {
           if (!block.data.hasOwnProperty(blueprintProp)) {

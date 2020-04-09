@@ -6,17 +6,48 @@
     <div
       v-if="!supportsUpload"
       v-html="strings.upload"></div>
-    <div v-else-if="supportsPreview">
-      <div
-        class="preview-container"
-        :style="{ borderRadius: radius + '%'}">
-        <template v-show="!imageSelected && !plain">
+    <div
+      class="preview-container"
+      :style="{ borderRadius: radius + '%'}">
+      <template v-show="!imageSelected && !plain">
+        <canvas
+          ref="grayCanvas"
+          class="picture-preview"
+          tabindex="0"
+          :class="computedClasses"
+          :style="{ zIndex: zIndex + 1, display: imageSelected ? 'none' : 'block' }"
+          @drag.stop.prevent=""
+          @dragover.stop.prevent=""
+          @dragstart.stop.prevent=""
+          @dragend.stop.prevent=""
+          @dragenter.stop.prevent="onDragEnter"
+          @dragleave.stop.prevent="onDragLeave"
+          @drop.stop.prevent="onFileDrop"
+          @click.prevent="onClick"
+          @keyup.enter="onClick">
+        </canvas>
+        <div
+          v-if="!imageSelected && !plain"
+          class="picture-inner"
+          :style="{ zIndex: zIndex + 2 }">
+          <span
+            v-if="supportsDragAndDrop"
+            class="picture-inner-text"
+            v-html="strings.drag"></span>
+          <span
+            v-else
+            class="picture-inner-text"
+            v-html="strings.tap"></span>
+        </div>
+      </template>
+      <template v-if="imageSelected">
+        <FocusPoint v-model="focus">
           <canvas
-            ref="grayCanvas"
+            ref="previewCanvas"
             class="picture-preview"
             tabindex="0"
             :class="computedClasses"
-            :style="{ zIndex: zIndex + 1, display: imageSelected ? 'none' : 'block' }"
+            :style="{ zIndex: zIndex + 1 }"
             @drag.stop.prevent=""
             @dragover.stop.prevent=""
             @dragstart.stop.prevent=""
@@ -27,81 +58,25 @@
             @click.prevent="onClick"
             @keyup.enter="onClick">
           </canvas>
-          <div
-            v-if="!imageSelected && !plain"
-            class="picture-inner"
-            :style="{ zIndex: zIndex + 2 }">
-            <span
-              v-if="supportsDragAndDrop"
-              class="picture-inner-text"
-              v-html="strings.drag"></span>
-            <span
-              v-else
-              class="picture-inner-text"
-              v-html="strings.tap"></span>
-          </div>
-        </template>
-        <template v-if="imageSelected">
-          <FocusPoint v-model="focus">
-            <canvas
-              ref="previewCanvas"
-              class="picture-preview"
-              tabindex="0"
-              :class="computedClasses"
-              :style="{ zIndex: zIndex + 1 }"
-              @drag.stop.prevent=""
-              @dragover.stop.prevent=""
-              @dragstart.stop.prevent=""
-              @dragend.stop.prevent=""
-              @dragenter.stop.prevent="onDragEnter"
-              @dragleave.stop.prevent="onDragLeave"
-              @drop.stop.prevent="onFileDrop"
-              @click.prevent="onClick"
-              @keyup.enter="onClick">
-            </canvas>
-          </FocusPoint>
-        </template>
-      </div>
-      <button
-        v-if="imageSelected && !hideChangeButton"
-        @click.prevent="selectImage">
-        {{ strings.change }}
-      </button>
-      <button
-        v-if="imageSelected && removable"
-        @click.prevent="removeImage">
-        {{ strings.remove }}
-      </button>
-      <button
-        v-if="imageSelected && toggleAspectRatio && width !== height"
-        :class="aspectButtonClass"
-        @click.prevent="rotateImage">
-        {{ strings.aspect }}
-      </button>
+        </FocusPoint>
+      </template>
     </div>
-    <div v-else>
-      <button
-        v-if="!imageSelected"
-        :class="buttonClass"
-        @click.prevent="selectImage">
-        {{ strings.select }}
-      </button>
-      <div v-else>
-        <div v-html="strings.selected"></div>
-        <button
-          v-if="!hideChangeButton"
-          :class="buttonClass"
-          @click.prevent="selectImage">
-          {{ strings.change }}
-        </button>
-        <button
-          v-if="removable"
-          :class="removeButtonClass"
-          @click.prevent="removeImage">
-          {{ strings.remove }}
-        </button>
-      </div>
-    </div>
+    <button
+      v-if="imageSelected && !hideChangeButton"
+      @click.prevent="selectImage">
+      {{ strings.change }}
+    </button>
+    <button
+      v-if="imageSelected && removable"
+      @click.prevent="removeImage">
+      {{ strings.remove }}
+    </button>
+    <button
+      v-if="imageSelected && toggleAspectRatio && width !== height"
+      :class="aspectButtonClass"
+      @click.prevent="rotateImage">
+      {{ strings.aspect }}
+    </button>
     <input
       :id="id"
       ref="fileInput"
@@ -254,9 +229,6 @@ export default {
       el.type = 'file'
       return !el.disabled
     },
-    supportsPreview () {
-      return window.FileReader && !!window.CanvasRenderingContext2D
-    },
     supportsDragAndDrop () {
       const div = document.createElement('div')
       return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && !('ontouchstart' in window || navigator.msMaxTouchPoints)
@@ -285,6 +257,7 @@ export default {
   },
   mounted () {
     this.updateStrings()
+
     if (this.prefill) {
       this.preloadImage(this.prefill, this.prefillOptions)
     }
@@ -296,31 +269,33 @@ export default {
     this.$nextTick(() => {
       window.addEventListener('resize', this.onResize)
       this.onResize()
-    })
 
-    if (this.supportsPreview) {
       this.pixelRatio = Math.round(window.devicePixelRatio || window.screen.deviceXDPI / window.screen.logicalXDPI)
       const canvas = this.$refs.previewCanvas
+
       if (canvas && canvas.getContext) {
         this.context = canvas.getContext('2d')
         this.context.scale(this.pixelRatio, this.pixelRatio)
       }
-    }
 
-    if (this.accept !== 'image/*') {
-      this.fileTypes = this.accept.split(',')
-      this.fileTypes = this.fileTypes.map(s => s.trim())
-    }
+      if (this.accept !== 'image/*') {
+        this.fileTypes = this.accept.split(',')
+        this.fileTypes = this.fileTypes.map(s => s.trim())
+      }
 
-    this.canvasWidth = this.width
-    this.canvasHeight = this.height
+      this.canvasWidth = this.width
+      this.canvasHeight = this.height
 
-    this.$on('error', this.onError)
+      this.$on('error', this.onError)
+      this.$emit('init', this.image)
+    })
   },
+
   beforeDestroy () {
     window.removeEventListener('resize', this.onResize)
     this.$off('error', this.onError)
   },
+
   methods: {
     updateStrings () {
       for (const s in this.customStrings) {
@@ -422,17 +397,13 @@ export default {
       this.image = ''
 
       this.$nextTick(() => {
-        if (this.supportsPreview) {
-          this.pixelRatio = Math.round(window.devicePixelRatio || window.screen.deviceXDPI / window.screen.logicalXDPI)
-          const canvas = this.$refs.previewCanvas
-          if (canvas && canvas.getContext) {
-            this.context = canvas.getContext('2d')
-            this.context.scale(this.pixelRatio, this.pixelRatio)
-          }
-          this.loadImage(files[0])
-        } else {
-          this.$emit('change', this.image)
+        this.pixelRatio = Math.round(window.devicePixelRatio || window.screen.deviceXDPI / window.screen.logicalXDPI)
+        const canvas = this.$refs.previewCanvas
+        if (canvas && canvas.getContext) {
+          this.context = canvas.getContext('2d')
+          this.context.scale(this.pixelRatio, this.pixelRatio)
         }
+        this.loadImage(files[0])
       })
     },
 
@@ -484,6 +455,7 @@ export default {
       }
 
       const canvas = this.$refs.previewCanvas
+
       canvas.style.background = 'none'
       canvas.width = this.previewWidth * this.pixelRatio
       canvas.height = this.previewHeight * this.pixelRatio
@@ -636,13 +608,10 @@ export default {
       if (typeof source === 'object') {
         this.imageSelected = true
         this.image = ''
-        if (this.supportsPreview) {
-          this.loadImage(source)
-        } else {
-          this.$emit('prefill')
-        }
+        this.loadImage(source)
         return
       }
+
       const headers = new Headers()
       headers.append('Accept', 'image/*')
       fetch(source, {

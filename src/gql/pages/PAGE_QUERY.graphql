@@ -1,0 +1,6 @@
+#import "./PAGE_FRAGMENT.graphql"
+query Page ($pageId: ID!) {
+  page (pageId: $pageId) {
+    ...page
+  }
+}

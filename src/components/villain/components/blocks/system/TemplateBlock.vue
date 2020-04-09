@@ -12,6 +12,7 @@
     </div>
     <component
       :is="buildWrapper()"
+      @change="changeBlock($event)"
       @delete="deleteBlock($event)" />
     <template slot="config">
       <div>

@@ -11,8 +11,8 @@
     </div>
     <div class="villain-block-picture">
       <img
-        v-if="block.data.url"
-        :src="block.data.url"
+        v-if="previewUrl"
+        :src="previewUrl"
         class="img-fluid">
       <div
         v-else
@@ -147,7 +147,7 @@
         <div
           v-for="i in images"
           :key="i.id"
-          class="col-3">
+          class="col-2">
           <img
             :src="i.thumb"
             class="img-fluid"
@@ -285,12 +285,27 @@ export default {
   },
 
   computed: {
+    seriesSlug () {
+      return this.block.data.series_slug ? this.block.data.series_slug : 'post'
+    },
+
     browseURL () {
-      return this.urls.browse + this.block.data.series_slug
+      return this.urls.browse + this.seriesSlug
     },
 
     uploadURL () {
-      return `${this.urls.base}upload/${this.block.data.series_slug}`
+      return `${this.urls.base}upload/${this.seriesSlug}`
+    },
+    previewUrl () {
+      if (!this.block.data.sizes && !this.block.data.url) {
+        return null
+      }
+
+      if (this.block.data.sizes.xlarge) {
+        return this.block.data.sizes.xlarge
+      } else {
+        return this.block.data.url
+      }
     }
   },
 

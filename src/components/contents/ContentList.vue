@@ -86,7 +86,7 @@
         <div
           class="main-content"
           @mouseover="selectIfMousePressed($event, entry[entryKey])"
-          @mousedown.stop="select(entry[entryKey])">
+          @click.stop="select(entry[entryKey])">
           <template v-if="sortable">
             <div class="col-1">
               <SequenceHandle

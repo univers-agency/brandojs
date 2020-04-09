@@ -67,7 +67,7 @@
 <script>
 
 import { gsap } from 'gsap'
-import gql from 'graphql-tag'
+import GET_ME from '../../gql/users/ME_QUERY.graphql'
 
 export default {
   data () {
@@ -109,23 +109,7 @@ export default {
   },
 
   apollo: {
-    // Simple query that will update the 'hello' vue property
-    me: gql`
-      query Me {
-        me {
-          id
-          full_name
-          email
-          avatar {
-            focal
-            thumb: url(size: "xlarge")
-          }
-          role
-          language
-          active
-        }
-      }
-    `
+    me: GET_ME
   }
 }
 </script>

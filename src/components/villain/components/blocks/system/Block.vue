@@ -773,6 +773,11 @@ export default {
     }
   }
 
+  ul {
+    list-style-type: disc;
+    padding-left: 20px;
+  }
+
   &.lead, &.lede {
     p {
       @fontsize xl;

@@ -42,6 +42,7 @@
 
 <script>
 
+import GET_PAGE from '../../gql/pages/PAGE_QUERY.graphql'
 import gql from 'graphql-tag'
 import PageForm from './PageForm'
 
@@ -64,8 +65,20 @@ export default {
 
   methods: {
     async save () {
-      const pageParams = this.$utils.stripParams(this.page, ['__typename', 'id', 'slug', 'deleted_at', 'inserted_at'])
-
+      const pageParams = this.$utils.stripParams(
+        this.page, [
+          '__typename',
+          'id',
+          'slug',
+          'deleted_at',
+          'inserted_at',
+          'updated_at',
+          'children',
+          'creator',
+          'fragments',
+          'parent'
+        ])
+      this.$utils.validateImageParams(pageParams, ['meta_image'])
       try {
         await this.$apollo.mutate({
           mutation: gql`
@@ -75,42 +88,6 @@ export default {
                 pageParams: $pageParams
               ) {
                 id
-                key
-                title
-                slug
-                language
-                data
-
-                parent {
-                  id
-                  key
-                  language
-                  data
-                  title
-                  slug
-                }
-
-                children {
-                  id
-                  key
-                  language
-                  title
-                  data
-                  slug
-                }
-                fragments {
-                  id
-                  title
-                  key
-                  parent_key
-                  data
-                  language
-                  updated_at
-                  page_id
-                }
-                inserted_at
-                updated_at
-                deleted_at
               }
             }
           `,
@@ -130,24 +107,8 @@ export default {
 
   apollo: {
     page: {
-      query: gql`
-        query Page ($pageId: ID!) {
-          page (pageId: $pageId) {
-            id
-            key
-            language
-            title
-            slug
-            data
-            status
-            css_classes
-            parent_id
-            meta_description
-            inserted_at
-            deleted_at
-          }
-        }
-      `,
+      query: GET_PAGE,
+      fetchPolicy: 'no-cache',
       variables () {
         return {
           pageId: this.pageId
@@ -181,6 +142,7 @@ export default {
           }
         }
       `,
+      fetchPolicy: 'no-cache',
       variables () {
         return {
           pageId: this.pageId

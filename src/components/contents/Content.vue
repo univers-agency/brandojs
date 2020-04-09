@@ -178,19 +178,22 @@ export default {
       @container;
       z-index: 9999;
       color: theme(colors.peach);
-      background-color: theme(colors.dark);
+      background-color: #000080e6;
       height: 0px;
       overflow-y: scroll;
       display: flex;
       opacity: 0;
       position: fixed;
+      left: 0;
 
       .progress-inner {
+        margin-top: -5px;
         display: flex;
         align-items: center;
+        width: 100%;
 
-        div {
-          margin-top: -5px;
+        > div {
+          width: 100%;
         }
       }
 

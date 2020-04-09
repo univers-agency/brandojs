@@ -8,6 +8,13 @@ fragment page on Page {
   data
   css_classes
 
+  meta_description
+  meta_image {
+    focal
+    thumb: url(size: "thumb")
+    original: url(size: "original")
+  }
+
   creator {
     id
     full_name

@@ -278,12 +278,16 @@ export default {
   },
 
   computed: {
+    seriesSlug () {
+      return this.block.data.series_slug ? this.block.data.series_slug : 'post'
+    },
+
     browseURL () {
-      return this.urls.browse + this.block.data.series_slug
+      return this.urls.browse + this.seriesSlug
     },
 
     uploadURL () {
-      return `${this.urls.base}upload/${this.block.data.series_slug}`
+      return `${this.urls.base}upload/${this.seriesSlug}`
     }
   },
 

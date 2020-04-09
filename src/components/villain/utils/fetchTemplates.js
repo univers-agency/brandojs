@@ -3,7 +3,6 @@ import { alerts } from '../../../utils/alerts'
 export default async function fetchTemplates (namespace, extraHeaders, url) {
   const headers = new Headers()
   headers.append('accept', 'application/json, text/javascript, */*; q=0.01')
-
   if (extraHeaders) {
     for (const key of Object.keys(extraHeaders)) {
       headers.append(key, extraHeaders[key])

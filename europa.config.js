@@ -115,65 +115,66 @@ module.exports = {
 
       /* main font sizing map */
       sizes: {
-        'nav.section': {
-          iphone: {
-            'font-size': '16px',
-            'line-height': '140%'
+        nav: {
+          section: {
+            iphone: {
+              'font-size': '16px',
+              'line-height': '140%'
+            },
+            mobile: {
+              'font-size': '15px',
+              'line-height': '140%'
+            },
+            ipad_portrait: {
+              'font-size': '15px',
+              'line-height': '140%'
+            },
+            ipad_landscape: {
+              'font-size': '15px',
+              'line-height': '140%'
+            },
+            desktop_md: {
+              'font-size': '15px',
+              'line-height': '140%'
+            },
+            desktop_lg: {
+              'font-size': '16px',
+              'line-height': '140%'
+            },
+            desktop_xl: {
+              'font-size': '16px',
+              'line-height': '140%'
+            }
           },
-          mobile: {
-            'font-size': '15px',
-            'line-height': '140%'
-          },
-          ipad_portrait: {
-            'font-size': '15px',
-            'line-height': '140%'
-          },
-          ipad_landscape: {
-            'font-size': '15px',
-            'line-height': '140%'
-          },
-          desktop_md: {
-            'font-size': '15px',
-            'line-height': '140%'
-          },
-          desktop_lg: {
-            'font-size': '16px',
-            'line-height': '140%'
-          },
-          desktop_xl: {
-            'font-size': '16px',
-            'line-height': '140%'
-          }
-        },
-
-        'nav.mainItem': {
-          iphone: {
-            'font-size': '28px',
-            'line-height': '40px'
-          },
-          mobile: {
-            'font-size': '28px',
-            'line-height': '40px'
-          },
-          ipad_portrait: {
-            'font-size': '28px',
-            'line-height': '40px'
-          },
-          ipad_landscape: {
-            'font-size': '28px',
-            'line-height': '40px'
-          },
-          desktop_md: {
-            'font-size': '24px',
-            'line-height': '40px'
-          },
-          desktop_lg: {
-            'font-size': '28px',
-            'line-height': '40px'
-          },
-          desktop_xl: {
-            'font-size': '28px',
-            'line-height': '40px'
+          mainItem: {
+            iphone: {
+              'font-size': '28px',
+              'line-height': '40px'
+            },
+            mobile: {
+              'font-size': '28px',
+              'line-height': '40px'
+            },
+            ipad_portrait: {
+              'font-size': '28px',
+              'line-height': '40px'
+            },
+            ipad_landscape: {
+              'font-size': '28px',
+              'line-height': '40px'
+            },
+            desktop_md: {
+              'font-size': '24px',
+              'line-height': '40px'
+            },
+            desktop_lg: {
+              'font-size': '28px',
+              'line-height': '40px'
+            },
+            desktop_xl: {
+              'font-size': '28px',
+              'line-height': '40px'
+            }
           }
         },
 

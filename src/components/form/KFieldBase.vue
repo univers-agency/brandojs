@@ -109,6 +109,10 @@ export default {
       justify-content: space-between;
       margin-bottom: 4px;
 
+      > span {
+        font-size: 16px;
+      }
+
       label {
         font-weight: 500;
 

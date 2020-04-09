@@ -61,6 +61,14 @@
           help-text="(for søkemotorer)"
           data-vv-name="page[meta_description]"
           data-vv-value-path="innerValue" />
+
+        <KInputImage
+          v-model="page.meta_image"
+          small
+          name="page[meta_image]"
+          preview-key="original"
+          label="Delebilde (META bilde)"
+          help-text="Brukes til SoMe. Beskjæres til 1200x630" />
       </div>
     </section>
     <Villain

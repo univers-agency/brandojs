@@ -340,7 +340,7 @@ export default {
   ],
 
   async mounted () {
-    this.templates = await fetchTemplates('all', this.headers.extra, this.urls.templates)
+    this.templates = await fetchTemplates('all', { authorization: `Bearer ${this.getToken()}` }, this.urls.templates)
     this.codeMirror = CodeMirror(document.querySelector('#builder-template'), {
       mode: 'htmlmixed',
       theme: 'duotone-light',
@@ -385,6 +385,10 @@ export default {
   },
 
   methods: {
+    getToken () {
+      return localStorage.getItem('token')
+    },
+
     isSelected (t) {
       return t === this.currentTemplate
     },

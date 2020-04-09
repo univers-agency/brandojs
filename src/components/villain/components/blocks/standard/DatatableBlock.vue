@@ -7,7 +7,7 @@
     @move="$emit('move', $event)"
     @delete="$emit('delete', $event)">
     <div
-      v-if="!block.data.length"
+      v-if="!block.data.rows"
       class="villain-block-empty">
       <i class="fa fa-fw fa-table"></i>
       <div class="actions">
@@ -24,8 +24,8 @@
       name="fade-move"
       tag="table">
       <tr
-        v-for="item in block.data"
-        :key="item.key + item.value"
+        v-for="(item, idx) in rows"
+        :key="idx + guid()"
         :data-id="item.key + item.value"
         class="villain-block-datatable-item">
         <td class="villain-block-datatable-item-key">
@@ -38,32 +38,32 @@
     </transition-group>
 
     <template slot="config">
-      <table class="table villain-block-datatable-table">
-        <tbody>
-          <tr
-            v-for="(item, idx) in block.data"
-            :key="idx + 'cfg'">
-            <td>
-              <KInput
-                v-model="item.key"
-                :name="`item[${idx}][key]`"
-                placeholder="Nøkkel" />
-            </td>
-            <td>
-              <KInput
-                v-model="item.value"
-                :name="`item[${idx}][value]`"
-                placeholder="Verdi" />
-            </td>
-            <td>
-              <ButtonSecondary
-                @click="deleteItem(item)">
-                <i class="fa fa-times" />
-              </ButtonSecondary>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <KInputTable
+        v-model="block.data.rows"
+        name="data[data]"
+        label="Datatabell"
+        id-key="key"
+        :delete-rows="true"
+        :new-rows="false">
+        <template v-slot:row="{ entry }">
+          <td>
+            <KInput
+              v-model="entry.key"
+              name="entry[key]"
+              placeholder="Nøkkel"
+              label="Nøkkel" />
+
+            <KInput
+              v-model="entry.value"
+              name="entry[value]"
+              placeholder="Verdi"
+              label="Verdi" />
+          </td>
+        </template>
+        <template v-slot:new="">
+        </template>
+      </KInputTable>
+
       <div class="d-flex justify-content-center">
         <ButtonSecondary
           @click="addItem">
@@ -104,43 +104,69 @@ export default {
     }
   },
 
+  computed: {
+
+    rows: {
+      get () {
+        return this.block.data.rows
+      },
+
+      set (rows) {
+        this.block.data.rows = rows
+        return this.block.data.rows
+      }
+    }
+  },
+
   created () {
     console.debug('<DatatableBlock /> created')
   },
 
   methods: {
+    guid () {
+      return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
+    },
+
     getOrder (sortable) {
-      return this.block.data
+      return this.rows
     },
 
     storeOrder (sortable) {
       this.sortedArray = sortable.toArray()
       let newOrder = []
       this.sortedArray.forEach(x => {
-        const i = this.block.data.find(i => i.key + i.value === x)
-        newOrder = [
-          ...newOrder,
-          i
-        ]
+        const i = this.rows.find(i => {
+          return i.key + i.value === x
+        })
+
+        if (i) {
+          newOrder = [
+            ...newOrder,
+            i
+          ]
+        }
       })
-      this.block.data = newOrder
+
+      // this.$set(this.block, 'data', newOrder)
+      this.rows = newOrder
     },
 
     addItem () {
-      this.block.data.push({
-        key: 'Nøkkel',
-        value: 'Innhold'
-      })
+      this.rows = [
+        ...this.rows,
+        { key: 'Nøkkel', value: 'Innhold' }
+      ]
     },
 
     deleteItem (item) {
-      const i = this.block.data.find(b => b === item)
-      const idx = this.block.data.indexOf(i)
-
-      this.block.data = [
-        ...this.block.data.slice(0, idx),
-        ...this.block.data.slice(idx + 1)
-      ]
+      const i = this.block.data.rows.find(b => b === item)
+      const idx = this.block.data.rows.indexOf(i)
+      this.$set(this.block.data, 'rows', [
+        ...this.block.data.rows.slice(0, idx),
+        ...this.block.data.rows.slice(idx + 1)
+      ])
+      // this.block.data.splice(idx)
     }
   }
 }

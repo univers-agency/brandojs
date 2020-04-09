@@ -35,6 +35,7 @@ import gql from 'graphql-tag'
 import { gsap } from 'gsap'
 import getCSSVar from './utils/getCSSVar'
 import GET_IDENTITY from './gql/identity/IDENTITY_QUERY.graphql'
+import GET_ME from './gql/users/ME_QUERY.graphql'
 
 export default {
   data () {
@@ -259,22 +260,7 @@ export default {
     `,
 
     me: {
-      query: gql`
-        query Me {
-          me {
-            id
-            full_name
-            email
-            avatar {
-              focal
-              thumb: url(size: "xlarge")
-            }
-            role
-            language
-            active
-          }
-        }
-      `,
+      query: GET_ME,
 
       update ({ me }) {
         if (!this.initialized && me) {
