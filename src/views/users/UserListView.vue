@@ -19,6 +19,7 @@
 
     <ContentList
       v-if="users"
+      :selectable="false"
       :entries="users">
       <template v-slot:header>
         <div class="col-2"></div>
@@ -34,11 +35,16 @@
         </div>
         <div class="col-10">
           <router-link
+            v-if="$can('manage', entry)"
             :to="{ name: 'users-edit', params: { userId: entry.id } }"
             class="link name-link"
             :class="{ inactive: !entry.active }">
             {{ entry.full_name }}
-          </router-link><br>
+          </router-link>
+          <span v-else>
+            {{ entry.full_name }}
+          </span>
+          <br>
           {{ entry.email }}
         </div>
         <div class="col-3">
@@ -47,9 +53,10 @@
           </div>
         </div>
         <div class="col-1">
-          <CircleDropdown>
+          <CircleDropdown v-if="$can('manage', entry)">
             <li>
-              <router-link :to="{ name: 'users-edit', params: { userId: entry.id } }">
+              <router-link
+                :to="{ name: 'users-edit', params: { userId: entry.id } }">
                 Editér bruker
               </router-link>
               <button
