@@ -27,6 +27,11 @@
         Konfigurér
       </ButtonSecondary>
       <ButtonSecondary
+        v-if="showConfig && $can('recreate', imageSeries)"
+        @click="reRender(imageSeries.id)">
+        Gjenskap størrelser
+      </ButtonSecondary>
+      <ButtonSecondary
         v-if="showDelete"
         @click.native.prevent="deleteSeries(imageSeries)">
         Slett
@@ -153,6 +158,7 @@ export default {
 
   data () {
     return {
+      me: 'tets',
       displayList: false,
       sortedArray: [],
       selectedImageSeriesForUpload: null
@@ -182,6 +188,14 @@ export default {
         .receive('ok', payload => {
           this.$emit('sort', this.sortedArray)
           this.$toast.success({ message: 'Rekkefølge oppdatert' })
+        })
+    },
+
+    reRender (seriesId) {
+      this.adminChannel.channel
+        .push('images:rerender_image_series', { series_id: seriesId })
+        .receive('ok', payload => {
+          this.$toast.success({ message: 'Bildeserie gjenskapt' })
         })
     },
 
