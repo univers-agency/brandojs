@@ -63,7 +63,7 @@
           name="data[images]"
           label="Bildetekster"
           :delete-rows="false"
-          :new-rows="false">
+          :add-rows="false">
           <template v-slot:row="{ entry }">
             <div class="panes">
               <div>

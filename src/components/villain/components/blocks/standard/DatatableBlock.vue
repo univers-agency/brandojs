@@ -44,7 +44,7 @@
         label="Datatabell"
         id-key="key"
         :delete-rows="true"
-        :new-rows="false">
+        :add-rows="false">
         <template v-slot:row="{ entry }">
           <td>
             <KInput
