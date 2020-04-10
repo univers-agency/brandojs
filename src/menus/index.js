@@ -11,35 +11,43 @@ export default {
         },
         {
           name: 'Konfigurasjon',
+          to: {
+            name: 'config'
+          },
           items: [
             {
               text: 'Identitet',
               to: {
                 name: 'config-identity'
               }
-            }, {
+            },
+            {
               text: 'Globale variabler',
               to: {
                 name: 'config-globals'
               }
-            }, {
+            },
+            {
               text: 'Innholdsmaler',
               to: {
                 name: 'templates'
               }
             }
           ]
-        }, {
+        },
+        {
           name: 'Brukere',
           to: {
             name: 'users'
           }
-        }, {
+        },
+        {
           name: 'Bildebibliotek',
           to: {
             name: 'images'
           }
-        }, {
+        },
+        {
           name: 'Filbibliotek',
           to: {
             name: 'files'
@@ -78,12 +86,14 @@ export default {
               to: {
                 name: 'config-identity'
               }
-            }, {
+            },
+            {
               text: 'Globals',
               to: {
                 name: 'config-globals'
               }
-            }, {
+            },
+            {
               text: 'Templates',
               to: {
                 name: 'templates'
@@ -95,12 +105,14 @@ export default {
           to: {
             name: 'users'
           }
-        }, {
+        },
+        {
           name: 'Image Library',
           to: {
             name: 'images'
           }
-        }, {
+        },
+        {
           name: 'File Library',
           to: {
             name: 'files'
