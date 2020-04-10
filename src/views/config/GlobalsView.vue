@@ -13,6 +13,13 @@
         </p>
       </template>
     </ContentHeader>
+
+    <KInputToggle
+      v-if="$can('admin', 'Globals')"
+      v-model="editing"
+      name="data[editing]"
+      label="Administrér globaler" />
+
     <KForm
       v-if="identity"
       :back="{ name: 'dashboard' }"
@@ -20,24 +27,31 @@
       @save="save">
       <template v-slot>
         <KInputTable
+          v-if="identity && identity.globals && identity.globals.length || editing"
           v-model="identity.globals"
+          :delete-rows="editing"
+          :add-rows="editing"
           name="identity[globals]"
           label="Globale variabler">
           <template v-slot:head>
             <tr>
               <th>Label</th>
-              <th>Nøkkel</th>
+              <th v-if="editing">Nøkkel</th>
               <th>Verdi</th>
-              <th></th>
+              <th v-if="editing"></th>
             </tr>
           </template>
           <template v-slot:row="{ entry }">
             <td>
               <input
+                v-if="editing"
                 v-model="entry.label"
                 type="text">
+              <div v-else>
+                {{ entry.label }}
+              </div>
             </td>
-            <td>
+            <td v-if="editing">
               <input
                 v-model="entry.key"
                 type="text">
@@ -48,7 +62,9 @@
                 type="text">
             </td>
           </template>
-          <template v-slot:new="{ newEntry }">
+          <template
+            v-if="editing"
+            v-slot:new="{ newEntry }">
             <td>
               <input
                 v-model="newEntry.label"
@@ -66,6 +82,11 @@
             </td>
           </template>
         </KInputTable>
+        <div
+          v-else
+          class="empty-globals">
+          Ingen tilgjengelige globaler
+        </div>
       </template>
     </KForm>
   </div>
@@ -79,6 +100,7 @@ import IDENTITY_FRAGMENT from '../../gql/identity/IDENTITY_FRAGMENT.graphql'
 export default {
   data () {
     return {
+      editing: false,
       loading: 0,
       identity: {}
     }
@@ -126,3 +148,10 @@ export default {
   }
 }
 </script>
+<style lang="postcss" scoped>
+  .empty-globals {
+    @color bg peach;
+    padding: 1rem 2rem;
+    margin-bottom: 25px;
+  }
+</style>
