@@ -28,7 +28,7 @@
         </td>
       </tr>
       <tr
-        v-if="newRows"
+        v-if="addRows"
         ref="newRow"
         class="input-row">
         <slot
@@ -65,9 +65,16 @@ export default {
       required: true
     },
 
-    newRows: {
+    addRows: {
       type: Boolean,
       default: true
+    },
+
+    /**
+     * !TODO DEPRECATE THIS IN FAVOR OF `addRows`
+     * */
+    newRows: {
+      type: Boolean
     },
 
     deleteRows: {
@@ -115,6 +122,9 @@ export default {
 
   created () {
     this.innerValue = this.value
+    if (this.newRows) {
+      console.error('==> KInputTable: `newRows` has been deprecated, use `addRows` instead!')
+    }
   },
 
   methods: {
