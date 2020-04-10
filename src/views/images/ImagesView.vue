@@ -17,12 +17,7 @@
       <ContentList
         :entries="imageCategories">
         <template v-slot:row="{ entry }">
-          <div class="col-1">
-            <div class="circle">
-              <strong>{{ entry.id }}</strong>
-            </div>
-          </div>
-          <div class="col-10">
+          <div class="col-11">
             <router-link
               :to="{ name: 'image-category-detail', params: { imageCategoryId: entry.id } }">
               <span class="name">{{ entry.name }}</span>
