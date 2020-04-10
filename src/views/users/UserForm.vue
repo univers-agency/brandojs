@@ -22,9 +22,10 @@
           v-model="user.role"
           rules="required"
           :options="[
-            { name: 'Superbruker', value: 'superuser' },
+            { name: 'Super', value: 'superuser' },
             { name: 'Admin', value: 'admin' },
-            { name: 'Stab', value: 'staff' }
+            { name: 'Redaktør', value: 'editor' },
+            { name: 'Bruker', value: 'user' },
           ]"
           name="user[role]"
           label="Rolle" />
