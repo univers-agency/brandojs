@@ -34,7 +34,8 @@
             :options="[
               { name: 'Super', value: 'superuser' },
               { name: 'Admin', value: 'admin' },
-              { name: 'Staff', value: 'staff' }
+              { name: 'Redaktør', value: 'editor' },
+              { name: 'Bruker', value: 'user' },
             ]"
             name="user[role]" />
           <KInputRadios
