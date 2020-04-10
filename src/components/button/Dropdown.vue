@@ -253,8 +253,8 @@ export default {
     "profile.edit": "Edit profile"
   },
 
-  "no": {
-    "logout": "Log ut",
+  "nb": {
+    "logout": "Logg ut",
     "profile.edit": "Endre profil"
   }
 }
