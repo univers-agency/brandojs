@@ -26,10 +26,17 @@
           </div>
           <input
             v-model="filters[k]"
-            :placeholder="$t('filter-placeholder')"
+            :placeholder="$t('contentlist.filter.placeholder')"
             type="text"
-            @input="filterInput" />
+            @input="filterInput()" />
         </div>
+      </div>
+      <div
+        v-if="softDelete && shouldStatus"
+        class="trash"
+        :class="{ trashSelected: trashActive }"
+        @click="toggleTrash">
+        <FontAwesomeIcon icon="trash" />
       </div>
       <div
         class="order">
@@ -73,15 +80,16 @@
         }
       }"
       appear
-      name="fade"
+      mode="out-in"
+      name="fadefast"
       tag="div"
       :data-sort-src="sortParent"
       class="sort-container">
       <div
-        v-for="entry in filteredEntries"
+        v-for="entry in entries"
         :key="entry[entryKey]"
         :data-id="entry[entryKey]"
-        :class="{ selected: isSelected(entry[entryKey]) }"
+        :class="{ selected: isSelected(entry[entryKey]), deleted: entry['deleted_at'] }"
         class="list-row">
         <div
           class="main-content"
@@ -95,7 +103,14 @@
           </template>
           <template v-if="status">
             <div class="status">
+              <div v-if="entry.deleted_at">
+                <FontAwesomeIcon
+                  icon="trash-alt"
+                  size="xs"
+                  fixed-width />
+              </div>
               <Status
+                v-else
                 :center="true"
                 :status="entry.status" />
             </div>
@@ -123,6 +138,7 @@
 
 <script>
 // import { gsap } from 'gsap'
+import debounce from 'lodash.debounce'
 
 export default {
   props: {
@@ -144,6 +160,11 @@ export default {
     queryVars: {
       type: Object,
       default: () => {}
+    },
+
+    softDelete: {
+      type: Boolean,
+      default: false
     },
 
     /*
@@ -189,18 +210,12 @@ export default {
   data () {
     return {
       filters: {},
-      selectedRows: []
+      selectedRows: [],
+      trashActive: false
     }
   },
 
   computed: {
-    filteredEntries () {
-      // if (this.filter && this.filterValue !== '') {
-      //   return this.entries.filter(e => e[this.filter].toLowerCase().includes(this.filterValue.toLowerCase()))
-      // }
-      return this.entries
-    },
-
     shouldFilter () {
       return this.$parent?.queryVars?.hasOwnProperty('filter')
     },
@@ -221,6 +236,15 @@ export default {
   },
 
   methods: {
+    toggleTrash () {
+      this.trashActive = !this.trashActive
+      if (this.trashActive) {
+        this.changeStatus('deleted')
+      } else {
+        this.changeStatus('published')
+      }
+    },
+
     changeStatus (status) {
       const queryVars = { ...this.$parent.queryVars, status }
       this.$emit('updateQuery', queryVars)
@@ -248,10 +272,10 @@ export default {
       }
     },
 
-    filterInput () {
+    filterInput: debounce(function () {
       const queryVars = { ...this.$parent.queryVars, filter: this.filters }
       this.$emit('updateQuery', queryVars)
-    },
+    }, 750, true),
 
     clearSelection () {
       this.selectedRows = []
@@ -304,10 +328,6 @@ export default {
       this.sortedArray = sortable.toArray().map(Number)
       console.log(this.sortedArray)
       this.$emit('sort', this.sortedArray)
-    },
-
-    test () {
-      console.log('DOES IT WORK?')
     }
   }
 }
@@ -319,7 +339,7 @@ export default {
     display: flex;
     min-height: 50px;
 
-    .order {
+    .order, .trash {
       padding: 0 15px;
       min-height: 52px;
       height: 100%;
@@ -327,6 +347,12 @@ export default {
       align-items: center;
       background-color: theme(colors.input);
       border-left: 5px solid #ffffff;
+      transition: background-color 250ms ease;
+    }
+
+    .trash.trashSelected {
+      background-color: theme(colors.peachDarker);
+      transition: background-color 250ms ease;
     }
 
     .filters {
@@ -473,8 +499,11 @@ export default {
       &.selected {
         background-color: theme(colors.peachDarker);
         transition: background-color 250ms ease;
-        /* padding-left: 25px;
-        padding-right: 25px; */
+      }
+
+      &.deleted {
+        background-color: #e8e8e8;
+        transition: background-color 250ms ease;
       }
 
       .main-content {
@@ -492,14 +521,3 @@ export default {
     }
   }
 </style>
-
-<i18n>
-{
-  "en": {
-    "filter-placeholder": "Search"
-  },
-  "nb": {
-    "filter-placeholder": "Søk"
-  }
-}
-</i18n>

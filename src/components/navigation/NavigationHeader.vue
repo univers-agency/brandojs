@@ -1,15 +1,14 @@
 <template>
   <header class="navigation-header">
     <div
-      class="logo"
-      :style="$app.logoStyle"
-      v-html="$app.logo" />
-
-    <div
       v-if="identity"
       class="client-name">
       {{ identity.name }} admin
     </div>
+    <div
+      class="logo"
+      :style="$app.logoStyle"
+      v-html="$app.logo" />
   </header>
 </template>
 
@@ -49,8 +48,12 @@ export default {
     }
 
     .client-name {
-      @space padding-top sm;
       line-height: 1;
+      font-family: maison neue;
+      letter-spacing: -1.1px;
+      font-size: 16px;
+      padding-bottom: 20px;
+      padding-top: 12px;
     }
   }
 </style>

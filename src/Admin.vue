@@ -17,7 +17,9 @@
       </button>
     </transition>
 
-    <Navigation ref="nav" />
+    <Navigation
+      v-if="me"
+      ref="nav" />
 
     <Content
       ref="content"
@@ -44,7 +46,6 @@ export default {
       progressStatus: {},
       noFocus: true,
       loading: 2,
-      initialized: false,
       fullScreen: false
     }
   },
@@ -82,6 +83,7 @@ export default {
   provide () {
     const userChannel = {}
     const adminChannel = {}
+    const shared = {}
 
     Object.defineProperty(userChannel, 'channel', {
       enumerable: true,
@@ -93,65 +95,84 @@ export default {
       get: () => this.adminChannel
     })
 
-    return { userChannel, adminChannel }
-  },
-
-  async created () {
-    this.$root.ready = false
-    console.debug('created <App />')
-
-    document.addEventListener('keydown', e => {
-      if (e.keyCode === 9 || e.which === 9) {
-        this.noFocus = false
-      }
+    Object.defineProperty(shared, 'me', {
+      enumberable: true,
+      get: () => this.me
     })
 
-    if (this.$route.meta.fullScreen) {
-      this.fullScreen = true
-    }
+    return { userChannel, adminChannel, shared }
+  },
 
-    const token = localStorage.getItem('token')
-    this.setToken(token)
+  created () {
+    this.$root.ready = false
+    this.$root.initialized = false
 
-    if (token) {
-      // check if the token is valid — might be old
-      const fmData = new FormData()
-      fmData.append('jwt', this.token)
+    console.debug('created <App />')
 
-      const response = await fetch('/admin/auth/verify', {
-        method: 'post',
-        body: fmData
-      })
-
-      switch (response.status) {
-        case 200:
-          this.$root.ready = true
-          break
-        case 406:
-          this.setToken(null)
-          localStorage.removeItem('token')
-
-          // this.$router.push({ name: 'login' })
-          this.$router.push({ name: 'login' })
-          break
-        case 401:
-          this.setToken(null)
-          localStorage.removeItem('token')
-
-          this.$router.push({ name: 'login' })
-      }
-    } else {
-      this.loading = 0
-    }
+    this.listenForTabs()
+    this.checkFullscreen()
+    this.checkToken()
   },
 
   methods: {
+    listenForTabs () {
+      document.addEventListener('keydown', e => {
+        if (e.keyCode === 9 || e.which === 9) {
+          this.noFocus = false
+        }
+      })
+    },
+
+    checkFullscreen () {
+      if (this.$route.meta.fullScreen) {
+        this.fullScreen = true
+      }
+    },
+
+    async checkToken () {
+      const token = localStorage.getItem('token')
+      await this.setToken(token)
+
+      if (token) {
+        // check if the token is valid — might be old
+        const fmData = new FormData()
+        fmData.append('jwt', this.token)
+
+        const response = await fetch('/admin/auth/verify', {
+          method: 'post',
+          body: fmData
+        })
+
+        switch (response.status) {
+          case 200: {
+            this.$root.ready = true
+            const responseBody = await response.json()
+            this.$ability.update(responseBody.rules)
+            break
+          }
+          case 406: {
+            this.setToken(null)
+            localStorage.removeItem('token')
+            this.$router.push({ name: 'login' })
+            break
+          }
+          case 401: {
+            this.setToken(null)
+            localStorage.removeItem('token')
+            this.$router.push({ name: 'login' })
+          }
+        }
+      } else {
+        this.loading = 0
+      }
+    },
+
     toggleMenuAppear (el) {
       gsap.to(el, { duration: 1, opacity: 1, delay: 1.8, ease: 'sine.in' })
     },
 
-    setToken (value) {
-      this.$apollo.mutate({
+    async setToken (value) {
+      await this.$apollo.mutate({
         mutation: gql`
           mutation setToken ($value: String!) {
             tokenSet (value: $value) @client
@@ -261,13 +282,16 @@ export default {
 
     me: {
       query: GET_ME,
+      fetchPolicy: 'no-cache',
 
       update ({ me }) {
-        if (!this.initialized && me) {
+        if (!this.$root.initialized && me) {
           this.$i18n.locale = me.language
-          this.initialized = true
+          this.$root.initialized = true
           this.initializeApp(me)
         }
+
+        return me
       },
 
       skip () {
@@ -319,6 +343,10 @@ export default {
 
   .fadefast-enter-active, .fadefast-leave-active {
     transition: opacity 0.15s;
+  }
+
+  .fadefast-enter, .fadefast-leave-to {
+    opacity: 0;
   }
 
   .fade-move-move {
@@ -1215,7 +1243,13 @@ input::-moz-placeholder {
 }
 
 .avatar-sm {
-  max-width: 25px;
+  min-width: auto;
+  width: 150px;
+}
+
+.avatar-xs {
+  min-width: auto;
+  width: 75px;
 }
 
 .villain-editor, .villain-builder {

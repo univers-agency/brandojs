@@ -1011,6 +1011,19 @@ export default {
     }
   }
 
+  a.action-button {
+    display: inline-block;
+    height: 50px;
+    border-radius: 33px;
+    padding-top: 15px;
+    padding-bottom: 14px;
+    padding-left: 23px;
+    padding-right: 23px;
+    border: 1px solid theme(colors.dark);
+    line-height: 1;
+    font-size: 18px;
+  }
+
   .text-mono {
     font-family: "SF Mono", "Menlo", "Monaco", "Inconsolata", "Fira Mono", "Droid Sans Mono", "Source Code Pro", monospace;
   }

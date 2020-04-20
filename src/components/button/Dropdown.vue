@@ -245,17 +245,3 @@ export default {
     }
   }
 </style>
-
-<i18n>
-{
-  "en": {
-    "logout": "Log out",
-    "profile.edit": "Edit profile"
-  },
-
-  "nb": {
-    "logout": "Logg ut",
-    "profile.edit": "Endre profil"
-  }
-}
-</i18n>

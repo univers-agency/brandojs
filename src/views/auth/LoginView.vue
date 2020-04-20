@@ -134,6 +134,7 @@ export default {
           if (json) {
             this.loggingIn = true
             await onLogin(this.$apolloProvider.defaultClient)
+            this.$ability.update(json.rules)
             localStorage.setItem('token', json.jwt)
 
             gsap.to(this.$refs.loginBox, { autoAlpha: 0, y: -60 })

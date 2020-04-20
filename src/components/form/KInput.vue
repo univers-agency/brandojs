@@ -98,6 +98,12 @@ export default {
     if (this.value) {
       this.innerValue = this.value
     }
+  },
+
+  methods: {
+    focus () {
+      this.$refs.input.focus()
+    }
   }
 }
 </script>

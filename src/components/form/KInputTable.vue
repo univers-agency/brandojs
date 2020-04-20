@@ -1,57 +1,61 @@
 <template>
-  <div class="input-table">
-    <div class="label-wrapper">
-      <label
-        :for="id"
-        class="control-label">
-        <span>{{ label }}</span>
-      </label>
-    </div>
+  <div class="field-wrapper">
+    <div class="input-table">
+      <div class="label-wrapper">
+        <label
+          :for="id"
+          class="control-label">
+          <span>{{ label }}</span>
+        </label>
+      </div>
 
-    <table>
-      <slot name="head"></slot>
-      <tr
-        v-for="(entry, idx) in innerValue"
-        :key="idx">
-        <slot
-          name="row"
-          v-bind:entry="entry"></slot>
-        <td
-          v-if="deleteRows"
-          class="action">
-          <button
-            type="button"
-            class="delete"
-            @click.self.stop.prevent="del(entry)">
-            Slett
-          </button>
-        </td>
-      </tr>
-      <tr
-        v-if="addRows"
-        ref="newRow"
-        class="input-row">
-        <slot
-          name="new"
-          v-bind:newEntry="newEntry"></slot>
-        <td class="action">
-          <button
-            type="button"
-            class="add"
-            @click.stop.prevent="add(newEntry)">
-            OK
-          </button>
-        </td>
-      </tr>
-    </table>
+      <table>
+        <slot name="head"></slot>
+        <tr
+          v-for="(entry, idx) in innerValue"
+          :key="idx">
+          <slot
+            name="row"
+            v-bind:entry="entry"></slot>
+          <td
+            v-if="deleteRows"
+            class="action">
+            <CircleButton
+              class="delete"
+              @click.self.stop.prevent="del(entry)">
+              <FontAwesomeIcon
+                icon="minus"
+                size="xs" />
+            </CircleButton>
+          </td>
+        </tr>
+        <tr
+          v-if="addRows"
+          ref="addRow"
+          class="input-row">
+          <slot
+            name="new"
+            v-bind:newEntry="newEntry"></slot>
+          <td class="action">
+            <CircleButton
+              class="add"
+              @click.native.stop.prevent="add(newEntry)">
+              <FontAwesomeIcon
+                icon="plus"
+                size="xs" />
+            </CircleButton>
+          </td>
+        </tr>
+      </table>
 
-    <div
-      v-if="helpText"
-      class="meta">
       <div
         v-if="helpText"
-        class="help-text">
-        —<span v-html="helpText" />
+        class="meta">
+        <div
+          v-if="helpText"
+          class="help-text">
+          —<span v-html="helpText" />
+        </div>
       </div>
     </div>
   </div>
@@ -129,9 +133,10 @@ export default {
 
   methods: {
     add () {
+      console.log('add')
       this.innerValue.push({ ...this.newEntry })
       this.newEntry = {}
-      this.$refs.newRow.querySelector('input').focus()
+      this.$refs.addRow.querySelector('input').focus()
     },
 
     del (entry) {

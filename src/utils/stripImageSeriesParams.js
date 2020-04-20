@@ -1,7 +1,6 @@
 import stripParams from './stripParams'
 
 export default function stripImageSeriesParams (params) {
-  // const val = { ...params }
   delete params.image_series.cfg
   delete params.image_series.creator
   delete params.image_series.__typename

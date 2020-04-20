@@ -417,16 +417,19 @@ export default {
           let blob
           let thumb
           const file = srcFiles[i]
+          let actualFile
 
           if (file.file instanceof Blob) {
             blob = window.URL.createObjectURL(file.file)
             thumb = (blob && file.type.substr(0, 6) === 'image/') ? blob : null
+            actualFile = file.file
           } else {
             window.URL = window.URL || window.webkitURL
             if (window.URL && window.URL.createObjectURL) {
               blob = window.URL.createObjectURL(file)
               thumb = (blob && file.type.substr(0, 6) === 'image/') ? blob : null
             }
+            actualFile = file
           }
 
           const newFile = {
@@ -439,8 +442,9 @@ export default {
             type: file.type,
             blob,
             thumb,
-            file
+            file: actualFile
           }
+
           files.push(newFile)
         }
       }

@@ -460,7 +460,6 @@ export default {
   apollo: {
     pages: {
       query: GET_PAGES,
-      debounce: 750,
       variables () {
         return this.queryVars
       }

@@ -21,7 +21,6 @@
           :show-upload="showUpload"
           :image-series="innerValue" />
       </div>
-
       <div v-else>
         <div
           class="dropzone">
@@ -66,7 +65,7 @@
               <div class="text-center">
                 Slipp filene dine her for å laste opp eller<br>
                 <span class="file-selector-button">
-                  Velg filer
+                  Velg filer!
                   <label for="image"></label>
                   <input
                     id="image"
@@ -160,7 +159,9 @@ export default {
 
     innerValue: {
       get () { return this.value },
-      set (innerValue) { this.$emit('input', innerValue) }
+      set (innerValue) {
+        this.$emit('input', innerValue)
+      }
     }
   },
 
@@ -174,7 +175,6 @@ export default {
       if (val && val.length) {
         this.innerValue.images = []
         val.forEach((v, idx) => {
-          console.log(idx)
           this.innerValue.images.push({
             image: v.file,
             sequence: idx
@@ -383,16 +383,19 @@ export default {
           let blob
           let thumb
           const file = srcFiles[i]
+          let actualFile
 
           if (file.file instanceof Blob) {
             blob = window.URL.createObjectURL(file.file)
             thumb = (blob && file.type.substr(0, 6) === 'image/') ? blob : null
+            actualFile = file.file
           } else {
             window.URL = window.URL || window.webkitURL
             if (window.URL && window.URL.createObjectURL) {
               blob = window.URL.createObjectURL(file)
               thumb = (blob && file.type.substr(0, 6) === 'image/') ? blob : null
             }
+            actualFile = file
           }
 
           const newFile = {
@@ -405,7 +408,7 @@ export default {
             type: file.type,
             blob,
             thumb,
-            file
+            file: actualFile
           }
           files.push(newFile)
         }

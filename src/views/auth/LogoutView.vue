@@ -12,11 +12,8 @@ export default {
     await onLogout(this.$apolloProvider.defaultClient)
     this.$ability.update(defaultAbilities.rules)
     this.$root.ready = false
+    this.$root.initialized = false
     this.$router.push('login')
   }
 }
 </script>
-
-<style>
-
-</style>

@@ -1,6 +1,6 @@
 <template>
   <dl ref="el">
-    <template v-if="item.items">
+    <template v-if="item.items && $can('view', {...item, '__typename': 'MenuItem' })">
       <dt
         @mouseover="$emit('hover', $event)"
         @click="toggle">
@@ -12,6 +12,7 @@
         <ul>
           <li
             v-for="subitem in item.items"
+            v-if="$can('view', {...subitem, '__typename': 'MenuItem' })"
             :key="subitem.text">
             <router-link
               :to="subitem.to">
@@ -21,8 +22,9 @@
         </ul>
       </dd>
     </template>
-    <template v-else>
-      <dt @mouseover="$emit('hover', $event)">
+    <template v-else-if="item && item.to && $can('view', {...item, '__typename': 'MenuItem' })">
+      <dt
+        @mouseover="$emit('hover', $event)">
         <router-link
           exact
           :to="item.to">
@@ -74,15 +76,21 @@ export default {
 
 <style lang="postcss" scoped>
   dl {
-    padding-bottom: 8px;
+    padding-bottom: 0;
+
+    &:empty {
+      display: none;
+    }
 
     dt {
       @fontsize nav.mainItem;
       color: theme(colors.dark);
       cursor: pointer;
       user-select: none;
+      font-weight: 200;
 
       a {
+        font-weight: 200;
         display: block;
 
         &:before {
@@ -135,6 +143,11 @@ export default {
 
           a {
             display: block;
+            font-weight: 200;
+
+            &.active {
+              font-weight: 400;
+            }
           }
         }
       }

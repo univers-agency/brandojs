@@ -45,31 +45,54 @@
     </EditorMenuBar>
     <EditorMenuBubble
       v-slot="{ commands, isActive, getMarkAttrs, menu }"
-      class="menububble"
+      :class="{ noTransform: linkMenuIsActive || actionButtonMenuIsActive }"
       :editor="editor"
       @hide="hideLinkMenu">
       <div
         class="menububble"
         :class="{ 'is-active': menu.isActive }"
         :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`">
-        <form
+        <KModal
           v-if="linkMenuIsActive"
-          class="menububble__form"
-          @submit.prevent="setLinkUrl(commands.link, linkUrl)">
-          <input
-            ref="linkInput"
-            v-model="linkUrl"
-            class="menububble__input"
-            type="text"
-            placeholder="https://"
-            @keydown.esc="hideLinkMenu" />
-          <button
-            class="menububble__button"
-            type="button"
-            @click="setLinkUrl(commands.link, null)">
-            <FontAwesomeIcon icon="unlink" />
-          </button>
-        </form>
+          ref="linkModal"
+          v-shortkey="['esc']"
+          ok-text="Lukk"
+          @shortkey.native="hideLinkMenu"
+          @ok="setLinkUrl(commands.link, linkUrl);$refs.linkModal.close()">
+          <template #header>
+            Rediger link
+          </template>
+          <template>
+            <KInput
+              ref="linkInput"
+              v-model="linkUrl"
+              name="link[url]"
+              label="URL"
+              help-text="OBS! For å linke til en lokal side må du alltid ha med / foran (f.eks /personvern)."
+              placeholder="https://link.no" />
+          </template>
+        </KModal>
+
+        <KModal
+          v-if="actionButtonMenuIsActive"
+          ref="actionButtonModal"
+          v-shortkey="['esc']"
+          ok-text="Lukk"
+          @shortkey.native="hideLinkMenu"
+          @ok="setActionButtonUrl(commands.action_button, actionButtonUrl);$refs.actionButtonModal.close()">
+          <template #header>
+            Rediger knappelink
+          </template>
+          <template>
+            <KInput
+              ref="actionButtonInput"
+              v-model="actionButtonUrl"
+              name="actionButton[url]"
+              label="URL"
+              help-text="OBS! For å linke til en lokal side må du alltid ha med / foran (f.eks /personvern)."
+              placeholder="https://link.no" />
+          </template>
+        </KModal>
 
         <template v-else>
           <button
@@ -77,7 +100,9 @@
             class="menububble__button"
             :class="{ 'is-active': isActive.bold() }"
             @click="commands.bold">
-            <FontAwesomeIcon icon="bold" />
+            <FontAwesomeIcon
+              icon="bold"
+              size="xs" />
           </button>
 
           <button
@@ -85,7 +110,9 @@
             class="menububble__button"
             :class="{ 'is-active': isActive.italic() }"
             @click="commands.italic">
-            <FontAwesomeIcon icon="italic" />
+            <FontAwesomeIcon
+              icon="italic"
+              size="xs" />
           </button>
 
           <button
@@ -95,7 +122,7 @@
             @click="commands.strike">
             <FontAwesomeIcon
               icon="strikethrough"
-              size="sm" />
+              size="xs" />
           </button>
 
           <button
@@ -105,7 +132,7 @@
             @click="commands.underline">
             <FontAwesomeIcon
               icon="underline"
-              size="sm" />
+              size="xs" />
           </button>
 
           <button
@@ -115,7 +142,7 @@
             @click="commands.paragraph">
             <FontAwesomeIcon
               icon="paragraph"
-              size="sm" />
+              size="xs" />
           </button>
 
           <button
@@ -125,7 +152,7 @@
             @click="commands.heading({ level: 2 })">
             <FontAwesomeIcon
               icon="heading"
-              size="sm" />
+              size="xs" />
           </button>
           <button
             type="button"
@@ -134,15 +161,25 @@
             @click="commands.heading({ level: 3 })">
             <FontAwesomeIcon
               icon="heading"
-              size="sm" />
+              size="xs" />
           </button>
           <button
             class="menububble__button"
+            type="button"
             :class="{ 'is-active': isActive.link() }"
             @click="showLinkMenu(getMarkAttrs('link'))">
             <FontAwesomeIcon
               icon="link"
-              size="sm" />
+              size="xs" />
+          </button>
+          <button
+            class="menububble__button"
+            type="button"
+            :class="{ 'is-active': isActive.action_button() }"
+            @click="showActionButtonMenu(getMarkAttrs('action_button'))">
+            <FontAwesomeIcon
+              icon="square"
+              size="xs" />
           </button>
         </template>
       </div>
@@ -188,7 +225,9 @@ import {
   Underline,
   History
 } from 'tiptap-extensions'
-import Link from './textExtensions/Link.js'
+import Link from '../../../tiptap/extensions/Link'
+import ActionButton from '../../../tiptap/extensions/ActionButton'
+import Arrow from '../../../tiptap/extensions/Arrow'
 import MarkdownIt from 'markdown-it'
 const md = new MarkdownIt({ html: true })
 
@@ -220,6 +259,8 @@ export default {
       customClass: '',
       linkUrl: null,
       linkMenuIsActive: false,
+      actionButtonUrl: null,
+      actionButtonMenuIsActive: false,
       showConfig: false
     }
   },
@@ -254,6 +295,8 @@ export default {
         new Heading({ levels: [2, 3] }),
         new ListItem(),
         new OrderedList(),
+        new ActionButton(),
+        new Arrow(),
         new Link({ openOnClick: false }),
         new Bold(),
         new Italic(),
@@ -287,6 +330,23 @@ export default {
     setLinkUrl (command, url) {
       command({ href: url })
       this.hideLinkMenu()
+    },
+
+    /** action button */
+    showActionButtonMenu (attrs) {
+      this.actionButtonUrl = attrs.href
+      this.actionButtonMenuIsActive = true
+      this.$nextTick(() => {
+        this.$refs.actionButtonInput.focus()
+      })
+    },
+    hideActionButtonMenu () {
+      this.actionButtonUrl = null
+      this.actionButtonMenuIsActive = false
+    },
+    setActionButtonUrl (command, url) {
+      command({ href: url })
+      this.hideActionButtonMenu()
     }
   }
 }
@@ -323,6 +383,10 @@ export default {
     &.is-active {
       visibility: visible;
       opacity: 1;
+    }
+
+    &.noTransform {
+      transform: none !important;
     }
 
     .menububble__form {

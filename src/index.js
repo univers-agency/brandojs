@@ -4,6 +4,8 @@ import 'flatpickr/dist/flatpickr.min.css'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 
+import { abilitiesPlugin } from '@casl/vue'
+import ability from './services/casl/defaultAbility'
 import Sortable from 'sortablejs'
 import VueShortkey from 'vue-shortkey'
 import VueClickOutside from 'v-click-outside'
@@ -64,6 +66,7 @@ export default {
 
     Vue.use(VueShortkey)
     Vue.use(VueClickOutside)
+    Vue.use(abilitiesPlugin, ability)
 
     // register all nav components
     for (const component in NavigationComponents) {
