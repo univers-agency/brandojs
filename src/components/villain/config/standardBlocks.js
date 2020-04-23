@@ -108,10 +108,6 @@ export default [
     }
   },
 
-  // dataTemplate: {
-  //   rows: []
-  // }
-
   {
     name: 'Video',
     icon: 'fa-video',

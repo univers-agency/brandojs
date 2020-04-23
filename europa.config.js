@@ -43,7 +43,7 @@ module.exports = {
         stripe: '#f7f7f7',
         background: '#000',
         secondary: '#94003e0d',
-        blockBackground: '#ffffffb3',
+        blockBackground: '#ffffff',
         blockBorder: '#9a9a9a26',
         availableBlock: 'rgb(211, 0, 0)',
         availableBlockHover: '#eeeeee',

@@ -104,6 +104,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import { format, register } from 'timeago.js'
 import nbNO from 'timeago.js/lib/lang/nb_NO'
 import { VTooltip } from 'v-tooltip'
+import shortid from 'shortid'
 
 import VillainBuilder from './VillainBuilder'
 import standardComponents from './blocks/standard'
@@ -413,10 +414,30 @@ export default {
         }
       } else {
         if (block.type === 'template') {
+          if (!block.data.hasOwnProperty('multi')) {
+            this.$set(block.data, 'multi', false)
+          }
           if (block.data.refs && block.data.refs.length) {
             for (let idx = 0; idx < block.data.refs.length; idx++) {
               const refBlock = block.data.refs[idx].data
               this.validateBlock(refBlock)
+            }
+          }
+
+          if (block.data.entries && block.data.entries.length) {
+            for (let idx = 0; idx < block.data.entries.length; idx++) {
+              const entry = block.data.entries[idx]
+
+              if (!entry.hasOwnProperty('id')) {
+                console.log('==> entry in TemplateBlock is lacking an `id`')
+                this.$set(entry, 'id', shortid.generate())
+                // this.$set(block.data, 'multi', false)
+              }
+
+              for (let xdx = 0; xdx < entry.refs.length; xdx++) {
+                const refBlock = entry.refs[xdx].data
+                this.validateBlock(refBlock)
+              }
             }
           }
         }

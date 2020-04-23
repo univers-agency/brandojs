@@ -58,7 +58,7 @@
           v-shortkey="['esc']"
           ok-text="Lukk"
           @shortkey.native="hideLinkMenu"
-          @ok="setLinkUrl(commands.link, linkUrl);$refs.linkModal.close()">
+          @ok="setLinkUrl(commands.link, linkUrl)">
           <template #header>
             Rediger link
           </template>
@@ -79,7 +79,7 @@
           v-shortkey="['esc']"
           ok-text="Lukk"
           @shortkey.native="hideLinkMenu"
-          @ok="setActionButtonUrl(commands.action_button, actionButtonUrl);$refs.actionButtonModal.close()">
+          @ok="setActionButtonUrl(commands.action_button, actionButtonUrl)">
           <template #header>
             Rediger knappelink
           </template>
@@ -228,6 +228,7 @@ import {
 import Link from '../../../tiptap/extensions/Link'
 import ActionButton from '../../../tiptap/extensions/ActionButton'
 import Arrow from '../../../tiptap/extensions/Arrow'
+import Emoji from '../../../tiptap/extensions/Emoji'
 import MarkdownIt from 'markdown-it'
 const md = new MarkdownIt({ html: true })
 
@@ -297,6 +298,27 @@ export default {
         new OrderedList(),
         new ActionButton(),
         new Arrow(),
+        // new Emoji({
+        //   items: () => [
+        //     { id: 1, name: 'Philipp Kühn' },
+        //     { id: 2, name: 'Hans Pagel' },
+        //     { id: 3, name: 'Kris Siepert' },
+        //     { id: 4, name: 'Justin Schueler' }
+        //   ],
+        //   // is called when a suggestion starts
+        //   onEnter: ({
+        //     items, query, range, command, virtualNode
+        //   }) => {
+        //     this.query = query
+        //     this.filteredUsers = items
+        //     this.suggestionRange = range
+        //     this.renderPopup(virtualNode)
+        //     // we save the command for inserting a selected mention
+        //     // this allows us to call it inside of our custom popup
+        //     // via keyboard navigation and on click
+        //     this.insertMention = command
+        //   }
+        // }),
         new Link({ openOnClick: false }),
         new Bold(),
         new Italic(),
@@ -323,12 +345,15 @@ export default {
         this.$refs.linkInput.focus()
       })
     },
+
     hideLinkMenu () {
       this.linkUrl = null
       this.linkMenuIsActive = false
     },
-    setLinkUrl (command, url) {
+
+    async setLinkUrl (command, url) {
       command({ href: url })
+      await this.$refs.linkModal.close()
       this.hideLinkMenu()
     },
 
@@ -340,12 +365,15 @@ export default {
         this.$refs.actionButtonInput.focus()
       })
     },
+
     hideActionButtonMenu () {
       this.actionButtonUrl = null
       this.actionButtonMenuIsActive = false
     },
-    setActionButtonUrl (command, url) {
+
+    async setActionButtonUrl (command, url) {
       command({ href: url })
+      await this.$refs.actionButtonModal.close()
       this.hideActionButtonMenu()
     }
   }
@@ -354,6 +382,69 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+  >>> .villain-text-editor {
+    strong {
+      font-weight: 500;
+    }
+
+    p {
+      @fontsize base(0.95);
+      margin-bottom: 22px;
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+
+      a {
+        border-bottom: 2px solid theme(colors.peachDarkest);
+        padding-bottom: 3px;
+      }
+    }
+
+    ul {
+      list-style-type: disc;
+      padding-left: 20px;
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+
+    ol {
+      list-style-type: decimal;
+      padding-left: 20px;
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+
+    &.lead, &.lede {
+      p {
+        @fontsize xl;
+      }
+    }
+
+    blockquote {
+      margin-top: 35px;
+      margin-bottom: 35px;
+      padding-left: 40px;
+      border-left: 2px solid black;
+    }
+
+    h2 {
+      @fontsize xl;
+      line-height: 1.05;
+      font-weight: 500;
+      margin-top: 0;
+      margin-bottom: 25px;
+    }
+
+    h3 {
+      @fontsize base;
+      font-weight: 500;
+      margin-top: 0;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+  }
+
   .villain-text-editor-menubar {
     margin-bottom: 10px;
     transition: opacity 1s ease;

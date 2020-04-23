@@ -754,52 +754,6 @@ export default {
   font-style: italic;
 }
 
-.villain-text-editor {
-  strong {
-    font-weight: 500;
-  }
-
-  p {
-    @fontsize base(0.95);
-    margin-bottom: 22px;
-
-    &:last-of-type {
-      margin-bottom: 0;
-    }
-
-    a {
-      border-bottom: 2px solid theme(colors.peachDarkest);
-      padding-bottom: 3px;
-    }
-  }
-
-  ul {
-    list-style-type: disc;
-    padding-left: 20px;
-  }
-
-  &.lead, &.lede {
-    p {
-      @fontsize xl;
-    }
-  }
-
-  h2 {
-    @fontsize lg;
-    font-weight: 500;
-    margin-top: 0;
-    margin-bottom: 25px;
-  }
-
-  h3 {
-    @fontsize sm;
-    font-weight: 500;
-    margin-top: 0;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-  }
-}
-
 .villain-svg-input-wrapper {
   width: 100%;
 }

@@ -218,6 +218,16 @@
           v-model="currentTemplate.data.help_text"
           class="form-control float-left d-inline"
           type="input">
+        <label class="float-left">Multi</label>
+        <input
+          v-model="currentTemplate.data.multi"
+          class="form-control float-left d-inline"
+          type="checkbox">
+        <label class="float-left">Wrapper</label>
+        <textarea
+          v-model="currentTemplate.data.wrapper"
+          class="form-control float-left d-inline"
+          rows="3"></textarea>
       </div>
       <div
         v-if="showBlockPicker"
@@ -636,7 +646,7 @@ export default {
     "footer footer";
 
   grid-template-columns: minmax(0, 1fr) 250px;
-  grid-template-rows: 160px 1fr auto auto 50px;
+  grid-template-rows: min-content 1fr auto auto 50px;
   grid-gap: 10px;
   height: 100%;
 

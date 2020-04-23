@@ -16,8 +16,7 @@
           :template-mode="templateMode"
           :json="innerValue"
           :visible-blocks="visibleBlocks"
-          :extra-headers="{'authorization': `Bearer ${token}`}"
-          @input="$emit('input', $event)" />
+          :extra-headers="{'authorization': `Bearer ${token}`}" />
       </template>
     </KFieldBase>
   </div>
@@ -102,12 +101,6 @@ export default {
       }
     }
   },
-
-  // watch: {
-  //   value (value) {
-  //     this.innerValue = value
-  //   }
-  // },
 
   created () {
     this.innerValue = this.value

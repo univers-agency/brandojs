@@ -287,7 +287,7 @@ export default {
     },
 
     uploadURL () {
-      return `${this.urls.base}upload/${this.seriesSlug}`
+      return `${this.urls.base}upload`
     }
   },
 
@@ -428,6 +428,7 @@ export default {
 
       const formData = new FormData()
       formData.append('image', f)
+      formData.append('slug', this.seriesSlug)
       formData.append('name', f.name)
       formData.append('uid', this.createUID())
 

@@ -17,20 +17,19 @@
           label="Språk" />
 
         <KInput
-          v-model="page.key"
-          :monospace="true"
-          rules="required"
-          name="page[key]"
-          type="text"
-          label="Nøkkel"
-          placeholder="Nøkkel" />
-
-        <KInput
           v-model="page.title"
           label="Tittel"
           rules="required"
           placeholder="Tittel"
           name="page[title]" />
+
+        <KInputTextarea
+          v-model="page.meta_description"
+          :rows="5"
+          name="page[meta_description]"
+          type="text"
+          label="META beskrivelse"
+          help-text="(for søkemotorer)" />
       </div>
       <div class="half">
         <KInputSelect
@@ -46,21 +45,19 @@
         </KInputSelect>
 
         <KInput
+          v-model="page.key"
+          rules="required"
+          name="page[key]"
+          type="text"
+          label="Nøkkel"
+          placeholder="Nøkkel" />
+
+        <KInput
           v-model="page.css_classes"
           name="page[css_classes]"
           type="text"
           label="Ekstra CSS klasser"
           placeholder="Ekstra CSS klasser" />
-
-        <KInputTextarea
-          v-model="page.meta_description"
-          :rows="3"
-          name="page[meta_description]"
-          type="text"
-          label="META beskrivelse"
-          help-text="(for søkemotorer)"
-          data-vv-name="page[meta_description]"
-          data-vv-value-path="innerValue" />
 
         <KInputImage
           v-model="page.meta_image"
