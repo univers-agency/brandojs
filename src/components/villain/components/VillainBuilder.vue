@@ -562,6 +562,8 @@ export default {
           }
         }
         this.resetVar()
+      } else {
+        console.error('==> VillainBuilder/saveVar — var not found', this.currentVarName, this.currentTemplate.data.vars)
       }
     },
 
@@ -607,6 +609,7 @@ export default {
     selectVar (v) {
       this.currentVar = v
       this.prevVarName = this.currentVar
+      this.currentVarName = this.currentVar
 
       this.varMirror.setValue(JSON.stringify(this.currentTemplate.data.vars[this.currentVar], null, 2))
       this.varMirror.refresh()

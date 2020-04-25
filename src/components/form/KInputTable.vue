@@ -22,7 +22,7 @@
             class="action">
             <CircleButton
               class="delete"
-              @click.self.stop.prevent="del(entry)">
+              @click.native.stop.prevent="del(entry)">
               <FontAwesomeIcon
                 icon="minus"
                 size="xs" />

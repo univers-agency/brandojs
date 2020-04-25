@@ -31,7 +31,23 @@ export default [
   },
 
   {
-    name: 'Bilde',
+    name: 'Media',
+    icon: 'fa-photo-video',
+    component: 'Media',
+    dataTemplate: {
+      type: null,
+      available_components: [
+        { component: 'Picture', dataTemplate: {} },
+        { component: 'Video', dataTemplate: {} },
+        { component: 'Slideshow', dataTemplate: {} },
+        { component: 'Svg', dataTemplate: {} }
+      ],
+      data: null
+    }
+  },
+
+  {
+    name: 'Bilde — simpel',
     icon: 'fa-image',
     component: 'Image',
     dataTemplate: {
@@ -46,7 +62,7 @@ export default [
   },
 
   {
-    name: 'Bildekarusell',
+    name: 'Galleri/slider',
     icon: 'fa-images',
     component: 'Slideshow',
     dataTemplate: {
@@ -57,7 +73,7 @@ export default [
   },
 
   {
-    name: 'Bildefigur (avansert)',
+    name: 'Bilde',
     icon: 'fa-portrait',
     component: 'Picture',
     dataTemplate: {

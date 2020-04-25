@@ -231,9 +231,9 @@ export default {
           width: 100%;
 
           svg {
-            width: 100%;
+            width: 50%;
+            margin-left: 25%;
             height: 100%;
-            padding: 1rem 3rem;
             pointer-events: none;
           }
         }

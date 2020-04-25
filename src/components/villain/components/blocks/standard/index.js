@@ -9,6 +9,7 @@ import HtmlBlock from './HtmlBlock'
 import ImageBlock from './ImageBlock'
 import MapBlock from './MapBlock'
 import MarkdownBlock from './MarkdownBlock'
+import MediaBlock from './MediaBlock'
 import PictureBlock from './PictureBlock'
 import SlideshowBlock from './SlideshowBlock'
 import SvgBlock from './SvgBlock'
@@ -28,6 +29,7 @@ export default {
   ImageBlock,
   MapBlock,
   MarkdownBlock,
+  MediaBlock,
   PictureBlock,
   SlideshowBlock,
   SvgBlock,

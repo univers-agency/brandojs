@@ -327,6 +327,12 @@ export default {
     box-shadow: none;
   }
 
+  .helpful-actions {
+    margin-top: 25px;
+    opacity: 0;
+    transition: opacity 300ms ease;
+  }
+
   &.villain-drag-element {
     background: #fff;
     box-shadow: 3px 3px #f00 inset, -3px -3px #f00 inset ;
@@ -362,6 +368,10 @@ export default {
     border: 1px solid theme(colors.villain.main);
 
     > .villain-block-actions {
+      opacity: 1;
+    }
+
+    .helpful-actions {
       opacity: 1;
     }
 

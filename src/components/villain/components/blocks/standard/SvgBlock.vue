@@ -1,5 +1,6 @@
 <template>
   <Block
+    ref="block"
     :block="block"
     :parent="parent"
     @add="$emit('add', $event)"
@@ -9,11 +10,20 @@
     <div class="villain-block-description">
       SVG
     </div>
-    <div
-      ref="svg"
-      class="villain-svg-output"
-      v-html="block.data.code">
+    <div class="villain-block-svg">
+      <div
+        ref="svg"
+        class="villain-svg-output"
+        v-html="block.data.code">
+      </div>
+      <div class="helpful-actions">
+        <ButtonTiny
+          @click="$refs.block.openConfig()">
+          Konfigurér SVG
+        </ButtonTiny>
+      </div>
     </div>
+
     <template slot="config">
       <div class="form-group mb-2">
         <label>SVG kode</label>
@@ -101,3 +111,19 @@ export default {
   }
 }
 </script>
+
+<style lang="postcss" scoped>
+  .villain-block-svg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .villain-svg-output {
+    >>> svg {
+      width: 100%;
+      height: 100%;
+      max-width: 500px;
+    }
+  }
+</style>

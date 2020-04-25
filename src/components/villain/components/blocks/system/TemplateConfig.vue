@@ -1,6 +1,6 @@
 <template>
   <div class="template-config">
-    <ButtonTiny>
+    <ButtonTiny right>
       Oppsett
     </ButtonTiny>
   </div>

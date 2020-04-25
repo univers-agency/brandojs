@@ -10,10 +10,18 @@
       Bildefigur
     </div>
     <div class="villain-block-picture">
-      <img
-        v-if="previewUrl"
-        :src="previewUrl"
-        class="img-fluid">
+      <template v-if="previewUrl">
+        <img
+          v-if="previewUrl"
+          :src="previewUrl"
+          class="img-fluid">
+        <div class="helpful-actions">
+          <ButtonTiny
+            @click="$refs.block.openConfig()">
+            Konfigurér bilde
+          </ButtonTiny>
+        </div>
+      </template>
       <div
         v-else
         class="villain-block-image-empty">
@@ -452,6 +460,7 @@ export default {
     min-width: auto;
     max-width: 40vw;
     margin: 0 auto;
+    text-align: center;
   }
 
   .preview-image {
@@ -483,4 +492,5 @@ export default {
   .drop {
     margin-bottom: 20px;
   }
+
 </style>

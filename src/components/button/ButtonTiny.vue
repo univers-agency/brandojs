@@ -1,16 +1,17 @@
 <template>
   <router-link
     v-if="to"
-    class="small"
-    :class="{static: position === 'static'}"
+    class="tiny"
+    :class="{static: position === 'static', right}"
     :to="to">
     <slot></slot>
   </router-link>
   <button
     v-else
     type="button"
-    :class="{static: position === 'static'}"
-    class="small">
+    :class="{static: position === 'static', right}"
+    class="tiny"
+    @click.prevent="$emit('click')">
     <slot></slot>
   </button>
 </template>
@@ -24,16 +25,20 @@ export default {
     position: {
       type: String,
       default: 'absolute'
+    },
+
+    right: {
+      type: Boolean,
+      default: false
     }
   }
 }
 </script>
 
 <style lang="postcss" scoped>
-  button.small, a.small {
+  button.tiny, a.tiny {
     @font mono;
     border-radius: 5px;
-    margin-left: auto;
     border: 1px solid theme(colors.dark);
     color: theme(colors.dark);
     font-size: 11px;
@@ -43,6 +48,10 @@ export default {
     padding: 4px 7px 4px;
     margin-top: -2px;
     transition: background-color 0.35s ease, color 0.35s ease;
+
+    &.right {
+      margin-left: auto;
+    }
 
     &.static {
       position: static;

@@ -11,7 +11,7 @@ module.exports = {
     },
 
     colors: () => ({
-      dark: '#000080',
+      dark: '#052752',
       input: '#FAEFEA',
       peach: '#FCF5F3',
       peachLighter: '#fffbfa',

@@ -60,8 +60,6 @@
               label="Verdi" />
           </td>
         </template>
-        <template v-slot:new="">
-        </template>
       </KInputTable>
 
       <div class="d-flex justify-content-center">

@@ -25,7 +25,6 @@ export default {
     },
 
     val: {
-      type: Boolean,
       required: true
     },
 

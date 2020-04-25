@@ -33,7 +33,7 @@
             @update="updateBlock($event)" />
           <div class="entry-toolbar">
             <div>
-              <ButtonTiny>
+              <ButtonTiny right>
                 Slett
               </ButtonTiny>
             </div>
@@ -321,6 +321,10 @@ export default {
 
       if (Object.prototype.hasOwnProperty.call(this.block.data, 'code')) {
         this.$delete(this.block.data, 'code')
+      }
+
+      if (Object.prototype.hasOwnProperty.call(this.block.data, 'wrapper')) {
+        this.$delete(this.block.data, 'wrapper')
       }
 
       if (Object.prototype.hasOwnProperty.call(this.block.data, 'class')) {
