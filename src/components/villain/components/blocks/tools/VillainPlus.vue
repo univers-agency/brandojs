@@ -55,9 +55,10 @@
             </div>
 
             <div
+              v-if="showTemplates"
               class="villain-editor-plus-available-block"
               @mouseover="setHover('moduler')"
-              @click="showTemplates">
+              @click="revealTemplates">
               <div>
                 <i class="fa fa-fw fa-window-restore" />
               </div>
@@ -190,7 +191,8 @@ export default {
 
   inject: [
     'available',
-    'vTemplateMode'
+    'vTemplateMode',
+    'showTemplates'
   ],
 
   created () {
@@ -213,7 +215,7 @@ export default {
       this.hoveredBlock = name
     },
 
-    showTemplates () {
+    revealTemplates () {
       this.showingTemplates = !this.showingTemplates
       if (this.showingTemplates) {
         setTimeout(() => {
@@ -258,7 +260,7 @@ export default {
       }
 
       if (this.vTemplateMode) {
-        this.showTemplates()
+        this.revealTemplates()
       }
     },
 

@@ -15,6 +15,7 @@
           :templates="templates"
           :template-mode="templateMode"
           :json="innerValue"
+          :show-templates="showTemplates"
           :visible-blocks="visibleBlocks"
           :extra-headers="{'authorization': `Bearer ${token}`}" />
       </template>
@@ -66,6 +67,11 @@ export default {
     name: {
       type: String,
       required: true
+    },
+
+    showTemplates: {
+      type: Boolean,
+      default: true
     },
 
     templateMode: {

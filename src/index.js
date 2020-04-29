@@ -69,6 +69,8 @@ export default {
     Vue.use(abilitiesPlugin, ability)
     Vue.use(PortalVue)
 
+    // Vue.config.performance = true
+
     // register all nav components
     for (const component in NavigationComponents) {
       Vue.component(component, NavigationComponents[component])

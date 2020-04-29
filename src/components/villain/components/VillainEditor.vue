@@ -214,6 +214,11 @@ export default {
       default: () => []
     },
 
+    showTemplates: {
+      type: Boolean,
+      default: true
+    },
+
     visibleBlocks: {
       type: Array,
       default: () => []
@@ -276,6 +281,7 @@ export default {
       enumerable: true,
       get: () => this.availableBlocks
     })
+
     Object.defineProperty(available, 'templates', {
       enumerable: true,
       get: () => this.availableTemplates
@@ -315,7 +321,8 @@ export default {
       available,
       headers,
       urls,
-      refresh: this.refresh
+      refresh: this.refresh,
+      showTemplates: this.showTemplates
     }
   },
 
