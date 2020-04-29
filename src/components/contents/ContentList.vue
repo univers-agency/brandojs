@@ -74,15 +74,16 @@
         animation: 250,
         easing: 'cubic-bezier(1, 0, 0, 1)',
         onAdd: onAdd,
+        onStart: onSortStart,
+        onEnd: onSortEnd,
         store: {
           get: getOrder,
           set: storeOrder
         }
       }"
       appear
-      mode="out-in"
-      name="fadefast"
       tag="div"
+      :css="false"
       :data-sort-src="sortParent"
       class="sort-container">
       <div
@@ -93,6 +94,8 @@
         class="list-row">
         <div
           class="main-content"
+          @mousedown="cacheSelected($event, entry[entryKey])"
+          @mouseup="clearCachedRow()"
           @mouseover="selectIfMousePressed($event, entry[entryKey])"
           @click.stop="select(entry[entryKey])">
           <template v-if="sortable">
@@ -137,7 +140,7 @@
 </template>
 
 <script>
-// import { gsap } from 'gsap'
+import { gsap } from 'gsap'
 import debounce from 'lodash.debounce'
 
 export default {
@@ -211,7 +214,9 @@ export default {
     return {
       filters: {},
       selectedRows: [],
-      trashActive: false
+      trashActive: false,
+      sorting: false,
+      cachedRowForSelection: null
     }
   },
 
@@ -230,6 +235,7 @@ export default {
   },
 
   created () {
+    console.log('<ContentList /> created')
     if (this.filterKeys.length) {
       this.filters[this.filterKeys[0]] = ''
     }
@@ -256,7 +262,6 @@ export default {
       }
 
       const idx = this.filterKeys.findIndex(k => k === key)
-      console.log(idx)
       if (idx !== this.filterKeys.length - 1) {
         delete this.filters[key]
         this.filters = {
@@ -281,6 +286,14 @@ export default {
       this.selectedRows = []
     },
 
+    cacheSelected (e, id) {
+      this.cachedRowForSelection = id
+    },
+
+    clearCachedRow () {
+      this.cachedRowForSelection = null
+    },
+
     select (id) {
       if (!this.selectable) {
         return
@@ -296,7 +309,14 @@ export default {
     },
 
     selectIfMousePressed (e, id) {
-      if ((e.buttons === 1) && (e.fromElement.className === e.toElement.className)) {
+      if (this.sorting) {
+        return
+      }
+      if ((e.buttons === 1 && e.shiftKey === true) && (e.fromElement.className === e.toElement.className)) {
+        if (this.cachedRowForSelection) {
+          this.selectedRows.push(this.cachedRowForSelection)
+          this.clearCachedRow()
+        }
         this.select(id)
       }
     },
@@ -315,9 +335,12 @@ export default {
       this.$emit('move', moveEvent)
     },
 
-    enter () {
-      // const rows = this.$el.querySelectorAll('.list-row')
-      // gsap.to(rows, { duration: 0.5, autoAlpha: 1, x: 0, stagger: 0.05 })
+    onSortStart (e) {
+      this.sorting = true
+    },
+
+    onSortEnd (e) {
+      this.sorting = false
     },
 
     getOrder () {
@@ -326,7 +349,6 @@ export default {
 
     storeOrder (sortable) {
       this.sortedArray = sortable.toArray().map(Number)
-      console.log(this.sortedArray)
       this.$emit('sort', this.sortedArray)
     }
   }
