@@ -27,9 +27,11 @@
       </div>
     </div>
     <div class="villain-editor-toolbar">
-      <div class="villain-editor-instructions">
-        <i class="fa mr-2 fa-info-circle" />
-        Trykk på "+" under for å legge til en innholdsblokk
+      <div
+        class="villain-editor-instructions">
+        <template v-if="showPlus">
+          Trykk på "+" under for å legge til en innholdsblokk
+        </template>
       </div>
       <div class="villain-editor-controls float-right">
         <div class="villain-editor-autosave-status">
@@ -164,6 +166,11 @@ export default {
       default: '[]'
     },
 
+    maxBlocks: {
+      type: Number,
+      default: 0
+    },
+
     templateMode: {
       type: Boolean,
       default: false
@@ -234,6 +241,7 @@ export default {
     return {
       autosaveEntries: [],
       autosaveStatus: '',
+      blockCount: 0,
       blocks: [],
       lastAutosavedAt: null,
       needsRefresh: false,
@@ -256,6 +264,16 @@ export default {
       }
     },
 
+    showPlus () {
+      if (this.maxBlocks === 0) {
+        return true
+      }
+      if (this.maxBlocks > 0 && this.blockCount === this.maxBlocks) {
+        return false
+      }
+      return true
+    },
+
     availableBlocks () {
       let availableBlocks = STANDARD_BLOCKS
 
@@ -273,9 +291,20 @@ export default {
   },
 
   provide () {
+    const state = {}
     const available = {}
     const headers = {}
     const urls = {}
+
+    Object.defineProperty(state, 'showPlus', {
+      enumerable: true,
+      get: () => this.showPlus
+    })
+
+    Object.defineProperty(state, 'showTemplates', {
+      enumerable: true,
+      get: () => this.showTemplates
+    })
 
     Object.defineProperty(available, 'blocks', {
       enumerable: true,
@@ -321,8 +350,8 @@ export default {
       available,
       headers,
       urls,
-      refresh: this.refresh,
-      showTemplates: this.showTemplates
+      state,
+      refresh: this.refresh
     }
   },
 
@@ -332,6 +361,7 @@ export default {
         this.lastEdit = getTimestamp()
         const bx = cloneDeep(val)
         if (bx.length) {
+          this.blockCount = bx.length
           this.$emit('input', JSON.stringify(bx.map(b => this.stripMeta(b)), null, 2))
         } else {
           this.$emit('input', null)
@@ -360,6 +390,7 @@ export default {
         this.blocks = JSON.parse(this.json)
       }
       this.blocks = this.addUIDs()
+      this.blockCount = this.blocks.length
     }
 
     // validate each block!

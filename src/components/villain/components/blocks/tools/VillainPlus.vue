@@ -1,6 +1,7 @@
 <template>
   <transition @appear="appear">
     <div
+      v-show="state.showPlus"
       ref="plus"
       class="villain-editor-plus">
       <div
@@ -55,7 +56,7 @@
             </div>
 
             <div
-              v-if="showTemplates"
+              v-if="state.showTemplates"
               class="villain-editor-plus-available-block"
               @mouseover="setHover('moduler')"
               @click="revealTemplates">
@@ -192,7 +193,7 @@ export default {
   inject: [
     'available',
     'vTemplateMode',
-    'showTemplates'
+    'state'
   ],
 
   created () {

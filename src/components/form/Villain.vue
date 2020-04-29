@@ -14,6 +14,7 @@
           v-model="innerValue"
           :templates="templates"
           :template-mode="templateMode"
+          :max-blocks="maxBlocks"
           :json="innerValue"
           :show-templates="showTemplates"
           :visible-blocks="visibleBlocks"
@@ -46,6 +47,11 @@ export default {
     errorText: {
       type: String,
       default: ''
+    },
+
+    maxBlocks: {
+      type: Number,
+      default: 0
     },
 
     label: {

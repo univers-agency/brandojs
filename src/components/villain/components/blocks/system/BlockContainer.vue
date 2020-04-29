@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { TweenMax, Power3 } from 'gsap'
+import { gsap } from 'gsap'
 export default {
   name: 'BlockContainer',
 
@@ -64,28 +64,30 @@ export default {
 
   methods: {
     enter (el, done) {
-      TweenMax.fromTo(el, 1,
+      gsap.fromTo(el,
         {
           opacity: 0,
           x: -5
         },
         {
+          duration: 0.45,
           opacity: 1,
           x: 0,
-          delay: 0.2 * el.dataset.index,
           onComplete: () => {
-            TweenMax.set(el, { clearProps: 'transform' })
+            gsap.set(el, { clearProps: 'transform' })
             done()
           }
         })
     },
 
     leave (el, done) {
-      TweenMax.to(el, 0.5, {
+      gsap.to(el, {
+
+        duration: 0.45,
         opacity: 0,
         x: -5,
         onComplete: () => {
-          TweenMax.to(el, 0.4, { height: 0, onComplete: done, ease: Power3.easeIn })
+          gsap.to(el, { duration: 0.4, height: 0, onComplete: done, ease: 'power3.in' })
         }
       })
     }
