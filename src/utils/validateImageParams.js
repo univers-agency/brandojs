@@ -4,7 +4,6 @@ export default function validateImageParams (params, imageParams) {
   console.log('==> validateImageParams: params before', params)
   for (let i = 0; i < imageParams.length; i++) {
     if (!params.hasOwnProperty(imageParams[i])) {
-      console.log('doesnt have it.')
       continue
     }
     if (!(params[imageParams[i]] instanceof File) && params[imageParams[i]] !== null) {

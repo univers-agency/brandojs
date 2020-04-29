@@ -47,9 +47,10 @@ export default [
   },
 
   {
-    name: 'Bilde — simpel',
+    name: 'Bilde — legacy',
     icon: 'fa-image',
     component: 'Image',
+    hide: true,
     dataTemplate: {
       url: '',
       sizes: null,
@@ -91,6 +92,18 @@ export default [
   },
 
   {
+    name: 'Video',
+    icon: 'fa-video',
+    component: 'Video',
+    dataTemplate: {
+      source: 'youtube',
+      remote_id: '',
+      width: null,
+      height: null
+    }
+  },
+
+  {
     name: 'Datakilde',
     icon: 'fa-database',
     component: 'Datasource',
@@ -110,7 +123,7 @@ export default [
     icon: 'fa-code',
     component: 'Svg',
     dataTemplate: {
-      code: 'Lim inn svg tag her',
+      code: '',
       class: ''
     }
   },
@@ -121,18 +134,6 @@ export default [
     component: 'Datatable',
     dataTemplate: {
       rows: []
-    }
-  },
-
-  {
-    name: 'Video',
-    icon: 'fa-video',
-    component: 'Video',
-    dataTemplate: {
-      source: 'youtube',
-      remote_id: '',
-      width: null,
-      height: null
     }
   },
 

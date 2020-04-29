@@ -208,33 +208,7 @@ export default {
     },
 
     addImageToSeries (image) {
-      const store = this.$apolloProvider.defaultClient.store.cache
-
-      if (!this.inForm) {
-        // check if we have a category with this series
-        const query = {
-          query: GET_IMAGE_CATEGORY,
-          variables: {
-            categoryId: parseInt(this.imageSeries.image_category_id)
-          }
-        }
-
-        try {
-          const data = store.readQuery(query)
-          const series = data.imageCategory.image_series.find(s => parseInt(s.id) === parseInt(image.image_series_id))
-          series.images.unshift(image)
-
-          store.writeQuery({
-            ...query,
-            data
-          })
-        } catch (err) {
-          console.log(err)
-          // not in store
-        }
-      } else {
-        this.imageSeries.images.push(image)
-      }
+      this.imageSeries.images.push(image)
     },
 
     deleteSeries (series) {

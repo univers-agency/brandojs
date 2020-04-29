@@ -1,38 +1,40 @@
 <template>
-  <div
-    ref="wrapper"
-    class="kmodal">
+  <portal to="modals">
     <div
-      ref="bg"
-      class="kmodal__bg"></div>
-    <div
-      ref="modal"
-      class="kmodal__modal">
-      <div class="kmodal__modal__header">
-        <slot name="header"></slot>
-      </div>
+      ref="wrapper"
+      class="kmodal">
+      <div
+        ref="bg"
+        class="kmodal__bg"></div>
+      <div
+        ref="modal"
+        class="kmodal__modal">
+        <div class="kmodal__modal__header">
+          <slot name="header"></slot>
+        </div>
 
-      <div class="kmodal__modal__content">
-        <slot></slot>
-      </div>
+        <div class="kmodal__modal__content">
+          <slot></slot>
+        </div>
 
-      <div class="kmodal__modal__footer">
-        <slot name="footer">
-          <ButtonPrimary
-            v-if="hasOKListener"
-            @click="$emit('ok')">
-            {{ okText }}
-          </ButtonPrimary>
+        <div class="kmodal__modal__footer">
+          <slot name="footer">
+            <ButtonPrimary
+              v-if="hasOKListener"
+              @click="$emit('ok')">
+              {{ okText }}
+            </ButtonPrimary>
 
-          <ButtonSecondary
-            v-if="hasCancelListener"
-            @click="$emit('cancel')">
-            {{ cancelText }}
-          </ButtonSecondary>
-        </slot>
+            <ButtonSecondary
+              v-if="hasCancelListener"
+              @click="$emit('cancel')">
+              {{ cancelText }}
+            </ButtonSecondary>
+          </slot>
+        </div>
       </div>
     </div>
-  </div>
+  </portal>
 </template>
 
 <script>
@@ -64,14 +66,17 @@ export default {
   },
 
   mounted () {
-    const timeline = gsap.timeline()
+    this.$nextTick().then(
+      this.$nextTick(() => {
+        const timeline = gsap.timeline()
+        gsap.set(this.$refs.modal, { y: 40 })
 
-    gsap.set(this.$refs.modal, { y: 40 })
-
-    timeline
-      .to(this.$refs.bg, { opacity: 0.8, duration: 0.25, ease: 'sine.in' })
-      .to(this.$refs.modal, { opacity: 1, duration: 0.25, ease: 'none' }, '-=0.1')
-      .to(this.$refs.modal, { y: 0, duration: 0.25, ease: 'circ.out' }, '<')
+        timeline
+          .to(this.$refs.bg, { opacity: 0.8, duration: 0.25, ease: 'sine.in' })
+          .to(this.$refs.modal, { opacity: 1, duration: 0.25, ease: 'none' }, '-=0.1')
+          .to(this.$refs.modal, { y: 0, duration: 0.25, ease: 'circ.out' }, '<')
+      })
+    )
   },
 
   methods: {
@@ -142,6 +147,10 @@ export default {
       font-size: 18px;
     }
     & >>> input::-moz-placeholder {
+      font-size: 18px;
+    }
+
+    & >>> .btn-secondary {
       font-size: 18px;
     }
 

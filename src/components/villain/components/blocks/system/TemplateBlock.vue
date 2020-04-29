@@ -8,13 +8,24 @@
     <div class="villain-template-description">
       {{ getBlockName }}{{ block.data.multi ? ' — Multi' : '' }}
     </div>
-    <template
-      v-if="!block.data.multi">
+    <div
+      v-if="!block.data.multi"
+      class="template-entry">
       <component
         :is="buildWrapper({refs: block.data.refs, vars: block.data.vars})"
         @delete="deleteBlock($event)"
         @update="updateBlock($event)" />
-    </template>
+      <div class="entry-toolbar">
+        <div class="helpful-actions">
+          <TemplateConfig
+            :templateId="block.data.id"
+            :refs="block.data.refs"
+            :vars="block.data.vars"
+            @updateVars="updateVars"
+            @updateRefs="updateRefs" />
+        </div>
+      </div>
+    </div>
     <template v-else>
       <transition-group
         v-if="block.data.entries"
@@ -32,12 +43,20 @@
             @delete="deleteBlock($event)"
             @update="updateBlock($event)" />
           <div class="entry-toolbar">
-            <div>
-              <ButtonTiny right>
+            <div class="helpful-actions">
+              <ButtonTiny
+                right
+                @click="deleteEntry(entry)">
                 Slett
               </ButtonTiny>
+              <TemplateConfig
+                :templateId="block.data.id"
+                :entryId="entry.id"
+                :refs="entry.refs"
+                :vars="entry.vars"
+                @updateVars="updateVars"
+                @updateRefs="updateRefs" />
             </div>
-            <TemplateConfig :entry="entry" />
           </div>
         </div>
       </transition-group>
@@ -50,54 +69,6 @@
         Legg til nytt objekt i &laquo;{{ getBlockName }}&raquo;
       </div>
     </div>
-
-    <!-- <template slot="config">
-      <div>
-        <label>Blokkvariabler</label>
-        <button
-          class="btn-secondary"
-          type="button"
-          @click.prevent="refetchVars">
-          Hent variabler på nytt
-        </button>
-      </div>
-
-      <div
-        v-for="(value, key) in block.data.vars"
-        :key="key">
-        <div class="field-wrapper">
-          <div class="label-wrapper">
-            <label class="control-label">
-              {{ value.label }}
-            </label>
-          </div>
-          <input
-            :name="`vars[${key}]`"
-            :value="localVars[key].value"
-            type="text"
-            @input="localVars[key].value = $event.target.value">
-        </div>
-      </div>
-
-      <button
-        class="btn-secondary"
-        type="button"
-        @click.prevent="updateVars">
-        Lagre nye variabelverdier
-      </button>
-
-      <div class="form-group">
-        <label>Refererte blokker [{{ block.data.refs.length }}]</label>
-        <button
-          v-for="(ref, idx) in block.data.refs"
-          :key="idx"
-          type="button"
-          class="btn-secondary"
-          @click="replaceRefWithSource(ref)">
-          {{ ref.name }} — Erstatt med referanseblokk
-        </button>
-      </div>
-    </template> -->
   </Block>
 </template>
 
@@ -174,7 +145,6 @@ export default {
   created () {
     console.debug('<TemplateBlock /> created')
     this.deleteProps()
-    this.setLocalVars()
 
     // if this is a multi but refs is not an array of arrays
     // we convert.
@@ -213,6 +183,10 @@ export default {
       }
     },
 
+    deleteEntry (entry) {
+      this.$delete(this.block.data.entries, this.block.data.entries.indexOf(entry))
+    },
+
     replaceContent ({ refs, vars }) {
       console.log('=> replaceContent')
       // replace all variables
@@ -234,6 +208,29 @@ export default {
       return this.findVar(varName)
     },
 
+    updateVars ({ newVars, entryId }) {
+      if (entryId) {
+        const entry = this.findEntry(entryId)
+        if (entry) {
+          this.$set(entry, 'vars', newVars)
+        }
+      } else {
+        console.log('==> updateVars', newVars)
+        this.$set(this.block.data, 'vars', newVars)
+      }
+    },
+
+    updateRefs ({ newRefs, entryId }) {
+      if (entryId) {
+        const entry = this.findEntry(entryId)
+        if (entry) {
+          this.$set(entry, 'refs', newRefs)
+        }
+      } else {
+        this.$set(this.block.data, 'refs', newRefs)
+      }
+    },
+
     replaceRefs (srcCode, refs) {
       console.log('=> replaceRefs')
       const replacedRefsCode = srcCode.replace(/%{(\w+)}/g, (exp, refName) => {
@@ -246,8 +243,6 @@ export default {
     replaceRef (exp, refName, refs) {
       const ref = this.findRef(refName, refs)
 
-      console.log(ref, refs, refName)
-
       if (ref.deleted) {
         return ''
       }
@@ -256,6 +251,10 @@ export default {
 
     findRef (refName, refs) {
       return refs.find(r => r.name === refName)
+    },
+
+    findEntry (entryId) {
+      return this.block.data.entries.find(e => e.id === entryId)
     },
 
     addMultiEntry () {
@@ -267,44 +266,6 @@ export default {
           vars: cloneDeep(foundTemplate.data.vars)
         }
       ])
-    },
-
-    setLocalVars () {
-      console.log('=> setLocalVars()')
-      this.localVars = cloneDeep(this.block.data.vars)
-    },
-
-    updateVars () {
-      console.log('=> updateVars()')
-      console.log(this.localVars)
-      this.$set(this.block.data, 'vars', cloneDeep(this.localVars))
-      this.refresh(false)
-    },
-
-    replaceRefWithSource (ref) {
-      console.log('=> replaceRefWithSource')
-      const foundTemplate = this.available.templates.find(t => t.data.id === this.block.data.id)
-      const foundRef = foundTemplate.data.refs.find(r => r.name === ref.name)
-
-      // replace our ref with foundRef
-      const refIdx = this.block.data.refs.indexOf(ref)
-
-      const newRefs = [
-        ...this.block.data.refs.slice(0, refIdx),
-        foundRef,
-        ...this.block.data.refs.slice(refIdx + 1)
-      ]
-
-      this.$set(this.block.data, 'refs', newRefs)
-      this.refresh(false)
-    },
-
-    refetchVars () {
-      console.log('=> refetchVars')
-      const foundTemplate = this.available.templates.find(t => t.data.id === this.block.data.id)
-      this.$set(this.block.data, 'vars', foundTemplate.data.vars)
-      this.refresh(false)
-      this.setLocalVars()
     },
 
     /** remove props we don't want to store */
@@ -477,6 +438,7 @@ export default {
   .entry-toolbar {
     display: flex;
     justify-content: flex-end;
+    align-items: baseline;
     padding-left: 1rem;
     padding-right: 1rem;
 

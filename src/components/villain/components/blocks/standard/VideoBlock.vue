@@ -12,25 +12,43 @@
       Video
     </div>
     <div class="villain-block-video">
-      <div
+      <template
         v-if="html && block.data.source !== 'file'"
-        ref="preview"
-        class="villain-block-video-content"
-        v-html="html" />
-      <div
-        v-else-if="html && block.data.source === 'file'"
-        ref="preview"
-        class="villain-block-video-file-content"
-        v-html="html" />
+        ref="preview">
+        <div
+          class="villain-block-video-content"
+          v-html="html" />
+        <div class="helpful-actions">
+          <ButtonTiny
+            @click="$refs.block.openConfig()">
+            Konfigurér video
+          </ButtonTiny>
+        </div>
+      </template>
+      <template
+        v-else-if="html && block.data.source === 'file'">
+        <div
+          ref="preview"
+          class="villain-block-video-file-content"
+          v-html="html" />
+        <div class="helpful-actions">
+          <ButtonTiny
+            @click="$refs.block.openConfig()">
+            Konfigurér video
+          </ButtonTiny>
+        </div>
+      </template>
       <div
         v-else
         class="villain-block-image-empty">
-        <i class="fa fa-fw fa-video"></i>
+        <FontAwesomeIcon
+          :icon="['fab', 'youtube']"
+          size="6x" />
         <div class="actions">
-          <ButtonSecondary
+          <ButtonTiny
             @click="$refs.block.openConfig()">
             Konfigurér videoblokk
-          </ButtonSecondary>
+          </ButtonTiny>
         </div>
       </div>
     </div>
@@ -202,10 +220,8 @@ export default {
     justify-content: center;
 
     svg {
-      width: 30%;
-      height: 30%;
+      height: auto;
       max-width: 250px;
-      margin-bottom: 25px;
     }
   }
 

@@ -12,7 +12,7 @@ import VueClickOutside from 'v-click-outside'
 import { createProvider } from './vue-apollo'
 import iziToast from 'izitoast'
 import VuePhoenixSocket from './utils/socket'
-
+import PortalVue from 'portal-vue'
 import { ValidationProvider, ValidationObserver, extend, configure } from 'vee-validate'
 import { required, email, max, confirmed, min } from 'vee-validate/dist/rules'
 
@@ -67,6 +67,7 @@ export default {
     Vue.use(VueShortkey)
     Vue.use(VueClickOutside)
     Vue.use(abilitiesPlugin, ability)
+    Vue.use(PortalVue)
 
     // register all nav components
     for (const component in NavigationComponents) {

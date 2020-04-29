@@ -33,7 +33,7 @@
           <template v-if="dragOver">
             <FontAwesomeIcon
               icon="cloud-upload-alt"
-              size="8x"
+              size="6x"
               fixed-width />
           </template>
           <template
@@ -42,23 +42,22 @@
               <FontAwesomeIcon
                 icon="circle-notch"
                 spin
-                size="8x"
+                size="6x"
                 fixed-width />
             </template>
             <template v-else>
               <FontAwesomeIcon
                 icon="image"
-                size="8x"
-                fixed-width />
+                size="6x" />
             </template>
           </template>
         </drop>
 
         <div class="actions">
-          <ButtonSecondary
+          <ButtonTiny
             @click="$refs.block.openConfig()">
             Konfigurér bildeblokk
-          </ButtonSecondary>
+          </ButtonTiny>
         </div>
       </div>
     </div>
@@ -483,14 +482,8 @@ export default {
     justify-content: center;
 
     svg {
-      height: 30%;
+      height: auto;
       max-width: 250px;
-      margin-bottom: 25px;
     }
   }
-
-  .drop {
-    margin-bottom: 20px;
-  }
-
 </style>

@@ -16,11 +16,13 @@ fragment identity on Identity {
 
   image {
     thumb: url(size: "original")
+    xlarge: url(size: "xlarge")
     focal
   }
 
   logo {
     thumb: url(size: "original")
+    xlarge: url(size: "xlarge")
     focal
   }
 

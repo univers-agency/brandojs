@@ -5,20 +5,27 @@
     :parent="parent"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)"
-    @config="bindEditor">
+    @delete="$emit('delete', $event)">
     <div class="villain-block-description">
       SVG
     </div>
     <div class="villain-block-svg">
       <div
+        v-if="block.data.code"
         ref="svg"
         class="villain-svg-output"
         v-html="block.data.code">
       </div>
+      <div
+        v-else
+        class="villain-block-svg-empty">
+        <FontAwesomeIcon
+          icon="draw-polygon"
+          size="6x" />
+      </div>
       <div class="helpful-actions">
         <ButtonTiny
-          @click="$refs.block.openConfig()">
+          @click="config">
           Konfigurér SVG
         </ButtonTiny>
       </div>
@@ -87,6 +94,13 @@ export default {
   },
 
   methods: {
+    config () {
+      this.$refs.block.openConfig()
+      this.$nextTick(() => {
+        this.bindEditor()
+      })
+    },
+
     bindEditor () {
       this.codeMirror = CodeMirror.fromTextArea(this.$refs.txt, {
         autoRefresh: true,
@@ -117,6 +131,18 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  .villain-block-svg-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      height: auto;
+      max-width: 250px;
+    }
   }
 
   .villain-svg-output {

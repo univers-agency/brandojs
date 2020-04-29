@@ -438,7 +438,7 @@ export default {
             }
           }
           const v = {
-            type: 'string',
+            type: 'text',
             value: 'Default value',
             label: 'Field name'
           }

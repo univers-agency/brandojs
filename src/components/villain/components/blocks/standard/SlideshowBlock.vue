@@ -45,12 +45,14 @@
       <div
         v-else
         class="villain-block-image-empty">
-        <i class="fa fa-fw fa-images"></i>
+        <FontAwesomeIcon
+          icon="images"
+          size="6x" />
         <div class="actions">
-          <ButtonSecondary
+          <ButtonTiny
             @click="$refs.block.openConfig()">
             Konfigurér galleriblokk
-          </ButtonSecondary>
+          </ButtonTiny>
         </div>
       </div>
     </div>
@@ -494,16 +496,9 @@ export default {
     justify-content: center;
 
     svg {
-      width: 30%;
-      height: 30%;
+      height: auto;
       max-width: 250px;
-      margin-bottom: 25px;
     }
-  }
-
-  .drop {
-    background-color: white;
-    margin-bottom: 20px;
   }
 
   .image-caption {

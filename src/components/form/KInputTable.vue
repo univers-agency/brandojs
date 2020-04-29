@@ -15,18 +15,42 @@
           v-for="(entry, idx) in innerValue"
           :key="idx">
           <slot
+            v-if="entry !== editEntry"
             name="row"
             v-bind:entry="entry"></slot>
+          <slot
+            v-else-if="editRows"
+            name="edit"
+            v-bind:editEntry="newEditEntry"></slot>
+
           <td
-            v-if="deleteRows"
+            v-if="deleteRows || editRows"
             class="action">
-            <CircleButton
-              class="delete"
-              @click.native.stop.prevent="del(entry)">
-              <FontAwesomeIcon
-                icon="minus"
-                size="xs" />
-            </CircleButton>
+            <div class="button-wrapper">
+              <CircleButton
+                v-if="entry !== editEntry && editRows"
+                class="edit"
+                @click.native.stop.prevent="edit(entry)">
+                <FontAwesomeIcon
+                  icon="pencil-alt"
+                  size="xs" />
+              </CircleButton>
+              <CircleButton
+                v-else-if="editRows"
+                class="edit"
+                @click.native.stop.prevent="editDone(entry)">
+                <FontAwesomeIcon
+                  icon="check"
+                  size="xs" />
+              </CircleButton>
+              <CircleButton
+                class="delete"
+                @click.native.stop.prevent="del(entry)">
+                <FontAwesomeIcon
+                  icon="minus"
+                  size="xs" />
+              </CircleButton>
+            </div>
           </td>
         </tr>
         <tr
@@ -86,6 +110,11 @@ export default {
       default: true
     },
 
+    editRows: {
+      type: Boolean,
+      default: false
+    },
+
     value: {
       type: [Array],
       default: () => []
@@ -109,6 +138,8 @@ export default {
 
   data () {
     return {
+      editEntry: {},
+      newEditEntry: {},
       newEntry: {}
     }
   },
@@ -139,9 +170,24 @@ export default {
       this.$refs.addRow.querySelector('input').focus()
     },
 
+    edit (entry) {
+      this.editEntry = entry
+      this.newEditEntry = { ...entry }
+    },
+
+    editDone (entry) {
+      const idx = this.innerValue.indexOf(entry)
+      this.innerValue = [
+        ...this.innerValue.slice(0, idx),
+        this.newEditEntry,
+        ...this.innerValue.slice(idx + 1)
+      ]
+      this.editEntry = {}
+    },
+
     del (entry) {
       if (!entry[this.idKey]) {
-        console.error('==> KInputTable: no idkey found!', this.idKey)
+        this.$delete(this.innerValue, this.innerValue.indexOf(entry))
         return
       }
 
@@ -239,6 +285,14 @@ export default {
           color: theme(colors.peach);
         }
       }
+    }
+  }
+
+  .button-wrapper {
+    display: flex;
+
+    button + button {
+      margin-left: 5px;
     }
   }
 </style>

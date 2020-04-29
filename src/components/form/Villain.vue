@@ -137,7 +137,7 @@ export default {
     }
 
     .villain-image-library.row {
-      flex-wrap: wrap;
+      flex-wrap: wrap !important;
       .col-12 {
         width: 100%;
       }
