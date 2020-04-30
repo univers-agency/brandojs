@@ -23,6 +23,14 @@
           placeholder="Tittel"
           name="page[title]" />
 
+        <KInputSlug
+          v-model="page.slug"
+          :from="page.title"
+          label="URL-tamp"
+          rules="required"
+          placeholder="URL-tamp"
+          name="page[slug]" />
+
         <KInputTextarea
           v-model="page.meta_description"
           :rows="5"

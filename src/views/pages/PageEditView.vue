@@ -69,7 +69,6 @@ export default {
         this.page, [
           '__typename',
           'id',
-          'slug',
           'deleted_at',
           'inserted_at',
           'updated_at',
