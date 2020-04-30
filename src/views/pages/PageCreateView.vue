@@ -14,15 +14,7 @@
 <script>
 
 import gql from 'graphql-tag'
-import GET_PAGES from '../../gql/pages/PAGES_QUERY.graphql'
 import PageForm from './PageForm'
-
-const DEFAULT_VARIABLES = {
-  limit: 100,
-  offset: 0,
-  filter: null,
-  status: 'all'
-}
 
 export default {
   components: {
@@ -57,75 +49,11 @@ export default {
                 pageParams: $pageParams
               ) {
                 id
-                key
-                title
-                slug
-                language
-                data
-
-                creator {
-                  id
-                  full_name
-                  avatar {
-                    thumb: url(size: "xlarge")
-                  }
-                }
-
-                parent {
-                  id
-                  key
-                  language
-                  title
-                  slug
-                  data
-                }
-
-                children {
-                  id
-                  key
-                  language
-                  title
-                  slug
-                  data
-                }
-
-                fragments {
-                  id
-                  title
-                  key
-                  parent_key
-                  language
-                  updated_at
-                  page_id
-                  data
-                }
-
-                inserted_at
-                updated_at
-                deleted_at
               }
             }
           `,
           variables: {
             pageParams
-          },
-
-          update: (store, { data: { createPage } }) => {
-            const query = {
-              query: GET_PAGES,
-              variables: DEFAULT_VARIABLES
-            }
-            const data = store.readQuery(query)
-            console.log('data', data)
-            if (data) {
-              data.pages.push(createPage)
-              // Write back to the cache
-
-              store.writeQuery({
-                ...query,
-                data
-              })
-            }
           }
         })
 
