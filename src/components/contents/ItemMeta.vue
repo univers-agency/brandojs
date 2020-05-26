@@ -58,6 +58,7 @@ export default {
   .item-meta {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
 
     .avatar-wrapper {
       align-items: center;
@@ -76,7 +77,6 @@ export default {
     }
 
     .content {
-      width: 100%;
       display: flex;
       line-height: 1;
       justify-content: space-between;

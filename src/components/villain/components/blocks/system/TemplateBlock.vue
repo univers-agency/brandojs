@@ -11,10 +11,12 @@
     <div
       v-if="!block.data.multi"
       class="template-entry">
-      <component
-        :is="buildWrapper({refs: block.data.refs, vars: block.data.vars})"
-        @delete="deleteBlock($event)"
-        @update="updateBlock($event)" />
+      <keep-alive>
+        <component
+          :is="buildWrapper({refs: block.data.refs, vars: block.data.vars})"
+          @delete="deleteBlock($event)"
+          @update="updateBlock($event)" />
+      </keep-alive>
       <div class="entry-toolbar">
         <div class="helpful-actions">
           <TemplateConfig
@@ -161,7 +163,6 @@ export default {
 
   methods: {
     buildWrapper (entry) {
-      console.log('==> buildWrapper()')
       const replacedContent = this.replaceContent(entry)
       this.createTemplateContentWrapperComponent(replacedContent)
       const builtSlots = this.buildSlots(entry.refs)
@@ -188,16 +189,15 @@ export default {
     },
 
     replaceContent ({ refs, vars }) {
-      console.log('=> replaceContent')
       // replace all variables
       const srcWithReplacedVars = this.replaceVars()
+      const srcWithReplacedEntry = this.replaceEntries(srcWithReplacedVars)
       // replace all refs
-      const srcWithReplacedVarsRefs = this.replaceRefs(srcWithReplacedVars, refs)
+      const srcWithReplacedVarsRefs = this.replaceRefs(srcWithReplacedEntry, refs)
       return srcWithReplacedVarsRefs
     },
 
     replaceVars () {
-      console.log('=> replaceVars')
       const srcCode = this.getSourceCode()
       const replacedVarsCode = srcCode.replace(/\${(\w+)}/g, this.replaceVar)
 
@@ -215,9 +215,20 @@ export default {
           this.$set(entry, 'vars', newVars)
         }
       } else {
-        console.log('==> updateVars', newVars)
         this.$set(this.block.data, 'vars', newVars)
       }
+    },
+
+    replaceEntries (srcCode) {
+      // if (this.available.entryData !== {}) {
+      //   const replacedEntriesCode = srcCode.replace(/\${entry:(\w+)}/g, this.replaceEntry)
+      //   return replacedEntriesCode
+      // }
+      return srcCode
+    },
+
+    replaceEntry (exp, entryVar) {
+      return `${this.available.entryData[entryVar] || 'mangler entryData'}`
     },
 
     updateRefs ({ newRefs, entryId }) {
@@ -232,7 +243,6 @@ export default {
     },
 
     replaceRefs (srcCode, refs) {
-      console.log('=> replaceRefs')
       const replacedRefsCode = srcCode.replace(/%{(\w+)}/g, (exp, refName) => {
         return this.replaceRef(exp, refName, refs)
       })
@@ -270,7 +280,6 @@ export default {
 
     /** remove props we don't want to store */
     deleteProps () {
-      console.log('=> deleteProps')
       // only delete props here if we have an ID
       if (!Object.prototype.hasOwnProperty.call(this.block.data, 'id')) {
         return
@@ -306,7 +315,6 @@ export default {
     },
 
     getSourceCode () {
-      console.log('=> getSourceCode')
       let foundTemplate
       const id = this.block.data.id
 
@@ -339,7 +347,6 @@ export default {
     },
 
     buildData (refs) {
-      console.log('buildData')
       // build it by {refname: data}
       const newRefs = {}
       for (let i = 0; i < refs.length; i++) {
@@ -356,7 +363,6 @@ export default {
     },
 
     buildSlots (refs, copyMissing = true) {
-      console.log('=> buildSlots')
       let template = ''
       if (copyMissing) {
         this.copyMissingRefs(refs)
@@ -381,7 +387,6 @@ export default {
     },
 
     copyMissingRefs (refs) {
-      console.log('=> copyMissingRefs')
       let foundTemplate
       const id = this.block.data.id
 
@@ -414,7 +419,6 @@ export default {
      * When we inject our builtSlots into this, they will populate automatically
      */
     createTemplateContentWrapperComponent (content) {
-      console.log('==> createTemplateContentWrapperComponent()')
       Vue.component('TemplateContentWrapper', {
         template: `<div>${content}</div>`
       })
@@ -454,7 +458,6 @@ export default {
     border-top: 1px solid #dcdcdc;
     margin-top: 1rem;
     text-align: center;
-    letter-spacing: -1px;
     text-transform: uppercase;
     cursor: pointer;
 

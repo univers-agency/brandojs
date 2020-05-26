@@ -1,14 +1,14 @@
 <template>
   <portal to="modals">
     <div
-      ref="wrapper"
+      ref="modalWrapper"
       class="kmodal">
       <div
-        ref="bg"
+        ref="modalBg"
         class="kmodal__bg"></div>
       <div
-        ref="modal"
-        class="kmodal__modal">
+        ref="modalModal"
+        :class="{ wide, kmodal__modal: true }">
         <div class="kmodal__modal__header">
           <slot name="header"></slot>
         </div>
@@ -53,6 +53,11 @@ export default {
       type: String,
       required: false,
       default: 'Lukk'
+    },
+
+    wide: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -68,13 +73,14 @@ export default {
   mounted () {
     this.$nextTick().then(
       this.$nextTick(() => {
+        console.log(this.$refs)
         const timeline = gsap.timeline()
-        gsap.set(this.$refs.modal, { y: 40 })
+        gsap.set(this.$refs.modalModal, { y: 40 })
 
         timeline
-          .to(this.$refs.bg, { opacity: 0.8, duration: 0.25, ease: 'sine.in' })
-          .to(this.$refs.modal, { opacity: 1, duration: 0.25, ease: 'none' }, '-=0.1')
-          .to(this.$refs.modal, { y: 0, duration: 0.25, ease: 'circ.out' }, '<')
+          .to(this.$refs.modalBg, { opacity: 0.8, duration: 0.25, ease: 'sine.in' })
+          .to(this.$refs.modalModal, { opacity: 1, duration: 0.25, ease: 'none' }, '-=0.1')
+          .to(this.$refs.modalModal, { y: 0, duration: 0.25, ease: 'circ.out' }, '<')
       })
     )
   },
@@ -84,9 +90,9 @@ export default {
       return new Promise((resolve, reject) => {
         const timeline = gsap.timeline()
         timeline
-          .to(this.$refs.modal, { opacity: 0, duration: 0.25, ease: 'none' })
-          .to(this.$refs.modal, { y: 40, duration: 0.25, ease: 'circ.in' }, '<')
-          .to(this.$refs.bg, { opacity: 0, duration: 0.4, ease: 'sine.in' }, '<')
+          .to(this.$refs.modalModal, { opacity: 0, duration: 0.25, ease: 'none' })
+          .to(this.$refs.modalModal, { y: 40, duration: 0.25, ease: 'circ.in' }, '<')
+          .to(this.$refs.modalBg, { opacity: 0, duration: 0.4, ease: 'sine.in' }, '<')
           .call(() => {
             return resolve()
           })
@@ -130,7 +136,7 @@ export default {
     }
 
     & >>> .help-text {
-      font-size: 17px;
+      font-size: 16px;
     }
 
     & >>> .multiselect > div > span {
@@ -183,6 +189,10 @@ export default {
         0 41.8px 33.4px rgba(0, 0, 0, 0.115),
         0 100px 80px rgba(0, 0, 0, 0.16)
       ;
+
+      &.wide {
+        min-width: 900px;
+      }
 
       &__header {
         @fontsize lg;

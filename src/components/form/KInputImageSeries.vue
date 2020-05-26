@@ -3,7 +3,6 @@
     :name="name"
     :label="label"
     :rules="rules"
-    :helpText="helpText"
     :value="value">
     <template v-slot>
     </template>
@@ -78,6 +77,16 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div
+        v-if="helpText"
+        class="meta">
+        <div
+          v-if="helpText"
+          class="help-text">
+          —<span v-html="helpText" />
         </div>
       </div>
     </template>

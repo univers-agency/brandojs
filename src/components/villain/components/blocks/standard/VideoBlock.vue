@@ -1,94 +1,103 @@
 <template>
-  <Block
-    ref="block"
-    :block="block"
-    :parent="parent"
-    :show-ok="true"
-    icon="fa-video"
-    @add="$emit('add', $event)"
-    @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
-    <div class="villain-block-description">
-      Video
-    </div>
-    <div class="villain-block-video">
-      <template
-        v-if="html && block.data.source !== 'file'"
-        ref="preview">
-        <div
-          class="villain-block-video-content"
-          v-html="html" />
-        <div class="helpful-actions">
-          <ButtonTiny
-            @click="$refs.block.openConfig()">
-            Konfigurér video
-          </ButtonTiny>
-        </div>
-      </template>
-      <template
-        v-else-if="html && block.data.source === 'file'">
-        <div
-          ref="preview"
-          class="villain-block-video-file-content"
-          v-html="html" />
-        <div class="helpful-actions">
-          <ButtonTiny
-            @click="$refs.block.openConfig()">
-            Konfigurér video
-          </ButtonTiny>
-        </div>
-      </template>
-      <div
-        v-else
-        class="villain-block-image-empty">
-        <FontAwesomeIcon
-          :icon="['fab', 'youtube']"
-          size="6x" />
-        <div class="actions">
-          <ButtonTiny
-            @click="$refs.block.openConfig()">
-            Konfigurér videoblokk
-          </ButtonTiny>
-        </div>
+  <div>
+    <Block
+      ref="block"
+      :block="block"
+      :parent="parent"
+      :show-ok="true"
+      icon="fa-video"
+      @add="$emit('add', $event)"
+      @move="$emit('move', $event)"
+      @delete="$emit('delete', $event)">
+      <div class="villain-block-description">
+        Video
       </div>
-    </div>
-    <template slot="config">
-      <div class="desc">
-        Lim inn link til youtube, vimeo eller ekstern fil. <br>
-        F.eks <strong>http://www.youtube.com/watch?v=jlbunmCbTBA</strong>
-      </div>
-      <div>
+      <div class="villain-block-video">
         <template
-          v-if="block.data.remote_id">
-          <KInput
-            v-model="block.data.remote_id"
-            name="data[remote_id]"
-            :label="`Eksisterende data — ${block.data.source}`"
-            placeholder="ID" />
-
-          <KInput
-            v-model="block.data.link"
-            name="data[link]"
-            label="Link video til denne URL"
-            placeholder="google.com" />
+          v-if="html && block.data.source !== 'file'"
+          ref="preview">
+          <div
+            class="villain-block-video-content"
+            v-html="html" />
+          <div class="helpful-actions">
+            <ButtonTiny
+              @click="$refs.block.openConfig()">
+              Konfigurér video
+            </ButtonTiny>
+          </div>
         </template>
+        <template
+          v-else-if="html && block.data.source === 'file'">
+          <div
+            ref="preview"
+            class="villain-block-video-file-content"
+            v-html="html" />
+          <div class="helpful-actions">
+            <ButtonTiny
+              @click="$refs.block.openConfig()">
+              Konfigurér video
+            </ButtonTiny>
+          </div>
+        </template>
+        <div
+          v-else
+          class="villain-block-image-empty">
+          <FontAwesomeIcon
+            :icon="['fab', 'youtube']"
+            size="6x" />
+          <div class="actions">
+            <ButtonTiny
+              @click="$refs.block.openConfig()">
+              Konfigurér videoblokk
+            </ButtonTiny>
+          </div>
+        </div>
+      </div>
+      <template slot="config">
+        <div class="desc">
+          Lim inn link til youtube, vimeo eller ekstern fil. <br>
+          F.eks <strong>http://www.youtube.com/watch?v=jlbunmCbTBA</strong>
+        </div>
+        <div>
+          <template
+            v-if="block.data.remote_id">
+            <KInput
+              v-model="block.data.remote_id"
+              name="data[remote_id]"
+              disabled
+              :label="`Eksisterende data — ${block.data.source}`"
+              placeholder="ID" />
 
-        <KInput
-          v-model="url"
-          name="url"
-          label="Lim inn videoens adresse"
-          placeholder="Videoadresse"
-          @input="parseUrl" />
-      </div>
-      <div v-if="block.data.url">
-        <KInput
-          v-model="block.data.class"
-          name="data[class]"
-          label="Ekstra CSS klasser"
-          placeholder="CSS klasser" />
-      </div>
-    </template>
-  </Block>
+            <KInput
+              v-model="block.data.link"
+              name="data[link]"
+              label="Link video til denne URL"
+              placeholder="google.com" />
+
+            <KInput
+              v-model="block.data.cover"
+              name="data[cover]"
+              label="URL til coverbilde"
+              placeholder="https://link.com/image.jpg" />
+          </template>
+
+          <KInput
+            v-model="url"
+            name="url"
+            label="Lim inn videoens adresse"
+            placeholder="Videoadresse"
+            @input="parseUrl" />
+        </div>
+        <div v-if="block.data.url">
+          <KInput
+            v-model="block.data.class"
+            name="data[class]"
+            label="Ekstra CSS klasser"
+            placeholder="CSS klasser" />
+        </div>
+      </template>
+    </Block>
+  </div>
 </template>
 
 <script>
@@ -166,6 +175,10 @@ export default {
         this.$set(this.block.data, 'height', Math.round(rect.height))
       }, 3500)
     }
+  },
+
+  updated () {
+    console.debug('<VideoBlock /> updated')
   },
 
   methods: {

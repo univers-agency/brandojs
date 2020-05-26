@@ -18,15 +18,15 @@
     <template v-slot:outsideValidator>
       <KModal
         v-if="open"
-        ref="modal"
+        ref="modalList"
         v-shortkey="['esc']"
         ok-text="Lukk"
         @shortkey.native="toggle"
         @ok="toggle()">
         <template #header>
-          {{  showCreateEntry ? createEntry : label }}
+          {{ showCreateEntry ? createEntry : label }}
           <div>
-            <ButtonSecondary
+            <ButtonTiny
               v-if="createEntry"
               @click="toggleCreateEntry">
               <template v-if="!showCreateEntry">
@@ -35,7 +35,11 @@
               <template v-else>
                 Tilbake til listen
               </template>
-            </ButtonSecondary>
+            </ButtonTiny>
+
+            <ButtonTiny @click="nullValue">
+              Nullstill
+            </ButtonTiny>
           </div>
         </template>
         <div
@@ -304,6 +308,13 @@ export default {
       this.displayData()
     },
 
+    nullValue () {
+      this.selected = null
+      this.innerValue = null
+      this.$emit('input', null)
+      this.toggle()
+    },
+
     selectSimilar (option) {
       this.selectOption(option)
       this.toggleCreateEntry()
@@ -360,7 +371,7 @@ export default {
           this.scrollToSelected()
         })
       } else {
-        this.$refs.modal.close().then(() => {
+        this.$refs.modalList.close().then(() => {
           this.open = false
         })
       }

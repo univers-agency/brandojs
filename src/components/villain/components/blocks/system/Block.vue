@@ -226,11 +226,11 @@ export default {
 
     openConfig () {
       this.showConfig = true
-      if (this.hasConfigListener) {
-        this.$nextTick(() => {
-          this.$emit('config')
-        })
-      }
+      // if (this.hasConfigListener) {
+      //   this.$nextTick(() => {
+      //     this.$emit('config')
+      //   })
+      // }
     },
 
     async closeConfig () {

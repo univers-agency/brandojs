@@ -20,6 +20,7 @@
     <ContentList
       v-if="users"
       :selectable="false"
+      :tools="false"
       :entries="users">
       <template v-slot:header>
         <div class="col-2"></div>

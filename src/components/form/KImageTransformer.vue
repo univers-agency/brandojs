@@ -37,13 +37,6 @@ Then value is set to the transformed result
         </table>
       </div>
 
-      <!-- <div v-else-if="edit && editObject">
-        <slot
-          name="form"
-          v-bind:entry="editObject">
-        </slot>
-      </div> -->
-
       <div>
         <div
           class="dropzone">

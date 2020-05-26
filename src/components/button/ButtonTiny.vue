@@ -44,7 +44,6 @@ export default {
     font-size: 11px;
     display: inline-block;
     text-transform: uppercase;
-    letter-spacing: -0.5px;
     padding: 4px 7px 4px;
     margin-top: -2px;
     transition: background-color 0.35s ease, color 0.35s ease;

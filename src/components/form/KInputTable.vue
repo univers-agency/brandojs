@@ -21,7 +21,8 @@
           <slot
             v-else-if="editRows"
             name="edit"
-            v-bind:editEntry="newEditEntry"></slot>
+            v-bind:editEntry="newEditEntry"
+            v-bind:callback="() => {editDone(entry)}"></slot>
 
           <td
             v-if="deleteRows || editRows"
@@ -93,6 +94,11 @@ export default {
       required: true
     },
 
+    newEntryTemplate: {
+      type: Object,
+      default: () => {}
+    },
+
     addRows: {
       type: Boolean,
       default: true
@@ -156,6 +162,7 @@ export default {
   },
 
   created () {
+    this.newEntry = this.$utils.clone(this.newEntryTemplate)
     this.innerValue = this.value
     if (this.newRows) {
       console.error('==> KInputTable: `newRows` has been deprecated, use `addRows` instead!')
@@ -166,7 +173,7 @@ export default {
     add () {
       console.log('add')
       this.innerValue.push({ ...this.newEntry })
-      this.newEntry = {}
+      this.newEntry = this.$utils.clone(this.newEntryTemplate)
       this.$refs.addRow.querySelector('input').focus()
     },
 

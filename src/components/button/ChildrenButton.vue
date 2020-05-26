@@ -59,10 +59,11 @@ export default {
   }
 
   button {
-    padding-top: 5px;
+    padding-top: 10px;
   }
 
   button, a {
+    @fontsize base/1;
     color: theme(colors.dark);
     border: 1px solid theme(colors.dark);
     background-color: transparent;

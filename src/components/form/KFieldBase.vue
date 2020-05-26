@@ -114,6 +114,7 @@ export default {
       }
 
       label {
+        @fontsize form.label;
         font-weight: 500;
 
         &:before {
@@ -121,7 +122,7 @@ export default {
           content: '';
           opacity: 0;
           position: absolute;
-          top: 5px;
+          top: 1px;
           width: 13px;
           height: 13px;
           margin-top: 3px;
@@ -154,6 +155,10 @@ export default {
       display: flex;
       justify-content: space-between;
       margin-top: 10px;
+
+      .help-text {
+        @fontsize form.help;
+      }
     }
   }
 </style>

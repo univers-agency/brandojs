@@ -38,18 +38,6 @@ fragment identity on Identity {
     value
   }
 
-  globalCategories {
-    id
-    label
-    key
-    globals {
-      id
-      label
-      key
-      value
-    }
-  }
-
   configs {
     id
     key

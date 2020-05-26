@@ -3,6 +3,7 @@
     class="list"
     :data-level="level">
     <div
+      v-if="tools"
       class="list-tools">
       <div
         v-if="shouldStatus"
@@ -39,6 +40,7 @@
         <FontAwesomeIcon icon="trash" />
       </div>
       <div
+        v-if="false"
         class="order">
         <FontAwesomeIcon icon="sort-alpha-down" />
       </div>
@@ -168,6 +170,11 @@ export default {
     softDelete: {
       type: Boolean,
       default: false
+    },
+
+    tools: {
+      type: Boolean,
+      default: true
     },
 
     /*

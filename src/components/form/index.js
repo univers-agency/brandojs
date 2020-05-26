@@ -2,6 +2,7 @@ import KForm from './KForm'
 import KFieldBase from './KFieldBase'
 import KImageTransformer from './KImageTransformer'
 import KInput from './KInput'
+import KInputColor from './KInputColor'
 import KInputDate from './KInputDate'
 import KInputDatetime from './KInputDatetime'
 import KInputEntries from './KInputEntries'
@@ -14,6 +15,7 @@ import KInputCheckbox from './KInputCheckbox'
 import KInputImage from './KInputImage'
 import KInputImageSeries from './KInputImageSeries'
 import KInputPassword from './KInputPassword'
+import KInputRichText from './KInputRichText'
 import KInputSelect from './KInputSelect'
 import KInputStatus from './KInputStatus'
 import KInputMultiSelect from './KInputMultiSelect'
@@ -26,6 +28,7 @@ export {
   KFieldBase,
   KImageTransformer,
   KInput,
+  KInputColor,
   KInputDate,
   KInputDatetime,
   KInputEntries,
@@ -34,6 +37,7 @@ export {
   KInputEmail,
   KInputPassword,
   KInputRadios,
+  KInputRichText,
   KInputCheckbox,
   KInputImage,
   KInputImageSeries,

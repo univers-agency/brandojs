@@ -5,10 +5,10 @@
     <header id="content-header">
       <div class="content">
         <section class="main">
-          <h2>
+          <h1>
             <slot name="title">
             </slot>
-          </h2>
+          </h1>
           <h3>
             <slot name="subtitle">
             </slot>

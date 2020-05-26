@@ -61,7 +61,7 @@ export default {
       width: 24px;
       height: 24px;
       opacity: 0;
-      margin-top: 9px;
+      margin-top: 7px;
       margin-left: -37px;
     }
   }

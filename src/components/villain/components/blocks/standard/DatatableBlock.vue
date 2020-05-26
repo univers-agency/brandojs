@@ -17,25 +17,34 @@
         </ButtonSecondary>
       </div>
     </div>
-    <transition-group
+    <div
       v-else
-      v-sortable="{handle: '.villain-block-datatable-item', animation: 500, store: {get: getOrder, set: storeOrder}}"
-      class="villain-block-datatable"
-      name="fade-move"
-      tag="table">
-      <tr
-        v-for="(item, idx) in rows"
-        :key="idx + guid()"
-        :data-id="item.key + item.value"
-        class="villain-block-datatable-item">
-        <td class="villain-block-datatable-item-key">
-          {{ item.key }}
-        </td>
-        <td class="villain-block-datatable-item-value">
-          {{ item.value }}
-        </td>
-      </tr>
-    </transition-group>
+      class="table-wrapper">
+      <transition-group
+        v-sortable="{handle: '.villain-block-datatable-item', animation: 500, store: {get: getOrder, set: storeOrder}}"
+        class="villain-block-datatable"
+        name="fade-move"
+        tag="table">
+        <tr
+          v-for="(item, idx) in rows"
+          :key="idx + guid()"
+          :data-id="item.key + item.value"
+          class="villain-block-datatable-item">
+          <td class="villain-block-datatable-item-key">
+            {{ item.key }}
+          </td>
+          <td class="villain-block-datatable-item-value">
+            {{ item.value }}
+          </td>
+        </tr>
+      </transition-group>
+      <div class="helpful-actions">
+        <ButtonTiny
+          @click="$refs.block.openConfig()">
+          Konfigurér tabell
+        </ButtonTiny>
+      </div>
+    </div>
 
     <template slot="config">
       <KInputTable
@@ -171,6 +180,10 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+  .table-wrapper {
+    margin: 0 auto;
+  }
+
   .villain-block-datatable {
     margin: 0 auto;
 

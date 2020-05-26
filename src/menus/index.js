@@ -28,7 +28,7 @@ export default {
               }
             },
             {
-              text: 'Innholdsmaler',
+              text: 'Innholdsmoduler',
               to: {
                 name: 'templates'
               }
@@ -94,7 +94,7 @@ export default {
               }
             },
             {
-              text: 'Templates',
+              text: 'Content modules',
               to: {
                 name: 'templates'
               }

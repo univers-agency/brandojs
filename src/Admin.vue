@@ -28,7 +28,7 @@
 
     <portal-target
       name="modals"
-      slim />
+      multiple />
   </div>
   <div v-else-if="!loading">
     <router-view class="content" />
@@ -142,30 +142,39 @@ export default {
         const fmData = new FormData()
         fmData.append('jwt', this.token)
 
-        const response = await fetch('/admin/auth/verify', {
-          method: 'post',
-          body: fmData
-        })
+        try {
+          const response = await fetch('/admin/auth/verify', {
+            method: 'post',
+            body: fmData
+          })
 
-        switch (response.status) {
-          case 200: {
-            this.$root.ready = true
-            const responseBody = await response.json()
-            this.$ability.update(responseBody.rules)
-            break
+          switch (response.status) {
+            case 200: {
+              this.$root.ready = true
+              const responseBody = await response.json()
+              this.$ability.update(responseBody.rules)
+              break
+            }
+            case 406: {
+              this.setToken(null)
+              localStorage.removeItem('token')
+              this.loading = 0
+              this.$router.push({ name: 'logout' })
+              break
+            }
+            case 401: {
+              this.setToken(null)
+              localStorage.removeItem('token')
+              this.loading = 0
+              this.$router.push({ name: 'logout' })
+              break
+            }
           }
-          case 406: {
-            this.setToken(null)
-            localStorage.removeItem('token')
-            this.$router.push({ name: 'login' })
-            break
-          }
-          case 401: {
-            this.setToken(null)
-            localStorage.removeItem('token')
-            this.$router.push({ name: 'login' })
-            break
-          }
+        } catch (e) {
+          this.setToken(null)
+          localStorage.removeItem('token')
+          this.loading = 0
+          this.$router.push({ name: 'logout' })
         }
       } else {
         this.loading = 0
@@ -319,26 +328,30 @@ export default {
   @europa base;
 
   @font-face {
-    font-family: 'FG';
-    src: url('/fonts/FoundersGroteskWeb-Regular.eot?#iefix') format('embedded-opentype'),
-         url('/fonts/FoundersGroteskWeb-Regular.woff2') format('woff2');
+    font-family: 'Main';
+    src: url('/fonts/Regular.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
   }
 
   @font-face {
-    font-family: 'FG';
-    src: url('/fonts/FoundersGroteskWeb-Medium.eot?#iefix') format('embedded-opentype'),
-         url('/fonts/FoundersGroteskWeb-Medium.woff2') format('woff2');
+    font-family: 'Main';
+    src: url('/fonts/Bold.woff2') format('woff2');
     font-weight: 500;
     font-style: normal;
   }
 
   @font-face {
-    font-family: 'FG';
-    src: url('/fonts/FoundersGroteskWeb-Light.eot?#iefix') format('embedded-opentype'),
-         url('/fonts/FoundersGroteskWeb-Light.woff2') format('woff2');
+    font-family: 'Main';
+    src: url('/fonts/Light.woff2') format('woff2');
     font-weight: 200;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Mono';
+    src: url('/fonts/Mono.woff2') format('woff2');
+    font-weight: 400;
     font-style: normal;
   }
 
@@ -362,6 +375,14 @@ export default {
     font-weight: 500;
   }
 
+  .no-entries {
+    @color bg peach;
+    @fontsize base;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    padding: 1rem;
+  }
+
   .drop {
     overflow: hidden;
     svg {
@@ -372,6 +393,9 @@ export default {
   html {
     line-height: 1.35;
     height: 100%;
+    letter-spacing: -0.02em;
+    font-feature-settings: "kern" 1, "liga" 1;
+    font-kerning: normal;
   }
 
   body {
@@ -401,6 +425,11 @@ export default {
 
   .half {
     width: 50%;
+
+    &.shaded {
+      background-color: #fafafa;
+      padding: 1rem;
+    }
   }
 
   .third {
@@ -503,12 +532,17 @@ export default {
     }
   }
 
+  h1 {
+    @fontsize h1;
+    font-feature-settings: 'kern', 'liga', 'dlig', 'hlig', 'cswh';
+  }
+
   h2 {
-    @fontsize xl;
+    @fontsize h2;
   }
 
   h3 {
-    @fontsize lg;
+    @fontsize h3;
     font-weight: 200;
   }
 
@@ -726,6 +760,10 @@ export default {
 
 .mb-3 {
   margin-bottom: 25px;
+}
+
+.mt-40 {
+  margin-top: 40px;
 }
 
 .mb-xs {
@@ -1109,7 +1147,7 @@ export default {
   font-family: inherit;
   line-height: 1em;
   margin: 0 0.5em;
-  padding: 0.75em 2em;
+  padding: 0.75em 1em;
 }
 
 .vex.vex-theme-kurtz .vex-dialog-button.vex-last {

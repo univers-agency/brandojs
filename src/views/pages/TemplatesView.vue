@@ -2,14 +2,14 @@
   <div class="villain-component">
     <ContentHeader>
       <template v-slot:title>
-        Innholdsmaler
+        Innholdsmoduler
       </template>
       <template v-slot:subtitle>
         Konfigurasjon
       </template>
       <template v-slot:help>
         <p>
-          Opprettelse og oppsett av maler for innholdssider
+          Opprettelse og oppsett av moduler for innholdssider
         </p>
       </template>
     </ContentHeader>

@@ -36,10 +36,12 @@ export default {
   }
 
   button {
-    padding-top: 5px;
+    padding-top: 6px;
   }
 
   button, a {
+    font-size: 20px;
+    font-weight: 400;
     white-space: nowrap;
     color: theme(colors.dark);
     border: 1px solid theme(colors.dark);

@@ -29,7 +29,7 @@ export default {
         title: '',
         slug: '',
         data: null,
-
+        template: 'default.html',
         status: 'published',
         language: 'no',
         meta_description: ''

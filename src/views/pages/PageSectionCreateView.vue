@@ -118,7 +118,7 @@ export default {
 </script>
 <i18n>
 {
-  "no": {
+  "nb": {
     "section.new": "Ny innholdsseksjon",
     "section.created": "Seksjon opprettet"
   },

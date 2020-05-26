@@ -166,6 +166,11 @@ export default {
       default: '[]'
     },
 
+    entryData: {
+      type: Object,
+      default: () => {}
+    },
+
     maxBlocks: {
       type: Number,
       default: 0
@@ -314,6 +319,11 @@ export default {
     Object.defineProperty(available, 'templates', {
       enumerable: true,
       get: () => this.availableTemplates
+    })
+
+    Object.defineProperty(available, 'entryData', {
+      enumerable: true,
+      get: () => this.entryData
     })
 
     Object.defineProperty(headers, 'extra', {

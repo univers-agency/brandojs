@@ -4,6 +4,7 @@ fragment page on Page {
   key
   title
   slug
+  template
   language
   data
   css_classes

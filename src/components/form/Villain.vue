@@ -16,6 +16,7 @@
           :template-mode="templateMode"
           :max-blocks="maxBlocks"
           :json="innerValue"
+          :entry-data="entryData"
           :show-templates="showTemplates"
           :visible-blocks="visibleBlocks"
           :extra-headers="{'authorization': `Bearer ${token}`}" />
@@ -37,6 +38,11 @@ export default {
     hasError: {
       type: Boolean,
       default: false
+    },
+
+    entryData: {
+      type: Object,
+      default: () => {}
     },
 
     helpText: {

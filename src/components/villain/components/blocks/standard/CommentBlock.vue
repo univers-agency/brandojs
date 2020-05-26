@@ -9,15 +9,12 @@
       Kommentar (vises ikke)
     </div>
     <div class="villain-block-comment">
-      <code><pre>{{ block.data.text }}</pre></code>
-    </div>
-    <template slot="config">
       <KInputTextarea
         v-model="block.data.text"
         :monospace="true"
         name="data[text]"
         label="Kommentar" />
-    </template>
+    </div>
   </Block>
 </template>
 
@@ -56,6 +53,21 @@ export default {
 
   created () {
     console.debug('<CommentBlock /> created')
+  },
+
+  methods: {
+    handleInput (e) {
+      const start = e.target.selectionStart
+      this.$nextTick(() => {
+        e.target.selectionStart = e.target.selectionEnd = start
+      })
+    }
   }
 }
 </script>
+
+<style lang="postcss" scoped>
+  >>> textarea {
+    background-color: transparent;
+  }
+</style>

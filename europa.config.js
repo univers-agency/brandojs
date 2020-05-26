@@ -115,6 +115,27 @@ module.exports = {
 
       /* main font sizing map */
       sizes: {
+        form: {
+          help: {
+            iphone: '14px',
+            mobile: '14px',
+            ipad_portrait: '16px',
+            ipad_landscape: '16px',
+            desktop_md: '16px',
+            desktop_lg: '16px',
+            desktop_xl: '17px'
+          },
+          label: {
+            iphone: '15px',
+            mobile: '15px',
+            ipad_portrait: '17px',
+            ipad_landscape: '18px',
+            desktop_md: '18px',
+            desktop_lg: '18px',
+            desktop_xl: '18px'
+          }
+        },
+
         nav: {
           section: {
             iphone: {
@@ -274,14 +295,98 @@ module.exports = {
           }
         },
 
-        '2xl': {
-          iphone: '27px',
-          mobile: '30px',
-          ipad_portrait: '30px',
-          ipad_landscape: '30px',
-          desktop_md: '40px',
-          desktop_lg: '48px',
-          desktop_xl: '64px'
+        /* letter-spacing: -0.5px; */
+        h1: {
+          iphone: {
+            'font-size': '27px',
+            'letter-spacing': '-0.5px',
+            'font-weight': '500'
+          },
+          mobile: {
+            'font-size': '30px',
+            'letter-spacing': '-0.5px',
+            'font-weight': '500'
+          },
+          ipad_portrait: {
+            'font-size': '30px',
+            'letter-spacing': '-0.5px',
+            'font-weight': '500'
+          },
+          ipad_landscape: {
+            'font-size': '30px',
+            'letter-spacing': '-0.5px',
+            'font-weight': '500'
+          },
+          desktop_md: {
+            'font-size': '45px',
+            'letter-spacing': '-0.5px',
+            'font-weight': '500'
+          },
+          desktop_lg: {
+            'font-size': '52px',
+            'letter-spacing': '-0.5px',
+            'font-weight': '500'
+          },
+          desktop_xl: {
+            'font-size': '60px',
+            'letter-spacing': '-0.5px',
+            'font-weight': '500'
+          }
+        },
+
+        h2: { //
+          iphone: {
+            'font-size': '22px',
+            'font-weight': '500'
+          },
+          mobile: {
+            'font-size': '24px',
+            'font-weight': '500'
+          },
+          ipad_portrait: {
+            'font-size': '27px',
+            'font-weight': '500'
+          },
+          ipad_landscape: {
+            'font-size': '30px',
+            'font-weight': '500'
+          },
+          desktop_md: {
+            'font-size': '32px',
+            'font-weight': '500'
+          },
+          desktop_lg: {
+            'font-size': '35px',
+            'font-weight': '500'
+          },
+          desktop_xl: {
+            'font-size': '35px',
+            'font-weight': '500'
+          }
+        },
+
+        h3: {
+          iphone: {
+            'font-size': '21px'
+          },
+          mobile: {
+            'font-size': '22px'
+          },
+          ipad_portrait: {
+            'font-size': '23px'
+          },
+          ipad_landscape: {
+            'font-size': '24px'
+          },
+          desktop_md: {
+            'font-size': '27px'
+          },
+          desktop_lg: {
+            'font-size': '28px'
+          },
+          desktop_xl: {
+            'font-size': '30px'
+          }
         },
 
         '3xl': { //
@@ -498,7 +603,7 @@ module.exports = {
 
       families: {
         main: [
-          'FG',
+          'Main',
           '-apple-system',
           'BlinkMacSystemFont',
           '"Segoe UI"',
@@ -517,7 +622,7 @@ module.exports = {
         ],
 
         mono: [
-          'Maison Neue',
+          'Mono',
           'Menlo',
           'Monaco',
           'Consolas',

@@ -100,7 +100,7 @@ export default {
           width: 18px;
           height: 18px;
           opacity: 0;
-          margin-top: 12px;
+          margin-top: 10px;
           margin-left: -34px;
           transition: opacity 1s ease;
         }

@@ -59,6 +59,7 @@ export default function ({ schema, prop, key }) {
 
         // send off entry for rendering
         // TODO: Maybe diff this against the last sent data and only send the diff?
+        console.log('livepreview:render')
         this.adminChannel.channel
           .push('livepreview:render', { schema, prop, key, entry, cache_key: this.livePreviewCacheKey })
       }

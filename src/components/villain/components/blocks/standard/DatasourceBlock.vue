@@ -69,6 +69,7 @@
         </div>
         <div>
           <KInputSelect
+            v-if="templates.length"
             v-model="block.data.template"
             rules="required"
             :options="templates"

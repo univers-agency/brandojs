@@ -9,7 +9,7 @@
       </template>
       <template v-slot:help>
         <p>
-          Konfigurasjon av variabler som kan brukes i innholdsmaler og generelt på nettsiden
+          Konfigurasjon av variabler som kan brukes i innholdsmoduler og generelt på nettsiden
         </p>
       </template>
     </ContentHeader>
@@ -23,22 +23,43 @@
     <ButtonPrimary
       v-if="editing"
       class="add-category-btn"
-      @click="newCategory">
+      @click="showNewCategoryModal = true">
       Legg til kategori
     </ButtonPrimary>
 
-    <KForm
-      v-if="identity"
-      :back="{ name: 'dashboard' }"
-      back-text="Tilbake til dashbordet"
-      @save="save">
-      <template v-slot>
-        <div
-          v-if="identity && identity.globalCategories && identity.globalCategories.length || editing">
-          <div
-            v-for="category in identity.globalCategories"
-            :key="category.id"
-            class="category">
+    <KModal
+      v-if="showNewCategoryModal"
+      ref="modal"
+      v-shortkey="['esc']"
+      ok-text="Lagre"
+      @shortkey.native="closeModal"
+      @ok="saveNewCategory"
+      @cancel="closeModal">
+      <template #header>
+        Legg til ny kategori
+      </template>
+      <KInput
+        v-model="newCategory.label"
+        :name="`category[label]`"
+        rules="required"
+        label="Etikett" />
+
+      <KInputSlug
+        v-model="newCategory.key"
+        :from="newCategory.label"
+        :name="`category[key]`"
+        rules="required"
+        label="Nøkkel" />
+    </KModal>
+
+    <template v-if="globalCategories">
+      <KForm
+        v-for="category in globalCategories"
+        :key="category.id"
+        back-text="Tilbake til dashbordet"
+        @save="saveCategory(category)">
+        <template v-slot>
+          <div class="category">
             <h3>
               {{ category.label }}
             </h3>
@@ -47,7 +68,7 @@
                 v-model="category.label"
                 :name="`category[${category.id}][label]`"
                 rules="required"
-                label="Kategori — label" />
+                label="Kategori — etikett" />
 
               <KInput
                 v-model="category.key"
@@ -59,82 +80,129 @@
             <KInputTable
               v-if="category.globals"
               v-model="category.globals"
+              :new-entry-template="{ type: 'text', label: '', key: '', data: { value: ''}}"
               :delete-rows="editing"
+              :edit-rows="true"
               :add-rows="editing"
               :name="`category[${category.id}][globals]`"
               label="">
               <template v-slot:head>
                 <tr>
                   <th>Label</th>
-                  <th v-if="editing">Nøkkel</th>
                   <th>Verdi</th>
-                  <th v-if="editing"></th>
+                  <th></th>
                 </tr>
               </template>
               <template v-slot:row="{ entry }">
                 <td>
-                  <input
-                    v-if="editing"
-                    v-model="entry.label"
-                    type="text">
-                  <div v-else>
-                    {{ entry.label }}
-                  </div>
-                </td>
-                <td v-if="editing">
-                  <input
-                    v-model="entry.key"
-                    type="text">
+                  {{ entry.label }}
                 </td>
                 <td>
-                  <input
-                    v-model="entry.value"
-                    type="text">
+                  <template v-if="entry.type === 'text'">
+                    {{ entry.data.value }}
+                  </template>
+                  <template v-else-if="entry.type === 'boolean'">
+                    <CheckOrX :val="entry.data.value" />
+                  </template>
                 </td>
               </template>
+              <template #edit="{ editEntry, callback }">
+                <KModal
+                  ref="globalModal"
+                  v-shortkey="['esc']"
+                  :wide="editEntry.type === 'html'"
+                  ok-text="Lukk"
+                  @shortkey.native="closeGlobalModal(callback)"
+                  @ok="closeGlobalModal(callback)">
+                  <template #header>
+                    Endre variabel — {{ editEntry.label }}
+                  </template>
+                  <KInput
+                    v-if="editing"
+                    v-model="editEntry.label"
+                    :name="`global[label]`"
+                    rules="required"
+                    label="Etikett" />
+
+                  <KInput
+                    v-if="editing"
+                    v-model="editEntry.key"
+                    :name="`global[key]`"
+                    rules="required"
+                    label="Nøkkel" />
+
+                  <KInput
+                    v-if="editing"
+                    v-model="editEntry.type"
+                    :name="`global[type]`"
+                    rules="required"
+                    label="Type" />
+
+                  <template v-if="editEntry.type === 'text'">
+                    <KInput
+                      v-model="editEntry.data.value"
+                      :name="`global[data][value]`"
+                      rules="required"
+                      label="Verdi" />
+                  </template>
+                  <template v-else-if="editEntry.type === 'boolean'">
+                    <KInputToggle
+                      v-model="editEntry.data.value"
+                      :name="`global[data][value]`"
+                      rules="required"
+                      label="Verdi" />
+                  </template>
+                  <template v-if="editEntry.type === 'html'">
+                    <KInputRichText
+                      v-model="editEntry.data.value"
+                      :name="`global[data][value]`"
+                      rules="required"
+                      label="" />
+                  </template>
+                </KModal>
+              </template>
+
               <template
                 v-if="editing"
                 v-slot:new="{ newEntry }">
                 <td>
                   <input
                     v-model="newEntry.label"
+                    placeholder="Etikett"
                     type="text">
                 </td>
                 <td>
                   <input
                     v-model="newEntry.key"
-                    type="text">
-                </td>
-                <td>
-                  <input
-                    v-model="newEntry.value"
+                    placeholder="nøkkel"
                     type="text">
                 </td>
               </template>
             </KInputTable>
+            <div
+              v-if="!category.globals.length && !editing"
+              class="empty-globals">
+              Ingen tilgjengelige globaler
+            </div>
           </div>
-        </div>
-        <div
-          v-else
-          class="empty-globals">
-          Ingen tilgjengelige globaler
-        </div>
-      </template>
-    </KForm>
+        </template>
+      </KForm>
+    </template>
   </div>
 </template>
 
 <script>
 import gql from 'graphql-tag'
-import GET_IDENTITY from '../../gql/identity/IDENTITY_QUERY.graphql'
-import IDENTITY_FRAGMENT from '../../gql/identity/IDENTITY_FRAGMENT.graphql'
+import GET_GLOBAL_CATEGORIES from '../../gql/identity/GLOBAL_CATEGORIES_QUERY.graphql'
 
 export default {
   data () {
     return {
       editing: false,
       loading: 0,
-      identity: {}
+
+      newCategory: { label: '', key: '' },
+      showNewCategoryModal: false
     }
   },
 
@@ -144,38 +212,74 @@ export default {
   },
 
   methods: {
-    newCategory () {
-      this.identity.globalCategories.push({ label: 'Label', key: 'key', globals: [] })
+    async closeModal () {
+      await this.$refs.modal.close()
+      this.showNewCategoryModal = false
     },
 
-    async save () {
-      const params = this.$utils.stripParams(this.identity, ['__typename', 'id', 'logo', 'image', 'links', 'metas'])
-      params.globalCategories.map(item => {
-        delete item.__typename
-        item.globals.map(global => {
-          delete global.__typename
+    async closeGlobalModal (callback, entry) {
+      await this.$refs.globalModal[0].close()
+      if (callback) {
+        callback()
+      }
+    },
+
+    async saveNewCategory () {
+      try {
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation CreateGlobalCategory($globalCategoryParams: GlobalCategoryParams) {
+              createGlobalCategory(
+                globalCategoryParams: $globalCategoryParams,
+              ) {
+                id
+              }
+            }
+          `,
+
+          variables: {
+            globalCategoryParams: this.newCategory
+          },
+
+          update: (store, data) => {
+            this.$apollo.queries.globalCategories.refresh()
+          }
         })
+      } catch (err) {
+        this.$utils.showError(err)
+      }
+    },
+
+    async saveCategory (category) {
+      const strippedCategory = this.$utils.stripParams(category, ['__typename'])
+      const globals = strippedCategory.globals.map(g => {
+        delete g.__typename
+        return { ...g, data: JSON.stringify(g.data) }
       })
+      const globalCategoryParams = { ...strippedCategory, globals }
 
       try {
         await this.$apollo.mutate({
           mutation: gql`
-            mutation UpdateIdentity($identityParams: IdentityParams) {
-              updateIdentity(
-                identityParams: $identityParams,
+            mutation UpdateGlobalCategory($categoryId: ID!, $globalCategoryParams: GlobalCategoryParams) {
+              updateGlobalCategory(
+                categoryId: $categoryId,
+                globalCategoryParams: $globalCategoryParams,
               ) {
-                ...identity
+                id
               }
             }
-            ${IDENTITY_FRAGMENT}
           `,
+
           variables: {
-            identityParams: params
+            categoryId: category.id,
+            globalCategoryParams
+          },
+
+          update: (store, data) => {
+            this.$apollo.queries.globalCategories.refresh()
           }
         })
-
-        this.$toast.success({ message: 'Globale variabler oppdatert' })
-        this.$router.push({ name: 'dashboard' })
       } catch (err) {
         this.$utils.showError(err)
       }
@@ -183,8 +287,8 @@ export default {
   },
 
   apollo: {
-    identity: {
-      query: GET_IDENTITY
+    globalCategories: {
+      query: GET_GLOBAL_CATEGORIES
     }
   }
 }
@@ -204,12 +308,12 @@ export default {
     border: 1px solid theme(colors.blue);
     padding: 2rem;
 
-    + .category {
-      margin-top: 1rem;
-    }
-
     h3 {
       @space margin-bottom sm;
     }
+  }
+
+  .form-wrapper + .form-wrapper {
+    margin-top: 2.5rem;
   }
 </style>

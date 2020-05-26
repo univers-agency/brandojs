@@ -73,6 +73,7 @@ export default {
           'inserted_at',
           'updated_at',
           'children',
+          'slug',
           'creator',
           'fragments',
           'parent'

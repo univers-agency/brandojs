@@ -196,16 +196,17 @@ export default {
 
 <style lang="postcss" scoped>
   a {
-    padding-top: 11px;
+    padding-top: 17px;
     display: inline-block;
     font-weight: 300;
   }
 
   button {
-    padding-top: 5px;
+    padding-top: 6px;
   }
 
   button, a {
+    font-size: 20px;
     color: theme(colors.peach);
     border: 1px solid theme(colors.blue);
     background-color: theme(colors.blue);

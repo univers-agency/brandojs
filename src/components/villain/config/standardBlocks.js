@@ -98,6 +98,7 @@ export default [
     dataTemplate: {
       source: 'youtube',
       remote_id: '',
+      cover: null,
       width: null,
       height: null
     }

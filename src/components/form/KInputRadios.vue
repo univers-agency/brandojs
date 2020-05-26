@@ -124,7 +124,7 @@ export default {
 
     input {
       margin-right: 17px;
-      margin-top: 5px;
+      margin-top: 2px;
     }
 
     label {

@@ -5,6 +5,14 @@
     @save="save">
     <section class="row">
       <div class="half">
+        <KInputToggle
+          v-model="advancedConfig"
+          name="config[advanced]"
+          label="Avanserte valg" />
+      </div>
+    </section>
+    <section class="row">
+      <div class="half">
         <KInputSelect
           v-model="page.language"
           rules="required"
@@ -22,14 +30,6 @@
           rules="required"
           placeholder="Tittel"
           name="page[title]" />
-
-        <KInputSlug
-          v-model="page.slug"
-          :from="page.title"
-          label="URL-tamp"
-          rules="required"
-          placeholder="URL-tamp"
-          name="page[slug]" />
 
         <KInputTextarea
           v-model="page.meta_description"
@@ -52,6 +52,17 @@
           </template>
         </KInputSelect>
 
+        <template v-if="templates">
+          <KInputSelect
+            v-if="advancedConfig || !page.id"
+            v-model="page.template"
+            rules="required"
+            :options="templates"
+            optionValueKey="value"
+            name="page[template]"
+            label="Sidemal" />
+        </template>
+
         <KInput
           v-model="page.key"
           rules="required"
@@ -61,6 +72,7 @@
           placeholder="Nøkkel" />
 
         <KInput
+          v-if="advancedConfig"
           v-model="page.css_classes"
           name="page[css_classes]"
           type="text"
@@ -73,15 +85,15 @@
           name="page[meta_image]"
           preview-key="original"
           label="Delebilde (META bilde)"
-          help-text="Brukes til SoMe. Beskjæres til 1200x630" />
+          help-text="Om du trenger et spesialtilpasset bilde for deling. Beskjæres til 1200x630." />
       </div>
     </section>
     <Villain
       v-model="page.data"
       rules="required"
       :value="page.data"
-      :template-mode="settings.templateMode"
-      :templates="settings.templateNamespace"
+      :template-mode="$app.templateMode"
+      :templates="$app.templateNamespace"
       name="page[data]"
       label="Innhold" />
   </KForm>
@@ -114,6 +126,8 @@ export default {
 
   data () {
     return {
+      advancedConfig: false,
+      templates: null,
       parents: [],
       settings: {
         templateMode: false,
@@ -126,6 +140,18 @@ export default {
   inject: [
     'adminChannel'
   ],
+
+  created () {
+    this.adminChannel.channel
+      .push('pages:list_templates')
+      .receive('ok', payload => {
+        this.templates = payload.templates
+      })
+  },
+
+  mounted () {
+    this.advancedConfig = false
+  },
 
   apollo: {
     parents: {

@@ -107,13 +107,11 @@ export default {
   ],
 
   mounted () {
-    console.log('==> templateConfig/mounted', this.vars)
     this.setLocalVars()
   },
 
   methods: {
     setLocalVars () {
-      console.log('=> setLocalVars()')
       this.localVars = cloneDeep(this.vars)
     },
 
@@ -122,14 +120,12 @@ export default {
     },
 
     refetchVars () {
-      console.log('=> refetchVars')
       const foundTemplate = this.available.templates.find(t => parseInt(t.data.id) === parseInt(this.templateId))
       this.$emit('updateVars', { newVars: foundTemplate.data.vars, entryId: this.entryId })
       this.setLocalVars()
     },
 
     replaceRefWithSource (ref) {
-      console.log('=> replaceRefWithSource')
       const foundTemplate = this.available.templates.find(t => t.data.id === this.templateId)
       const foundRef = foundTemplate.data.refs.find(r => r.name === ref.name)
 
@@ -193,7 +189,7 @@ export default {
           content: '';
           opacity: 0;
           position: absolute;
-          top: 5px;
+          top: 1px;
           width: 13px;
           height: 13px;
           margin-top: 3px;

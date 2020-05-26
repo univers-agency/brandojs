@@ -296,7 +296,7 @@ export default {
     },
 
     async save () {
-      const params = this.$utils.stripParams(this.identity, ['__typename', 'id', 'globalCategories'])
+      const params = this.$utils.stripParams(this.identity, ['__typename', 'id'])
       this.$utils.validateImageParams(params, ['logo', 'image'])
 
       console.log(params)

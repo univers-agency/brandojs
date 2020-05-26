@@ -27,7 +27,7 @@
           Lagre bildekategori
         </button>
         <button
-          class="btn"
+          class="btn btn-secondary"
           @click.prevent="closeModal">
           Avbryt
         </button>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import gql from 'graphql-tag'
 import Modal from '../../Modal.vue'
 
 export default {
@@ -63,8 +63,24 @@ export default {
   methods: {
     async save () {
       try {
-        const c = await this.createImageCategory(this.category)
-        this.$router.push({ name: 'image-category-detail', params: { categoryId: c.id } })
+        await this.$apollo.mutate({
+          mutation: gql`
+              mutation CreateImageCategory($imageCategoryParams: ImageCategoryParams) {
+                createImageCategory(
+                  imageCategoryParams: $imageCategoryParams
+                ) {
+                  id
+                }
+              }
+            `,
+          variables: {
+            imageCategoryParams: this.category
+          },
+          update: (store, { data: { createImageCategory } }) => {
+            this.$toast.success({ message: 'Kategori opprettet' })
+            this.$router.push({ name: 'image-category-detail', params: { categoryId: createImageCategory.id } })
+          }
+        })
       } catch (err) {
         this.$utils.showError(err)
       }
@@ -72,11 +88,7 @@ export default {
 
     closeModal () {
       this.$emit('close')
-    },
-
-    ...mapActions('images', [
-      'createImageCategory'
-    ])
+    }
   }
 }
 </script>
