@@ -10,13 +10,14 @@
       <input
         :id="id"
         ref="input"
-        v-model="innerValue"
+        :value="innerValue"
         :class="{ monospace, invert }"
         :placeholder="placeholder"
         :maxlength="maxlength"
         :name="name"
         :disabled="disabled"
-        type="text">
+        type="text"
+        @input="handleInput">
     </template>
   </KFieldBase>
 </template>
@@ -80,17 +81,13 @@ export default {
 
   data () {
     return {
+      innerValue: ''
     }
   },
 
   computed: {
     id () {
       return this.name.replace('[', '_').replace(']', '_')
-    },
-
-    innerValue: {
-      get () { return this.value },
-      set (innerValue) { this.$emit('input', innerValue) }
     }
   },
 
@@ -103,6 +100,16 @@ export default {
   methods: {
     focus () {
       this.$refs.input.focus()
+    },
+
+    handleInput (event) {
+      const val = event.target.value
+      const pos = event.target.selectionStart
+      if (val !== this.value) {
+        this.$nextTick(() => (event.target.selectionEnd = pos))
+      }
+      this.innerValue = val
+      this.$emit('input', this.innerValue)
     }
   }
 }
