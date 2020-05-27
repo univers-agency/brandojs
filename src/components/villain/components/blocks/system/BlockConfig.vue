@@ -7,7 +7,7 @@
     @shortkey.native="closeConfig"
     @ok="closeConfig">
     <template #header>
-      <h5>getBlockDisplayName(block.type)</h5>
+      <h5>Konfigurer blokk</h5>
     </template>
     <div
       ref="config"
@@ -31,11 +31,8 @@ export default {
   },
 
   created () {
+    console.debug('<BlockConfig /> created')
     this.innerValue = this.$utils.clone(this.value)
-  },
-
-  updated () {
-    console.debug('<BlockConfig /> updated')
   },
 
   methods: {
@@ -46,7 +43,7 @@ export default {
     async closeConfig () {
       await this.$refs.modal.close()
       this.modalVisible = false
-      this.$emit('input', this.innerValue)
+      this.$emit('input', this.$utils.clone(this.innerValue))
     }
   }
 }

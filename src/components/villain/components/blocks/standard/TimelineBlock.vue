@@ -1,55 +1,66 @@
 <template>
-  <Block
-    :block="block"
-    :parent="parent"
-    @add="$emit('add', $event)"
-    @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)"
-    @toggle-config="showConfig = $event">
-    <ul class="villain-timeline">
-      <li
-        v-for="(item, idx) in block.data"
-        :key="idx"
-        class="villain-timeline-item">
-        <p class="villain-timeline-item-date">
-          {{ item.caption }}
-        </p>
-        <div class="villain-timeline-item-content">
-          <div class="villain-timeline-item-content-inner">
-            {{ item.text }}
+  <div>
+    <Block
+      :block="block"
+      :parent="parent"
+      @add="$emit('add', $event)"
+      @move="$emit('move', $event)"
+      @delete="$emit('delete', $event)">
+      <ul class="villain-timeline">
+        <li
+          v-for="(item, idx) in block.data.rows"
+          :key="idx"
+          class="villain-timeline-item">
+          <p class="villain-timeline-item-date">
+            {{ item.caption }}
+          </p>
+          <div class="villain-timeline-item-content">
+            <div class="villain-timeline-item-content-inner">
+              {{ item.text }}
+            </div>
           </div>
-        </div>
-      </li>
-    </ul>
-    <template slot="config">
-      <div
-        v-for="(item, idx) in block.data"
-        :key="idx + 'cfg'"
-        class="form-group">
-        <KInput
-          v-model="item.caption"
-          label="Datapunkt"
-          :name="`data[caption][${idx}]`" />
-
-        <KInputTextarea
-          v-model="item.text"
-          :rows="2"
-          label="Innhold"
-          :name="`data[text][${idx}]`" />
-
-        <ButtonSecondary
-          @click="deleteItem(item)">
-          Slett punkt
-        </ButtonSecondary>
-
-        <hr />
+        </li>
+      </ul>
+      <div class="helpful-actions">
+        <ButtonTiny
+          @click="$refs.config.openConfig()">
+          Konfigurér blokk
+        </ButtonTiny>
       </div>
-      <ButtonSecondary
-        @click="addItem">
-        Nytt punkt
-      </ButtonSecondary>
-    </template>
-  </Block>
+    </Block>
+    <BlockConfig
+      ref="config"
+      v-model="block.data">
+      <template #default="{ cfg }">
+        <div
+          v-for="(item, idx) in cfg.rows"
+          :key="idx + 'cfg'"
+          class="form-group">
+          <KInput
+            v-model="item.caption"
+            label="Datapunkt"
+            :name="`data[caption][${idx}]`" />
+
+          <KInputTextarea
+            v-model="item.text"
+            :rows="2"
+            label="Innhold"
+            :name="`data[text][${idx}]`" />
+
+          <ButtonSecondary
+            @click="deleteItem(cfg, item)">
+            Slett punkt
+          </ButtonSecondary>
+
+          <hr />
+        </div>
+        <ButtonSecondary
+          @click="addItem(cfg)">
+          Nytt punkt
+        </ButtonSecondary>
+      </template>
+    </BlockConfig>
+  </div>
 </template>
 
 <script>
@@ -85,21 +96,25 @@ export default {
     console.debug('<TimelineBlock /> created')
   },
 
+  updated () {
+    console.debug('<TimelineBlock /> updated')
+  },
+
   methods: {
-    addItem () {
-      this.block.data.push({
-        caption: '2018',
+    addItem (cfg) {
+      cfg.rows.push({
+        caption: '2022',
         text: 'Innhold'
       })
     },
 
-    deleteItem (item) {
-      const i = this.block.data.find(b => b === item)
-      const idx = this.block.data.indexOf(i)
+    deleteItem (cfg, item) {
+      const i = cfg.rows.find(b => b === item)
+      const idx = cfg.rows.indexOf(i)
 
-      this.block.data = [
-        ...this.block.data.slice(0, idx),
-        ...this.block.data.slice(idx + 1)
+      cfg.rows = [
+        ...cfg.rows.slice(0, idx),
+        ...cfg.rows.slice(idx + 1)
       ]
     }
   }

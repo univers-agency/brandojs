@@ -73,7 +73,6 @@ export default {
   mounted () {
     this.$nextTick().then(
       this.$nextTick(() => {
-        console.log(this.$refs)
         const timeline = gsap.timeline()
         gsap.set(this.$refs.modalModal, { y: 40 })
 

@@ -10,13 +10,18 @@
     <div class="villain-block-description">
       Markdown
     </div>
-    <div
+    <KInputCode
+      v-model="block.data.text"
+      label=""
+      transparent
+      name="data[text]" />
+    <!-- <div
       ref="wrapper"
       class="villain-markdown-input-wrapper">
       <textarea
         ref="txt"
         class="villain-markdown-input"></textarea>
-    </div>
+    </div> -->
     <template slot="help">
       <p>
         Markdown formatering er en ryddig måte å formatere tekst til nettsider på.
@@ -30,10 +35,6 @@
 </template>
 
 <script>
-import CodeMirror from 'codemirror'
-import 'codemirror/mode/gfm/gfm.js'
-import 'codemirror/addon/display/autorefresh.js'
-
 import Block from '../system/Block'
 
 export default {
@@ -67,27 +68,6 @@ export default {
 
   created () {
     console.debug('<MarkdownBlock /> created')
-  },
-
-  mounted () {
-    this.codeMirror = CodeMirror.fromTextArea(this.$refs.txt, {
-      mode: 'gfm',
-      theme: 'duotone-light',
-      autoRefresh: true,
-      line: true,
-      gutters: ['CodeMirror-linenumbers'],
-      matchBrackets: true,
-      showCursorWhenSelecting: true,
-      styleActiveLine: true,
-      lineNumbers: true,
-      styleSelectedText: true
-    })
-
-    this.codeMirror.setValue(this.block.data.text)
-
-    this.codeMirror.on('change', cm => {
-      this.block.data.text = cm.getValue()
-    })
   },
 
   destroy () {

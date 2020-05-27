@@ -9,9 +9,10 @@
       Kommentar (vises ikke)
     </div>
     <div class="villain-block-comment">
-      <KInputTextarea
+      <KInputCode
         v-model="block.data.text"
-        :monospace="true"
+        transparent
+        :line-numbers="false"
         name="data[text]"
         label="Kommentar" />
     </div>

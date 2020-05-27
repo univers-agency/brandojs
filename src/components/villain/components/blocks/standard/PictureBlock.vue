@@ -1,71 +1,31 @@
 <template>
-  <Block
-    ref="block"
-    :block="block"
-    :parent="parent"
-    @add="$emit('add', $event)"
-    @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
-    <div class="villain-block-description">
-      Bildefigur
-    </div>
-    <div class="villain-block-picture">
-      <template v-if="previewUrl">
-        <img
-          v-if="previewUrl"
-          :src="previewUrl"
-          class="img-fluid">
-        <div class="helpful-actions">
-          <ButtonTiny
-            @click="$refs.block.openConfig()">
-            Konfigurér bilde
-          </ButtonTiny>
-        </div>
-      </template>
-      <div
-        v-else
-        class="villain-block-image-empty">
-        <drop
-          class="drop"
-          @dragover="dragOver = true"
-          @dragleave="dragOver = false"
-          @drop="handleDrop">
-          <template v-if="dragOver">
-            <FontAwesomeIcon
-              icon="cloud-upload-alt"
-              size="6x"
-              fixed-width />
-          </template>
-          <template
-            v-else>
-            <template v-if="uploading">
-              <FontAwesomeIcon
-                icon="circle-notch"
-                spin
-                size="6x"
-                fixed-width />
-            </template>
-            <template v-else>
-              <FontAwesomeIcon
-                icon="image"
-                size="6x" />
-            </template>
-          </template>
-        </drop>
-
-        <div class="actions">
-          <ButtonTiny
-            @click="$refs.block.openConfig()">
-            Konfigurér bildeblokk
-          </ButtonTiny>
-        </div>
+  <div>
+    <Block
+      ref="block"
+      :block="block"
+      :parent="parent"
+      @add="$emit('add', $event)"
+      @move="$emit('move', $event)"
+      @delete="$emit('delete', $event)">
+      <div class="villain-block-description">
+        Bildefigur
       </div>
-    </div>
-    <template slot="config">
-      <div
-        v-if="!showImages && !block.data.url">
+      <div class="villain-block-picture">
+        <template v-if="previewUrl">
+          <img
+            v-if="previewUrl"
+            :src="previewUrl"
+            class="img-fluid">
+          <div class="helpful-actions">
+            <ButtonTiny
+              @click="$refs.config.openConfig()">
+              Konfigurér bildeblokk
+            </ButtonTiny>
+          </div>
+        </template>
         <div
-          class="display-icon">
+          v-else
+          class="villain-block-image-empty">
           <drop
             class="drop"
             @dragover="dragOver = true"
@@ -74,6 +34,7 @@
             <template v-if="dragOver">
               <FontAwesomeIcon
                 icon="cloud-upload-alt"
+                size="6x"
                 fixed-width />
             </template>
             <template
@@ -82,173 +43,217 @@
                 <FontAwesomeIcon
                   icon="circle-notch"
                   spin
+                  size="6x"
                   fixed-width />
               </template>
               <template v-else>
                 <FontAwesomeIcon
                   icon="image"
-                  fixed-width />
+                  size="6x" />
               </template>
             </template>
           </drop>
+
+          <div class="actions">
+            <ButtonTiny
+              @click="$refs.config.openConfig()">
+              Konfigurér bildeblokk
+            </ButtonTiny>
+          </div>
         </div>
-        <div class="text-center mb-2">
-          <template
-            v-if="dragOver">
-            Slipp for å laste opp!
-          </template>
-          <template v-else>
-            <template v-if="uploading">
-              Laster opp ...
+      </div>
+    </Block>
+    <BlockConfig
+      ref="config">
+      <template #default>
+        <div
+          v-if="!showImages && !block.data.url">
+          <div
+            class="display-icon">
+            <drop
+              class="drop"
+              @dragover="dragOver = true"
+              @dragleave="dragOver = false"
+              @drop="handleDrop">
+              <template v-if="dragOver">
+                <FontAwesomeIcon
+                  icon="cloud-upload-alt"
+                  fixed-width />
+              </template>
+              <template
+                v-else>
+                <template v-if="uploading">
+                  <FontAwesomeIcon
+                    icon="circle-notch"
+                    spin
+                    fixed-width />
+                </template>
+                <template v-else>
+                  <FontAwesomeIcon
+                    icon="image"
+                    fixed-width />
+                </template>
+              </template>
+            </drop>
+          </div>
+          <div class="text-center mb-2">
+            <template
+              v-if="dragOver">
+              Slipp for å laste opp!
             </template>
             <template v-else>
-              Dra bildet du vil laste opp hit &uarr;
+              <template v-if="uploading">
+                Laster opp ...
+              </template>
+              <template v-else>
+                Dra bildet du vil laste opp hit &uarr;
+              </template>
             </template>
-          </template>
+          </div>
         </div>
-      </div>
 
-      <div
-        v-if="showImages && listStyle"
-        class="villain-image-library">
-        <div class="col-12 mb-3">
-          <ButtonSecondary @click="listStyle = false">Vis thumbnails</ButtonSecondary>
-          <ButtonSecondary @click="showImages = false">Skjul bildeliste</ButtonSecondary>
-        </div>
-        <table
-          class="table villain-image-table">
-          <tr
-            v-for="i in images"
-            :key="i.id">
-            <td class="fit">
-              <img
-                :src="i.thumb"
-                class="img-fluid"
-                @click="selectImage(i)" />
-            </td>
-            <td>
-              <table class="table table-bordered">
-                <tr>
-                  <td>
-                    <span class="text-mono">{{ i.src.substring(i.src.lastIndexOf('/')+1) }}</span>
-                  </td>
-                  <td>
-                    <span class="text-mono text-align-right">
-                      {{ i.width }}x{{ i.height }}
-                    </span>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </div>
-
-      <div
-        v-else-if="showImages && !listStyle"
-        class="villain-image-library">
-        <div class="col-12 mb-3">
-          <ButtonSecondary @click="listStyle = true">Vis listevisning</ButtonSecondary>
-          <ButtonSecondary @click="showImages = false">Skjul bildeliste</ButtonSecondary>
-        </div>
         <div
-          v-for="i in images"
-          :key="i.id"
-          class="col-2">
-          <img
-            :src="i.thumb"
-            class="img-fluid"
-            @click="selectImage(i)" />
+          v-if="showImages && listStyle"
+          class="villain-image-library">
+          <div class="col-12 mb-3">
+            <ButtonSecondary @click="listStyle = false">Vis thumbnails</ButtonSecondary>
+            <ButtonSecondary @click="showImages = false">Skjul bildeliste</ButtonSecondary>
+          </div>
+          <table
+            class="table villain-image-table">
+            <tr
+              v-for="i in images"
+              :key="i.id">
+              <td class="fit">
+                <img
+                  :src="i.thumb"
+                  class="img-fluid"
+                  @click="selectImage(i)" />
+              </td>
+              <td>
+                <table class="table table-bordered">
+                  <tr>
+                    <td>
+                      <span class="text-mono">{{ i.src.substring(i.src.lastIndexOf('/')+1) }}</span>
+                    </td>
+                    <td>
+                      <span class="text-mono text-align-right">
+                        {{ i.width }}x{{ i.height }}
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
         </div>
-      </div>
 
-      <div v-else>
-        <div class="panes">
-          <div>
-            <div v-if="block.data.url">
-              <KInputToggle
-                v-model="advancedConfig"
-                name="config[advanced]"
-                label="Vis avansert konfigurasjon" />
-
-              <KInput
-                v-model="block.data.title"
-                name="data[title]"
-                label="Tittel"
-                placeholder="Tittel" />
-
-              <KInput
-                v-model="block.data.alt"
-                name="data[alt]"
-                label="Alt. tekst (om bildet ikke laster)"
-                placeholder="Alt. tekst" />
-
-              <KInput
-                v-model="block.data.credits"
-                name="data[credits]"
-                label="Krediteringer"
-                placeholder="Krediteringer" />
-
-              <div v-show="advancedConfig">
-                <KInput
-                  v-model="block.data.url"
-                  name="data[url]"
-                  label="Kilde (avansert)"
-                  placeholder="Kilde" />
-
-                <KInputTextarea
-                  v-model="block.data.media_queries"
-                  name="data[media_queries]"
-                  label="Media Queries (avansert)" />
-
-                <KInputTextarea
-                  v-model="block.data.srcset"
-                  name="data[srcset]"
-                  label="Srcset (avansert)" />
-
-                <KInput
-                  v-model="block.data.img_class"
-                  name="data[img_class]"
-                  label="CSS klasser (img)"
-                  placeholder="classname1 classname2" />
-
-                <KInput
-                  v-model="block.data.picture_class"
-                  name="data[picture_class]"
-                  label="CSS klasser (picture)"
-                  placeholder="classname1 classname2" />
-              </div>
-            </div>
-
-            <div class="villain-config-content-buttons">
-              <button
-                v-if="!showImages"
-                type="button"
-                class="btn btn-primary"
-                @click="getImages">
-                Velg bilde fra bildebibliotek
-              </button>
-              <button
-                v-if="block.data.url !== ''"
-                type="button"
-                class="btn btn-primary ml-3"
-                @click="resetImage">
-                Nullstill bildeblokk
-              </button>
-            </div>
+        <div
+          v-else-if="showImages && !listStyle"
+          class="villain-image-library">
+          <div class="col-12 mb-3">
+            <ButtonSecondary @click="listStyle = true">Vis listevisning</ButtonSecondary>
+            <ButtonSecondary @click="showImages = false">Skjul bildeliste</ButtonSecondary>
           </div>
           <div
-            v-if="block.data.url"
-            class="shaded preview-image">
+            v-for="i in images"
+            :key="i.id"
+            class="col-2">
             <img
-              v-if="block.data.url"
-              :src="block.data.url"
-              class="img-fluid" />
+              :src="i.thumb"
+              class="img-fluid"
+              @click="selectImage(i)" />
           </div>
         </div>
-      </div>
-    </template>
-  </Block>
+
+        <div v-else>
+          <div class="panes">
+            <div>
+              <div v-if="block.data.url">
+                <KInputToggle
+                  v-model="advancedConfig"
+                  name="config[advanced]"
+                  label="Vis avansert konfigurasjon" />
+
+                <KInput
+                  v-model="block.data.title"
+                  name="data[title]"
+                  label="Tittel"
+                  placeholder="Tittel" />
+
+                <KInput
+                  v-model="block.data.alt"
+                  name="data[alt]"
+                  label="Alt. tekst (om bildet ikke laster)"
+                  placeholder="Alt. tekst" />
+
+                <KInput
+                  v-model="block.data.credits"
+                  name="data[credits]"
+                  label="Krediteringer"
+                  placeholder="Krediteringer" />
+
+                <div v-show="advancedConfig">
+                  <KInput
+                    v-model="block.data.url"
+                    name="data[url]"
+                    label="Kilde (avansert)"
+                    placeholder="Kilde" />
+
+                  <KInputTextarea
+                    v-model="block.data.media_queries"
+                    name="data[media_queries]"
+                    label="Media Queries (avansert)" />
+
+                  <KInputTextarea
+                    v-model="block.data.srcset"
+                    name="data[srcset]"
+                    label="Srcset (avansert)" />
+
+                  <KInput
+                    v-model="block.data.img_class"
+                    name="data[img_class]"
+                    label="CSS klasser (img)"
+                    placeholder="classname1 classname2" />
+
+                  <KInput
+                    v-model="block.data.picture_class"
+                    name="data[picture_class]"
+                    label="CSS klasser (picture)"
+                    placeholder="classname1 classname2" />
+                </div>
+              </div>
+
+              <div class="villain-config-content-buttons">
+                <button
+                  v-if="!showImages"
+                  type="button"
+                  class="btn btn-primary"
+                  @click="getImages">
+                  Velg bilde fra bildebibliotek
+                </button>
+                <button
+                  v-if="block.data.url !== ''"
+                  type="button"
+                  class="btn btn-primary ml-3"
+                  @click="resetImage">
+                  Nullstill bildeblokk
+                </button>
+              </div>
+            </div>
+            <div
+              v-if="block.data.url"
+              class="shaded preview-image">
+              <img
+                v-if="block.data.url"
+                :src="block.data.url"
+                class="img-fluid" />
+            </div>
+          </div>
+        </div>
+      </template>
+    </BlockConfig>
+  </div>
 </template>
 
 <script>

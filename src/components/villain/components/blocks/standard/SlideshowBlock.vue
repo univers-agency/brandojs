@@ -1,241 +1,248 @@
 <template>
-  <Block
-    ref="block"
-    :block="block"
-    :parent="parent"
-    @add="$emit('add', $event)"
-    @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
-    <div class="villain-block-description">
-      Galleriblokk
-    </div>
-    <div
+  <div>
+    <Block
       ref="block"
-      class="villain-block-slideshow">
-      <transition-group
-        v-if="block.data.images.length"
-        v-sortable="{handle: '.villain-block-slideshow-image', animation: 500, store: {get: getOrder, set: storeOrder}}"
-        name="fade-move"
-        tag="div"
-        class="villain-block-slideshow-images">
-        <div
-          v-for="i in block.data.images"
-          :key="i.url"
-          :data-id="i.url"
-          class="villain-block-slideshow-image"
-          @mouseover.stop="imgHover(i, $event)"
-          @mouseout="imgLeave"
-          @click="toggleImage(i)">
-          <i class="fa fa-trash info" />
-          <div
-            v-if="toggledImageUrl === i.url"
-            class="villain-block-slideshow-image-overlay">
-            <template>
-              <FontAwesomeIcon
-                icon="trash"
-                size="4x"
-                @click="del(i)" />
-            </template>
-          </div>
-          <img
-            :src="i.url"
-            class="img-fluid">
-        </div>
-      </transition-group>
+      :block="block"
+      :parent="parent"
+      @add="$emit('add', $event)"
+      @move="$emit('move', $event)"
+      @delete="$emit('delete', $event)">
+      <div class="villain-block-description">
+        Galleriblokk
+      </div>
       <div
-        v-else
-        class="villain-block-image-empty">
-        <FontAwesomeIcon
-          icon="images"
-          size="6x" />
-        <div class="actions">
+        ref="block"
+        class="villain-block-slideshow">
+        <transition-group
+          v-if="block.data.images.length"
+          v-sortable="{handle: '.villain-block-slideshow-image', animation: 500, store: {get: getOrder, set: storeOrder}}"
+          name="fade-move"
+          tag="div"
+          class="villain-block-slideshow-images">
+          <div
+            v-for="i in block.data.images"
+            :key="i.url"
+            :data-id="i.url"
+            class="villain-block-slideshow-image"
+            @mouseover.stop="imgHover(i, $event)"
+            @mouseout="imgLeave"
+            @click="toggleImage(i)">
+            <i class="fa fa-trash info" />
+            <div
+              v-if="toggledImageUrl === i.url"
+              class="villain-block-slideshow-image-overlay">
+              <template>
+                <FontAwesomeIcon
+                  icon="trash"
+                  size="4x"
+                  @click="del(i)" />
+              </template>
+            </div>
+            <img
+              :src="i.url"
+              class="img-fluid">
+          </div>
+        </transition-group>
+        <div
+          v-else
+          class="villain-block-image-empty">
+          <FontAwesomeIcon
+            icon="images"
+            size="6x" />
+        </div>
+        <div
+          key="actions"
+          class="actions">
           <ButtonTiny
-            @click="$refs.block.openConfig()">
+            @click="$refs.config.openConfig()">
             Konfigurér galleriblokk
           </ButtonTiny>
         </div>
       </div>
-    </div>
 
-    <template slot="config">
-      <div
-        v-if="showTitles">
-        <KInputTable
-          v-model="block.data.images"
-          name="data[images]"
-          label="Bildetekster"
-          :delete-rows="false"
-          :add-rows="false">
-          <template v-slot:row="{ entry }">
-            <div class="panes">
-              <div>
-                <td>
-                  <img :src="entry.sizes.thumb">
-                </td>
-              </div>
-              <div>
-                <td>
-                  <KInput
-                    v-model="entry.title"
-                    name="entry[title]"
-                    placeholder="Bildetekst"
-                    label="Bildetekst" />
-
-                  <KInput
-                    v-model="entry.alt"
-                    name="entry[alt]"
-                    placeholder="Alt tekst"
-                    label="Alt. tekst"
-                    help-text="Beskrivelse av bildet for universell utforming" />
-                </td>
-              </div>
-            </div>
-          </template>
-          <template v-slot:new="">
-          </template>
-        </KInputTable>
-
-        <button
-          type="button"
-          class="btn btn-primary"
-          @click="showTitles = false; showImages = true">
-          OK
-        </button>
-      </div>
-      <div
-        v-if="showUpload">
+      <template slot="help">
+        <p>
+          For å slette et bilde i bildekarusellen, klikker du på bildet, deretter klikker du på søplekasse-ikonet (<i class="fa fa-trash" />)<br><br>
+          For å gi bildene bildetekst, klikker du på tannhjulet (<i class="fa fa-cog" />) og deretter "Endre bildetekster"<br><br>
+          For å sortere bildene kan du dra og slippe de i ønsket rekkefølge.
+        </p>
+      </template>
+    </Block>
+    <BlockConfig
+      ref="config">
+      <template #default>
         <div
-          class="display-icon">
-          <drop
-            class="drop"
-            @dragover="dragOver = true"
-            @dragleave="dragOver = false"
-            @drop="handleDrop">
-            <template v-if="dragOver">
-              <i class="fa fa-fw fa-cloud-upload-alt"></i>
+          v-if="showTitles">
+          <KInputTable
+            v-model="block.data.images"
+            name="data[images]"
+            label="Bildetekster"
+            :delete-rows="false"
+            :add-rows="false">
+            <template v-slot:row="{ entry }">
+              <div class="panes">
+                <div>
+                  <td>
+                    <img :src="entry.sizes.thumb">
+                  </td>
+                </div>
+                <div>
+                  <td>
+                    <KInput
+                      v-model="entry.title"
+                      name="entry[title]"
+                      placeholder="Bildetekst"
+                      label="Bildetekst" />
+
+                    <KInput
+                      v-model="entry.alt"
+                      name="entry[alt]"
+                      placeholder="Alt tekst"
+                      label="Alt. tekst"
+                      help-text="Beskrivelse av bildet for universell utforming" />
+                  </td>
+                </div>
+              </div>
             </template>
-            <template
-              v-else>
-              <template v-if="uploading">
-                <i class="fa fa-fw fa-circle-notch fa-spin"></i>
-              </template>
-              <template v-else>
-                <i class="fa fa-fw fa-images"></i>
-              </template>
+            <template v-slot:new="">
             </template>
-          </drop>
+          </KInputTable>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="showTitles = false; showImages = true">
+            OK
+          </button>
         </div>
-        <div class="text-center mb-3">
-          <template
-            v-if="dragOver">
-            Slipp for å laste opp!
-          </template>
-          <template v-else>
-            <template v-if="uploading">
-              Laster opp ...
+        <div
+          v-if="showUpload">
+          <div
+            class="display-icon">
+            <drop
+              class="drop"
+              @dragover="dragOver = true"
+              @dragleave="dragOver = false"
+              @drop="handleDrop">
+              <template v-if="dragOver">
+                <i class="fa fa-fw fa-cloud-upload-alt"></i>
+              </template>
+              <template
+                v-else>
+                <template v-if="uploading">
+                  <i class="fa fa-fw fa-circle-notch fa-spin"></i>
+                </template>
+                <template v-else>
+                  <i class="fa fa-fw fa-images"></i>
+                </template>
+              </template>
+            </drop>
+          </div>
+          <div class="text-center mb-3">
+            <template
+              v-if="dragOver">
+              Slipp for å laste opp!
             </template>
             <template v-else>
-              Dra bildene du vil laste opp hit &uarr;
+              <template v-if="uploading">
+                Laster opp ...
+              </template>
+              <template v-else>
+                Dra bildene du vil laste opp hit &uarr;
+              </template>
             </template>
-          </template>
+          </div>
         </div>
-      </div>
-      <div
-        v-if="showImages && listStyle"
-        class="villain-image-library mt-4">
-        <div class="buttons col-12 mb-3">
-          <ButtonSecondary @click="listStyle = false">
-            Vis som grid
-          </ButtonSecondary>
-          <ButtonSecondary @click="showUpload = true; showImages = false">
-            Last opp bilder
-          </ButtonSecondary>
-          <ButtonSecondary @click="showTitles = true; showImages = false">
-            Endre bildetekster
-          </ButtonSecondary>
+        <div
+          v-if="showImages && listStyle"
+          class="villain-image-library mt-4">
+          <div class="buttons col-12 mb-3">
+            <ButtonSecondary @click="listStyle = false">
+              Vis som grid
+            </ButtonSecondary>
+            <ButtonSecondary @click="showUpload = true; showImages = false">
+              Last opp bilder
+            </ButtonSecondary>
+            <ButtonSecondary @click="showTitles = true; showImages = false">
+              Endre bildetekster
+            </ButtonSecondary>
+          </div>
+          <table
+            class="table villain-image-table">
+            <tr
+              v-for="i in images"
+              :key="i.id">
+              <td class="fit">
+                <img
+                  :src="i.thumb"
+                  :class="alreadySelected(i) ? 'villain-image-table-selected' : ''"
+                  class="img-fluid"
+                  @click="selectImage(i)" />
+              </td>
+              <td>
+                <table class="table table-bordered">
+                  <tr>
+                    <td>
+                      <span class="text-mono">{{ i.src.substring(i.src.lastIndexOf('/')+1) }}</span>
+                    </td>
+                    <td>
+                      <span class="text-mono text-align-right">
+                        {{ i.width }}x{{ i.height }}
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
         </div>
-        <table
-          class="table villain-image-table">
-          <tr
+
+        <div
+          v-else-if="showImages && !listStyle"
+          class="villain-image-library row">
+          <div class="buttons col-12 mb-3">
+            <ButtonSecondary @click="listStyle = true">
+              Vis som liste
+            </ButtonSecondary>
+            <ButtonSecondary @click="showUpload = true; showImages = false">
+              Last opp bilder
+            </ButtonSecondary>
+            <ButtonSecondary @click="showTitles = true; showImages = false">
+              Endre bildetekster
+            </ButtonSecondary>
+          </div>
+          <div
             v-for="i in images"
-            :key="i.id">
-            <td class="fit">
-              <img
-                :src="i.thumb"
-                :class="alreadySelected(i) ? 'villain-image-table-selected' : ''"
-                class="img-fluid"
-                @click="selectImage(i)" />
-            </td>
-            <td>
-              <table class="table table-bordered">
-                <tr>
-                  <td>
-                    <span class="text-mono">{{ i.src.substring(i.src.lastIndexOf('/')+1) }}</span>
-                  </td>
-                  <td>
-                    <span class="text-mono text-align-right">
-                      {{ i.width }}x{{ i.height }}
-                    </span>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </div>
+            :key="i.id"
+            class="imgthumb mb-3">
+            <img
+              :src="i.thumb"
+              :class="alreadySelected(i) ? 'villain-image-table-selected' : ''"
+              class="img-fluid"
+              @click="selectImage(i)" />
+          </div>
+          <div
+            class="col-12 form-group mt-4">
+            <label>CSS klasser</label>
+            <input
+              v-model="block.data.class"
+              class="form-control"
+              type="input">
+          </div>
+        </div>
 
-      <div
-        v-else-if="showImages && !listStyle"
-        class="villain-image-library row">
-        <div class="buttons col-12 mb-3">
-          <ButtonSecondary @click="listStyle = true">
-            Vis som liste
-          </ButtonSecondary>
-          <ButtonSecondary @click="showUpload = true; showImages = false">
-            Last opp bilder
-          </ButtonSecondary>
-          <ButtonSecondary @click="showTitles = true; showImages = false">
-            Endre bildetekster
-          </ButtonSecondary>
+        <div class="villain-config-content-buttons">
+          <button
+            v-if="!showImages && !showTitles"
+            type="button"
+            class="btn btn-primary"
+            @click="showImages = true; showUpload = false; showTitles = false">
+            Velg bilder fra bildebibliotek
+          </button>
         </div>
-        <div
-          v-for="i in images"
-          :key="i.id"
-          class="imgthumb mb-3">
-          <img
-            :src="i.thumb"
-            :class="alreadySelected(i) ? 'villain-image-table-selected' : ''"
-            class="img-fluid"
-            @click="selectImage(i)" />
-        </div>
-        <div
-          class="col-12 form-group mt-4">
-          <label>CSS klasser</label>
-          <input
-            v-model="block.data.class"
-            class="form-control"
-            type="input">
-        </div>
-      </div>
-
-      <div class="villain-config-content-buttons">
-        <button
-          v-if="!showImages && !showTitles"
-          type="button"
-          class="btn btn-primary"
-          @click="showImages = true; showUpload = false; showTitles = false">
-          Velg bilder fra bildebibliotek
-        </button>
-      </div>
-    </template>
-    <template slot="help">
-      <p>
-        For å slette et bilde i bildekarusellen, klikker du på bildet, deretter klikker du på søplekasse-ikonet (<i class="fa fa-trash" />)<br><br>
-        For å gi bildene bildetekst, klikker du på tannhjulet (<i class="fa fa-cog" />) og deretter "Endre bildetekster"<br><br>
-        For å sortere bildene kan du dra og slippe de i ønsket rekkefølge.
-      </p>
-    </template>
-  </Block>
+      </template>
+    </BlockConfig>
+  </div>
 </template>
 
 <script>
@@ -503,5 +510,9 @@ export default {
 
   .image-caption {
     align-self: center;
+  }
+
+  .actions {
+    text-align: center;
   }
 </style>

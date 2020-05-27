@@ -1,94 +1,105 @@
 <template>
-  <Block
-    ref="block"
-    :block="block"
-    :parent="parent"
-    @add="$emit('add', $event)"
-    @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
-    <div class="villain-block-description">
-      Datakilde<span v-if="block.data.description"> — {{ block.data.description }}</span>
-    </div>
-    <div class="villain-block-datasource-info">
-      <div
-        v-if="block.data.module"
-        class="inside">
-        <i class="fa fa-fw fa-database"></i>
-        <p>Datakilde — {{ block.data.description }}</p>
-        <p><small><code>{{ block.data.module }}<br>{{ block.data.type }}|{{ block.data.query }}</code></small></p>
+  <div>
+    <Block
+      ref="block"
+      :block="block"
+      :parent="parent"
+      @add="$emit('add', $event)"
+      @move="$emit('move', $event)"
+      @delete="$emit('delete', $event)">
+      <div class="villain-block-description">
+        Datakilde<span v-if="block.data.description"> — {{ block.data.description }}</span>
       </div>
-      <div
-        v-else
-        class="villain-block-datasource-empty">
-        <i class="fa fa-fw fa-database"></i>
-        <div class="actions">
-          <ButtonSecondary
-            @click="$refs.block.openConfig()">
-            Konfigurér datakilde
-          </ButtonSecondary>
+      <div class="villain-block-datasource-info">
+        <div
+          v-if="block.data.module"
+          class="inside">
+          <i class="fa fa-fw fa-database"></i>
+          <p>Datakilde — {{ block.data.description }}</p>
+          <p><small><code>{{ block.data.module }}<br>{{ block.data.type }}|{{ block.data.query }}</code></small></p>
+          <div class="helpful-actions">
+            <ButtonTiny
+              @click="$refs.config.openConfig()">
+              Konfigurér datakilde
+            </ButtonTiny>
+          </div>
+        </div>
+        <div
+          v-else
+          class="villain-block-datasource-empty">
+          <i class="fa fa-fw fa-database"></i>
+          <div class="actions">
+            <ButtonTiny
+              @click="$refs.config.openConfig()">
+              Konfigurér datakilde
+            </ButtonTiny>
+          </div>
         </div>
       </div>
-    </div>
-    <template slot="config">
-      <div class="panes">
-        <div>
-          <KInput
-            v-model="block.data.description"
-            rules="required"
-            name="data[description]"
-            label="Beskrivelse"
-            placeholder="Beskrivelse av datakilden" />
+      <BlockConfig
+        ref="config">
+        <template #default>
+          <div class="panes">
+            <div>
+              <KInput
+                v-model="block.data.description"
+                rules="required"
+                name="data[description]"
+                label="Beskrivelse"
+                placeholder="Beskrivelse av datakilden" />
 
-          <KInputRadios
-            v-model="block.data.module"
-            rules="required"
-            :options="availableModules"
-            optionValueKey="module"
-            optionLabelKey="module"
-            name="data[module]"
-            label="Kildemodul" />
+              <KInputRadios
+                v-model="block.data.module"
+                rules="required"
+                :options="availableModules"
+                optionValueKey="module"
+                optionLabelKey="module"
+                name="data[module]"
+                label="Kildemodul" />
 
-          <KInputRadios
-            v-model="block.data.type"
-            rules="required"
-            :options="availableModuleTypes"
-            name="data[type]"
-            label="Type" />
+              <KInputRadios
+                v-model="block.data.type"
+                rules="required"
+                :options="availableModuleTypes"
+                name="data[type]"
+                label="Type" />
 
-          <KInputRadios
-            v-model="block.data.query"
-            rules="required"
-            :options="availableModuleQueries"
-            name="data[query]"
-            label="Spørring" />
+              <KInputRadios
+                v-model="block.data.query"
+                rules="required"
+                :options="availableModuleQueries"
+                name="data[query]"
+                label="Spørring" />
 
-          <KInput
-            v-model="block.data.arg"
-            name="data[arg]"
-            label="Argument" />
-        </div>
-        <div>
-          <KInputSelect
-            v-if="templates.length"
-            v-model="block.data.template"
-            rules="required"
-            :options="templates"
-            optionValueKey="id"
-            optionLabelKey="name"
-            name="data[template]"
-            label="Mal" />
+              <KInput
+                v-model="block.data.arg"
+                name="data[arg]"
+                label="Argument" />
+            </div>
+            <div>
+              <KInputSelect
+                v-if="templates.length"
+                v-model="block.data.template"
+                rules="required"
+                :options="templates"
+                optionValueKey="id"
+                optionLabelKey="name"
+                name="data[template]"
+                label="Mal" />
 
-          <KInputTextarea
-            v-model="block.data.wrapper"
-            :monospace="true"
-            :rows="8"
-            name="data[wrapper]"
-            label="Wrapper"
-            help-text="Bruk ${CONTENT} for innhold" />
-        </div>
-      </div>
-    </template>
-  </Block>
+              <KInputTextarea
+                v-model="block.data.wrapper"
+                :monospace="true"
+                :rows="8"
+                name="data[wrapper]"
+                label="Wrapper"
+                help-text="Bruk ${CONTENT} for innhold" />
+            </div>
+          </div>
+        </template>
+      </BlockConfig>
+    </block>
+  </div>
 </template>
 
 <script>

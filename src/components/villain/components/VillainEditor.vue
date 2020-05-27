@@ -607,7 +607,7 @@ export default {
       let block
       // a standard component blueprint
       if (blockTpl.hasOwnProperty('component')) {
-        if (blockTpl.component === 'Columns' || blockTpl.component === 'Datatable') {
+        if (blockTpl.component === 'Columns') {
           block = {
             type: blockTpl.component.toLowerCase(),
             data: [...blockTpl.dataTemplate],

@@ -92,25 +92,6 @@
       </div>
     </div>
 
-    <KModal
-      v-if="showConfig"
-      ref="modal"
-      v-shortkey="['esc']"
-      ok-text="Lukk konfigurasjon"
-      @shortkey.native="closeConfig"
-      @ok="closeConfig">
-      <template #header>
-        <h5>{{ getBlockDisplayName(block.type) }}</h5>
-      </template>
-      <div
-        ref="config"
-        class="villain-block-config">
-        <div class="villain-block-config-content">
-          <slot name="config" />
-        </div>
-      </div>
-    </KModal>
-
     <template v-if="!locked">
       <VillainPlus
         v-if="block.type !== 'columns'"
@@ -225,17 +206,7 @@ export default {
     },
 
     openConfig () {
-      this.showConfig = true
-      // if (this.hasConfigListener) {
-      //   this.$nextTick(() => {
-      //     this.$emit('config')
-      //   })
-      // }
-    },
-
-    async closeConfig () {
-      await this.$refs.modal.close()
-      this.showConfig = false
+      console.error('==> openConfig called!', this.block.type)
     },
 
     deleteBlock () {

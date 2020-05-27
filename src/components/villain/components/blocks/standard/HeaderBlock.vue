@@ -1,49 +1,61 @@
 <template>
-  <Block
-    :block="block"
-    :parent="parent"
-    @add="$emit('add', $event)"
-    @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
-    <div class="villain-block-description">
-      Overskrift (H{{ block.data.level }})
-    </div>
-    <textarea
-      ref="txt"
-      v-model="block.data.text"
-      rows="1"
-      :style="'font-size: ' + fontSize + 'rem'"
-      class="villain-header-input">
-    </textarea>
-    <template slot="config">
-      <KInputRadios
-        v-model="block.data.level"
-        name="data[level]"
-        rules="required"
-        :options="[
-          { label: 'H1', value: 1 },
-          { label: 'H2', value: 2 },
-          { label: 'H3', value: 3 },
-          { label: 'H4', value: 4 },
-          { label: 'H5', value: 5 },
-          { label: 'H6', value: 6 }
-        ]"
-        optionValueKey="value"
-        optionLabelKey="label"
-        label="Størrelse" />
+  <div>
+    <Block
+      :block="block"
+      :parent="parent"
+      @add="$emit('add', $event)"
+      @move="$emit('move', $event)"
+      @delete="$emit('delete', $event)">
+      <div class="villain-block-description">
+        Overskrift (H{{ block.data.level }})
+      </div>
+      <textarea
+        ref="txt"
+        v-model="block.data.text"
+        rows="1"
+        :style="'font-size: ' + fontSize + 'rem'"
+        class="villain-header-input">
+      </textarea>
+      <div class="helpful-actions">
+        <ButtonTiny
+          @click="$refs.config.openConfig()">
+          Konfigurér overskrift
+        </ButtonTiny>
+      </div>
+    </Block>
+    <BlockConfig
+      ref="config"
+      v-model="block.data">
+      <template #default="{ cfg }">
+        <KInputRadios
+          v-model="cfg.level"
+          name="data[level]"
+          rules="required"
+          :options="[
+            { label: 'H1', value: 1 },
+            { label: 'H2', value: 2 },
+            { label: 'H3', value: 3 },
+            { label: 'H4', value: 4 },
+            { label: 'H5', value: 5 },
+            { label: 'H6', value: 6 }
+          ]"
+          optionValueKey="value"
+          optionLabelKey="label"
+          label="Størrelse" />
 
-      <KInput
-        v-model="block.data.id"
-        name="data[id]"
-        label="Id"
-        help-text="Kan brukes som lenkemål (#id-navn-her)" />
+        <KInput
+          v-model="cfg.id"
+          name="data[id]"
+          label="Id"
+          help-text="Kan brukes som lenkemål (#id-navn-her)" />
 
-      <KInput
-        v-model="block.data.class"
-        name="data[class]"
-        label="CSS klasser" />
-    </template>
-  </Block>
+        <KInput
+          v-model="cfg.class"
+          name="data[class]"
+          label="CSS klasser" />
+      </template>
+    </BlockConfig>
+  </div>
 </template>
 
 <script>

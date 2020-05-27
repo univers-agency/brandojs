@@ -6,18 +6,14 @@
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
     @delete="$emit('delete', $event)">
-    <textarea
+    <KInputTextarea
       v-model="block.data.text"
-      class="villain-blockquote-content" />
-    <input
+      label="Sitat"
+      name="data[text]" />
+    <KInput
       v-model="block.data.cite"
-      class="villain-blockquote-cite">
-    <template slot="config">
-      <KInput
-        v-model="block.data.class"
-        name="data[class]"
-        label="CSS klasser" />
-    </template>
+      label="Sitatforfatter"
+      name="data[cite]" />
   </Block>
 </template>
 

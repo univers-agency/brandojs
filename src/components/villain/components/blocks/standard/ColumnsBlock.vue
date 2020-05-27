@@ -1,84 +1,89 @@
 <template>
-  <Block
-    :block="block"
-    :parent="null"
-    :config="showConfig"
-    @add="$emit('add', $event)"
-    @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)"
-    @toggle-config="showConfig = $event">
-    <!-- parse each block inside columns -->
-    <div class="row">
-      <div
-        v-for="col in block.data"
-        :key="col.uid"
-        :class="col.class">
-        <div v-if="col.data.length">
-          <div class="villain-block-container">
-            <div class="villain-block-wrapper">
-              <VillainPlus
-                :parent="col.uid"
-                @add="$emit('add', $event)"
-                @move="$emit('move', $event)" />
+  <div>
+    <Block
+      :block="block"
+      :parent="null"
+      @add="$emit('add', $event)"
+      @move="$emit('move', $event)"
+      @delete="$emit('delete', $event)">
+      <!-- parse each block inside columns -->
+      <div class="row">
+        <div
+          v-for="col in block.data"
+          :key="col.uid"
+          :class="col.class">
+          <div v-if="col.data.length">
+            <div class="villain-block-container">
+              <div class="villain-block-wrapper">
+                <VillainPlus
+                  :parent="col.uid"
+                  @add="$emit('add', $event)"
+                  @move="$emit('move', $event)" />
+              </div>
             </div>
+            <transition-group name="bounce">
+              <div
+                v-for="b in col.data"
+                :key="b.uid"
+                class="villain-block-container">
+                <component
+                  :is="b.type + 'Block'"
+                  :block="b"
+                  :parent="col.uid"
+                  :after="b.uid"
+                  @add="$emit('add', $event)"
+                  @move="$emit('move', $event)"
+                  @delete="$emit('delete', $event)" />
+              </div>
+            </transition-group>
           </div>
-          <transition-group name="bounce">
-            <div
-              v-for="b in col.data"
-              :key="b.uid"
-              class="villain-block-container">
-              <component
-                :is="b.type + 'Block'"
-                :block="b"
-                :parent="col.uid"
-                :after="b.uid"
-                @add="$emit('add', $event)"
-                @move="$emit('move', $event)"
-                @delete="$emit('delete', $event)" />
-            </div>
-          </transition-group>
-        </div>
-        <div v-else>
-          <div class="villain-block-container">
-            <div class="villain-block-wrapper">
-              <VillainPlus
-                :parent="col.uid"
-                @add="$emit('add', $event)"
-                @move="$emit('move', $event)" />
+          <div v-else>
+            <div class="villain-block-container">
+              <div class="villain-block-wrapper">
+                <VillainPlus
+                  :parent="col.uid"
+                  @add="$emit('add', $event)"
+                  @move="$emit('move', $event)" />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <template slot="config">
-      <div class="form-group">
-        <label>Antall kolonner</label>
-        <input
-          v-model="columnCount"
-          class="form-control"
-          type="input">
-        <button
-          type="button"
-          class="btn btn-primary mt-2"
-          @click="updateColumns">
-          Sett kolonneantall (overskriver nåværende kolonner!)
-        </button>
-        <template v-if="block.data.length">
-          <label class="mt-4">Kolonne CSS-klasser (avansert)</label>
-          <input
-            v-for="(b, idx) in block.data"
-            :key="b.uid"
-            v-model="b.class"
-            :class="idx > 0 ? 'mt-2' : ''"
-            class="form-control"
-            type="input">
-        </template>
-        <div class="text-center mt-3">
-        </div>
+      <div class="helpful-actions">
+        <ButtonTiny
+          @click="$refs.config.openConfig()">
+          Konfigurér kolonner
+        </ButtonTiny>
       </div>
-    </template>
-  </Block>
+    </Block>
+    <BlockConfig
+      ref="config">
+      <template #default>
+        <div class="form-group">
+          <KInput
+            v-model="columnCount"
+            label="Antall kolonner"
+            name="data[columnCount]" />
+          <ButtonSecondary @click="updateColumns">
+            Sett kolonneantall (overskriver nåværende kolonner!)
+          </ButtonSecondary>
+          <template v-if="block.data.length">
+            <label class="mt-4">Kolonne CSS-klasser (avansert)</label>
+            <KInput
+              v-for="(b, idx) in block.data"
+              :key="b.uid"
+              v-model="b.class"
+              label=""
+              :name="'data[class][' + idx + ']'"
+              :class="idx > 0 ? 'mt-2' : ''" />
+          </template>
+          <div class="text-center mt-3">
+          </div>
+        </div>
+      </template>
+    </BlockConfig>
+  </div>
 </template>
 
 <script>

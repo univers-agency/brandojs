@@ -2,6 +2,7 @@ import KForm from './KForm'
 import KFieldBase from './KFieldBase'
 import KImageTransformer from './KImageTransformer'
 import KInput from './KInput'
+import KInputCode from './KInputCode'
 import KInputColor from './KInputColor'
 import KInputDate from './KInputDate'
 import KInputDatetime from './KInputDatetime'
@@ -28,6 +29,7 @@ export {
   KFieldBase,
   KImageTransformer,
   KInput,
+  KInputCode,
   KInputColor,
   KInputDate,
   KInputDatetime,

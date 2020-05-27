@@ -1,49 +1,54 @@
 <template>
-  <Block
-    ref="block"
-    :block="block"
-    :parent="parent"
-    icon="fa-compass"
-    @add="$emit('add', $event)"
-    @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)">
-    <div class="villain-block-video">
-      <div
-        v-if="html"
-        class="villain-block-video-content"
-        v-html="html" />
-      <div
-        v-else
-        class="villain-block-empty">
-        <i class="fa fa-fw fa-map"></i>
+  <div>
+    <Block
+      ref="block"
+      :block="block"
+      :parent="parent"
+      icon="fa-compass"
+      @add="$emit('add', $event)"
+      @move="$emit('move', $event)"
+      @delete="$emit('delete', $event)">
+      <div class="villain-block-video">
+        <div
+          v-if="html"
+          class="villain-block-video-content"
+          v-html="html" />
+        <div
+          v-else
+          class="villain-block-empty">
+          <i class="fa fa-fw fa-map"></i>
+        </div>
         <div class="actions">
-          <ButtonSecondary
-            @click="$refs.block.openConfig()">
+          <ButtonTiny
+            @click="$refs.config.openConfig()">
             Konfigurér kartblokk
-          </ButtonSecondary>
+          </ButtonTiny>
         </div>
       </div>
-    </div>
-    <template slot="config">
-      <div
-        class="form-group">
-        <KInput
-          v-model="url"
-          name="url"
-          label="URL"
-          help-text="Lim inn embed-link fra Google Maps"
-          @input="parseUrl" />
-      </div>
-      <div
-        v-if="block.data.url"
-        class="form-group">
-        <KInput
-          v-model="block.data.class"
-          name="data[class]"
-          label="CSS klasser" />
-      </div>
-    </template>
-  </Block>
+    </Block>
+    <BlockConfig
+      ref="config">
+      <template #default>
+        <div
+          class="form-group">
+          <KInput
+            v-model="url"
+            name="url"
+            label="URL"
+            help-text="Lim inn embed-link fra Google Maps"
+            @input="parseUrl" />
+        </div>
+        <div
+          v-if="block.data.url"
+          class="form-group">
+          <KInput
+            v-model="block.data.class"
+            name="data[class]"
+            label="CSS klasser" />
+        </div>
+      </template>
+    </BlockConfig>
+  </div>
 </template>
 
 <script>
@@ -81,7 +86,7 @@ export default {
         gmaps: {
           regex: /<iframe(?:.*)src="(.*?)"/,
           html: `
-            <iframe src="{{protocol}}{{embed_url}}"
+            <iframe src="https://{{embed_url}}"
                     width="600"
                     height="450"
                     frameborder="0"
@@ -124,7 +129,6 @@ export default {
       }
 
       this.html = this.providers[this.block.data.source].html
-        .replace('{{protocol}}', window.location.protocol)
         .replace('{{embed_url}}', this.block.data.embed_url)
     }
   }
@@ -132,6 +136,11 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+  .actions {
+    margin-top: 15px;
+    text-align: center;
+  }
+
   .villain-block-empty {
     width: 100%;
     display: flex;

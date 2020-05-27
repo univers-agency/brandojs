@@ -1,206 +1,217 @@
 <template>
-  <Block
-    :block="block"
-    :parent="parent"
-    :config="showConfig"
-    icon="fa-paragraph"
-    @add="$emit('add', $event)"
-    @move="$emit('move', $event)"
-    @delete="$emit('delete', $event)"
-    @toggle-config="showConfig = $event">
-    <div class="villain-block-description">
-      Tekst ({{ block.data.type }})
-    </div>
-    <EditorMenuBar
-      v-slot="{ commands, isActive, focused }"
-      class="villain-text-editor-menubar"
-      :editor="editor">
-      <div
-        class="menubar is-hidden"
-        :class="{ 'is-focused': focused }">
-        <button
-          type="button"
-          class="menubar__button"
-          :class="{ 'is-active': isActive.bullet_list() }"
-          @click="commands.bullet_list">
-          <FontAwesomeIcon icon="list-ul" />
-        </button>
-
-        <button
-          type="button"
-          class="menubar__button"
-          :class="{ 'is-active': isActive.ordered_list() }"
-          @click="commands.ordered_list">
-          <FontAwesomeIcon icon="list-ol" />
-        </button>
-
-        <button
-          type="button"
-          class="menubar__button"
-          :class="{ 'is-active': isActive.blockquote() }"
-          @click="commands.blockquote">
-          <FontAwesomeIcon icon="quote-right" />
-        </button>
+  <div>
+    <Block
+      :block="block"
+      :parent="parent"
+      :config="showConfig"
+      icon="fa-paragraph"
+      @add="$emit('add', $event)"
+      @move="$emit('move', $event)"
+      @delete="$emit('delete', $event)">
+      <div class="villain-block-description">
+        Tekst ({{ block.data.type }})
       </div>
-    </EditorMenuBar>
-    <EditorMenuBubble
-      v-slot="{ commands, isActive, getMarkAttrs, menu }"
-      :class="{ noTransform: linkMenuIsActive || actionButtonMenuIsActive }"
-      :editor="editor"
-      @hide="hideLinkMenu">
-      <div
-        class="menububble"
-        :class="{ 'is-active': menu.isActive }"
-        :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`">
-        <KModal
-          v-if="linkMenuIsActive"
-          ref="linkModal"
-          v-shortkey="['esc']"
-          ok-text="Lukk"
-          @shortkey.native="hideLinkMenu"
-          @ok="setLinkUrl(commands.link, linkUrl)">
-          <template #header>
-            Rediger link
+      <EditorMenuBar
+        v-slot="{ commands, isActive, focused }"
+        class="villain-text-editor-menubar"
+        :editor="editor">
+        <div
+          class="menubar is-hidden"
+          :class="{ 'is-focused': focused }">
+          <button
+            type="button"
+            class="menubar__button"
+            :class="{ 'is-active': isActive.bullet_list() }"
+            @click="commands.bullet_list">
+            <FontAwesomeIcon icon="list-ul" />
+          </button>
+
+          <button
+            type="button"
+            class="menubar__button"
+            :class="{ 'is-active': isActive.ordered_list() }"
+            @click="commands.ordered_list">
+            <FontAwesomeIcon icon="list-ol" />
+          </button>
+
+          <button
+            type="button"
+            class="menubar__button"
+            :class="{ 'is-active': isActive.blockquote() }"
+            @click="commands.blockquote">
+            <FontAwesomeIcon icon="quote-right" />
+          </button>
+        </div>
+      </EditorMenuBar>
+      <EditorMenuBubble
+        v-slot="{ commands, isActive, getMarkAttrs, menu }"
+        :class="{ noTransform: linkMenuIsActive || actionButtonMenuIsActive }"
+        :editor="editor"
+        @hide="hideLinkMenu">
+        <div
+          class="menububble"
+          :class="{ 'is-active': menu.isActive }"
+          :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`">
+          <KModal
+            v-if="linkMenuIsActive"
+            ref="linkModal"
+            v-shortkey="['esc']"
+            ok-text="Lukk"
+            @shortkey.native="hideLinkMenu"
+            @ok="setLinkUrl(commands.link, linkUrl)">
+            <template #header>
+              Rediger link
+            </template>
+            <template>
+              <KInput
+                ref="linkInput"
+                v-model="linkUrl"
+                name="link[url]"
+                label="URL"
+                help-text="OBS! For å linke til en lokal side må du alltid ha med / foran (f.eks /personvern)."
+                placeholder="https://link.no" />
+            </template>
+          </KModal>
+
+          <KModal
+            v-if="actionButtonMenuIsActive"
+            ref="actionButtonModal"
+            v-shortkey="['esc']"
+            ok-text="Lukk"
+            @shortkey.native="hideLinkMenu"
+            @ok="setActionButtonUrl(commands.action_button, actionButtonUrl)">
+            <template #header>
+              Rediger knappelink
+            </template>
+            <template>
+              <KInput
+                ref="actionButtonInput"
+                v-model="actionButtonUrl"
+                name="actionButton[url]"
+                label="URL"
+                help-text="OBS! For å linke til en lokal side må du alltid ha med / foran (f.eks /personvern)."
+                placeholder="https://link.no" />
+            </template>
+          </KModal>
+
+          <template v-else>
+            <button
+              type="button"
+              class="menububble__button"
+              :class="{ 'is-active': isActive.bold() }"
+              @click="commands.bold">
+              <FontAwesomeIcon
+                icon="bold"
+                size="xs" />
+            </button>
+
+            <button
+              type="button"
+              class="menububble__button"
+              :class="{ 'is-active': isActive.italic() }"
+              @click="commands.italic">
+              <FontAwesomeIcon
+                icon="italic"
+                size="xs" />
+            </button>
+
+            <button
+              type="button"
+              class="menububble__button"
+              :class="{ 'is-active': isActive.strike() }"
+              @click="commands.strike">
+              <FontAwesomeIcon
+                icon="strikethrough"
+                size="xs" />
+            </button>
+
+            <button
+              type="button"
+              class="menububble__button"
+              :class="{ 'is-active': isActive.underline() }"
+              @click="commands.underline">
+              <FontAwesomeIcon
+                icon="underline"
+                size="xs" />
+            </button>
+
+            <button
+              type="button"
+              class="menububble__button"
+              :class="{ 'is-active': isActive.paragraph() }"
+              @click="commands.paragraph">
+              <FontAwesomeIcon
+                icon="paragraph"
+                size="xs" />
+            </button>
+
+            <button
+              type="button"
+              class="menububble__button"
+              :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+              @click="commands.heading({ level: 2 })">
+              <FontAwesomeIcon
+                icon="heading"
+                size="xs" />
+            </button>
+            <button
+              type="button"
+              class="menububble__button"
+              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+              @click="commands.heading({ level: 3 })">
+              <FontAwesomeIcon
+                icon="heading"
+                size="xs" />
+            </button>
+            <button
+              class="menububble__button"
+              type="button"
+              :class="{ 'is-active': isActive.link() }"
+              @click="showLinkMenu(getMarkAttrs('link'))">
+              <FontAwesomeIcon
+                icon="link"
+                size="xs" />
+            </button>
+            <button
+              class="menububble__button"
+              type="button"
+              :class="{ 'is-active': isActive.action_button() }"
+              @click="showActionButtonMenu(getMarkAttrs('action_button'))">
+              <FontAwesomeIcon
+                icon="square"
+                size="xs" />
+            </button>
           </template>
-          <template>
-            <KInput
-              ref="linkInput"
-              v-model="linkUrl"
-              name="link[url]"
-              label="URL"
-              help-text="OBS! For å linke til en lokal side må du alltid ha med / foran (f.eks /personvern)."
-              placeholder="https://link.no" />
-          </template>
-        </KModal>
-
-        <KModal
-          v-if="actionButtonMenuIsActive"
-          ref="actionButtonModal"
-          v-shortkey="['esc']"
-          ok-text="Lukk"
-          @shortkey.native="hideLinkMenu"
-          @ok="setActionButtonUrl(commands.action_button, actionButtonUrl)">
-          <template #header>
-            Rediger knappelink
-          </template>
-          <template>
-            <KInput
-              ref="actionButtonInput"
-              v-model="actionButtonUrl"
-              name="actionButton[url]"
-              label="URL"
-              help-text="OBS! For å linke til en lokal side må du alltid ha med / foran (f.eks /personvern)."
-              placeholder="https://link.no" />
-          </template>
-        </KModal>
-
-        <template v-else>
-          <button
-            type="button"
-            class="menububble__button"
-            :class="{ 'is-active': isActive.bold() }"
-            @click="commands.bold">
-            <FontAwesomeIcon
-              icon="bold"
-              size="xs" />
-          </button>
-
-          <button
-            type="button"
-            class="menububble__button"
-            :class="{ 'is-active': isActive.italic() }"
-            @click="commands.italic">
-            <FontAwesomeIcon
-              icon="italic"
-              size="xs" />
-          </button>
-
-          <button
-            type="button"
-            class="menububble__button"
-            :class="{ 'is-active': isActive.strike() }"
-            @click="commands.strike">
-            <FontAwesomeIcon
-              icon="strikethrough"
-              size="xs" />
-          </button>
-
-          <button
-            type="button"
-            class="menububble__button"
-            :class="{ 'is-active': isActive.underline() }"
-            @click="commands.underline">
-            <FontAwesomeIcon
-              icon="underline"
-              size="xs" />
-          </button>
-
-          <button
-            type="button"
-            class="menububble__button"
-            :class="{ 'is-active': isActive.paragraph() }"
-            @click="commands.paragraph">
-            <FontAwesomeIcon
-              icon="paragraph"
-              size="xs" />
-          </button>
-
-          <button
-            type="button"
-            class="menububble__button"
-            :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-            @click="commands.heading({ level: 2 })">
-            <FontAwesomeIcon
-              icon="heading"
-              size="xs" />
-          </button>
-          <button
-            type="button"
-            class="menububble__button"
-            :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-            @click="commands.heading({ level: 3 })">
-            <FontAwesomeIcon
-              icon="heading"
-              size="xs" />
-          </button>
-          <button
-            class="menububble__button"
-            type="button"
-            :class="{ 'is-active': isActive.link() }"
-            @click="showLinkMenu(getMarkAttrs('link'))">
-            <FontAwesomeIcon
-              icon="link"
-              size="xs" />
-          </button>
-          <button
-            class="menububble__button"
-            type="button"
-            :class="{ 'is-active': isActive.action_button() }"
-            @click="showActionButtonMenu(getMarkAttrs('action_button'))">
-            <FontAwesomeIcon
-              icon="square"
-              size="xs" />
-          </button>
-        </template>
+        </div>
+      </EditorMenuBubble>
+      <EditorContent
+        :editor="editor"
+        :class="'villain-text-editor ' + block.data.type" />
+      <div class="helpful-actions">
+        <ButtonTiny
+          @click="$refs.config.openConfig()">
+          Konfigurér tekstblokk
+        </ButtonTiny>
       </div>
-    </EditorMenuBubble>
-    <EditorContent
-      :editor="editor"
-      :class="'villain-text-editor ' + block.data.type" />
-    <template slot="config">
-      <KInputRadios
-        v-model="block.data.type"
-        name="data[type]"
-        rules="required"
-        :options="[
-          { label: 'Paragraf/brødtekst', value: 'paragraph' },
-          { label: 'Ingress', value: 'lede' }
-        ]"
-        optionValueKey="value"
-        optionLabelKey="label"
-        label="Teksttype" />
-    </template>
-  </Block>
+    </Block>
+    <BlockConfig
+      ref="config"
+      v-model="block.data">
+      <template #default="{ cfg }">
+        <KInputRadios
+          v-model="cfg.type"
+          name="data[type]"
+          rules="required"
+          :options="[
+            { label: 'Paragraf/brødtekst', value: 'paragraph' },
+            { label: 'Ingress', value: 'lede' }
+          ]"
+          optionValueKey="value"
+          optionLabelKey="label"
+          label="Teksttype" />
+      </template>
+    </BlockConfig>
+  </div>
 </template>
 
 <script>
@@ -285,6 +296,10 @@ export default {
     console.debug('<TextBlock /> created')
     this.text = md.render(this.block.data.text)
     this.customClass = this.block.data.type
+  },
+
+  updated () {
+    console.debug('<TextBlock /> updated')
   },
 
   mounted () {
