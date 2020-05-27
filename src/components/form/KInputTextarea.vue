@@ -10,13 +10,14 @@
       <textarea
         :id="id"
         ref="input"
-        v-model="innerValue"
+        :value="innerValue"
         :rows="rows"
         :class="{ monospace }"
         :placeholder="placeholder"
         :maxlength="maxlength"
         :name="name"
-        :disabled="disabled"></textarea>
+        :disabled="disabled"
+        @input="handleInput"></textarea>
     </template>
   </KFieldBase>
 </template>
@@ -79,23 +80,31 @@ export default {
 
   data () {
     return {
+      innerValue: ''
     }
   },
 
   computed: {
     id () {
       return this.name.replace('[', '_').replace(']', '_')
-    },
-
-    innerValue: {
-      get () { return this.value },
-      set (innerValue) { this.$emit('input', innerValue) }
     }
   },
 
   created () {
     if (this.value) {
       this.innerValue = this.value
+    }
+  },
+
+  methods: {
+    handleInput (event) {
+      const val = event.target.value
+      const pos = event.target.selectionStart
+      if (val !== this.value) {
+        this.$nextTick(() => (event.target.selectionEnd = pos))
+      }
+      this.innerValue = val
+      this.$emit('input', this.innerValue)
     }
   }
 }
