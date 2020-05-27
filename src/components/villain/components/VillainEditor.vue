@@ -450,6 +450,15 @@ export default {
               this.needsRefresh = true
             }
             break
+
+          case 'timeline':
+            if (Array.isArray(block.data)) {
+              console.log('==> Converting timeline [] to new format {}')
+              const rows = block.data
+              this.$set(block, 'data', { rows })
+              this.needsRefresh = true
+            }
+            break
         }
 
         const blueprint = bpBlock.dataTemplate
@@ -598,7 +607,7 @@ export default {
       let block
       // a standard component blueprint
       if (blockTpl.hasOwnProperty('component')) {
-        if (blockTpl.component === 'Columns' || blockTpl.component === 'Timeline' || blockTpl.component === 'Datatable') {
+        if (blockTpl.component === 'Columns' || blockTpl.component === 'Datatable') {
           block = {
             type: blockTpl.component.toLowerCase(),
             data: [...blockTpl.dataTemplate],
