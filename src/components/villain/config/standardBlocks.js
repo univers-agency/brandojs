@@ -162,12 +162,14 @@ export default [
     name: 'Tidslinje',
     icon: 'fa-clock',
     component: 'Timeline',
-    dataTemplate: [
-      {
-        caption: '2018',
-        text: 'Tekst om hendelsen'
-      }
-    ]
+    dataTemplate: {
+      rows: [
+        {
+          caption: '2022',
+          text: 'Tekst om hendelsen'
+        }
+      ]
+    }
   },
 
   {
