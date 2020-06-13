@@ -243,6 +243,7 @@ export default {
 
           update: (store, data) => {
             this.$apollo.queries.globalCategories.refresh()
+            this.$toast.success({ message: 'Kategori opprettet' })
           }
         })
       } catch (err) {
@@ -278,6 +279,7 @@ export default {
 
           update: (store, data) => {
             this.$apollo.queries.globalCategories.refresh()
+            this.$toast.success({ message: 'Kategori lagret' })
           }
         })
       } catch (err) {

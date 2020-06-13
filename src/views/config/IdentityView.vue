@@ -299,7 +299,6 @@ export default {
       const params = this.$utils.stripParams(this.identity, ['__typename', 'id'])
       this.$utils.validateImageParams(params, ['logo', 'image'])
 
-      console.log(params)
       params.links.map(item => (delete item.__typename))
       params.metas.map(item => (delete item.__typename))
 

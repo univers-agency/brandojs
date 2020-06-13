@@ -31,6 +31,17 @@ export default [
   },
 
   {
+    name: 'Liste',
+    icon: 'fa-list',
+    component: 'List',
+    dataTemplate: {
+      id: null,
+      class: null,
+      rows: []
+    }
+  },
+
+  {
     name: 'Media',
     icon: 'fa-photo-video',
     component: 'Media',
@@ -69,7 +80,8 @@ export default [
     dataTemplate: {
       images: [],
       class: '',
-      series_slug: 'post'
+      series_slug: 'post',
+      lightbox: false
     }
   },
 
@@ -83,6 +95,7 @@ export default [
       title: '',
       credits: '',
       alt: '',
+      link: null,
       img_class: 'img-fluid',
       picture_class: '',
       srcset: '',
@@ -98,7 +111,7 @@ export default [
     dataTemplate: {
       source: 'youtube',
       remote_id: '',
-      cover: null,
+      poster: null,
       width: null,
       height: null
     }

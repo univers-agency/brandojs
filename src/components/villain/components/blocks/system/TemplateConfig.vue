@@ -116,7 +116,7 @@ export default {
     },
 
     updateVars () {
-      this.$emit('updateVars', { newVars: this.localVars })
+      this.$emit('updateVars', { entryId: this.entryId, newVars: this.localVars })
     },
 
     refetchVars () {

@@ -212,7 +212,6 @@ export default {
     deleteBlock () {
       this.$alerts.alertConfirm('OBS!', 'Er du sikker på at du vil slette denne blokken?', data => {
         if (data) {
-          console.log('emitting delete!', this)
           this.$emit('delete', this.block)
         }
       })

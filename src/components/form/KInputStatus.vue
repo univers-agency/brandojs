@@ -20,7 +20,9 @@
               :value="o.value"
               class="form-check-input"
               type="radio">
-            <span class="label-text">
+            <span
+              class="label-text"
+              :class="o.value">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="12"
@@ -119,7 +121,7 @@ export default {
 
     input {
       margin-right: 17px;
-      margin-top: 2px;
+      margin-top: 8px;
     }
 
     label {
@@ -134,6 +136,7 @@ export default {
 
   svg {
     margin-right: 12px;
+    margin-top: -4px;
     circle {
       fill: theme(colors.blue);
 
@@ -152,6 +155,30 @@ export default {
       &.disabled {
         fill: theme(colors.status.disabled);
       }
+    }
+  }
+
+  .label-text {
+    font-size: 17px;
+    border: 1px solid;
+    padding: 2px 14px;
+    padding-top: 5px;
+    border-radius: 30px;
+
+    &.draft {
+      border-color: theme(colors.status.draft);
+    }
+
+    &.pending {
+      border-color: theme(colors.status.pending);
+    }
+
+    &.published {
+      border-color: theme(colors.status.published);
+    }
+
+    &.disabled {
+      border-color: theme(colors.status.disabled);
     }
   }
 </style>

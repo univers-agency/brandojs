@@ -82,23 +82,11 @@ export default {
   watch: {
     showProgress (val) {
       if (val) {
-        this.progressTimeline.play()
+        this.$refs.progress.classList.add('visible')
       } else {
-        this.progressTimeline.reverse()
+        this.$refs.progress.classList.remove('visible')
       }
     }
-  },
-
-  mounted () {
-    this.progressTimeline = gsap.timeline({ paused: true, reversed: true })
-
-    this.progressTimeline
-      .to(this.$refs.progress, {
-        duration: 0.35,
-        height: 100,
-        opacity: 1,
-        ease: 'sine.out'
-      })
   },
 
   methods: {
@@ -176,24 +164,36 @@ export default {
 
     > .progress {
       @container;
-      z-index: 9999;
+      z-index: 999999;
       color: theme(colors.peach);
       background-color: #000080e6;
-      height: 0px;
+      height: auto;
+      transform: translateY(-100%);
       overflow-y: scroll;
       display: flex;
-      opacity: 0;
       position: fixed;
       left: 0;
+      padding-top: 20px;
+      padding-bottom: 25px;
+      transition: transform 350ms ease;
+
+      &.visible {
+        transform: translateY(0%);
+      }
 
       .progress-inner {
-        margin-top: -5px;
         display: flex;
+        flex-direction: column;
         align-items: center;
         width: 100%;
 
         > div {
+          &:first-of-type {
+            padding-top: 5px;
+          }
           width: 100%;
+          padding-top: 15px;
+          padding-bottom: 5px;
         }
       }
 

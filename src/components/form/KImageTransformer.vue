@@ -15,26 +15,33 @@ Then value is set to the transformed result
     </template>
     <template v-slot:outsideValidator>
       <div v-if="innerValue">
-        <table
+        <div
           v-if="innerValue.length"
-          class="table-bordered">
+          class="entries">
           <slot name="head"></slot>
-          <tr
-            v-for="(entry, idx) in innerValue"
-            :key="idx">
-            <slot
-              name="row"
-              v-bind:entry="entry">
-              <td>{{ entry.id }}</td>
-            </slot>
-            <td class="action">
-              <ButtonSmall
-                @click.native.stop.prevent="removeEntry(entry)">
+          <div
+            v-for="entry in innerValue"
+            :key="entry.thumb"
+            class="entries__entry">
+            <div class="entries__entry__content">
+              <slot
+                name="row"
+                v-bind:entry="entry">
+                {{ entry.id }}
+              </slot>
+            </div>
+            <div class="entries__entry__actions">
+              <ButtonSecondary
+                @click="save(entry)">
+                Lagre
+              </ButtonSecondary>
+              <ButtonSecondary
+                @click="removeEntry(entry)">
                 Fjern
-              </ButtonSmall>
-            </td>
-          </tr>
-        </table>
+              </ButtonSecondary>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div>
@@ -77,6 +84,11 @@ export default {
     },
 
     transform: {
+      type: Function,
+      required: true
+    },
+
+    save: {
       type: Function,
       required: true
     },
@@ -168,6 +180,10 @@ export default {
   },
 
   methods: {
+    getKey (e) {
+      return Math.random().toString(36).substr(2, 10) + Math.random().toString(36).substr(2, 10)
+    },
+
     watchDrop (el) {
       if (this.dropElement) {
         try {
@@ -339,16 +355,19 @@ export default {
           let blob
           let thumb
           const file = srcFiles[i]
+          let actualFile
 
           if (file.file instanceof Blob) {
             blob = window.URL.createObjectURL(file.file)
             thumb = (blob && file.type.substr(0, 6) === 'image/') ? blob : null
+            actualFile = file.file
           } else {
             window.URL = window.URL || window.webkitURL
             if (window.URL && window.URL.createObjectURL) {
               blob = window.URL.createObjectURL(file)
               thumb = (blob && file.type.substr(0, 6) === 'image/') ? blob : null
             }
+            actualFile = file
           }
 
           const newFile = {
@@ -361,7 +380,7 @@ export default {
             type: file.type,
             blob,
             thumb,
-            file
+            file: actualFile
           }
           files.push(newFile)
         }
@@ -504,64 +523,26 @@ input[type=file] {
   opacity: 0;
 }
 
-table {
+.entries {
   width: 100%;
 
-  &.table-bordered {
-    td {
-      border: 1px solid #dee2e6;
-      vertical-align: middle;
-      padding: 0.75rem;
+  .entries__entry {
+    @space padding-y 25px;
+    @space margin-bottom 25px;
+    background-color: #fefcfb;
+    border-bottom: 1px solid theme(colors.peachDarker);
 
-      &.action {
-        white-space: nowrap;
-        width: 1%;
-
-        padding-right: 0.75rem;
-        button {
-          position: relative;
-          margin-top: -12px;
-
-          + button {
-            margin-left: 5px;
-          }
-        }
-      }
+    >>> .field-wrapper {
+      margin-bottom: 22px;
     }
   }
 
-  tr {
-    &:nth-of-type(odd) {
-      td {
-        background-color: theme(colors.peach);
-      }
-    }
-    td {
-      &:first-of-type {
-        width: 65px;
-      }
-
-      &.name {
-        position: relative;
-        background-color: transparent;
-
-        span {
-          position: relative;
-          z-index: 2;
-        }
-
-        &:before {
-          content: '';
-          background-color: pink;
-          position: absolute;
-          top: 0;
-          left: 0;
-          height: 100%;
-          width: 0%;
-          z-index: 1;
-        }
-      }
-    }
+  .entries__entry__actions {
+    background-color: #faefea;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 }
 

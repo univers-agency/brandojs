@@ -14,7 +14,6 @@
 <script>
 
 import gql from 'graphql-tag'
-import GET_PAGES from '../../gql/pages/PAGES_QUERY.graphql'
 import PageSectionForm from './PageSectionForm'
 
 export default {
@@ -36,7 +35,7 @@ export default {
         page_id: null,
         key: '',
         data: '',
-        language: 'no',
+        language: null,
         wrapper: ''
       }
     }
@@ -82,28 +81,6 @@ export default {
           `,
           variables: {
             pageFragmentParams
-          },
-          update: (store, { data: { createPageFragment } }) => {
-            const query = {
-              query: GET_PAGES,
-              variables: {
-                limit: 100,
-                offset: 0,
-                filter: null
-              }
-            }
-            const data = store.readQuery(query)
-            const page = data.pages.find(page => parseInt(page.id) === parseInt(this.pageId))
-            if (page) {
-              page.fragments.push(createPageFragment)
-              // Write back to the cache
-              store.writeQuery({
-                ...query,
-                data
-              })
-            } else {
-              console.log('page not found?', data.pages, this.pageId)
-            }
           }
         })
 
@@ -111,6 +88,27 @@ export default {
         this.$router.push({ name: 'pages' })
       } catch (err) {
         this.$utils.showError(err)
+      }
+    }
+  },
+
+  apollo: {
+    identity: {
+      query: gql`
+        query Identity {
+          identity {
+            id
+            defaultLanguage
+            languages {
+              id
+              name
+            }
+          }
+        }
+      `,
+      update ({ identity }) {
+        this.page.language = identity.defaultLanguage
+        return identity
       }
     }
   }

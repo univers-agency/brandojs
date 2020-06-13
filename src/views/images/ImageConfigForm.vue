@@ -184,7 +184,6 @@ export default {
     },
 
     changeKey (ev, key) {
-      console.log('change key', key)
       this.config.sizes = Object.assign(
         {},
         ...Object.keys(this.config.sizes)

@@ -10,13 +10,12 @@
     </div>
     <div
       v-if="!block.data.multi"
-      class="template-entry">
-      <keep-alive>
-        <component
-          :is="buildWrapper({refs: block.data.refs, vars: block.data.vars})"
-          @delete="deleteBlock($event)"
-          @update="updateBlock($event)" />
-      </keep-alive>
+      class="template-entry"
+      @click="handleClick">
+      <component
+        :is="buildWrapper({refs: block.data.refs, vars: block.data.vars})"
+        @delete="deleteBlock($event)"
+        @update="updateBlock($event)" />
       <div class="entry-toolbar">
         <div class="helpful-actions">
           <TemplateConfig
@@ -39,7 +38,8 @@
           v-for="entry in block.data.entries"
           :key="entry.id"
           :data-id="entry.id"
-          class="template-entry">
+          class="template-entry"
+          @click="handleClick">
           <component
             :is="buildWrapper(entry)"
             @delete="deleteBlock($event)"
@@ -162,6 +162,12 @@ export default {
   },
 
   methods: {
+    handleClick (e) {
+      if (e.target.matches('[data-type="template"] *')) {
+        e.preventDefault()
+      }
+    },
+
     buildWrapper (entry) {
       const replacedContent = this.replaceContent(entry)
       this.createTemplateContentWrapperComponent(replacedContent)
@@ -210,11 +216,14 @@ export default {
 
     updateVars ({ newVars, entryId }) {
       if (entryId) {
+        console.log('entryId', entryId)
         const entry = this.findEntry(entryId)
         if (entry) {
+          console.log('set entry to', newVars)
           this.$set(entry, 'vars', newVars)
         }
       } else {
+        console.log('else!')
         this.$set(this.block.data, 'vars', newVars)
       }
     },

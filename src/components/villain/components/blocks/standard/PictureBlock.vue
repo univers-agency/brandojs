@@ -193,6 +193,12 @@
                   label="Krediteringer"
                   placeholder="Krediteringer" />
 
+                <KInput
+                  v-model="block.data.link"
+                  name="data[link]"
+                  label="Link til"
+                  placeholder="Link" />
+
                 <div v-show="advancedConfig">
                   <KInput
                     v-model="block.data.url"
@@ -337,6 +343,7 @@ export default {
       this.$set(this.block.data, 'sizes', {})
       this.$set(this.block.data, 'credits', '')
       this.$set(this.block.data, 'title', '')
+      this.$set(this.block.data, 'link', '')
       this.$set(this.block.data, 'width', 0)
       this.$set(this.block.data, 'height', 0)
     },
@@ -379,6 +386,7 @@ export default {
       this.$set(this.block.data, 'url', img.src)
       this.$set(this.block.data, 'alt', img.alt)
       this.$set(this.block.data, 'sizes', img.sizes)
+      this.$set(this.block.data, 'link', '')
       this.$set(this.block.data, 'credits', img.credits)
       this.$set(this.block.data, 'title', img.title)
       this.$set(this.block.data, 'width', img.width || 0)
@@ -422,9 +430,7 @@ export default {
       try {
         this.dragOver = false
         this.uploading = true
-        console.log('=> go fetch')
         const response = await fetch(this.uploadURL, { headers, method: 'post', body: formData })
-        console.log('=> oke')
         const data = await response.json()
         if (data.status === 200) {
           this.showImages = false
@@ -434,6 +440,7 @@ export default {
           this.$set(this.block.data, 'credits', data.image.credits)
           this.$set(this.block.data, 'title', data.image.title)
           this.$set(this.block.data, 'alt', data.image.alt)
+          this.$set(this.block.data, 'link', '')
           this.$set(this.block.data, 'url', data.image.src)
           this.$set(this.block.data, 'width', data.image.width || 0)
           this.$set(this.block.data, 'height', data.image.height || 0)
@@ -447,7 +454,6 @@ export default {
         }
       } catch (e) {
         this.uploading = false
-        console.log(' ==> caught error', e)
         this.$alerts.alertError('Feil', `Feil ved opplasting :(\n\n${e}`)
       }
     }

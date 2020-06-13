@@ -1,6 +1,6 @@
 <template>
   <KForm
-    v-if="page"
+    v-if="page && identity"
     :back="{ name: 'pages' }"
     @save="save">
     <section class="row">
@@ -16,11 +16,8 @@
         <KInputSelect
           v-model="page.language"
           rules="required"
-          :options="[
-            { name: 'Norsk', value: 'no' },
-            { name: 'English', value: 'en' }
-          ]"
-          optionValueKey="value"
+          :options="identity.languages"
+          optionValueKey="id"
           name="page[language]"
           label="Språk" />
 
@@ -93,7 +90,7 @@
       rules="required"
       :value="page.data"
       :template-mode="$app.templateMode"
-      :templates="$app.templateNamespace"
+      :templates="$app.templates"
       name="page[data]"
       label="Innhold" />
   </KForm>
@@ -130,8 +127,6 @@ export default {
       templates: null,
       parents: [],
       settings: {
-        templateMode: false,
-        templateNamespace: 'all',
         namespacedTemplates: []
       }
     }
@@ -161,6 +156,21 @@ export default {
             id
             language
             title
+          }
+        }
+      `
+    },
+
+    identity: {
+      query: gql`
+        query Identity {
+          identity {
+            id
+            defaultLanguage
+            languages {
+              id
+              name
+            }
           }
         }
       `

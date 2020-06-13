@@ -1,6 +1,6 @@
 <template>
   <KForm
-    v-if="!loading"
+    v-if="!loading && identity"
     :back="{ name: 'pages' }"
     @save="save">
     <section class="row">
@@ -15,11 +15,8 @@
         <KInputSelect
           v-model="page.language"
           rules="required"
-          :options="[
-            { name: 'English', value: 'en' },
-            { name: 'Norsk', value: 'no' }
-          ]"
-          optionValueKey="value"
+          :options="identity.languages"
+          optionValueKey="id"
           name="page[language]"
           label="Språk" />
         <section class="row">
@@ -65,14 +62,17 @@
     <Villain
       v-model="page.data"
       rules="required"
-      :template-mode="settings.templateMode"
-      :templates="settings.templateNamespace"
+      :template-mode="$app.templateMode"
+      :templates="$app.templates"
       name="page[data]"
       label="Innhold" />
   </KForm>
 </template>
 
 <script>
+
+import gql from 'graphql-tag'
+
 export default {
   props: {
     page: {
@@ -91,8 +91,6 @@ export default {
       loading: 1,
       parents: [],
       settings: {
-        templateMode: false,
-        templateNamespace: 'all',
         namespacedTemplates: []
       }
     }
@@ -115,9 +113,26 @@ export default {
           this.loading = 0
         })
         .receive('error', err => {
-          console.log(err)
+          console.error(err)
           this.loading = 0
         })
+    }
+  },
+
+  apollo: {
+    identity: {
+      query: gql`
+        query Identity {
+          identity {
+            id
+            defaultLanguage
+            languages {
+              id
+              name
+            }
+          }
+        }
+      `
     }
   }
 }

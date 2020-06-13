@@ -368,7 +368,7 @@ export default {
   }
 
   .fade-move-move {
-    transition: transform 0.35s;
+    transition: transform 0.25s ease-in;
   }
 
   strong {
@@ -376,8 +376,8 @@ export default {
   }
 
   .no-entries {
-    @color bg peach;
     @fontsize base;
+    background-color: #0000000d;
     margin-top: 25px;
     margin-bottom: 25px;
     padding: 1rem;

@@ -19,13 +19,13 @@ export default function showError (err) {
       }
     })
     alerts.alertError('Feil', msgs)
-    console.log(err)
+    console.error(err)
   } else if (err.error) {
     alerts.alertError('Feil', err.error)
-    console.log(err)
+    console.error(err)
   } else {
     alerts.alertError('Ukjent feil', err.message)
-    console.log(err)
+    console.error(err)
   }
   nprogress.done()
 }

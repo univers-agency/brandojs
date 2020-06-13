@@ -125,7 +125,6 @@ export function createProvider (options = {}) {
           Vue.prototype.$alerts.alertError('Valideringsfeil', err.error)
           break
         case 406:
-          console.log('got 406, call onLogout')
           await onLogout(apolloClient)
           window.location = '/admin/login'
           break

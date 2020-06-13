@@ -861,7 +861,6 @@ export default {
       if (block) {
         if (ref) {
           const idx = this.blocks.indexOf(block)
-          console.log('idx', idx)
           // a TemplateBlock that wants to get rid of a ref!
           const foundRef = block.data.refs.find(r => r.name === ref)
           const refIdx = block.data.refs.indexOf(foundRef)
@@ -882,10 +881,8 @@ export default {
               },
               ...this.blocks.slice(idx + 1)
             ]
-
-            console.log(this.blocks)
           } else {
-            console.log('ref not found...')
+            console.error('deleteBlock: ref not found...', ref)
           }
         } else {
           const idx = this.blocks.indexOf(block)

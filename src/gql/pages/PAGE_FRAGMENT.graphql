@@ -24,6 +24,7 @@ fragment page on Page {
     }
   }
 
+  parent_id
   parent {
     id
     key

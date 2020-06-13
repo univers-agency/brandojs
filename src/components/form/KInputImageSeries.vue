@@ -229,9 +229,8 @@ export default {
       if (this.new && this.adminChannel) {
         this.adminChannel.channel
           .push('images:get_category_id_by_slug', { slug: this.imageCategorySlug })
-          .receive('ok', payload => {
-            this.innerValue.image_category_id = payload.category_id
-          })
+          .receive('ok', payload => { this.innerValue.image_category_id = payload.category_id })
+          .receive('error', resp => { this.$alerts.alertError('Feil', `Fant ikke bildekategorien "${this.imageCategorySlug}" for gallerifeltet. Denne bildekategorien må eksistere før du kan laste opp bildeserier til den. Opprett en bildekategori med dette navnet!`) })
       }
     },
 

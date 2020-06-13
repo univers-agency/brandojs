@@ -14,7 +14,6 @@
 <script>
 
 import gql from 'graphql-tag'
-import GET_PAGES from '../../gql/pages/PAGES_QUERY.graphql'
 import PageSectionForm from './PageSectionForm'
 
 export default {
@@ -73,38 +72,6 @@ export default {
           variables: {
             pageFragmentParams,
             pageFragmentId: this.sectionId
-          },
-
-          update: (store, { data: { updatePageFragment } }) => {
-            const query = {
-              query: GET_PAGES,
-              variables: {
-                limit: 100,
-                offset: 0,
-                filter: null
-              }
-            }
-            const data = store.readQuery(query)
-            const page = data.pages.find(page => parseInt(page.id) === parseInt(this.pageFragment.page_id))
-
-            if (page) {
-              const fragment = page.fragments.find(fragment => parseInt(fragment.id) === parseInt(this.sectionId))
-              const idx = page.fragments.indexOf(fragment)
-
-              page.fragments = [
-                ...page.fragments.slice(0, idx),
-                updatePageFragment,
-                ...page.fragments.slice(idx + 1)
-              ]
-
-              // Write back to the cache
-              store.writeQuery({
-                ...query,
-                data
-              })
-            } else {
-              console.log('page not found?', data.pages, this.pageFragment.page_id)
-            }
           }
         })
 

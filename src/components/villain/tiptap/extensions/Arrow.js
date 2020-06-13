@@ -40,7 +40,6 @@ export default class Arrow extends Mark {
   }
 
   inputRules ({ type }) {
-    console.log('==> Arrow')
     return this.options.directions.map(direction => markInputRule(
       new RegExp(`&(${direction})arr;$`),
       type,

@@ -181,7 +181,6 @@ export default {
       if (val && val.length) {
         this.innerValue.images = []
         val.forEach((v, idx) => {
-          console.log(idx)
           this.innerValue.images.push({
             image: v.file,
             sequence: idx

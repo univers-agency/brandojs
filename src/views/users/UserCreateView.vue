@@ -57,23 +57,6 @@ export default {
           `,
           variables: {
             userParams
-          },
-          update: (store, { data: { createUser } }) => {
-            try {
-              const query = {
-                query: GET_USERS
-              }
-              const data = store.readQuery(query)
-              data.users.push(createUser)
-              // Write back to the cache
-              store.writeQuery({
-                ...query,
-                data
-              })
-            } catch (e) {
-              console.log(e)
-              // ignore errors. usually means it's just not in cache.
-            }
           }
         })
 

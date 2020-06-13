@@ -112,9 +112,7 @@ export default {
       })
     },
 
-    focus () {
-      console.log('focus!')
-    }
+    focus () {}
   }
 }
 </script>

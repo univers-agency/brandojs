@@ -79,9 +79,9 @@
               placeholder="google.com" />
 
             <KInput
-              v-model="cfg.cover"
-              name="data[cover]"
-              label="URL til coverbilde"
+              v-model="cfg.poster"
+              name="data[poster]"
+              label="URL til posterbilde"
               placeholder="https://link.com/image.jpg" />
           </template>
 

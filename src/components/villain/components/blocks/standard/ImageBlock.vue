@@ -441,7 +441,6 @@ export default {
         }
       } catch (e) {
         this.uploading = false
-        console.log(' ==> caught error', e)
         this.$alerts.alertError('Feil', `Feil ved opplasting :(\n\n${e}`)
       }
     }

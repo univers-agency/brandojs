@@ -3,7 +3,6 @@ import GET_IMAGE_CATEGORIES from '../../../gql/images/IMAGE_CATEGORIES_QUERY.gra
 
 export default {
   removeSeries (provider, series) {
-    console.log(series)
     let query = {
       query: GET_IMAGE_CATEGORY,
       variables: {
@@ -14,8 +13,6 @@ export default {
     const store = provider.defaultClient.store.cache
     let data = store.readQuery(query)
     const idx = data.imageCategory.image_series.findIndex(s => parseInt(s.id) === parseInt(series.id))
-
-    console.log(idx)
 
     if (idx !== -1) {
       data.imageCategory.image_series.splice(idx, 1)

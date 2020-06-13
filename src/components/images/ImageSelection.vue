@@ -56,7 +56,6 @@ export default {
     },
 
     deleteImages () {
-      console.log(this.selectedImages)
       const imageIds = this.selectedImages.map(i => i.image.id)
       const imageIdsWithSeriesId = this.selectedImages.map(i => ({ id: i.image.id, imageSeriesId: i.image.image_series_id }))
       this.$apollo.mutate({
@@ -71,12 +70,10 @@ export default {
           imageIds: imageIds
         }
       }).then(res => {
-        console.log(res)
         imageIdsWithSeriesId.forEach(i => this.$emit('delete', { id: i.id, imageSeriesId: i.imageSeriesId }))
         this.clearSelection()
-        // this.showConfirm = false
       }).catch(e => {
-        console.log(e)
+        console.error(e)
       })
     }
   }

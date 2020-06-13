@@ -242,7 +242,7 @@ export default {
   },
 
   created () {
-    console.log('<ContentList /> created')
+    console.debug('<ContentList /> created')
     if (this.filterKeys.length) {
       this.filters[this.filterKeys[0]] = ''
     }

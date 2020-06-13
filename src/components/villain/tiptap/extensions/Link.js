@@ -32,9 +32,16 @@ export default class Link extends Mark {
       toDOM: node => ['a', {
         ...node.attrs,
         rel: 'noopener noreferrer nofollow',
-        target: node.attrs.href.startsWith('/') ? null : '_blank'
+        target: this.hasTarget(node)
       }, 0]
     }
+  }
+
+  hasTarget (node) {
+    if (node.attrs.href.startsWith('/')) { return null }
+    if (node.attrs.href.startsWith('#')) { return null }
+
+    return '_blank'
   }
 
   commands ({ type }) {

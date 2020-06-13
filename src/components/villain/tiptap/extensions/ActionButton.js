@@ -57,7 +57,6 @@ export default class ActionButton extends Mark {
       new Plugin({
         props: {
           handleClick: (view, pos, event) => {
-            console.log('CLICKED BUTTON')
             const { schema } = view.state
             const attrs = getMarkAttrs(view.state, schema.marks.link)
 

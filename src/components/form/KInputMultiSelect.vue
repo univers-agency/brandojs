@@ -62,21 +62,19 @@
                 @keydown.up.prevent="pointerBackward()"
                 @focus="$event.target.select()">
             </div>
-            <transition-group name="fade">
-              <div
-                v-for="(option, index) in filteredOptions"
-                :key="option[optionValueKey]"
-                :class="optionHighlight(index, option)"
-                class="options-option"
-                @click="selectOption(option)"
-                @mouseenter.self="pointerSet(index)">
-                <slot
-                  name="label"
-                  v-bind:option="option">
-                  {{ option[optionLabelKey] }}
-                </slot>
-              </div>
-            </transition-group>
+            <div
+              v-for="(option, index) in filteredOptions"
+              :key="option[optionValueKey]"
+              :class="optionHighlight(index, option)"
+              class="options-option"
+              @click="selectOption(option)"
+              @mouseenter.self="pointerSet(index)">
+              <slot
+                name="label"
+                v-bind:option="option">
+                {{ option[optionLabelKey] }}
+              </slot>
+            </div>
           </div>
           <div class="shaded selected-items">
             <transition-group name="fade-move">
@@ -391,8 +389,9 @@ export default {
             return
           }
         }
-        this.selected.push(option)
+        this.selected.unshift(option)
       }
+      this.searchString = ''
     },
 
     searchEnter () {

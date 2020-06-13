@@ -1,6 +1,7 @@
 <template>
   <router-link
     v-if="to"
+    class="button-secondary"
     :class="{ narrow }"
     :to="to">
     <slot></slot>
@@ -8,6 +9,7 @@
   <button
     v-else
     type="button"
+    class="button-secondary"
     :class="{ narrow }"
     @click.prevent="$emit('click')">
     <slot></slot>
@@ -52,15 +54,16 @@ export default {
     transition: background-color 0.25s ease, border-color 0.25s ease;
 
     &.narrow {
-      min-width: 80px;
+      min-width: auto;
+      padding: 15px 18px 16px;
     }
 
     &:hover {
       background-color: theme(colors.peach);
     }
+  }
 
-    + button, + a {
-      margin-left: -1px;
-    }
+  .button-secondary + .button-secondary {
+    border-left: none;
   }
 </style>

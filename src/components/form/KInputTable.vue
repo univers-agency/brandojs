@@ -171,7 +171,6 @@ export default {
 
   methods: {
     add () {
-      console.log('add')
       this.innerValue.push({ ...this.newEntry })
       this.newEntry = this.$utils.clone(this.newEntryTemplate)
       this.$refs.addRow.querySelector('input').focus()

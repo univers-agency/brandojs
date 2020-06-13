@@ -1,3 +1,5 @@
+/* POSSIBLY DEPRECATED?? */
+
 import { Mark, Plugin } from 'tiptap'
 import { updateMark, removeMark, pasteRule } from 'tiptap-commands'
 import { getMarkAttrs } from 'tiptap-utils'

@@ -1,5 +1,5 @@
 <template>
-  <article>
+  <article v-if="identity">
     <ContentHeader>
       <template v-slot:title>
         Ny innholdsside
@@ -31,7 +31,7 @@ export default {
         data: null,
         template: 'default.html',
         status: 'published',
-        language: 'no',
+        language: null,
         meta_description: ''
       }
     }
@@ -61,6 +61,27 @@ export default {
         this.$router.push({ name: 'pages' })
       } catch (err) {
         this.$utils.showError(err)
+      }
+    }
+  },
+
+  apollo: {
+    identity: {
+      query: gql`
+        query Identity {
+          identity {
+            id
+            defaultLanguage
+            languages {
+              id
+              name
+            }
+          }
+        }
+      `,
+      update ({ identity }) {
+        this.page.language = identity.defaultLanguage
+        return identity
       }
     }
   }

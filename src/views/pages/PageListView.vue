@@ -151,6 +151,14 @@
                     </router-link>
                   </li>
                   <li>
+                    <button
+                      type="button"
+                      @click="duplicateSection(section)">
+                      {{ $t('pages.duplicate-section') }}
+                    </button>
+                  </li>
+
+                  <li>
                     <button @click="deleteSection(section)">{{ $t('pages.delete-section') }}</button>
                   </li>
                 </CircleDropdown>
@@ -201,7 +209,6 @@
 <script>
 import gql from 'graphql-tag'
 import GET_PAGES from '../../gql/pages/PAGES_QUERY.graphql'
-import PAGE_FRAGMENT from '../../gql/pages/PAGE_FRAGMENT.graphql'
 
 export default {
   data () {
@@ -217,10 +224,6 @@ export default {
   },
 
   inject: ['adminChannel'],
-
-  fragments: {
-    user: PAGE_FRAGMENT
-  },
 
   methods: {
     reprocess () {
@@ -242,22 +245,6 @@ export default {
         .push('pages:sequence_pages', { ids: seq })
         .receive('ok', payload => {
           this.$toast.success({ message: this.$t('pages.sequence-updated') })
-
-          const query = {
-            query: GET_PAGES,
-            variables: this.queryVars
-          }
-          const store = this.$apolloProvider.defaultClient.store.cache
-          const data = store.readQuery(query)
-
-          data.pages.sort((a, b) => {
-            return seq.indexOf(parseInt(a.id)) - seq.indexOf(parseInt(b.id))
-          })
-
-          store.writeQuery({
-            ...query,
-            data
-          })
         })
     },
 
@@ -266,44 +253,22 @@ export default {
         .push('page_fragments:sequence_fragments', { ids: seq })
         .receive('ok', payload => {
           this.$toast.success({ message: this.$t('pages.sequence-updated') })
-
-          const query = {
-            query: GET_PAGES,
-            variables: this.queryVars
-          }
-          const store = this.$apolloProvider.defaultClient.store.cache
-          const data = store.readQuery(query)
-
-          const page = data.pages.find(
-            p => parseInt(p.id) === parseInt(pageId)
-          )
-
-          page.fragments.sort((a, b) => {
-            return seq.indexOf(parseInt(a.id)) - seq.indexOf(parseInt(b.id))
-          })
-
-          store.writeQuery({
-            ...query,
-            data
-          })
         })
     },
 
     moveSections (data) {
-      console.log(data)
+      // TODO!: move sections
     },
 
     async duplicatePage (page) {
-      console.log('DUP PAGE CALLED')
       try {
         await this.$apollo.mutate({
           mutation: gql`
             mutation DuplicatePage($pageId: ID!) {
               duplicatePage(pageId: $pageId) {
-                ...page
+                id
               }
             }
-            ${PAGE_FRAGMENT}
           `,
           variables: {
             pageId: page.id
@@ -315,6 +280,31 @@ export default {
         })
 
         this.$toast.success({ message: this.$t('pages.page-duplicated') })
+      } catch (err) {
+        this.$utils.showError(err)
+      }
+    },
+
+    async duplicateSection (section) {
+      try {
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation DuplicateSection($sectionId: ID!) {
+              duplicateSection(sectionId: $sectionId) {
+                id
+              }
+            }
+          `,
+          variables: {
+            sectionId: section.id
+          },
+
+          update: (store, { data: { duplicateSection } }) => {
+            this.$apollo.queries.pages.refresh()
+          }
+        })
+
+        this.$toast.success({ message: this.$t('pages.section-duplicated') })
       } catch (err) {
         this.$utils.showError(err)
       }
@@ -342,34 +332,7 @@ export default {
                 },
 
                 update: (store, { data: { deletePageFragment } }) => {
-                  const query = {
-                    query: GET_PAGES,
-                    variables: this.queryVars
-                  }
-                  const data = store.readQuery(query)
-                  const page = data.pages.find(
-                    page => parseInt(page.id) === parseInt(section.page_id)
-                  )
-
-                  if (page) {
-                    const fragment = page.fragments.find(
-                      f => parseInt(f.id) === parseInt(section.id)
-                    )
-                    const idx = page.fragments.indexOf(fragment)
-
-                    page.fragments = [
-                      ...page.fragments.slice(0, idx),
-                      ...page.fragments.slice(idx + 1)
-                    ]
-
-                    // Write back to the cache
-                    store.writeQuery({
-                      ...query,
-                      data
-                    })
-                  } else {
-                    console.log('page not found?', data.pages, section.page_id)
-                  }
+                  this.$apollo.queries.pages.refresh()
                 }
               })
 
@@ -400,26 +363,7 @@ export default {
             },
 
             update: (store, { data: { deletePage } }) => {
-              const query = {
-                query: GET_PAGES,
-                variables: this.queryVars
-              }
-
-              const data = store.readQuery(query)
-              const idx = data.pages.findIndex(
-                p => parseInt(p.id) === parseInt(entryId)
-              )
-
-              data.pages = [
-                ...data.pages.slice(0, idx),
-                ...data.pages.slice(idx + 1)
-              ]
-
-              // Write back to the cache
-              store.writeQuery({
-                ...query,
-                data
-              })
+              this.$apollo.queries.pages.refresh()
             }
           })
 
@@ -504,6 +448,7 @@ export default {
     "pages.sequence-updated": "Sequence updated",
     "pages.delete-page": "Delete page",
     "pages.duplicate-page": "Duplicate page",
+    "pages.duplicate-section": "Duplicate section",
     "pages.edit-section": "Edit section",
     "pages.delete-section": "Delete section",
     "pages.are-you-sure-you-want-to-delete-this-section": "Are you sure you want to delete this section?",
@@ -514,6 +459,7 @@ export default {
     "pages.delete-confirm-many": "Are you sure you want to delete these pages?",
     "pages.page-deleted": "Page deleted",
     "pages.page-duplicated": "Page duplicated",
+    "pages.section-duplicated": "Section duplicated",
     "pages.subpage": "Subpage",
     "pages.edit-subpage": "Edit subpage",
     "pages.delete-subpage": "Delete subpage"
@@ -533,6 +479,7 @@ export default {
     "pages.are-you-sure-you-want-to-delete-this-section": "Er du sikker på at du vil slette denne seksjonen?",
     "pages.delete-page": "Slett siden",
     "pages.duplicate-page": "Dupliser side",
+    "pages.duplicate-section": "Dupliser seksjon",
     "pages.edit-section": "Rediger seksjon",
     "pages.reprocess-page": "Behandle siden på nytt",
     "pages.section-deleted": "Seksjon slettet",
@@ -540,6 +487,7 @@ export default {
     "pages.delete-confirm-many": "Er du sikker på at du vil slette disse sidene?",
     "pages.page-deleted": "Siden ble slettet",
     "pages.page-duplicated": "Siden ble duplisert",
+    "pages.section-duplicated": "Seksjonen ble duplisert",
     "pages.subpage": "Underside",
     "pages.edit-subpage": "Endre underside",
     "pages.delete-subpage": "Slett underside"

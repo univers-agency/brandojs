@@ -397,6 +397,10 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+  >>> .ProseMirror {
+    outline: none !important;
+  }
+
   >>> .villain-text-editor {
     strong {
       font-weight: 500;
@@ -449,6 +453,11 @@ export default {
       font-weight: 500;
       margin-top: 0;
       margin-bottom: 25px;
+
+      a {
+        border-bottom: 2px solid theme(colors.peachDarkest);
+        padding-bottom: 1px;
+      }
     }
 
     h3 {
@@ -457,6 +466,11 @@ export default {
       margin-top: 0;
       margin-bottom: 5px;
       text-transform: uppercase;
+
+      a {
+        border-bottom: 2px solid theme(colors.peachDarkest);
+        padding-bottom: 1px;
+      }
     }
   }
 

@@ -404,7 +404,6 @@ export default {
     },
 
     dropSvg (e) {
-      console.log(e.dataTransfer.files)
       if (e.dataTransfer.files.length > 1) {
         this.$alerts.alertError('Feil', 'Slipp kun én fil her.')
         return
@@ -420,7 +419,6 @@ export default {
       const reader = new FileReader()
 
       reader.onload = event => {
-        console.log(event.target.result)
         this.currentTemplate.data.svg = event.target.result
       }
 
@@ -430,7 +428,6 @@ export default {
     createVar () {
       this.$alerts.alertPrompt('Variabelnavn', ({ data }) => {
         if (data) {
-          console.log(data)
           if (!this.currentTemplate.data.hasOwnProperty('vars')) {
             this.currentTemplate.data = {
               ...this.currentTemplate.data,

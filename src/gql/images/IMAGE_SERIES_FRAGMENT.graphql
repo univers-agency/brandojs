@@ -33,6 +33,7 @@ fragment image_series on ImageSeries {
       sizes
       thumb: url(size: "thumb")
       medium: url(size: "medium")
+      original: url(size: "original")
     }
     image_series_id
     sequence

@@ -30,9 +30,35 @@
             @change="onChange($event) || provider.validate($event)"
             @remove="onRemove() || provider.validate(null)"
             @focalChanged="onFocalChanged" />
+          <ButtonSecondary
+            v-if="edit"
+            @click="showEditModal = true">
+            Endre bildetekst
+          </ButtonSecondary>
+          <KModal
+            v-if="showEditModal"
+            ref="editModal"
+            v-shortkey="['esc']"
+            ok-text="Lukk"
+            @shortkey.native="closeEditModal"
+            @ok="closeEditModal">
+            <template #header>
+              Endre bildetekst
+            </template>
+            <KInput
+              v-model="innerValue.title"
+              name="image[title]"
+              label="Bildetekst"
+              placeholder="Bildetekst" />
+          </KModal>
         </template>
 
-        <div v-else>
+        <div
+          v-else
+          class="image-preview-wrapper-small">
+          <transition @appear="initialValidation(provider)">
+            <span></span>
+          </transition>
           <KModal
             v-if="showModal"
             ref="modal"
@@ -41,7 +67,7 @@
             @shortkey.native="closeModal"
             @ok="closeModal">
             <template #header>
-              Last opp delebilde
+              Rediger bilde
             </template>
             <PictureInput
               :id="id"
@@ -59,9 +85,9 @@
               size="10"
               button-class="btn btn-outline-secondary"
               @click.prevent
+              @init="provider.validate($event)"
               @change="onChange($event) || provider.validate($event)"
               @remove="onRemove() || provider.validate(null)"
-              @init="provider.validate($event)"
               @focalChanged="onFocalChanged" />
           </KModal>
 
@@ -80,6 +106,7 @@
                 :src="prefill"
                 class="preview-image" />
             </figure>
+            <div>&larr; Klikk på bildet for å redigere/endre</div>
           </div>
 
           <div v-else>
@@ -144,6 +171,11 @@ export default {
       required: true
     },
 
+    edit: {
+      type: Boolean,
+      default: false
+    },
+
     rules: {
       type: String,
       default: null
@@ -164,6 +196,7 @@ export default {
       innerValue: '',
       prefill: null,
       showModal: false,
+      showEditModal: false,
       previewImage: null,
 
       customStrings: {
@@ -173,6 +206,7 @@ export default {
         change: 'Skift bilde',
         remove: 'Nullstill bildefelt',
         select: 'Velg et bilde',
+        meta: 'Endre bildeinformasjon',
         fileSize: 'Filen er for stor!',
         fileType: 'Filtypen er ikke støttet'
       }
@@ -206,6 +240,10 @@ export default {
   },
 
   methods: {
+    initialValidation (provider) {
+      provider.validate(this.value)
+    },
+
     getPrefill () {
       if (typeof this.innerValue === 'string') {
         this.prefill = this.innerValue
@@ -226,8 +264,12 @@ export default {
       this.showModal = false
     },
 
+    async closeEditModal () {
+      await this.$refs.editModal.close()
+      this.showEditModal = false
+    },
+
     onChange (a) {
-      console.log('onChange!')
       // we have a prefill, and preCheck is false
       if (this.value && !this.preCheck) {
         // do nothing except, set preCheck to true
@@ -281,5 +323,12 @@ export default {
 
   .prefill-small {
     display: flex;
+    align-items: center;
+    border: 1px solid theme(colors.dark);
+
+    div {
+      padding-left: 50px;
+    }
   }
+
 </style>

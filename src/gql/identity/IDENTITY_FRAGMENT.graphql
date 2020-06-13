@@ -45,4 +45,9 @@ fragment identity on Identity {
   }
 
   url
+
+  languages {
+    id
+    name
+  }
 }
