@@ -5,20 +5,20 @@ query ImageCategories {
     slug
 
     cfg {
-      upload_path
+      uploadPath
     }
 
     creator {
       id
-      full_name
+      fullName
       avatar {
         thumb: url(size: "xlarge")
       }
     }
 
-    image_series_count
+    imageSeriesCount
 
-    updated_at
-    deleted_at
+    updatedAt
+    deletedAt
   }
 }

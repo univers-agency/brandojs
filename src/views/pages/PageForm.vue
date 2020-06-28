@@ -29,20 +29,20 @@
           name="page[title]" />
 
         <KInputTextarea
-          v-model="page.meta_description"
+          v-model="page.metaDescription"
           :rows="5"
-          name="page[meta_description]"
+          name="page[metaDescription]"
           type="text"
           label="META beskrivelse"
           help-text="(for søkemotorer)" />
       </div>
       <div class="half">
         <KInputSelect
-          v-model="page.parent_id"
+          v-model="page.parentId"
           :options="parents"
           option-value-key="id"
           option-label-key="title"
-          name="page[parent_id]"
+          name="page[parentId]"
           label="Tilhørende side">
           <template v-slot:label="{ option }">
             [{{ option.language.toUpperCase() }}] {{ option.title }}
@@ -70,16 +70,16 @@
 
         <KInput
           v-if="advancedConfig"
-          v-model="page.css_classes"
-          name="page[css_classes]"
+          v-model="page.cssClasses"
+          name="page[cssClasses]"
           type="text"
           label="Ekstra CSS klasser"
           placeholder="Ekstra CSS klasser" />
 
         <KInputImage
-          v-model="page.meta_image"
+          v-model="page.metaImage"
           small
-          name="page[meta_image]"
+          name="page[metaImage]"
           preview-key="original"
           label="Delebilde (META bilde)"
           help-text="Om du trenger et spesialtilpasset bilde for deling. Beskjæres til 1200x630." />

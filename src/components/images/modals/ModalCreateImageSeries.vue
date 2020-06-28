@@ -91,7 +91,7 @@ export default {
               createImageSeries(
                 imageSeriesParams: $imageSeriesParams,
               ) {
-                ...image_series
+                ...imageSeries
               }
             }
             ${IMAGE_SERIES_FRAGMENT}

@@ -4,20 +4,20 @@
       Hovedkonfigurasjon
     </h2>
     <KInput
-      v-model="config.upload_path"
+      v-model="config.uploadPath"
       rules="required"
-      name="config[upload_path]"
+      name="config[uploadPath]"
       label="Opplastingsbane"
       placeholder="Opplastingsbane" />
     <KInput
-      v-model="config.size_limit"
+      v-model="config.sizeLimit"
       rules="required"
-      name="config[size_limit]"
+      name="config[sizeLimit]"
       label="Størrelsesbegrensing (i bytes)"
       placeholder="Størrelsesbegrensing (i bytes)" />
     <KInputCheckbox
-      v-model="config.random_filename"
-      name="config[random_filename]"
+      v-model="config.randomFilename"
+      name="config[randomFilename]"
       label="Vilkårlig filnavn" />
 
     <h2>

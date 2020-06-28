@@ -125,7 +125,11 @@
             @sort="sortSections($event, entry.id)"
             @move="moveSections">
             <template v-slot:row="{ entry: section }">
-              <div class="col-1"></div>
+              <div class="col-1">
+                <div class="circle">
+                  <span>{{ section.language }}</span>
+                </div>
+              </div>
               <div class="col-8 subtitle">
                 <div class="arrow">↳</div>
                 <div class="flex-v">
@@ -134,7 +138,7 @@
                     {{ section.title || 'Ingen tittel' }}
                   </router-link>
                   <div class="keys">
-                    <div class="badge">{{ section.parent_key }}</div>
+                    <div class="badge">{{ section.parentKey }}</div>
                     <div class="badge">{{ section.key }}</div>
                   </div>
                 </div>
@@ -464,7 +468,7 @@ export default {
     "pages.edit-subpage": "Edit subpage",
     "pages.delete-subpage": "Delete subpage"
   },
-  "nb": {
+  "no": {
     "pages.title": "Sider og seksjoner",
     "pages.subtitle": "Innholdsadministrasjon",
     "pages.index": "Oversikt",

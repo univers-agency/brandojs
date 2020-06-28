@@ -286,14 +286,12 @@ export default {
       this.canvasWidth = this.width
       this.canvasHeight = this.height
 
-      this.$on('error', this.onError)
       this.$emit('init', this.image)
     })
   },
 
   beforeDestroy () {
     window.removeEventListener('resize', this.onResize)
-    this.$off('error', this.onError)
   },
 
   methods: {
@@ -357,7 +355,7 @@ export default {
           fileSize: files[0].size,
           fileType: files[0].type,
           fileName: files[0].name,
-          message: this.strings.fileSize + ' (' + this.size + 'MB)'
+          sizeLimit: this.size
         })
         return
       }
@@ -382,8 +380,7 @@ export default {
             type: 'fileType',
             fileSize: files[0].size,
             fileType: files[0].type,
-            fileName: files[0].name,
-            message: this.strings.fileType
+            fileName: files[0].name
           })
           return
         }
@@ -419,7 +416,7 @@ export default {
         const reader = new FileReader()
         reader.onload = e => {
           this.image = e.target.result
-          this.$emit('change', this.image)
+          this.$emit('change', this.image) //! TODO
           this.imageObject = new Image()
           this.imageObject.onload = () => {
             if (this.autoToggleAspectRatio) {
@@ -500,7 +497,6 @@ export default {
       }
 
       const newOrientation = this.getOrientation(this.canvasWidth, this.canvasHeight)
-      this.$emit('aspectratiochange', newOrientation)
     },
 
     resizeCanvas () {
@@ -632,7 +628,7 @@ export default {
         .catch(err => {
           this.$emit('error', {
             type: 'failedPrefill',
-            message: 'Failed loading prefill image: ' + err
+            err: err
           })
         })
     }

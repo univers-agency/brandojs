@@ -5,11 +5,11 @@ query ImageCategory ($categoryId: ID!, $imageSeriesLimit: Int, $imageSeriesOffse
     name
     slug
     cfg {
-      allowed_mimetypes
-      default_size
-      upload_path
-      random_filename
-      size_limit
+      allowedMimetypes
+      defaultSize
+      uploadPath
+      randomFilename
+      sizeLimit
       sizes
       srcset {
         key
@@ -18,11 +18,11 @@ query ImageCategory ($categoryId: ID!, $imageSeriesLimit: Int, $imageSeriesOffse
     }
     creator {
       id
-      full_name
+      fullName
     }
-    image_series_count
-    image_series (limit: $imageSeriesLimit, offset: $imageSeriesOffset) {
-      ...image_series
+    imageSeriesCount
+    imageSeries (limit: $imageSeriesLimit, offset: $imageSeriesOffset) {
+      ...imageSeries
     }
   }
 }

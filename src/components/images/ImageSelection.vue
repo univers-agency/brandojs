@@ -57,7 +57,7 @@ export default {
 
     deleteImages () {
       const imageIds = this.selectedImages.map(i => i.image.id)
-      const imageIdsWithSeriesId = this.selectedImages.map(i => ({ id: i.image.id, imageSeriesId: i.image.image_series_id }))
+      const imageIdsWithSeriesId = this.selectedImages.map(i => ({ id: i.image.id, imageSeriesId: i.image.imageSeriesId }))
       this.$apollo.mutate({
         mutation: gql`
           mutation DeleteImages($imageIds: [ID]) {

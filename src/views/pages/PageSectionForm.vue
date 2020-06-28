@@ -22,9 +22,9 @@
         <section class="row">
           <div class="half">
             <KInput
-              v-model="page.parent_key"
+              v-model="page.parentKey"
               rules="required"
-              name="page[parent_key]"
+              name="page[parentKey]"
               type="text"
               label="Hovednøkkel"
               placeholder="Hovednøkkel" />
@@ -43,10 +43,10 @@
 
       <div class="half">
         <KInputSelect
-          v-model="page.page_id"
+          v-model="page.pageId"
           rules="required"
           :options="parents"
-          name="page[page_id]"
+          name="page[pageId]"
           optionValueKey="value"
           label="Tilhørende side" />
         <KInputTextarea

@@ -17,6 +17,12 @@
           <i class="fa fa-fw fa-database"></i>
           <p>Datakilde — {{ block.data.description }}</p>
           <p><small><code>{{ block.data.module }}<br>{{ block.data.type }}|{{ block.data.query }}</code></small></p>
+          <div v-if="block.data.type === 'selection'">
+            <ButtonPrimary
+              @click="selectEntries">
+              Velg oppføringer
+            </ButtonPrimary>
+          </div>
           <div class="helpful-actions">
             <ButtonTiny
               @click="$refs.config.openConfig()">
@@ -86,6 +92,9 @@
                 optionLabelKey="name"
                 name="data[template]"
                 label="Mal" />
+              <div v-else>
+                Fant ingen tilgjengelige maler!
+              </div>
 
               <KInputTextarea
                 v-model="block.data.wrapper"
@@ -98,6 +107,37 @@
           </div>
         </template>
       </BlockConfig>
+      <KModal
+        v-if="showAvailableEntries"
+        ref="availableEntriesModal"
+        v-shortkey="['esc', 'enter']"
+        ok-text="Lukk"
+        @shortkey.native="closeAvailableEntriesModal"
+        @ok="closeAvailableEntriesModal">
+        <template #header>
+          Velg oppføringer
+        </template>
+        <ContentList
+          :selectable="false"
+          :tools="false"
+          :entries="availableEntries">
+          <template v-slot:row="{ entry }">
+            <div>
+              #{{ entry.id }} — {{ entry.label }}
+              <ButtonTiny
+                v-if="!block.data.ids.includes(parseInt(entry.id))"
+                @click="addSelectedEntry(entry.id)">
+                Legg til
+              </ButtonTiny>
+              <div
+                v-else
+                class="badge">
+                Allerede valgt
+              </div>
+            </div>
+          </template>
+        </ContentList>
+      </KModal>
     </block>
   </div>
 </template>
@@ -129,6 +169,8 @@ export default {
       customClass: '',
       uid: null,
       showConfig: false,
+      showAvailableEntries: false,
+      availableEntries: [],
       availableModules: [],
       availableModuleKeys: [],
       availableModuleTypes: [],
@@ -200,6 +242,30 @@ export default {
         .receive('ok', payload => {
           this.templates = payload.templates
         })
+    },
+
+    selectEntries () {
+      this.adminChannel.channel
+        .push('datasource:list_available_entries', { module: this.block.data.module, query: this.block.data.query })
+        .receive('ok', payload => {
+          this.availableEntries = payload.available_entries
+          this.showAvailableEntries = true
+          if (!this.block.data.ids) {
+            this.block.data = {
+              ...this.block.data,
+              ids: []
+            }
+          }
+        })
+    },
+
+    async closeAvailableEntriesModal () {
+      await this.$refs.availableEntriesModal.close()
+      this.showAvailableEntries = false
+    },
+
+    addSelectedEntry (id) {
+      this.block.data.ids.push(id)
     },
 
     createUID () {

@@ -12,10 +12,10 @@ export default {
 
     const store = provider.defaultClient.store.cache
     let data = store.readQuery(query)
-    const idx = data.imageCategory.image_series.findIndex(s => parseInt(s.id) === parseInt(series.id))
+    const idx = data.imageCategory.imageSeries.findIndex(s => parseInt(s.id) === parseInt(series.id))
 
     if (idx !== -1) {
-      data.imageCategory.image_series.splice(idx, 1)
+      data.imageCategory.imageSeries.splice(idx, 1)
 
       store.writeQuery({
         ...query,
@@ -31,7 +31,7 @@ export default {
       data = store.readQuery(query)
 
       const category = data.imageCategories.find(c => parseInt(c.id) === parseInt(series.image_category_id))
-      category.image_series_count = parseInt(category.image_series_count) - 1
+      category.imageSeriesCount = parseInt(category.imageSeriesCount) - 1
 
       store.writeQuery({
         ...query,
@@ -55,7 +55,7 @@ export default {
     try {
       const data = store.readQuery(query)
 
-      data.imageCategory.image_series.unshift(series)
+      data.imageCategory.imageSeries.unshift(series)
 
       store.writeQuery({
         ...query,
@@ -73,7 +73,7 @@ export default {
       const data = store.readQuery(query)
 
       const category = data.imageCategories.find(c => parseInt(c.id) === parseInt(series.image_category_id))
-      category.image_series_count = parseInt(category.image_series_count) + 1
+      category.imageSeriesCount = parseInt(category.imageSeriesCount) + 1
 
       store.writeQuery({
         ...query,

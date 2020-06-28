@@ -167,7 +167,7 @@ export default {
     "save": "Save",
     "back": "Back to index"
   },
-  "nb": {
+  "no": {
     "add": "Legg til",
     "save": "Lagre",
     "back": "Tilbake til oversikten"

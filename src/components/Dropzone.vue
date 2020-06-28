@@ -228,10 +228,10 @@ export default {
                   thumb: url(size: "thumb")
                   medium: url(size: "medium")
                 }
-                image_series_id
+                imageSeriesId
                 sequence
-                updated_at
-                deleted_at
+                updatedAt
+                deletedAt
               }
             }
           `,

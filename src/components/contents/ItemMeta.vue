@@ -10,10 +10,10 @@
     <section class="content">
       <div class="info">
         <div class="name">
-          {{ user.full_name || 'Systemroboten' }}
+          {{ user.fullName || 'Systemroboten' }}
         </div>
         <div class="time">
-          {{ getDate(entry.updated_at) }} <span>•</span> {{ getTime(entry.updated_at) }}
+          {{ getDate(entry.updatedAt) }} <span>•</span> {{ getTime(entry.updatedAt) }}
         </div>
       </div>
     </section>

@@ -6,8 +6,7 @@ export default function validateImageParams (params, imageParams) {
       continue
     }
     if (!(params[imageParams[i]] instanceof File) && params[imageParams[i]] !== null) {
-      stripParams(params[imageParams[i]], ['__typename', 'thumb'])
-      params[imageParams[i]] = JSON.stringify(params[imageParams[i]])
+      params[imageParams[i]] = stripParams(params[imageParams[i]], ['__typename', 'thumb', 'small', 'medium', 'large', 'xlarge'])
     }
   }
 }

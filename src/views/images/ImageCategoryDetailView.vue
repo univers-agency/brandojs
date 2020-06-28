@@ -34,6 +34,12 @@
               </li>
               <li>
                 <button
+                  @click.prevent="propagateConfigToSeries">
+                  Forplant konfigurasjon til alle serier
+                </button>
+              </li>
+              <li>
+                <button
                   @click.prevent="duplicateImageCategory">
                   Dupliser kategori
                 </button>
@@ -79,25 +85,18 @@
             name="slide-fade-top-slow"
             appear>
             <ImageSeries
-              v-for="s in imageCategory.image_series"
+              v-for="s in imageCategory.imageSeries"
               :key="s.id"
               :image-series="s"
               :selected-images="selectedImages"
               @delete="removeSeries" />
           </transition-group>
-          <div v-if="imageCategory.image_series.length">
-            <button
-              v-if="queryVars.imageSeriesOffset !== 0"
-              class="btn btn-outline-secondary"
-              @click.prevent="previousPage">
-              &larr; Forrige side
-            </button>
-            <button
-              v-if="queryVars.imageSeriesOffset + queryVars.imageSeriesLimit < imageCategory.image_series_count"
-              class="btn btn-outline-secondary"
-              @click.prevent="nextPage">
-              Neste side &rarr;
-            </button>
+          <div v-if="imageCategory.imageSeries.length">
+            <ButtonSecondary
+              v-if="limit * page < imageCategory.imageSeriesCount"
+              @click="nextPage">
+              Last inn flere
+            </ButtonSecondary>
           </div>
         </div>
       </div>
@@ -132,6 +131,10 @@ export default {
     }
   },
 
+  inject: [
+    'adminChannel'
+  ],
+
   data () {
     return {
       showModalImageCreateSeries: false,
@@ -139,14 +142,24 @@ export default {
       showModalImageDuplicateCategory: false,
       selectedImages: [],
       loading: 0,
-      queryVars: {
-        imageSeriesOffset: 0,
-        imageSeriesLimit: 20
-      }
+      page: 0,
+      limit: 100
     }
   },
 
   methods: {
+    nextPage () {
+      this.page++
+    },
+
+    propagateConfigToSeries () {
+      this.adminChannel.channel
+        .push('images:propagate_category_config', { category_id: this.imageCategory.id })
+        .receive('ok', payload => {
+          this.$toast.success({ message: 'Konfigurasjon forplantet til alle serier.' })
+        })
+    },
+
     createImageSeries () {
       this.showModalImageCreateSeries = true
     },
@@ -214,7 +227,7 @@ export default {
 
       try {
         const data = store.readQuery(query)
-        const series = data.imageCategory.image_series.find(s => parseInt(s.id) === parseInt(imageSeriesId))
+        const series = data.imageCategory.imageSeries.find(s => parseInt(s.id) === parseInt(imageSeriesId))
         const idx = series.images.findIndex(i => parseInt(i.id) === parseInt(id))
 
         if (idx !== -1) {
@@ -236,7 +249,8 @@ export default {
       query: GET_IMAGE_CATEGORY,
       variables () {
         return {
-          categoryId: this.imageCategoryId
+          categoryId: this.imageCategoryId,
+          imageSeriesOffset: this.limit * this.page
         }
       },
 

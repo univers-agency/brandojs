@@ -128,6 +128,7 @@ export default [
       template: null,
       wrapper: null,
       arg: null,
+      ids: [],
       description: null
     }
   },

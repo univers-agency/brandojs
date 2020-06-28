@@ -196,11 +196,6 @@ export default {
       default: '/admin/api/villain/browse/'
     },
 
-    slideshowsURL: {
-      type: String,
-      default: '/admin/api/villain/slideshows/'
-    },
-
     templatesURL: {
       type: String,
       default: '/admin/api/villain/templates/'
@@ -342,10 +337,6 @@ export default {
       enumerable: true,
       get: () => `${this.server}${this.browseURL}`
     })
-    Object.defineProperty(urls, 'slideshows', {
-      enumerable: true,
-      get: () => `${this.server}${this.slideshowsURL}`
-    })
     Object.defineProperty(urls, 'templates', {
       enumerable: true,
       get: () => `${this.server}${this.templatesURL}`
@@ -459,6 +450,14 @@ export default {
               this.needsRefresh = true
             }
             break
+
+          case 'datasource':
+            if (block.data.wrapper) {
+              this.$alerts.alertError('OBS!', 'Datakilden har et gammelt format. Flytt `wrapper` til template!')
+              console.log(block.data.wrapper)
+              delete block.data.wrapper
+            }
+            break
         }
 
         const blueprint = bpBlock.dataTemplate
@@ -488,7 +487,6 @@ export default {
               if (!entry.hasOwnProperty('id')) {
                 console.log('==> entry in TemplateBlock is lacking an `id`')
                 this.$set(entry, 'id', shortid.generate())
-                // this.$set(block.data, 'multi', false)
               }
 
               for (let xdx = 0; xdx < entry.refs.length; xdx++) {

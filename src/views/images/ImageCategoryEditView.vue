@@ -40,10 +40,10 @@ export default {
         '__typename',
         'id',
         'creator',
-        'image_series',
-        'image_series_count',
-        'deleted_at',
-        'inserted_at'])
+        'imageSeries',
+        'imageSeriesCount',
+        'deletedAt',
+        'insertedAt'])
 
       delete imageCategoryParams.cfg.__typename
       imageCategoryParams.cfg = JSON.stringify(imageCategoryParams.cfg)
@@ -61,12 +61,12 @@ export default {
                   slug
 
                   cfg {
-                    upload_path
+                    uploadPath
                   }
 
                   creator {
                     id
-                    full_name
+                    fullName
                   }
                 }
               }

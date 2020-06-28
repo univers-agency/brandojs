@@ -40,10 +40,10 @@
             :to="{ name: 'users-edit', params: { userId: entry.id } }"
             class="link name-link"
             :class="{ inactive: !entry.active }">
-            {{ entry.full_name }}
+            {{ entry.fullName }}
           </router-link>
           <span v-else>
-            {{ entry.full_name }}
+            {{ entry.fullName }}
           </span>
           <br>
           {{ entry.email }}

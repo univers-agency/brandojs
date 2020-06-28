@@ -4,6 +4,11 @@
       {{ label }}
     </dt>
     <dd>
+      <div class="actions">
+        <slot
+          name="actions"
+          :field="value"></slot>
+      </div>
       <slot :field="value">
         <template v-if="value">
           {{ value }}
@@ -12,10 +17,6 @@
           <span class="fallback">{{ fallback }}</span>
         </template>
       </slot>
-
-      <slot
-        name="actions"
-        :field="value"></slot>
     </dd>
   </dl>
 </template>
@@ -34,6 +35,10 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+  .actions {
+    padding-bottom: 15px;
+  }
+
   dl {
     margin-bottom: 20px;
     background-color: #FCF5F3;

@@ -2,7 +2,7 @@ fragment identity on Identity {
   id
   type
   name
-  alternate_name
+  alternateName
   email
   phone
   address
@@ -10,9 +10,9 @@ fragment identity on Identity {
   city
   country
   description
-  title_prefix
+  titlePrefix
   title
-  title_postfix
+  titlePostfix
 
   image {
     thumb: url(size: "original")

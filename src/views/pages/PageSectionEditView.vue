@@ -40,7 +40,7 @@ export default {
 
   methods: {
     async save () {
-      const pageFragmentParams = this.$utils.stripParams(this.pageFragment, ['__typename', 'id', 'creator', 'deleted_at', 'inserted_at'])
+      const pageFragmentParams = this.$utils.stripParams(this.pageFragment, ['__typename', 'id', 'creator', 'deletedAt', 'insertedAt'])
 
       try {
         await this.$apollo.mutate({
@@ -52,19 +52,19 @@ export default {
               ) {
                 id
                 title
-                parent_key
-                page_id
+                parentKey
+                pageId
                 key
                 language
                 wrapper
                 data
                 creator {
                   id
-                  full_name
+                  fullName
                 }
-                inserted_at
-                updated_at
-                deleted_at
+                insertedAt
+                updatedAt
+                deletedAt
               }
             }
           `,
@@ -90,18 +90,18 @@ export default {
           pageFragment (pageFragmentId: $pageFragmentId) {
             id
             title
-            parent_key
-            page_id
+            parentKey
+            pageId
             key
             language
             wrapper
             data
             creator {
               id
-              full_name
+              fullName
             }
-            inserted_at
-            deleted_at
+            insertedAt
+            deletedAt
           }
         }
       `,

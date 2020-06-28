@@ -27,7 +27,7 @@
           </div>
           <input
             v-model="filters[k]"
-            :placeholder="$t('contentlist.filter.placeholder')"
+            placeholder="Search"
             type="text"
             @input="filterInput()" />
         </div>
@@ -92,7 +92,7 @@
         v-for="entry in entries"
         :key="entry[entryKey]"
         :data-id="entry[entryKey]"
-        :class="{ selected: isSelected(entry[entryKey]), deleted: entry['deleted_at'] }"
+        :class="{ selected: isSelected(entry[entryKey]), deleted: entry['deletedAt'] }"
         class="list-row">
         <div
           class="main-content"
@@ -108,7 +108,7 @@
           </template>
           <template v-if="status">
             <div class="status">
-              <div v-if="entry.deleted_at">
+              <div v-if="entry.deletedAt">
                 <FontAwesomeIcon
                   icon="trash-alt"
                   size="xs"

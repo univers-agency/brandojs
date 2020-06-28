@@ -32,7 +32,7 @@ export default {
     return {
       loading: 0,
       page: {
-        page_id: null,
+        pageId: null,
         key: '',
         data: '',
         language: null,
@@ -46,7 +46,7 @@ export default {
   ],
 
   created () {
-    this.page.page_id = this.pageId
+    this.page.pageId = this.pageId
   },
 
   methods: {
@@ -63,15 +63,15 @@ export default {
                 id
                 title
                 key
-                parent_key
+                parentKey
                 language
-                updated_at
-                page_id
+                updatedAt
+                pageId
                 data
 
                 creator {
                   id
-                  full_name
+                  fullName
                   avatar {
                     thumb: url(size: "xlarge")
                   }
@@ -116,7 +116,7 @@ export default {
 </script>
 <i18n>
 {
-  "nb": {
+  "no": {
     "section.new": "Ny innholdsseksjon",
     "section.created": "Seksjon opprettet"
   },

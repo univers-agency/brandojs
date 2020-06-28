@@ -41,7 +41,7 @@ export default {
     async save (setLoader) {
       setLoader(true)
 
-      const userParams = this.$utils.stripParams(this.user, ['__typename', 'password_confirm', 'id', 'active', 'deleted_at'])
+      const userParams = this.$utils.stripParams(this.user, ['__typename', 'password_confirm', 'id', 'active', 'deletedAt'])
       this.$utils.validateImageParams(userParams, ['avatar'])
 
       try {

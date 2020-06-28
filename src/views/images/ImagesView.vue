@@ -23,7 +23,7 @@
               <span class="name">{{ entry.name }}</span>
             </router-link><br>
             <span class="small">
-              <strong>{{ entry.image_series_count }}</strong> bildeserie(r) i denne kategorien
+              <strong>{{ entry.imageSeriesCount }}</strong> bildeserie(r) i denne kategorien
             </span>
           </div>
           <div class="col-4">

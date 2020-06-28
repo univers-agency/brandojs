@@ -57,29 +57,29 @@
     <BlockConfig
       ref="config"
       v-model="block.data">
-      <template #default="{ cfg }">
+      <template #default>
         <div class="desc">
           Lim inn link til youtube, vimeo eller ekstern fil. <br>
           F.eks <strong>http://www.youtube.com/watch?v=jlbunmCbTBA</strong>
         </div>
         <div>
           <template
-            v-if="cfg.remote_id">
+            v-if="block.data.remote_id">
             <KInput
-              v-model="cfg.remote_id"
+              v-model="block.data.remote_id"
               name="data[remote_id]"
               disabled
-              :label="`Eksisterende data — ${cfg.source}`"
+              :label="`Eksisterende data — ${block.data.source}`"
               placeholder="ID" />
 
             <KInput
-              v-model="cfg.link"
+              v-model="block.data.link"
               name="data[link]"
               label="Link video til denne URL"
               placeholder="google.com" />
 
             <KInput
-              v-model="cfg.poster"
+              v-model="block.data.poster"
               name="data[poster]"
               label="URL til posterbilde"
               placeholder="https://link.com/image.jpg" />
@@ -90,11 +90,11 @@
             name="url"
             label="Lim inn videoens adresse"
             placeholder="Videoadresse"
-            @input="parseUrl(cfg)" />
+            @input="parseUrl" />
         </div>
-        <div v-if="cfg.url">
+        <div v-if="block.data.url">
           <KInput
-            v-model="cfg.class"
+            v-model="block.data.class"
             name="data[class]"
             label="Ekstra CSS klasser"
             placeholder="CSS klasser" />
@@ -134,7 +134,6 @@ export default {
     return {
       customClass: '',
       uid: null,
-      showConfig: false,
       url: '',
       html: '',
 
@@ -186,36 +185,37 @@ export default {
   },
 
   methods: {
-    parseUrl (cfg) {
+    parseUrl () {
       let match
       const url = this.url
 
       if (url.startsWith('https://player.vimeo.com/external/')) {
-        cfg.source = 'file'
-        cfg.remote_id = url
-        this.showConfig = false
+        console.log('external file')
+        this.$set(this.block.data, 'source', 'file')
+        this.$set(this.block.data, 'remote_id', url)
+        // this.showConfig = false
       } else {
         for (const key of Object.keys(this.providers)) {
           const provider = this.providers[key]
           match = provider.regex.exec(url)
 
           if (match !== null && match[1] !== undefined) {
-            cfg.source = key
-            cfg.remote_id = match[1]
+            this.$set(this.block.data, 'source', key)
+            this.$set(this.block.data, 'remote_id', match[1])
             if (key !== 'file') {
-              this.showConfig = false
+              // this.showConfig = false
             }
             break
           }
         }
-        if (!{}.hasOwnProperty.call(this.providers, cfg.source)) {
+        if (!{}.hasOwnProperty.call(this.providers, this.block.data.source)) {
           return false
         }
       }
 
-      this.html = this.providers[cfg.source].html
+      this.html = this.providers[this.block.data.source].html
         .replace('{{protocol}}', window.location.protocol)
-        .replace('{{remote_id}}', cfg.remote_id)
+        .replace('{{remote_id}}', this.block.data.remote_id)
     }
   }
 }

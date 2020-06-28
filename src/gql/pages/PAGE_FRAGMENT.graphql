@@ -7,10 +7,10 @@ fragment page on Page {
   template
   language
   data
-  css_classes
+  cssClasses
 
-  meta_description
-  meta_image {
+  metaDescription
+  metaImage {
     focal
     thumb: url(size: "thumb")
     original: url(size: "original")
@@ -18,13 +18,13 @@ fragment page on Page {
 
   creator {
     id
-    full_name
+    fullName
     avatar {
       thumb: url(size: "xlarge")
     }
   }
 
-  parent_id
+  parentId
   parent {
     id
     key
@@ -44,7 +44,7 @@ fragment page on Page {
 
     creator {
       id
-      full_name
+      fullName
       avatar {
         thumb: url(size: "xlarge")
       }
@@ -55,22 +55,22 @@ fragment page on Page {
     id
     title
     key
-    parent_key
+    parentKey
     language
-    updated_at
-    page_id
+    updatedAt
+    pageId
     data
 
     creator {
       id
-      full_name
+      fullName
       avatar {
         thumb: url(size: "xlarge")
       }
     }
   }
 
-  inserted_at
-  updated_at
-  deleted_at
+  insertedAt
+  updatedAt
+  deletedAt
 }

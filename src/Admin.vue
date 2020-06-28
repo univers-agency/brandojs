@@ -355,6 +355,11 @@ export default {
     font-style: normal;
   }
 
+  .justify-end {
+    display: flex;
+    justify-content: flex-end;
+  }
+
   .fade-enter-active, .fade-leave-active {
     transition: opacity 0.35s;
   }
@@ -534,6 +539,8 @@ export default {
 
   h1 {
     @fontsize h1;
+    @space margin-bottom 10px;
+    line-height: 1.05 !important;
     font-feature-settings: 'kern', 'liga', 'dlig', 'hlig', 'cswh';
   }
 

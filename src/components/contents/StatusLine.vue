@@ -132,7 +132,7 @@ export default {
     "status-disabled": "Disabled"
   },
 
-  "nb": {
+  "no": {
     "status-draft": "Utkast",
     "status-pending": "Venter",
     "status-published": "Publisert",

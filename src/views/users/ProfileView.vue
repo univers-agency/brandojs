@@ -14,12 +14,12 @@
       <section class="row">
         <div class="half">
           <KInput
-            v-model="user.full_name"
+            v-model="user.fullName"
             :label="$t('user.name')"
             :helpText="$t('user.name.help')"
             rules="required"
             placeholder="Navn Navnesen"
-            name="user[full_name]" />
+            name="user[fullName]" />
           <KInputEmail
             v-model="user.email"
             :label="$t('user.email')"
@@ -43,7 +43,7 @@
             rules="required"
             :options="[
               { name: 'English', value: 'en' },
-              { name: 'Norsk', value: 'nb' }
+              { name: 'Norsk', value: 'no' }
             ]"
             name="user[language]"
             :label="$t('user.language')" />
@@ -85,7 +85,7 @@ export default {
 
   methods: {
     async save () {
-      const userParams = this.$utils.stripParams(this.user, ['__typename', 'password_confirm', 'id', 'active', 'deleted_at'])
+      const userParams = this.$utils.stripParams(this.user, ['__typename', 'password_confirm', 'id', 'active', 'deletedAt'])
       this.$utils.validateImageParams(userParams, ['avatar'])
 
       try {
@@ -98,7 +98,7 @@ export default {
               ) {
                 id
                 language
-                full_name
+                fullName
                 email
                 avatar {
                   focal
@@ -160,7 +160,7 @@ export default {
     "profile.title": "Your User Profile",
     "profile.helpText": "Administrate user info"
   },
-  "nb": {
+  "no": {
     "user.language": "Språk",
     "user.password": "Passord",
     "user.password_confirm": "Bekreft passord",

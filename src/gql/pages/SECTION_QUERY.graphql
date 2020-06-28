@@ -2,17 +2,17 @@ query PageFragment ($pageFragmentId: ID!) {
   pageFragment (pageFragmentId: $pageFragmentId) {
     id
     title
-    parent_key
-    page_id
+    parentKey
+    pageId
     key
     language
     wrapper
     data
     creator {
       id
-      full_name
+      fullName
     }
-    inserted_at
-    deleted_at
+    insertedAt
+    deletedAt
   }
 }

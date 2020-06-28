@@ -63,11 +63,11 @@ export default {
   }
 
   button, a {
-    @fontsize base/1;
+    @fontsize sm/1;
     color: theme(colors.dark);
     border: 1px solid theme(colors.dark);
     background-color: transparent;
-    height: 60px;
+    height: 48px;
     border-radius: 30px;
     padding-bottom: 9px;
     padding-left: 25px;

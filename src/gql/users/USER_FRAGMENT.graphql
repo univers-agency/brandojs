@@ -1,9 +1,11 @@
 fragment user on User {
   id
-  full_name
+  fullName
   email
   avatar {
     focal
+    alt
+    title
     thumb: url(size: "thumb")
     medium: url(size: "medium")
     xlarge: url(size: "xlarge")
@@ -11,5 +13,5 @@ fragment user on User {
   role
   language
   active
-  deleted_at
+  deletedAt
 }

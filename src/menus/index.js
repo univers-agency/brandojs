@@ -1,5 +1,5 @@
 export default {
-  nb: [
+  no: [
     {
       name: 'System',
       items: [

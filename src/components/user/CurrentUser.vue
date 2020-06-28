@@ -20,7 +20,7 @@
         <section class="content">
           <div class="info">
             <div class="name">
-              {{ me.full_name }}
+              {{ me.fullName }}
             </div>
             <div class="role">
               {{ me.role }}
@@ -249,7 +249,7 @@ export default {
     "profile.edit": "Edit profile"
   },
 
-  "nb": {
+  "no": {
     "logout": "Logg ut",
     "profile.edit": "Endre profil"
   }

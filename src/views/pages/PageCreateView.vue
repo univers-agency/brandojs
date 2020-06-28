@@ -24,7 +24,7 @@ export default {
   data () {
     return {
       page: {
-        parent_id: null,
+        parentId: null,
         key: '',
         title: '',
         slug: '',
@@ -32,14 +32,15 @@ export default {
         template: 'default.html',
         status: 'published',
         language: null,
-        meta_description: ''
+        metaDescription: ''
       }
     }
   },
 
   methods: {
     async save () {
-      const pageParams = this.$utils.stripParams(this.page, ['__typename', 'id', 'slug', 'deleted_at'])
+      const pageParams = this.$utils.stripParams(this.page, ['__typename', 'id', 'slug', 'deletedAt'])
+      this.$utils.validateImageParams(pageParams, ['metaImage'])
 
       try {
         await this.$apollo.mutate({

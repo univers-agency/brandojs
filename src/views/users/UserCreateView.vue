@@ -18,7 +18,6 @@
 
 import gql from 'graphql-tag'
 import UserForm from './UserForm'
-import GET_USERS from '../../gql/users/USERS_QUERY.graphql'
 import USER_FRAGMENT from '../../gql/users/USER_FRAGMENT.graphql'
 
 export default {
@@ -29,7 +28,7 @@ export default {
   data () {
     return {
       user: {
-        language: 'nb'
+        language: 'no'
       }
     }
   },
@@ -40,7 +39,7 @@ export default {
 
   methods: {
     async save () {
-      const userParams = this.$utils.stripParams(this.user, ['__typename', 'password_confirm', 'id', 'deleted_at'])
+      const userParams = this.$utils.stripParams(this.user, ['__typename', 'password_confirm', 'id', 'deletedAt'])
       this.$utils.validateImageParams(userParams, ['avatar'])
 
       try {

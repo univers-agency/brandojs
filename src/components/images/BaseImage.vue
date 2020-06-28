@@ -145,7 +145,7 @@ export default {
 
   computed: {
     timestamp () {
-      return moment(this.img.updated_at)
+      return moment(this.img.updatedAt)
     }
   },
 
@@ -188,7 +188,7 @@ export default {
         title: this.img.image.title,
         focal: this.img.image.focal
       }
-      const imageParams = this.$utils.stripParams(this.img, ['__typename', 'id', 'deleted_at'])
+      const imageParams = this.$utils.stripParams(this.img, ['__typename', 'id', 'deletedAt'])
       this.$utils.validateImageParams(imageParams, ['image'])
       try {
         await this.$apollo.mutate({
@@ -211,10 +211,10 @@ export default {
                   thumb: url(size: "thumb")
                   medium: url(size: "medium")
                 }
-                image_series_id
+                imageSeriesId
                 sequence
-                updated_at
-                deleted_at
+                updatedAt
+                deletedAt
               }
             }
           `,

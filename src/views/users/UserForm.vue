@@ -5,12 +5,12 @@
     <section class="row">
       <div class="half">
         <KInput
-          v-model="user.full_name"
+          v-model="user.fullName"
           label="Navn"
           helpText="navn som brukes når du er artikkelforfatter"
           rules="required"
           placeholder="Navn Navnesen"
-          name="user[full_name]" />
+          name="user[fullName]" />
         <KInputEmail
           v-model="user.email"
           label="Epost"

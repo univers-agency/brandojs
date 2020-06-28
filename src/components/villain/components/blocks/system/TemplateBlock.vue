@@ -402,7 +402,7 @@ export default {
       if (!id) {
         foundTemplate = this.available.templates.find(t => t.data.class === this.block.data.class)
       } else {
-        foundTemplate = this.available.templates.find(t => parseInt(t.data.id) === parseInt(this.block.data.id))
+        foundTemplate = this.available.templates.find(t => parseInt(t.data.id) === parseInt(id))
       }
 
       if (!foundTemplate) {

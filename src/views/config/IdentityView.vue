@@ -41,8 +41,8 @@
 
           <div class="half">
             <KInput
-              v-model="identity.alternate_name"
-              name="identity[alternate_name]"
+              v-model="identity.alternateName"
+              name="identity[alternateName]"
               label="Kortere form av navnet"
               placeholder="AB" />
           </div>
@@ -105,8 +105,8 @@
         <div class="row">
           <div class="third">
             <KInput
-              v-model="identity.title_prefix"
-              name="identity[title_prefix]"
+              v-model="identity.titlePrefix"
+              name="identity[titlePrefix]"
               label="Tittel prefiks"
               placeholder="AB | " />
           </div>
@@ -119,8 +119,8 @@
           </div>
           <div class="third">
             <KInput
-              v-model="identity.title_postfix"
-              name="identity[title_postfix]"
+              v-model="identity.titlePostfix"
+              name="identity[titlePostfix]"
               label="Tittel postfiks"
               placeholder=" | AB" />
           </div>
@@ -152,6 +152,7 @@
 
         <KInputTable
           v-model="identity.links"
+          :new-entry-template="{ name: '', url: '' }"
           :edit-rows="true"
           name="user[links]"
           label="Linker (sosiale medier)">
@@ -198,6 +199,7 @@
 
         <KInputTable
           v-model="identity.metas"
+          :new-entry-template="{ key: '', value: '' }"
           name="user[metas]"
           label="META variabler">
           <template #head>
@@ -296,7 +298,7 @@ export default {
     },
 
     async save () {
-      const params = this.$utils.stripParams(this.identity, ['__typename', 'id'])
+      const params = this.$utils.stripParams(this.identity, ['__typename', 'id', 'languages'])
       this.$utils.validateImageParams(params, ['logo', 'image'])
 
       params.links.map(item => (delete item.__typename))

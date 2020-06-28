@@ -69,16 +69,16 @@ export default {
         this.page, [
           '__typename',
           'id',
-          'deleted_at',
-          'inserted_at',
-          'updated_at',
+          'deletedAt',
+          'insertedAt',
+          'updatedAt',
           'children',
           'slug',
           'creator',
           'fragments',
           'parent'
         ])
-      this.$utils.validateImageParams(pageParams, ['meta_image'])
+      this.$utils.validateImageParams(pageParams, ['metaImage'])
       try {
         await this.$apollo.mutate({
           mutation: gql`
@@ -133,7 +133,7 @@ export default {
 
               creator {
                 id
-                full_name
+                fullName
                 avatar {
                   thumb: url(size: "xlarge")
                 }
@@ -168,7 +168,7 @@ export default {
   "en": {
     "pages.subpages": "Subpages"
   },
-  "nb": {
+  "no": {
     "pages.subpages": "Undersider"
   }
 }

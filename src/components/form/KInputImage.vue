@@ -1,10 +1,48 @@
 <template>
   <KFieldBase
     :name="name"
-    :label="label"
+    :label="label + ' (max ' + sizeLimit + 'MB)'"
     :rules="rules"
     :helpText="helpText"
     :value="innerValue">
+    <template #outsideValidator>
+      <KModal
+        v-if="showErrorModal"
+        ref="errorModal"
+        v-shortkey="['esc', 'enter']"
+        ok-text="Lukk"
+        @shortkey.native="closeErrorModal"
+        @ok="closeErrorModal">
+        <template #header>
+          Feil
+        </template>
+        <div v-html="errorMessage" />
+      </KModal>
+
+      <KModal
+        v-if="showEditModal"
+        ref="editModal"
+        v-shortkey="['esc', 'enter']"
+        ok-text="Lukk"
+        @shortkey.native="closeEditModal"
+        @ok="closeEditModal">
+        <template #header>
+          Endre bildedata
+        </template>
+        <KInput
+          v-model="innerValue.title"
+          rules=""
+          name="image[title]"
+          label="Bildetekst"
+          placeholder="Bildetekst" />
+        <KInput
+          v-model="innerValue.alt"
+          rules=""
+          name="image[alt]"
+          label="Alt. tekst"
+          placeholder="Beskrivelse av bildet" />
+      </KModal>
+    </template>
     <template v-slot="{ provider }">
       <div
         v-if="provider"
@@ -13,6 +51,7 @@
           <PictureInput
             :id="id"
             ref="pictureInput"
+            :size-limit="sizeLimit"
             :focal="focal"
             :crop="crop"
             :width="width"
@@ -21,36 +60,22 @@
             :removable="true"
             :name="name"
             :custom-strings="customStrings"
+            :size="sizeLimit"
+            :accept="accept"
             margin="0"
-            accept="image/jpeg,image/jpg,image/png,image/gif"
-            size="10"
             button-class="btn btn-outline-secondary"
             @click.prevent
             @init="provider.validate($event)"
             @change="onChange($event) || provider.validate($event)"
             @remove="onRemove() || provider.validate(null)"
+            @error="onError"
             @focalChanged="onFocalChanged" />
           <ButtonSecondary
-            v-if="edit"
+            v-if="edit && innerValue"
+            class="btn-edit"
             @click="showEditModal = true">
-            Endre bildetekst
+            Endre bildedata
           </ButtonSecondary>
-          <KModal
-            v-if="showEditModal"
-            ref="editModal"
-            v-shortkey="['esc']"
-            ok-text="Lukk"
-            @shortkey.native="closeEditModal"
-            @ok="closeEditModal">
-            <template #header>
-              Endre bildetekst
-            </template>
-            <KInput
-              v-model="innerValue.title"
-              name="image[title]"
-              label="Bildetekst"
-              placeholder="Bildetekst" />
-          </KModal>
         </template>
 
         <div
@@ -72,6 +97,7 @@
             <PictureInput
               :id="id"
               ref="pictureInput"
+              :size-limit="sizeLimit"
               :focal="focal"
               :crop="crop"
               :width="width"
@@ -80,14 +106,15 @@
               :removable="true"
               :name="name"
               :custom-strings="customStrings"
+              :size="sizeLimit"
+              :accept="accept"
               margin="0"
-              accept="image/jpeg,image/jpg,image/png,image/gif"
-              size="10"
               button-class="btn btn-outline-secondary"
               @click.prevent
               @init="provider.validate($event)"
               @change="onChange($event) || provider.validate($event)"
               @remove="onRemove() || provider.validate(null)"
+              @error="onError"
               @focalChanged="onFocalChanged" />
           </KModal>
 
@@ -139,6 +166,16 @@ export default {
     small: {
       type: Boolean,
       default: false
+    },
+
+    accept: {
+      type: String,
+      default: 'image/jpeg,image/jpg,image/png,image/gif'
+    },
+
+    sizeLimit: {
+      type: Number,
+      default: 3
     },
 
     helpText: {
@@ -197,7 +234,9 @@ export default {
       prefill: null,
       showModal: false,
       showEditModal: false,
+      showErrorModal: false,
       previewImage: null,
+      errorMessage: '',
 
       customStrings: {
         upload: 'Dingsen du bruker støtter ikke filopplasting :(',
@@ -231,7 +270,8 @@ export default {
 
   mounted () {
     this.innerValue = this.value
-    this.getPrefill()
+    this.setPrefill()
+
     this.$nextTick(() => {
       if (this.$refs.provider) {
         this.$refs.provider.validate(this.value)
@@ -244,18 +284,13 @@ export default {
       provider.validate(this.value)
     },
 
-    getPrefill () {
-      if (typeof this.innerValue === 'string') {
-        this.prefill = this.innerValue
-      } else if (this.innerValue instanceof File) {
-        this.prefill = this.innerValue
+    setPrefill () {
+      this.prefill = this.innerValue ? this.innerValue[this.previewKey] : null
+      if (this.innerValue) {
+        this.focal = this.innerValue.focal ? this.innerValue.focal : null
+        delete this.innerValue.focal
       } else {
-        this.prefill = this.innerValue ? this.innerValue[this.previewKey] : null
-        if (this.innerValue) {
-          this.focal = this.innerValue.focal ? this.innerValue.focal : null
-        } else {
-          this.focal = { x: 50, y: 50 }
-        }
+        this.focal = { x: 50, y: 50 }
       }
     },
 
@@ -269,20 +304,48 @@ export default {
       this.showEditModal = false
     },
 
+    async closeErrorModal () {
+      await this.$refs.errorModal.close()
+      this.showErrorModal = false
+    },
+
+    showError () {
+      this.showErrorModal = true
+    },
+
+    async hideError () {
+      await this.$refs.errorModal.close()
+      this.showErrorModal = false
+    },
+
     onChange (a) {
-      // we have a prefill, and preCheck is false
+      /*
+      This triggers on the initial load of prefill, as well as when the image changes.
+      */
       if (this.value && !this.preCheck) {
-        // do nothing except, set preCheck to true
+        // Just changing the prefill. Set preCheck and return
         this.preCheck = true
         return
       }
+
       // there's been a change, and we either have no prefill, or we've triggered the prefill check:
       if (this.$refs.pictureInput.file) {
-        this.innerValue = this.$refs.pictureInput.file
+        this.preCheck = true
+
+        if (this.innerValue) {
+          this.innerValue.file = this.$refs.pictureInput.file
+        } else {
+          this.innerValue = {
+            file: this.$refs.pictureInput.file,
+            thumb: this.$refs.pictureInput.file,
+            alt: '',
+            title: ''
+          }
+        }
 
         if (this.small && this.innerValue) {
           this.previewImage = a
-          this.prefill = this.innerValue
+          this.prefill = this.$refs.pictureInput.file
         }
       }
     },
@@ -292,18 +355,40 @@ export default {
     },
 
     onFocalChanged (f) {
-      if (this.innerValue instanceof File) {
-        // remove any focal key
-        let filename = this.innerValue.name.replace(/%%%(.*)%%%/, '')
-        // change the filename to include focal info
-        filename = filename + `%%%${f.x}:${f.y}%%%`
-        const newFile = new File([this.innerValue], filename, { type: this.innerValue.type })
-        this.innerValue = newFile
-      } else {
-        this.innerValue = {
-          ...this.innerValue,
-          focal: f
-        }
+      if (this.preCheck) {
+        this.setFocal(f)
+      }
+    },
+
+    onError (err) {
+      switch (err.type) {
+        case 'fileSize':
+          this.errorMessage = `
+          Filen du vil laste opp er for stor. <br><br>
+          Maks tillatt størrelse for feltet er <br><br>
+          &lt;&lt; ${err.sizeLimit}MB. &gt;&gt;<br><br>
+          Du kan komprimere filen før du laster den opp med en online tjeneste<br>
+          som <a href="https://squoosh.app/" target="_blank" rel="noopener nofollow">squoosh.app</a> eller en mac-applikasjon
+          som f.eks <a href="https://imageoptim.com/mac/" target="_blank" rel="noopener nofollow">ImageOptim</a>.
+          `
+          this.showError()
+          break
+
+        case 'fileType':
+          this.errorMessage = `
+          Ikke tillatt filtype. <br><br>
+          Gyldige filtyper for dette felter er<br><br>
+          &lt;&lt; ${this.accept} &gt;&gt;<br><br>
+          `
+          this.showError()
+          break
+      }
+    },
+
+    setFocal (f) {
+      this.innerValue = {
+        ...this.innerValue,
+        focal: f
       }
     }
   }
@@ -329,6 +414,11 @@ export default {
     div {
       padding-left: 50px;
     }
+  }
+
+  .btn-edit {
+    width: 100%;
+    margin-top: -1px;
   }
 
 </style>
