@@ -22,14 +22,14 @@
         v-else
         class="table-wrapper">
         <transition-group
-          v-sortable="{handle: '.villain-block-datatable-item', animation: 500, store: {get: getOrder, set: storeOrder}}"
+          v-sortable="{handle: '.villain-block-datatable-item', animation: 0, store: {get: getOrder, set: storeOrder}}"
           class="villain-block-datatable"
           name="fade-move"
           tag="table">
           <tr
-            v-for="(item, idx) in rows"
-            :key="idx + guid()"
-            :data-id="item.key + item.value"
+            v-for="item in block.data.rows"
+            :key="item.id"
+            :data-id="item.id"
             class="villain-block-datatable-item">
             <td class="villain-block-datatable-item-key">
               {{ item.key }}
@@ -49,13 +49,13 @@
     </Block>
     <BlockConfig
       ref="config"
-      v-model="block.data">
+      v-model="block.data"
+      @close="forceUpdate">
       <template #default="{ cfg }">
         <KInputTable
           v-model="cfg.rows"
           name="data[data]"
           label="Datatabell"
-          id-key="key"
           :delete-rows="true"
           :add-rows="false">
           <template v-slot:row="{ entry }">
@@ -116,40 +116,26 @@ export default {
     }
   },
 
-  computed: {
-
-    rows: {
-      get () {
-        return this.block.data.rows
-      },
-
-      set (rows) {
-        this.block.data.rows = rows
-        return this.block.data.rows
-      }
-    }
-  },
-
   created () {
     console.debug('<DatatableBlock /> created')
   },
 
   methods: {
-    guid () {
-      return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
+    forceUpdate (data) {
+      console.log('forceUpdate', data)
+      this.$set(this.block, 'data', data)
     },
 
     getOrder (sortable) {
-      return this.rows
+      return this.block.data.rows
     },
 
     storeOrder (sortable) {
       this.sortedArray = sortable.toArray()
       let newOrder = []
-      this.sortedArray.forEach(x => {
-        const i = this.rows.find(i => {
-          return i.key + i.value === x
+      this.sortedArray.forEach(id => {
+        const i = this.block.data.rows.find(i => {
+          return i.id === id
         })
 
         if (i) {
@@ -160,24 +146,14 @@ export default {
         }
       })
 
-      // this.$set(this.block, 'data', newOrder)
-      this.rows = newOrder
+      this.$set(this.block.data, 'rows', newOrder)
     },
 
     addItem (cfg) {
       cfg.rows = [
         ...cfg.rows,
-        { key: 'Nøkkel', value: 'Innhold' }
+        { id: this.$utils.guid(), key: 'Nøkkel', value: 'Innhold' }
       ]
-    },
-
-    deleteItem (item) {
-      const i = this.block.data.rows.find(b => b === item)
-      const idx = this.block.data.rows.indexOf(i)
-      this.$set(this.block.data, 'rows', [
-        ...this.block.data.rows.slice(0, idx),
-        ...this.block.data.rows.slice(idx + 1)
-      ])
     }
   }
 }

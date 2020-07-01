@@ -10,7 +10,8 @@
     v-else
     type="button"
     :class="{static: position === 'static'}"
-    class="small">
+    class="small"
+    @click.prevent="$emit('click')">
     <slot></slot>
   </button>
 </template>

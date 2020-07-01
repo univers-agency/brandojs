@@ -4,6 +4,7 @@
     :rules="rules"
     :helpText="helpText"
     :label="label"
+    :compact="compact"
     :value="value">
     <template v-slot>
       <div class="check-wrapper">
@@ -30,6 +31,11 @@
 <script>
 export default {
   props: {
+    compact: {
+      type: Boolean,
+      default: false
+    },
+
     helpText: {
       type: String,
       default: null

@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
 import Modal from '../../Modal.vue'
 import gql from 'graphql-tag'
 
@@ -99,11 +98,7 @@ export default {
           newFile.thumb = newFile.blob
         }
       }
-    },
-
-    ...mapActions('images', [
-      'storeImage'
-    ])
+    }
   },
 
   apollo: {

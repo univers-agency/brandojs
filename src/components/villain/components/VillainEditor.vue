@@ -439,7 +439,18 @@ export default {
               const rows = block.data
               this.$set(block, 'data', { rows })
               this.needsRefresh = true
+              break
             }
+
+            if (block.data.rows) {
+              block.data.rows = block.data.rows.map(r => {
+                if (!r.id) {
+                  return { ...r, id: this.$utils.guid() }
+                }
+                return r
+              })
+            }
+
             break
 
           case 'timeline':

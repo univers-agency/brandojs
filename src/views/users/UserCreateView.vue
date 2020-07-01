@@ -18,7 +18,6 @@
 
 import gql from 'graphql-tag'
 import UserForm from './UserForm'
-import USER_FRAGMENT from '../../gql/users/USER_FRAGMENT.graphql'
 
 export default {
   components: {
@@ -33,26 +32,25 @@ export default {
     }
   },
 
-  fragments: {
-    user: USER_FRAGMENT
-  },
-
   methods: {
     async save () {
-      const userParams = this.$utils.stripParams(this.user, ['__typename', 'password_confirm', 'id', 'deletedAt'])
+      const userParams = this.$utils.stripParams(this.user, ['__typename', 'passwordConfirm', 'id', 'deletedAt'])
       this.$utils.validateImageParams(userParams, ['avatar'])
+
+      if (userParams.config) {
+        delete userParams.config.__typename
+      }
 
       try {
         await this.$apollo.mutate({
           mutation: gql`
-            mutation CreateUser($userParams: CreateUserParams) {
+            mutation CreateUser($userParams: UserParams) {
               createUser(
                 userParams: $userParams
               ) {
-                ...user
+                id
               }
             }
-            ${USER_FRAGMENT}
           `,
           variables: {
             userParams

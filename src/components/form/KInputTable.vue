@@ -12,8 +12,8 @@
       <table>
         <slot name="head"></slot>
         <tr
-          v-for="(entry, idx) in innerValue"
-          :key="idx">
+          v-for="entry in innerValue"
+          :key="entry[idKey]">
           <slot
             v-if="entry !== editEntry"
             name="row"
@@ -156,8 +156,12 @@ export default {
     },
 
     innerValue: {
-      get () { return this.value },
-      set (innerValue) { this.$emit('input', innerValue) }
+      get () {
+        return this.value
+      },
+      set (innerValue) {
+        this.$emit('input', innerValue)
+      }
     }
   },
 
@@ -197,13 +201,11 @@ export default {
         return
       }
 
-      const e = this.innerValue.find(e => e[this.idKey] === entry[this.idKey])
+      const e = this.innerValue.find(e => {
+        return e[this.idKey] === entry[this.idKey]
+      })
       const idx = this.innerValue.indexOf(e)
-
-      this.innerValue = [
-        ...this.innerValue.slice(0, idx),
-        ...this.innerValue.slice(idx + 1)
-      ]
+      this.$delete(this.innerValue, idx)
     }
   }
 }

@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
 import Modal from '../../Modal.vue'
 
 export default {
@@ -110,11 +109,7 @@ export default {
 
     closeModal () {
       this.$emit('close')
-    },
-
-    ...mapActions('images', [
-      'createImageCategory'
-    ])
+    }
   }
 }
 </script>

@@ -19,9 +19,25 @@
           <p><small><code>{{ block.data.module }}<br>{{ block.data.type }}|{{ block.data.query }}</code></small></p>
           <div v-if="block.data.type === 'selection'">
             <ButtonPrimary
+              class="mt-2"
               @click="selectEntries">
               Velg oppføringer
             </ButtonPrimary>
+            <template v-if="selectedEntries.length">
+              <transition-group
+                v-sortable="{handle: '.sort-handle', animation: 0, store: {get: getOrder, set: storeOrder}}"
+                name="fade-move"
+                tag="div"
+                class="sort-container">
+                <div
+                  v-for="e in selectedEntries"
+                  :key="e.id"
+                  :data-id="e.id"
+                  class="selected-entry sort-handle">
+                  #{{ e.id }} — {{ e.label }}
+                </div>
+              </transition-group>
+            </template>
           </div>
           <div class="helpful-actions">
             <ButtonTiny
@@ -96,6 +112,12 @@
                 Fant ingen tilgjengelige maler!
               </div>
 
+              <KInputNumber
+                v-if="block.data.type === 'selection'"
+                v-model="block.data.limit"
+                name="data[limit]"
+                label="Maks antall" />
+
               <KInputTextarea
                 v-model="block.data.wrapper"
                 :monospace="true"
@@ -122,18 +144,21 @@
           :tools="false"
           :entries="availableEntries">
           <template v-slot:row="{ entry }">
-            <div>
-              #{{ entry.id }} — {{ entry.label }}
+            <div
+              class="row-wrap"
+              :class="{selected: block.data.ids.includes(parseInt(entry.id))}">
+              <div>#{{ entry.id }} — {{ entry.label }}</div>
+
               <ButtonTiny
                 v-if="!block.data.ids.includes(parseInt(entry.id))"
                 @click="addSelectedEntry(entry.id)">
                 Legg til
               </ButtonTiny>
-              <div
+              <ButtonTiny
                 v-else
-                class="badge">
-                Allerede valgt
-              </div>
+                @click="removeSelectedEntry(entry.id)">
+                Fjern
+              </ButtonTiny>
             </div>
           </template>
         </ContentList>
@@ -175,6 +200,7 @@ export default {
       availableModuleKeys: [],
       availableModuleTypes: [],
       availableModuleQueries: [],
+      selectedEntries: [],
       templates: []
     }
   },
@@ -202,16 +228,34 @@ export default {
     'adminChannel'
   ],
 
-  created () {
+  async created () {
     console.debug('<DatasourceBlock /> created')
     this.getModules()
     this.getTemplates()
     if (this.block.data.module) {
       this.getModuleKeys()
     }
+
+    if (this.block.data.ids.length) {
+      await this.listAvailableEntries()
+      this.refreshSelectedEntries()
+    }
   },
 
   methods: {
+    refreshSelectedEntries () {
+      this.selectedEntries = this.block.data.ids.map(id => this.availableEntries.find(e => parseInt(e.id) === parseInt(id)))
+    },
+
+    getOrder (sortable) {
+      return this.block.data.ids
+    },
+
+    storeOrder (sortable) {
+      this.sortedArray = sortable.toArray().map(Number)
+      this.block.data.ids = this.sortedArray
+    },
+
     getModules () {
       this.adminChannel.channel
         .push('datasource:list_modules')
@@ -245,27 +289,47 @@ export default {
     },
 
     selectEntries () {
-      this.adminChannel.channel
-        .push('datasource:list_available_entries', { module: this.block.data.module, query: this.block.data.query })
-        .receive('ok', payload => {
-          this.availableEntries = payload.available_entries
-          this.showAvailableEntries = true
-          if (!this.block.data.ids) {
-            this.block.data = {
-              ...this.block.data,
-              ids: []
+      this.listAvailableEntries()
+      this.showAvailableEntries = true
+    },
+
+    listAvailableEntries () {
+      return new Promise((resolve, reject) => {
+        this.adminChannel.channel
+          .push('datasource:list_available_entries', { module: this.block.data.module, query: this.block.data.query })
+          .receive('ok', payload => {
+            this.availableEntries = payload.available_entries
+            if (!this.block.data.ids) {
+              this.block.data = {
+                ...this.block.data,
+                ids: []
+              }
             }
-          }
-        })
+            resolve()
+          })
+      })
     },
 
     async closeAvailableEntriesModal () {
       await this.$refs.availableEntriesModal.close()
       this.showAvailableEntries = false
+      this.refreshSelectedEntries()
     },
 
     addSelectedEntry (id) {
+      if (this.block.data.limit) {
+        if (this.block.data.ids.length >= this.block.data.limit) {
+          this.$alerts.alertError('Feil', `Kan kun velge ${this.block.data.limit} oppføringer`)
+          return
+        }
+      }
       this.block.data.ids.push(id)
+    },
+
+    removeSelectedEntry (id) {
+      const newIds = this.block.data.ids.filter(i => i !== id)
+      this.$set(this.block.data, 'ids', newIds)
+      this.refreshSelectedEntries()
     },
 
     createUID () {
@@ -276,6 +340,12 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+  .row-wrap {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .villain-block-datasource-info,
   .villain-block-datasource-empty {
     display: flex;
@@ -297,5 +367,11 @@ export default {
       max-width: 250px;
       margin-bottom: 25px;
     }
+  }
+
+  .selected-entry {
+    margin-top: 15px;
+    padding: 7px 0;
+    border-bottom: 1px solid theme(colors.peach);
   }
 </style>

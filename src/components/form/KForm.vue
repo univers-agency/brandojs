@@ -34,12 +34,15 @@
           </template>
         </ValidationObserver>
       </form>
-      <template v-if="livePreview && $parent.livePreviewReady">
-        <FontAwesomeIcon
-          :class="{ active: $parent.livePreviewReady }"
-          class="live-preview-icon"
-          icon="eye"
-          @click="openLivePreview" />
+      <template v-if="livePreview">
+        <div class="live-preview-icon">
+          <ButtonSmall
+            @click="$parent.openLivePreview">
+            <FontAwesomeIcon
+              icon="eye" />
+            Live preview
+          </ButtonSmall>
+        </div>
       </template>
     </div>
   </transition>
@@ -93,16 +96,6 @@ export default {
   },
 
   methods: {
-    openLivePreview () {
-      window.open(
-        '/__livepreview?key=' + this.$parent.livePreviewCacheKey,
-        '_blank',
-        'location=no,menubar=no,resizable=yes,status=no'
-      )
-
-      this.$parent.livePreviewActivated = true
-    },
-
     async validate () {
       const isValid = await this.$refs.observer.validate()
       if (!isValid) {
@@ -141,11 +134,8 @@ export default {
   .live-preview-icon {
     @space right container;
     position: absolute;
-    opacity: 0.3;
-
-    &.active {
-      opacity: 1;
-    }
+    opacity: 1;
+    cursor: pointer;
   }
 
   .buttons {

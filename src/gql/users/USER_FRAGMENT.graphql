@@ -2,6 +2,7 @@ fragment user on User {
   id
   fullName
   email
+
   avatar {
     focal
     alt
@@ -10,8 +11,14 @@ fragment user on User {
     medium: url(size: "medium")
     xlarge: url(size: "xlarge")
   }
+
   role
   language
   active
+
+  config {
+    showOnboarding
+  }
+
   deletedAt
 }

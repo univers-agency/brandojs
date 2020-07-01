@@ -19,10 +19,7 @@ export default function ({ schema, prop, key }) {
         immediate: true,
         handler: debounce(function (v) {
           if (this.livePreview) {
-            if (this.livePreviewFirstRun) {
-              this.livePreviewFirstRun = false
-              this.initializeLivePreview(v)
-            } else {
+            if (this.livePreviewReady && this.livePreviewActivated) {
               this.updateLivePreview(v)
             }
           }
@@ -35,17 +32,26 @@ export default function ({ schema, prop, key }) {
     ],
 
     methods: {
-      initializeLivePreview (entry) {
+      openLivePreview () {
         this.adminChannel.channel
-          .push('livepreview:initialize', { schema, prop, key, entry })
+          .push('livepreview:initialize', { schema, prop, key, entry: this[prop] })
           .receive('ok', payload => {
             if (payload.cache_key) {
               this.livePreviewCacheKey = payload.cache_key
               this.livePreviewReady = true
+
+              window.open(
+                '/__livepreview?key=' + this.livePreviewCacheKey,
+                '_blank',
+                'location=no,menubar=no,resizable=yes,status=no'
+              )
+
+              this.livePreviewActivated = true
             } else {
               this.livePreviewReady = false
             }
           })
+          .receive('error', resp => { this.$alerts.alertError('Feil', 'Live preview ikke støttet for denne typen') })
       },
 
       updateLivePreview (entry) {

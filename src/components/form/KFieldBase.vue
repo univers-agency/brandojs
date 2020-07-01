@@ -7,36 +7,70 @@
       :immediate="true"
       :vid="name"
       :rules="rules">
-      <div
-        v-if="label"
-        class="label-wrapper">
-        <label
-          :for="id"
-          class="control-label"
-          :class="{ failed }">
-          <span>{{ label }}</span>
-        </label>
-        <span v-if="failed">
-          —{{ errors[0] }}
-        </span>
-      </div>
-
-      <slot v-bind:provider="$refs.provider"></slot>
-
-      <div
-        v-if="helpText || maxlength"
-        class="meta">
-        <div
-          v-if="helpText"
-          class="help-text">
-          —<span v-html="helpText" />
+      <template v-if="compact">
+        <div class="compact">
+          <slot v-bind:provider="$refs.provider"></slot>
+          <div
+            v-if="label"
+            class="label-wrapper">
+            <label
+              :for="id"
+              class="control-label"
+              :class="{ failed }">
+              <span>{{ label }}</span>
+            </label>
+            <span v-if="failed">
+              —{{ errors[0] }}
+            </span>
+          </div>
         </div>
         <div
-          v-if="maxlength"
-          class="max-length">
-          {{ maxlength - value.length }}
+          v-if="helpText || maxlength"
+          class="meta">
+          <div
+            v-if="helpText"
+            class="help-text">
+            —<span v-html="helpText" />
+          </div>
+          <div
+            v-if="maxlength"
+            class="max-length">
+            {{ maxlength - value.length }}
+          </div>
         </div>
-      </div>
+      </template>
+      <template v-else>
+        <div
+          v-if="label"
+          class="label-wrapper">
+          <label
+            :for="id"
+            class="control-label"
+            :class="{ failed }">
+            <span>{{ label }}</span>
+          </label>
+          <span v-if="failed">
+            —{{ errors[0] }}
+          </span>
+        </div>
+
+        <slot v-bind:provider="$refs.provider"></slot>
+
+        <div
+          v-if="helpText || maxlength"
+          class="meta">
+          <div
+            v-if="helpText"
+            class="help-text">
+            —<span v-html="helpText" />
+          </div>
+          <div
+            v-if="maxlength"
+            class="max-length">
+            {{ maxlength - value.length }}
+          </div>
+        </div>
+      </template>
     </ValidationProvider>
     <slot name="outsideValidator"></slot>
   </div>
@@ -48,6 +82,11 @@ export default {
     helpText: {
       type: String,
       default: null
+    },
+
+    compact: {
+      type: Boolean,
+      default: false
     },
 
     label: {
@@ -100,6 +139,24 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+  .compact {
+    display: flex;
+    align-items: center;
+
+    >>> .check-wrapper {
+      margin-top: 0 !important;
+      margin-right: 15px;
+
+      .form-check {
+        margin-bottom: 0 !important;
+      }
+    }
+
+    >>> .label-wrapper {
+      margin-bottom: 0 !important;
+    }
+  }
+
   .field-wrapper {
     width: 100%;
     margin-bottom: 40px;

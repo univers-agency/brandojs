@@ -31,13 +31,13 @@
           label="Rolle" />
         <KInputPassword
           v-model="user.password"
-          rules="min:6|confirmed:user[password_confirm]"
+          rules="min:6|confirmed:user[passwordConfirm]"
           name="user[password]"
           label="Passord"
           placeholder="Passord" />
         <KInputPassword
-          v-model="user.password_confirm"
-          name="user[password_confirm]"
+          v-model="user.passwordConfirm"
+          name="user[passwordConfirm]"
           label="Bekreft passord"
           placeholder="Bekreft passord" />
       </div>

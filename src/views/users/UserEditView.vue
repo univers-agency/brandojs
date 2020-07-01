@@ -41,13 +41,17 @@ export default {
     async save (setLoader) {
       setLoader(true)
 
-      const userParams = this.$utils.stripParams(this.user, ['__typename', 'password_confirm', 'id', 'active', 'deletedAt'])
+      const userParams = this.$utils.stripParams(this.user, ['__typename', 'passwordConfirm', 'id', 'active', 'deletedAt'])
       this.$utils.validateImageParams(userParams, ['avatar'])
+
+      if (userParams.config) {
+        delete userParams.config.__typename
+      }
 
       try {
         await this.$apollo.mutate({
           mutation: gql`
-            mutation UpdateUser($userId: ID!, $userParams: UpdateUserParams) {
+            mutation UpdateUser($userId: ID!, $userParams: UserParams) {
               updateUser(
                 userId: $userId,
                 userParams: $userParams

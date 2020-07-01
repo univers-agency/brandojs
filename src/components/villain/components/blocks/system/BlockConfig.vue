@@ -32,7 +32,7 @@ export default {
 
   created () {
     console.debug('<BlockConfig /> created')
-    this.innerValue = this.$utils.clone(this.value)
+    this.innerValue = this.value
   },
 
   methods: {
@@ -43,7 +43,8 @@ export default {
     async closeConfig () {
       await this.$refs.modal.close()
       this.modalVisible = false
-      this.$emit('input', this.$utils.clone(this.innerValue))
+      this.$emit('close', this.innerValue)
+      this.$emit('input', this.innerValue)
     }
   }
 }

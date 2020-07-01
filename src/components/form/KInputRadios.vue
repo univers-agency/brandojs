@@ -129,10 +129,7 @@ export default {
 
     label {
       display: flex;
-
-      /* span {
-        margin-top: -1px;
-      } */
+      align-items: baseline;
     }
   }
 </style>
