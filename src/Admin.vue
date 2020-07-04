@@ -839,10 +839,10 @@ export default {
 .badge {
   display: inline-block;
   font-family: theme(typography.families.mono);
-  font-size: 14px;
+  font-size: 12px;
   text-transform: uppercase;
   display: inline-block;
-  padding: 3px 5px 2px;
+  padding: 5px 6px 4px;
   line-height: 1;
   border: 1px solid theme(colors.blue);
   user-select: none;

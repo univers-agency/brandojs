@@ -418,8 +418,6 @@ export default {
         }
       }
 
-      this.refresh()
-
       this.showImages = false
       this.uploading = false
       this.showConfig = false

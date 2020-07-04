@@ -843,11 +843,6 @@ export default {
           ...this.blocks.slice(parentIdx + 1)
         ]
       }
-
-      // if template block, we refresh
-      if (block.type === 'template') {
-        this.refresh()
-      }
     },
 
     deleteBlock ({ uid, ref }) {
