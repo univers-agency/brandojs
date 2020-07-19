@@ -156,6 +156,7 @@ export default {
             id
             language
             title
+            key
           }
         }
       `

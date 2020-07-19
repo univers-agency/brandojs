@@ -10,7 +10,7 @@ query PageFragment ($pageFragmentId: ID!) {
     data
     creator {
       id
-      fullName
+      name
     }
     insertedAt
     deletedAt

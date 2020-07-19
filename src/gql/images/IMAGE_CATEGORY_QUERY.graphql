@@ -18,7 +18,7 @@ query ImageCategory ($categoryId: ID!, $imageSeriesLimit: Int, $imageSeriesOffse
     }
     creator {
       id
-      fullName
+      name
     }
     imageSeriesCount
     imageSeries (limit: $imageSeriesLimit, offset: $imageSeriesOffset) {

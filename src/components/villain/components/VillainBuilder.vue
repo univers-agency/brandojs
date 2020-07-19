@@ -580,7 +580,8 @@ export default {
     addBlock (b) {
       const ref = {
         name: b.component.toUpperCase(),
-        data: { type: b.component.toLowerCase(), data: b.dataTemplate }
+        data: { type: b.component.toLowerCase(), data: b.dataTemplate },
+        description: ''
       }
 
       this.currentRef = { ...ref }

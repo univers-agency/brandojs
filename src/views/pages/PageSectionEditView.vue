@@ -60,7 +60,7 @@ export default {
                 data
                 creator {
                   id
-                  fullName
+                  name
                 }
                 insertedAt
                 updatedAt
@@ -98,7 +98,7 @@ export default {
             data
             creator {
               id
-              fullName
+              name
             }
             insertedAt
             deletedAt

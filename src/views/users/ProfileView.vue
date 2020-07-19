@@ -14,12 +14,12 @@
       <section class="row">
         <div class="half">
           <KInput
-            v-model="user.fullName"
+            v-model="user.name"
             :label="$t('user.name')"
             :helpText="$t('user.name.help')"
             rules="required"
             placeholder="Navn Navnesen"
-            name="user[fullName]" />
+            name="user[name]" />
           <KInputEmail
             v-model="user.email"
             :label="$t('user.email')"
@@ -98,7 +98,7 @@ export default {
               ) {
                 id
                 language
-                fullName
+                name
                 email
                 avatar {
                   focal

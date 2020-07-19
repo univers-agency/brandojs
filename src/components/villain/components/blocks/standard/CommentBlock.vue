@@ -5,9 +5,7 @@
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
     @delete="$emit('delete', $event)">
-    <div class="villain-block-description">
-      Kommentar (vises ikke)
-    </div>
+    <template #description> (vises ikke)</template>
     <div class="villain-block-comment">
       <KInputCode
         v-model="block.data.text"

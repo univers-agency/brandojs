@@ -7,9 +7,6 @@
       @add="$emit('add', $event)"
       @move="$emit('move', $event)"
       @delete="$emit('delete', $event)">
-      <div class="villain-block-description">
-        Datakilde<span v-if="block.data.description"> — {{ block.data.description }}</span>
-      </div>
       <div class="villain-block-datasource-info">
         <div
           v-if="block.data.module"

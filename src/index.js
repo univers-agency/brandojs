@@ -1,8 +1,6 @@
 import 'vex-js/dist/css/vex.css'
 import 'izitoast/dist/css/iziToast.css'
 import 'flatpickr/dist/flatpickr.min.css'
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
 
 import { abilitiesPlugin } from '@casl/vue'
 import ability from './services/casl/defaultAbility'
@@ -15,8 +13,8 @@ import VuePhoenixSocket from './utils/socket'
 import PortalVue from 'portal-vue'
 import { ValidationProvider, ValidationObserver, extend, configure } from 'vee-validate'
 import { required, email, max, confirmed, min } from 'vee-validate/dist/rules'
-
 import VueUploadComponent from 'vue-upload-component'
+import { VTooltip } from 'v-tooltip'
 
 import Admin from './Admin'
 import Dropzone from './components/Dropzone'
@@ -37,8 +35,8 @@ import { gsap, CSSPlugin } from 'gsap'
 gsap.registerPlugin(CSSPlugin)
 
 iziToast.settings({
-  position: 'topRight',
   title: '',
+  position: 'topRight',
   animateInside: false,
   timeout: 5000,
   iconColor: '#ffffff',
@@ -58,6 +56,8 @@ export default {
         return s
       }
     })
+
+    Vue.directive('popover', VTooltip)
 
     // register global utility filters.
     Object.keys(filters).forEach(key => {

@@ -65,7 +65,7 @@ export default {
 
                   creator {
                     id
-                    fullName
+                    name
                   }
                 }
               }

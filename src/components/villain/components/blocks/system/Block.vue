@@ -7,6 +7,9 @@
       :class="hovering ? 'villain-hover' : ''"
       :data-type="block.type"
       class="villain-block">
+      <div class="villain-block-description">
+        {{ blockDescription }}<slot name="description"></slot>{{ refDescription }}
+      </div>
       <slot></slot>
       <div class="villain-block-actions">
         <div
@@ -59,9 +62,6 @@
             fixed-width />
         </div>
       </div>
-      <div class="villain-block-info">
-        {{ getBlockDisplayName(block.type) }}
-      </div>
     </div>
 
     <div
@@ -109,10 +109,7 @@
 </template>
 
 <script>
-import { VTooltip } from 'v-tooltip'
-
 export default {
-  directives: { popover: VTooltip },
   props: {
     block: {
       type: Object,
@@ -147,11 +144,22 @@ export default {
       dragEl: null,
       hovering: false,
       moving: false,
+      refDescription: '',
       width: null
     }
   },
 
   computed: {
+    blockDescription () {
+      const foundBlock = this.available.blocks.find(b => {
+        return b.component.toLowerCase() === this.block.type
+      })
+      if (foundBlock) {
+        return foundBlock.name
+      }
+      return ''
+    },
+
     hasConfigSlot () {
       return Object.prototype.hasOwnProperty.call(this.$slots, 'config')
     },
@@ -188,18 +196,20 @@ export default {
       this.$refs.handle.addEventListener('dragend', this.onDragEnd)
       this.$refs.handle.addEventListener('mousedown', this.onMouseDown)
     }
+
+    this.$nextTick(() => {
+      if (this.$parent.$el) {
+        const desc = this.$parent.$el.dataset.description
+        if (desc) {
+          this.refDescription = ` // ${desc}`
+          return
+        }
+      }
+      this.refDescription = ''
+    })
   },
 
   methods: {
-    getBlockDisplayName (blkType) {
-      const foundBlock = this.available.blocks.find(b => {
-        return b.component.toLowerCase() === blkType
-      })
-      if (foundBlock) {
-        return foundBlock.name
-      }
-      return ''
-    },
 
     helpBlock () {
       this.showHelp = true

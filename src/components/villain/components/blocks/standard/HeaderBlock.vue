@@ -6,9 +6,7 @@
       @add="$emit('add', $event)"
       @move="$emit('move', $event)"
       @delete="$emit('delete', $event)">
-      <div class="villain-block-description">
-        Overskrift (H{{ block.data.level }})
-      </div>
+      <template #description> (H{{ block.data.level }})</template>
       <textarea
         ref="txt"
         v-model="block.data.text"

@@ -1,6 +1,6 @@
 fragment user on User {
   id
-  fullName
+  name
   email
 
   avatar {

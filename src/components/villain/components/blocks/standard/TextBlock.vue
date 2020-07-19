@@ -8,9 +8,7 @@
       @add="$emit('add', $event)"
       @move="$emit('move', $event)"
       @delete="$emit('delete', $event)">
-      <div class="villain-block-description">
-        Tekst ({{ block.data.type }})
-      </div>
+      <template #description> ({{ block.data.type }})</template>
       <EditorMenuBar
         v-slot="{ commands, isActive, focused }"
         class="villain-text-editor-menubar"

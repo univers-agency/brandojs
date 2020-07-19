@@ -73,7 +73,7 @@ export default {
 
     selectImage (i) {
       this.adminChannel.channel
-        .push('image:get', { id: i.id })
+        .push('images:get_image', { image_id: i.id })
         .receive('ok', payload => {
           this.$emit('change', payload.image)
           this.$emit('close')

@@ -9,9 +9,6 @@
       @add="$emit('add', $event)"
       @move="$emit('move', $event)"
       @delete="$emit('delete', $event)">
-      <div class="villain-block-description">
-        Video
-      </div>
       <div class="villain-block-video">
         <template
           v-if="html && block.data.source !== 'file'"

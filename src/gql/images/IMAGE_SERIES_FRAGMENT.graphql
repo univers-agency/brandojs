@@ -17,7 +17,7 @@ fragment imageSeries on ImageSeries {
   }
   creator {
     id
-    fullName
+    name
   }
 
   images {

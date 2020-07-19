@@ -20,7 +20,7 @@
         <section class="content">
           <div class="info">
             <div class="name">
-              {{ me.fullName }}
+              {{ me.name }}
             </div>
             <div class="role">
               {{ me.role }}

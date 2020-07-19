@@ -386,6 +386,7 @@ export default {
           <div slot="${ref.name}">
             <component
               is="${ref.data.type}Block"
+              data-description="${ref.description || ''}"
               data-ref="${ref.name}"
               :block="refs.${ref.name}"
               @delete="$emit('delete', {event: $event, ref: '${ref.name}'})" />

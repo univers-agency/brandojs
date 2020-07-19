@@ -10,7 +10,7 @@
     <section class="content">
       <div class="info">
         <div class="name">
-          {{ user.fullName || 'Systemroboten' }}
+          {{ user.name || 'Systemroboten' }}
         </div>
         <div class="time">
           {{ getDate(entry.updatedAt) }} <span>•</span> {{ getTime(entry.updatedAt) }}
@@ -77,7 +77,7 @@ export default {
 
     .content {
       display: flex;
-      line-height: 1;
+      line-height: 1.3;
       justify-content: space-between;
       padding-left: 15px;
       border-left: 1px solid;
@@ -96,7 +96,8 @@ export default {
         text-transform: uppercase;
 
         span {
-          opacity: 0.2;
+          @color fg dark;
+          opacity: 1;
         }
       }
     }

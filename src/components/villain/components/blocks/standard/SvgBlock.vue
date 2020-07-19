@@ -7,9 +7,6 @@
       @add="$emit('add', $event)"
       @move="$emit('move', $event)"
       @delete="$emit('delete', $event)">
-      <div class="villain-block-description">
-        SVG
-      </div>
       <div class="villain-block-svg">
         <div
           v-if="block.data.code"

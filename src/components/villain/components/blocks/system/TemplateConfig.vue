@@ -10,8 +10,7 @@
         v-if="showConfig"
         ref="modal"
         ok-text="OK"
-        @ok="closeConfig"
-        @cancel="closeConfig">
+        @ok="closeConfig">
         <template #header>
           Maloppsett
         </template>
@@ -39,12 +38,6 @@
               </div>
             </div>
 
-            <button
-              class="btn-secondary"
-              type="button"
-              @click.prevent="updateVars">
-              Lagre nye variabelverdier
-            </button>
             <button
               class="btn-secondary"
               type="button"
@@ -144,6 +137,7 @@ export default {
     closeConfig () {
       this.$refs.modal.close().then(() => {
         this.$nextTick(() => {
+          this.updateVars()
           this.showConfig = false
         })
       })

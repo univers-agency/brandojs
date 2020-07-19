@@ -7,9 +7,6 @@
     @move="$emit('move', $event)"
     @delete="$emit('delete', $event)"
     @toggle-config="showConfig = $event">
-    <div class="villain-block-description">
-      Markdown
-    </div>
     <KInputCode
       v-model="block.data.text"
       label=""

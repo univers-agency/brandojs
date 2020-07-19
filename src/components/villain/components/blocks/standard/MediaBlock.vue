@@ -6,10 +6,6 @@
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
     @delete="$emit('delete', $event)">
-    <div class="villain-block-description">
-      Media
-    </div>
-
     <div class="villain-block-media">
       <div
         class="villain-block-media-empty">

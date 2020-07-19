@@ -25,6 +25,7 @@
     "codemirror": "^5.55.0",
     "core-js": "^3.6.5",
     "gsap": "^3.3.4",
+    "idle-js": "^1.2.0",
     "izitoast": "^1.4.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",

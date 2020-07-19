@@ -24,8 +24,7 @@
       :entries="users">
       <template v-slot:header>
         <div class="col-2"></div>
-        <div class="col-10">Info</div>
-        <div class="col-3">Rolle</div>
+        <div class="col-13">Info</div>
         <div class="col-1"></div>
       </template>
       <template v-slot:row="{ entry }">
@@ -34,21 +33,22 @@
             <img :src="entry.avatar ? entry.avatar.thumb : '/images/admin/avatar.png'" />
           </div>
         </div>
-        <div class="col-10">
+        <div class="col-13">
           <router-link
             v-if="$can('manage', entry)"
             :to="{ name: 'users-edit', params: { userId: entry.id } }"
             class="link name-link"
             :class="{ inactive: !entry.active }">
-            {{ entry.fullName }}
+            {{ entry.name }}
           </router-link>
           <span v-else>
-            {{ entry.fullName }}
+            {{ entry.name }}
           </span>
           <br>
-          {{ entry.email }}
-        </div>
-        <div class="col-3">
+          <small>
+            {{ entry.email }}
+          </small>
+          <br>
           <div class="badge">
             {{ entry.role }}
           </div>

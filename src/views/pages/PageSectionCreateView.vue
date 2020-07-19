@@ -71,7 +71,7 @@ export default {
 
                 creator {
                   id
-                  fullName
+                  name
                   avatar {
                     thumb: url(size: "xlarge")
                   }

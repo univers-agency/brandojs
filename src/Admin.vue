@@ -19,7 +19,9 @@
 
     <Navigation
       v-if="me"
-      ref="nav" />
+      ref="nav"
+      :presences="lobbyPresences"
+      :users="users" />
 
     <Content
       ref="content"
@@ -39,6 +41,9 @@
 
 import gql from 'graphql-tag'
 import { gsap } from 'gsap'
+import { Presence } from 'phoenix'
+import IdleJs from 'idle-js'
+
 import getCSSVar from './utils/getCSSVar'
 import GET_IDENTITY from './gql/identity/IDENTITY_QUERY.graphql'
 import GET_ME from './gql/users/ME_QUERY.graphql'
@@ -46,6 +51,7 @@ import GET_ME from './gql/users/ME_QUERY.graphql'
 export default {
   data () {
     return {
+      lobbyPresences: {},
       showProgress: false,
       progressStatus: {},
       noFocus: true,
@@ -202,7 +208,33 @@ export default {
       this.connectSocket().then(() => {
         this.joinAdminChannel(me)
         this.joinUserChannel(me)
+        this.trackIdle()
       })
+    },
+
+    trackIdle () {
+      /**
+       * Add idle checker
+      */
+
+      this.idle = new IdleJs({
+        idle: 30000, // idle time in ms
+        events: ['mousemove', 'keydown', 'mousedown', 'touchstart'], // events that will trigger the idle resetter
+        onIdle: () => { this.setActive(false) },
+        onActive: () => { this.setActive(true) },
+        onHide: () => { this.setActive(false) },
+        onShow: () => { this.setActive(true) },
+        keepTracking: true,
+        startAtIdle: false
+      })
+
+      this.idle.start()
+    },
+
+    setActive (status) {
+      if (this.adminChannel) {
+        this.adminChannel.push('user:state', { active: status })
+      }
     },
 
     toggleFocus () {
@@ -255,16 +287,26 @@ export default {
 
       // receive initial presence data from server, sent after join
       this.adminChannel.on('admin:presence_state', state => {
-        // this.storeLobbyPresences(state)
+        this.storeLobbyPresences(state)
       })
 
       // receive 'presence_diff' from server, containing join/leave events
       this.adminChannel.on('presence_diff', diff => {
-        // this.storeLobbyPresencesDiff(diff)
+        this.storeLobbyPresencesDiff(diff)
       })
 
       // request presences
       this.adminChannel.push('admin:list_presence')
+    },
+
+    storeLobbyPresences (state) {
+      const lobbyPresences = Presence.syncState(this.lobbyPresences, state)
+      this.lobbyPresences = lobbyPresences
+    },
+
+    storeLobbyPresencesDiff (diff) {
+      const lobbyPresences = Presence.syncDiff(this.lobbyPresences, diff)
+      this.lobbyPresences = lobbyPresences
     },
 
     toggleFullscreen () {
@@ -316,6 +358,23 @@ export default {
     identity: {
       query: GET_IDENTITY,
 
+      skip () {
+        return !this.$root.ready || !this.token
+      }
+    },
+
+    users: {
+      query: gql`
+        query Users {
+          users {
+            id
+            name
+            avatar {
+              thumb: url(size: "thumb")
+            }
+          }
+        }
+      `,
       skip () {
         return !this.$root.ready || !this.token
       }
@@ -644,7 +703,7 @@ export default {
     img {
       max-width: 100%;
       width: 100%;
-      border: 5px solid theme(colors.blue);
+      border: 5px solid theme(colors.peachDarkest);
     }
   }
 
