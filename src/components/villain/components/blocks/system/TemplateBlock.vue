@@ -170,8 +170,9 @@ export default {
 
     buildWrapper (entry) {
       const replacedContent = this.replaceContent(entry)
-      this.createTemplateContentWrapperComponent(replacedContent)
+      this.createTemplateContentWrapperComponent(replacedContent, this.available.entryData)
       const builtSlots = this.buildSlots(entry.refs)
+
       const template = `
         <TemplateContentWrapper>
           ${replacedContent}
@@ -216,28 +217,35 @@ export default {
 
     updateVars ({ newVars, entryId }) {
       if (entryId) {
-        console.log('entryId', entryId)
         const entry = this.findEntry(entryId)
         if (entry) {
-          console.log('set entry to', newVars)
           this.$set(entry, 'vars', newVars)
         }
       } else {
-        console.log('else!')
         this.$set(this.block.data, 'vars', newVars)
       }
     },
 
     replaceEntries (srcCode) {
-      // if (this.available.entryData !== {}) {
-      //   const replacedEntriesCode = srcCode.replace(/\${entry:(\w+)}/g, this.replaceEntry)
-      //   return replacedEntriesCode
-      // }
+      if (this.available.entryData !== {}) {
+        const replacedEntriesCode = srcCode.replace(/\${entry:(\w+)}/g, this.replaceEntry)
+        return replacedEntriesCode
+      }
       return srcCode
     },
 
     replaceEntry (exp, entryVar) {
-      return `${this.available.entryData[entryVar] || 'mangler entryData'}`
+      if (this.available.entryData) {
+        return `<span v-popover="'\${entry:${entryVar}}'" class="villain-entry-var">${this.lookupEntryVar(entryVar)}</span>`
+      } else {
+        return '${entry:' + entryVar + '}'
+      }
+      // return `${this.available.entryData[entryVar] || 'mangler entryData'}`
+    },
+
+    lookupEntryVar (entryVar) {
+      return `{{ entryData.${entryVar} }}`
+      // return `${this.available.entryData[entryVar] || 'mangler entryData'}`
     },
 
     updateRefs ({ newRefs, entryId }) {
@@ -367,7 +375,8 @@ export default {
       }
 
       return {
-        refs: newRefs
+        refs: newRefs,
+        entryData: this.available.entryData
       }
     },
 
@@ -428,8 +437,13 @@ export default {
      * This wrapper has all the slot placeholders
      * When we inject our builtSlots into this, they will populate automatically
      */
-    createTemplateContentWrapperComponent (content) {
+    createTemplateContentWrapperComponent (content, entryData) {
       Vue.component('TemplateContentWrapper', {
+        data () {
+          return {
+            entryData: entryData
+          }
+        },
         template: `<div>${content}</div>`
       })
     },
@@ -473,6 +487,14 @@ export default {
 
     &:hover {
       background-color: #fafafa;
+    }
+  }
+
+  >>> .villain-entry-var {
+    &:hover {
+      border-radius: 5px;
+      background-color: yellow;
+      cursor: help;
     }
   }
 </style>

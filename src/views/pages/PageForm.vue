@@ -88,7 +88,7 @@
     <Villain
       v-model="page.data"
       rules="required"
-      :value="page.data"
+      :entry-data="page"
       :template-mode="$app.templateMode"
       :templates="$app.templates"
       name="page[data]"
