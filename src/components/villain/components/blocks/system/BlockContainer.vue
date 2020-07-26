@@ -13,11 +13,12 @@
       <div
         v-for="(b, index) in cBlocks"
         ref="containers"
-        :key="b.uid"
+        :key="b.uid + '-container'"
         :data-index="index"
         class="villain-block-container">
         <component
           :is="b.type + 'Block'"
+          :key="b.uid"
           :block="b"
           @add="$emit('add', $event)"
           @delete="$emit('delete', $event)"
