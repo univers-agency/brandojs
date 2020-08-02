@@ -80,6 +80,7 @@ import Vue from 'vue'
 import TemplateConfig from './TemplateConfig'
 import IconRefresh from '../../icons/IconRefresh'
 import cloneDeep from 'lodash/cloneDeep'
+import camelCase from 'lodash/camelCase'
 import shortid from 'shortid'
 
 export default {
@@ -161,6 +162,10 @@ export default {
     }
   },
 
+  updated () {
+    console.debug('<TemplateBlock /> updated')
+  },
+
   methods: {
     handleClick (e) {
       if (e.target.matches('[data-type="template"] *')) {
@@ -170,23 +175,44 @@ export default {
 
     buildWrapper (entry) {
       const replacedContent = this.replaceContent(entry)
-      this.createTemplateContentWrapperComponent(replacedContent, this.available.entryData)
       const builtSlots = this.buildSlots(entry.refs)
 
       const template = `
-        <TemplateContentWrapper>
+        <component :is="buildCmp()" :entryData="entryData">
           ${replacedContent}
           ${builtSlots}
-        </TemplateContentWrapper>
+        </component>
       `
 
       const data = this.buildData(entry.refs)
+      const entryData = this.available.entryData
 
       return {
-        name: 'buildwrapper',
+        name: 'BuildWrapper',
         template,
+        created () {
+          console.debug('<BuildWrapper /> created')
+        },
+        updated () {
+          console.debug('<BuildWrapper /> updated')
+        },
         data () {
           return data
+        },
+        methods: {
+          buildCmp () {
+            return {
+              data () {
+                return {
+                  entryData: entryData
+                }
+              },
+
+              template: `
+                <div>${replacedContent}</div>
+              `
+            }
+          }
         }
       }
     },
@@ -196,18 +222,17 @@ export default {
     },
 
     replaceContent ({ refs, vars }) {
+      const srcCode = this.getSourceCode()
       // replace all variables
-      const srcWithReplacedVars = this.replaceVars()
+      const srcWithReplacedVars = this.replaceVars(srcCode)
       const srcWithReplacedEntry = this.replaceEntries(srcWithReplacedVars)
       // replace all refs
       const srcWithReplacedVarsRefs = this.replaceRefs(srcWithReplacedEntry, refs)
       return srcWithReplacedVarsRefs
     },
 
-    replaceVars () {
-      const srcCode = this.getSourceCode()
+    replaceVars (srcCode) {
       const replacedVarsCode = srcCode.replace(/\${(\w+)}/g, this.replaceVar)
-
       return replacedVarsCode
     },
 
@@ -244,7 +269,8 @@ export default {
     },
 
     lookupEntryVar (entryVar) {
-      return `{{ entryData.${entryVar} }}`
+      const camelCasedVar = camelCase(entryVar)
+      return `{{ entryData.${camelCasedVar} }}`
       // return `${this.available.entryData[entryVar] || 'mangler entryData'}`
     },
 
@@ -356,7 +382,7 @@ export default {
         return `\${${varName}}`
       }
 
-      if (this.block.data.vars.hasOwnProperty(varName)) {
+      if (Object.prototype.hasOwnProperty.call(this.block.data.vars, varName)) {
         return this.block.data.vars[varName].value
       }
 
@@ -431,21 +457,6 @@ export default {
           ]
         }
       }
-    },
-
-    /**
-     * This wrapper has all the slot placeholders
-     * When we inject our builtSlots into this, they will populate automatically
-     */
-    createTemplateContentWrapperComponent (content, entryData) {
-      Vue.component('TemplateContentWrapper', {
-        data () {
-          return {
-            entryData: entryData
-          }
-        },
-        template: `<div>${content}</div>`
-      })
     },
 
     deleteBlock ({ ref, block }) {
