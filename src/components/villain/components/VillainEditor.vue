@@ -121,7 +121,7 @@ import fetchTemplates from '../utils/fetchTemplates.js'
 import { alerts } from '../../../utils/alerts'
 import { addAutoSave, getAutoSaves } from '../utils/autoSave.js'
 import getTimestamp from '../utils/getTimestamp.js'
-import { AUTOSAVE_INTERVAL } from '../config/autoSave.js'
+import { AUTOSAVE_INTERVAL, AUTOSAVE_STATUS_TEXT_DURATION } from '../config/autoSave.js'
 import { TweenMax } from 'gsap'
 
 for (const key in standardComponents) {
@@ -418,7 +418,7 @@ export default {
         this.autosaveStatus = 'autolagrer...'
         setTimeout(() => {
           this.autosaveStatus = ''
-        }, 2500)
+        }, AUTOSAVE_STATUS_TEXT_DURATION)
         addAutoSave(this.blocks)
       }
     }, AUTOSAVE_INTERVAL)
