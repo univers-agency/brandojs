@@ -6,6 +6,7 @@
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
     @delete="$emit('delete', $event)"
+    @duplicate="$emit('duplicate', $event)"
     @toggle-config="showConfig = $event">
     <KInputCode
       v-model="block.data.text"

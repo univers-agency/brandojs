@@ -22,6 +22,7 @@
           :block="b"
           @add="$emit('add', $event)"
           @delete="$emit('delete', $event)"
+          @duplicate="$emit('duplicate', $event)"
           @move="$emit('move', $event)" />
       </div>
     </transition-group>

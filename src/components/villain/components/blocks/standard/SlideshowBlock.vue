@@ -6,6 +6,7 @@
       :parent="parent"
       @add="$emit('add', $event)"
       @move="$emit('move', $event)"
+      @duplicate="$emit('duplicate', $event)"
       @delete="$emit('delete', $event)">
       <div
         ref="block"

@@ -7,6 +7,7 @@
       icon="fa-paragraph"
       @add="$emit('add', $event)"
       @move="$emit('move', $event)"
+      @duplicate="$emit('duplicate', $event)"
       @delete="$emit('delete', $event)">
       <template #description> ({{ block.data.type }})</template>
       <EditorMenuBar

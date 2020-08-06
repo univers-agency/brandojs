@@ -5,6 +5,7 @@
     class="villain-extra-padding"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
+    @duplicate="$emit('duplicate', $event)"
     @delete="$emit('delete', $event)">
     <div
       ref="wrapper"

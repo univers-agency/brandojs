@@ -4,6 +4,7 @@
     :parent="parent"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
+    @duplicate="$emit('duplicate', $event)"
     @delete="$emit('delete', $event)">
     <template #description> (vises ikke)</template>
     <div class="villain-block-comment">

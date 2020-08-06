@@ -5,6 +5,7 @@
       :parent="null"
       @add="$emit('add', $event)"
       @move="$emit('move', $event)"
+      @duplicate="$emit('duplicate', $event)"
       @delete="$emit('delete', $event)">
       <!-- parse each block inside columns -->
       <div class="row">

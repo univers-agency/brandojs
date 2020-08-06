@@ -88,12 +88,14 @@
         @add="addBlock($event)"
         @move="moveBlock($event)"
         @delete="deleteBlock"
+        @duplicate="duplicateBlock"
         @order="orderBlocks" />
       <BlockContainer
         v-else
         :blocks="blocks"
         @add="addBlock($event)"
         @move="moveBlock($event)"
+        @duplicate="duplicateBlock"
         @delete="deleteBlock" />
     </template>
   </div>
@@ -842,6 +844,39 @@ export default {
           block,
           ...this.blocks.slice(parentIdx + 1)
         ]
+      }
+    },
+
+    duplicateBlock (srcBlock) {
+      const { uid } = srcBlock
+      const copyBlock = this.$utils.clone(srcBlock)
+      copyBlock.uid = this.createUID()
+
+      const block = this.blocks.find(b => {
+        if (b.type === 'columns') {
+          for (const col of b.data) {
+            for (const colBlock of col.data) {
+              if (colBlock.uid === uid) {
+                col.data = [
+                  ...col.data,
+                  copyBlock
+                ]
+              }
+            }
+          }
+        }
+        return b.uid === uid
+      })
+
+      if (block) {
+        const idx = this.blocks.indexOf(block)
+        this.blocks = [
+          ...this.blocks.slice(0, idx),
+          block,
+          copyBlock,
+          ...this.blocks.slice(idx + 1)
+        ]
+        this.$toast.success({ message: 'Blokken ble duplisert' })
       }
     },
 

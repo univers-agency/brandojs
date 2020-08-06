@@ -33,6 +33,16 @@
             fixed-width />
         </div>
         <div
+          v-if="!locked"
+          class="villain-block-action villain-duplicate"
+          @click="duplicateBlock">
+          <FontAwesomeIcon
+            v-popover.left="'Duplisér blokken'"
+            icon="clone"
+            size="xs"
+            fixed-width />
+        </div>
+        <div
           v-if="hasConfigSlot && block.type !== 'template'"
           class="villain-block-action villain-config"
           @click="openConfig">
@@ -223,6 +233,14 @@ export default {
       this.$alerts.alertConfirm('OBS!', 'Er du sikker på at du vil slette denne blokken?', data => {
         if (data) {
           this.$emit('delete', this.block)
+        }
+      })
+    },
+
+    duplicateBlock () {
+      this.$alerts.alertConfirm('OBS!', 'Er du sikker på at du vil duplisere denne blokken?', data => {
+        if (data) {
+          this.$emit('duplicate', this.block)
         }
       })
     },
