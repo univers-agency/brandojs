@@ -51,7 +51,10 @@ export default function ({ schema, prop, key }) {
               this.livePreviewReady = false
             }
           })
-          .receive('error', resp => { this.$alerts.alertError('Feil', 'Live preview ikke støttet for denne typen') })
+          .receive('error', resp => {
+            this.$alerts.alertError('Feil', 'Live preview ikke støttet for denne typen')
+            console.error(resp)
+          })
       },
 
       updateLivePreview (entry) {
