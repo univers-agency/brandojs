@@ -25,12 +25,6 @@ export default {
     NavigationMenuSection
   },
 
-  data () {
-    return {
-
-    }
-  },
-
   mounted () {
     this.$refs.sections.addEventListener('mouseover', () => { this.showCircle() })
     this.$refs.sections.addEventListener('mouseleave', () => { this.hideCircle() })
@@ -46,7 +40,7 @@ export default {
     },
 
     moveCircle (el) {
-      const top = el.offsetTop
+      const top = el.getBoundingClientRect().top - this.$refs.nav.getBoundingClientRect().top
       gsap.to(this.$refs.circle, { ease: 'expo.ease', duration: 0.35, top: top })
     }
   }
