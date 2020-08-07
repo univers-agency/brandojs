@@ -7,6 +7,7 @@ import DividerBlock from './DividerBlock'
 import HeaderBlock from './HeaderBlock'
 import HtmlBlock from './HtmlBlock'
 import ImageBlock from './ImageBlock'
+import InputBlock from './InputBlock'
 import ListBlock from './ListBlock'
 import MapBlock from './MapBlock'
 import MarkdownBlock from './MarkdownBlock'
@@ -28,6 +29,7 @@ export default {
   HeaderBlock,
   HtmlBlock,
   ImageBlock,
+  InputBlock,
   ListBlock,
   MapBlock,
   MarkdownBlock,

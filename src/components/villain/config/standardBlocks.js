@@ -118,6 +118,19 @@ export default [
   },
 
   {
+    name: 'Input',
+    icon: 'fa-keyboard',
+    component: 'Input',
+    dataTemplate: {
+      type: 'input',
+      label: 'label',
+      placeholder: 'placeholder',
+      help_text: null,
+      value: null
+    }
+  },
+
+  {
     name: 'Datakilde',
     icon: 'fa-database',
     component: 'Datasource',
