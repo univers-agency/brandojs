@@ -18,6 +18,11 @@
         :name="name"
         :disabled="disabled"
         @input="handleInput"></textarea>
+      <div
+        v-if="counter"
+        class="counter">
+        {{ charCounter }}
+      </div>
     </template>
   </KFieldBase>
 </template>
@@ -27,6 +32,11 @@
 export default {
   props: {
     disabled: {
+      type: Boolean,
+      default: false
+    },
+
+    counter: {
       type: Boolean,
       default: false
     },
@@ -87,6 +97,10 @@ export default {
   computed: {
     id () {
       return this.name.replace('[', '_').replace(']', '_')
+    },
+
+    charCounter () {
+      return this.innerValue.length
     }
   },
 
@@ -126,5 +140,10 @@ export default {
       padding-bottom: 12px;
       padding-top: 16px;
     }
+  }
+
+  .counter {
+    font-size: 12px;
+    float: right;
   }
 </style>
