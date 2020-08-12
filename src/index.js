@@ -64,7 +64,7 @@ export default {
       Vue.filter(key, filters[key])
     })
 
-    Vue.use(VueShortkey)
+    Vue.use(VueShortkey, { prevent: ['input', 'textarea'] })
     Vue.use(VueClickOutside)
     Vue.use(abilitiesPlugin, ability)
     Vue.use(PortalVue)
