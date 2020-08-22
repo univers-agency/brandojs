@@ -5,6 +5,7 @@
     :rules="rules"
     :maxlength="maxlength"
     :helpText="helpText"
+    :compact="compact"
     :value="value">
     <template v-slot>
       <input
@@ -27,6 +28,11 @@
 export default {
   props: {
     disabled: {
+      type: Boolean,
+      default: false
+    },
+
+    compact: {
       type: Boolean,
       default: false
     },

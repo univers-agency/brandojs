@@ -119,7 +119,7 @@ export default {
     value: {
       type: String,
       default: () => {
-        return moment.tz('Europe/Oslo').format()
+        return moment.tz('Europe/Oslo').format('YYYY-MM-DD')
       }
     }
   },

@@ -78,15 +78,22 @@ export default {
 
   methods: {
     beforeEnter (el) {
-      gsap.set(el, { autoAlpha: 0, x: -15 })
+      if (process.env.NODE_ENV !== 'development') {
+        gsap.set(el, { autoAlpha: 0, x: -15 })
+      }
     },
 
     enter (el, done) {
       const tl = gsap.timeline({
-        onComplete: done
+        onComplete: done,
+        paused: true
       })
 
       tl.to(el, { duration: 0.75, delay: 1.3, autoAlpha: 1, x: 0 })
+
+      if (process.env.NODE_ENV !== 'development') {
+        tl.play()
+      }
     },
 
     toggle () {

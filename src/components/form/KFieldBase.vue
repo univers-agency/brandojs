@@ -1,5 +1,5 @@
 <template>
-  <div class="field-wrapper">
+  <div :class="compact ? '' : 'field-wrapper'">
     <ValidationProvider
       ref="provider"
       v-slot="{ errors, failed }"

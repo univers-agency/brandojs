@@ -466,7 +466,8 @@ export default {
 
           case 'datasource':
             if (block.data.wrapper) {
-              this.$alerts.alertError('OBS!', 'Datakilden har et gammelt format. Flytt `wrapper` til template!')
+              this.$alerts.alertError('OBS!', 'Datakilden har et gammelt format. Flytt `wrapper` til template. Koden finner du i konsollen. OBS! Wrapper nulles ut ved lagring av dette skjemaet!')
+              console.log('Datakilde-wrapper til template #', block.data.template)
               console.log(block.data.wrapper)
               delete block.data.wrapper
             }

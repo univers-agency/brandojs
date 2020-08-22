@@ -27,6 +27,7 @@
       :progress-status="progressStatus" />
 
     <transition-group
+      v-if="users"
       appear
       tag="div"
       class="presences"
@@ -634,12 +635,16 @@ export default {
   .row {
     @row;
 
-    .half {
+    .half, .w50 {
       @column 8/16;
     }
 
-    .third {
+    .third, .w33 {
       width: 33%;
+    }
+
+    .w75 {
+      width: 75%;
     }
   }
 

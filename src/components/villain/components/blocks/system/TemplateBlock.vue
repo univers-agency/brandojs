@@ -31,7 +31,13 @@
     <template v-else>
       <transition-group
         v-if="block.data.entries"
-        v-sortable="{handle: '.template-entry', animation: 0 }"
+        v-sortable="{
+          handle: '.template-entry',
+          animation: 0,
+          store: {
+            get: getOrder,
+            set: storeOrder
+          }}"
         name="fade-move"
         tag="div"
         class="sort-container">
@@ -168,6 +174,21 @@ export default {
   },
 
   methods: {
+    getOrder () {
+      return this.block.data.entries
+    },
+
+    storeOrder (sortable) {
+      this.sortedArray = sortable.toArray()
+
+      var arr = this.block.data.entries.sort((a, b) => {
+        return this.sortedArray.indexOf(a.id) - this.sortedArray.indexOf(b.id)
+      })
+
+      this.$set(this.block.data, 'entries', arr)
+      // this.$emit('sort', this.sortedArray)
+    },
+
     handleClick (e) {
       if (e.target.matches('[data-type="template"] *')) {
         e.preventDefault()

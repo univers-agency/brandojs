@@ -35,8 +35,10 @@ export default {
 
   methods: {
     beforeEnter (el) {
-      const els = [this.$refs.header.$el, this.$refs.menu.$el]
-      gsap.set(els, { autoAlpha: 0, x: -15 })
+      if (process.env.NODE_ENV !== 'development') {
+        const els = [this.$refs.header.$el, this.$refs.menu.$el]
+        gsap.set(els, { autoAlpha: 0, x: -15 })
+      }
     },
 
     enter (el, done) {
@@ -44,12 +46,15 @@ export default {
       const tl = gsap.timeline({
         onComplete: done, paused: true
       })
+      if (process.env.NODE_ENV !== 'development') {
+        gsap.set(this.$refs.nav, { yPercent: -100, opacity: 1 })
+        tl.to(this.$refs.nav, { yPercent: 0, duration: 0.7, ease: 'expo.in', delay: 0.6 })
+        tl.to(els, { duration: 0.75, autoAlpha: 1, x: 0, stagger: 0.1 })
 
-      gsap.set(this.$refs.nav, { yPercent: -100, opacity: 1 })
-      tl.to(this.$refs.nav, { yPercent: 0, duration: 0.7, ease: 'expo.in', delay: 0.6 })
-      tl.to(els, { duration: 0.75, autoAlpha: 1, x: 0, stagger: 0.1 })
-
-      tl.play()
+        tl.play()
+      } else {
+        gsap.set([this.$refs.nav, els], { opacity: 1 })
+      }
     }
   }
 }

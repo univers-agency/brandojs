@@ -9,68 +9,93 @@
         </label>
       </div>
 
-      <table>
+      <table style="table-layout: fixed">
         <slot name="head"></slot>
-        <tr
-          v-for="entry in innerValue"
-          :key="entry[idKey]">
-          <slot
-            v-if="entry !== editEntry"
-            name="row"
-            v-bind:entry="entry"></slot>
-          <slot
-            v-else-if="editRows"
-            name="edit"
-            v-bind:editEntry="newEditEntry"
-            v-bind:callback="() => {editDone(entry)}"></slot>
+        <transition-group
+          v-sortable="{
+            dragoverBubble: true,
+            disabled: !sortable,
+            handle: '.sequence-handle',
+            animation: 250,
+            easing: 'cubic-bezier(1, 0, 0, 1)',
+            store: {
+              get: getOrder,
+              set: storeOrder
+            }
+          }"
+          appear
+          tag="tbody"
+          :css="false"
+          class="sort-container">
+          <tr
+            v-for="entry in innerValue"
+            :key="entry[idKey]"
+            :data-id="entry[idKey]">
+            <td
+              v-if="sortable"
+              style="width: 50px">
+              <SequenceHandle class="sequence-handle" />
+            </td>
+            <slot
+              v-if="entry !== editEntry"
+              name="row"
+              v-bind:entry="entry"></slot>
+            <slot
+              v-else-if="editRows"
+              name="edit"
+              v-bind:editEntry="newEditEntry"
+              v-bind:callback="() => {editDone(entry)}"></slot>
 
-          <td
-            v-if="deleteRows || editRows"
-            class="action">
-            <div class="button-wrapper">
+            <td
+              v-if="deleteRows || editRows"
+              class="action fit">
+              <div class="button-wrapper">
+                <CircleButton
+                  v-if="entry !== editEntry && editRows"
+                  class="edit"
+                  @click.native.stop.prevent="edit(entry)">
+                  <FontAwesomeIcon
+                    icon="pencil-alt"
+                    size="xs" />
+                </CircleButton>
+                <CircleButton
+                  v-else-if="editRows"
+                  class="edit"
+                  @click.native.stop.prevent="editDone(entry)">
+                  <FontAwesomeIcon
+                    icon="check"
+                    size="xs" />
+                </CircleButton>
+                <CircleButton
+                  class="delete"
+                  @click.native.stop.prevent="del(entry)">
+                  <FontAwesomeIcon
+                    icon="minus"
+                    size="xs" />
+                </CircleButton>
+              </div>
+            </td>
+          </tr>
+          <tr
+            v-if="addRows"
+            ref="addRow"
+            key="addrow"
+            class="input-row">
+            <td v-if="sortable" />
+            <slot
+              name="new"
+              v-bind:newEntry="newEntry"></slot>
+            <td class="action fit">
               <CircleButton
-                v-if="entry !== editEntry && editRows"
-                class="edit"
-                @click.native.stop.prevent="edit(entry)">
+                class="add"
+                @click.native.stop.prevent="add(newEntry)">
                 <FontAwesomeIcon
-                  icon="pencil-alt"
+                  icon="plus"
                   size="xs" />
               </CircleButton>
-              <CircleButton
-                v-else-if="editRows"
-                class="edit"
-                @click.native.stop.prevent="editDone(entry)">
-                <FontAwesomeIcon
-                  icon="check"
-                  size="xs" />
-              </CircleButton>
-              <CircleButton
-                class="delete"
-                @click.native.stop.prevent="del(entry)">
-                <FontAwesomeIcon
-                  icon="minus"
-                  size="xs" />
-              </CircleButton>
-            </div>
-          </td>
-        </tr>
-        <tr
-          v-if="addRows"
-          ref="addRow"
-          class="input-row">
-          <slot
-            name="new"
-            v-bind:newEntry="newEntry"></slot>
-          <td class="action">
-            <CircleButton
-              class="add"
-              @click.native.stop.prevent="add(newEntry)">
-              <FontAwesomeIcon
-                icon="plus"
-                size="xs" />
-            </CircleButton>
-          </td>
-        </tr>
+            </td>
+          </tr>
+        </transition-group>
       </table>
 
       <div
@@ -87,6 +112,7 @@
 </template>
 
 <script>
+
 export default {
   props: {
     name: {
@@ -97,6 +123,11 @@ export default {
     newEntryTemplate: {
       type: Object,
       default: () => {}
+    },
+
+    sortable: {
+      type: Boolean,
+      default: false
     },
 
     addRows: {
@@ -174,8 +205,23 @@ export default {
   },
 
   methods: {
+    getOrder () {
+      return this.innerValue
+    },
+
+    storeOrder (sortable) {
+      this.sortedArray = sortable.toArray()
+
+      var arr = this.innerValue.sort((a, b) => {
+        return this.sortedArray.indexOf(a.id) - this.sortedArray.indexOf(b.id)
+      })
+
+      this.$set(this, 'innerValue', arr)
+      this.$emit('sort', this.sortedArray)
+    },
+
     add () {
-      this.innerValue.push({ ...this.newEntry })
+      this.innerValue.push({ ...this.newEntry, id: this.$utils.guid() })
       this.newEntry = this.$utils.clone(this.newEntryTemplate)
       this.$refs.addRow.querySelector('input').focus()
     },
@@ -242,7 +288,7 @@ export default {
         }
 
         &.action {
-          width: 75px;
+          width: 35px;
           text-align: right;
         }
       }

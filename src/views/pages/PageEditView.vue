@@ -1,13 +1,14 @@
 <template>
   <article
     v-if="pageId"
-    :key="'edit-' + pageId">
+    :key="pageId">
     <ContentHeader>
       <template v-slot:title>
         Endre innholdsside
       </template>
     </ContentHeader>
     <PageForm
+      :key="pageId"
       :page="page"
       :save="save" />
 

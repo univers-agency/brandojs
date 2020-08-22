@@ -8,6 +8,9 @@ export default function validateImageParams (params, imageParams) {
     if (!(params[imageParams[i]] instanceof File) && params[imageParams[i]] !== null) {
       params[imageParams[i]] = stripParams(params[imageParams[i]], [
         '__typename',
+        'credits',
+        'path',
+        'sizes',
         'thumb',
         'small',
         'medium',

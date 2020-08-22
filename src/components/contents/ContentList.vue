@@ -285,7 +285,10 @@ export default {
     },
 
     filterInput: debounce(function () {
-      const queryVars = { ...this.$parent.queryVars, filter: this.filters }
+      // clear out empty keys
+      const filters = { ...this.filters }
+      Object.keys(filters).forEach(key => (filters[key] === '') && delete filters[key])
+      const queryVars = { ...this.$parent.queryVars, filter: filters }
       this.$emit('updateQuery', queryVars)
     }, 750, true),
 

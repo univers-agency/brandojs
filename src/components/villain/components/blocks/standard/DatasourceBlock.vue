@@ -122,7 +122,7 @@
                 :rows="8"
                 name="data[wrapper]"
                 label="Wrapper"
-                help-text="Bruk ${CONTENT} for innhold" />
+                help-text="OBS! Ikke bruk dette feltet! Sett `wrapper`-verdi direkte i MALEN istedet!" />
             </div>
           </div>
         </template>

@@ -45,7 +45,9 @@
         @appear="appearContent"
         @afterLeave="afterLeave"
         @leave="leave">
-        <router-view class="content" />
+        <router-view
+          :key="$route.fullPath"
+          class="content" />
       </transition>
     </main>
   </transition>
@@ -95,12 +97,15 @@ export default {
     },
 
     beforeAppear (el) {
-      gsap.set(el, { yPercent: -100 })
+      if (process.env.NODE_ENV !== 'development') {
+        gsap.set(el, { yPercent: -100 })
+      }
     },
 
     appear (el, done) {
       const tl = gsap.timeline({
-        onComplete: done
+        onComplete: done,
+        paused: true
       })
 
       tl
@@ -111,15 +116,22 @@ export default {
           ease: 'power3.out',
           clearProps: 'transform'
         })
+
+      if (process.env.NODE_ENV !== 'development') {
+        tl.play()
+      }
     },
 
     beforeAppearContent (el) {
-      gsap.set(el, { x: -25, autoAlpha: 0 })
+      if (process.env.NODE_ENV !== 'development') {
+        gsap.set(el, { x: -25, autoAlpha: 0 })
+      }
     },
 
     appearContent (el, done) {
       const tl = gsap.timeline({
-        onComplete: done
+        onComplete: done,
+        paused: true
       })
 
       tl.to(el, {
@@ -130,6 +142,10 @@ export default {
         ease: 'power3.out',
         clearProps: 'transform'
       })
+
+      if (process.env.NODE_ENV !== 'development') {
+        tl.play()
+      }
     },
 
     leave (el, done) {

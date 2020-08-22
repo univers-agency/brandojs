@@ -119,27 +119,30 @@ export function createProvider (options = {}) {
 
     async errorHandler (err) {
       const { networkError, graphQLErrors } = err
-      console.log('errorHandler', err)
-      switch (networkError.statusCode) {
-        case 422:
-          Vue.prototype.$alerts.alertError('Valideringsfeil', err.error)
-          break
-        case 406:
-          await onLogout(apolloClient)
-          window.location = '/admin/login'
-          break
-        default:
-          if (graphQLErrors && graphQLErrors.length) {
-            Vue.prototype.$alerts.alertError('Feil', graphQLErrors.map(e => e.message).join('<br>'))
-          } else if (networkError.error) {
-            Vue.prototype.$alerts.alertError('Feil', networkError.error)
-          } else {
-            Vue.prototype.$alerts.alertError('Ukjent feil', err.message)
-            console.log(err)
-          }
+      if (networkError) {
+        switch (networkError.statusCode) {
+          case 422:
+            Vue.prototype.$alerts.alertError('Valideringsfeil', err.error)
+            break
+          case 406:
+            await onLogout(apolloClient)
+            window.location = '/admin/login'
+            break
+          default:
+            if (graphQLErrors && graphQLErrors.length) {
+              Vue.prototype.$alerts.alertError('Feil', graphQLErrors.map(e => e.message).join('<br>'))
+            } else if (networkError.error) {
+              Vue.prototype.$alerts.alertError('Feil', networkError.error)
+            } else {
+              Vue.prototype.$alerts.alertError('Ukjent feil', err.message)
+              console.log(err)
+            }
+        }
+      } else {
+        Vue.prototype.$alerts.alertError('Feil', graphQLErrors.map(e => e.message).join('<br>'))
       }
       // eslint-disable-next-line no-console
-      console.log('%cError', 'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;', graphQLErrors)
+      console.log('%cB/GQLError', 'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;', graphQLErrors)
     }
   })
 
