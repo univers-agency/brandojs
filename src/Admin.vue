@@ -27,7 +27,7 @@
       :progress-status="progressStatus" />
 
     <transition-group
-      v-if="users"
+      v-if="users && me"
       appear
       tag="div"
       class="presences"

@@ -148,8 +148,8 @@
               </div>
               <div class="col-4 justify-end">
                 <ItemMeta
-                  :entry="entry"
-                  :user="entry.creator" />
+                  :entry="section"
+                  :user="section.creator" />
               </div>
               <div class="col-1">
                 <CircleDropdown>
@@ -182,7 +182,7 @@
               <div class="col-1"></div>
               <div class="col-1">
                 <div class="circle">
-                  <span>{{ entry.language }}</span>
+                  <span>{{ subPage.language }}</span>
                 </div>
               </div>
               <div class="col-6 title flex-v">
@@ -196,8 +196,8 @@
               </div>
               <div class="col-4 justify-end">
                 <ItemMeta
-                  :entry="entry"
-                  :user="entry.creator" />
+                  :entry="subPage"
+                  :user="subPage.creator" />
               </div>
               <div class="col-1">
                 <CircleDropdown>

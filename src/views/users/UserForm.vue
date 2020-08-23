@@ -48,6 +48,11 @@
           preview-key="xlarge"
           label="Profilbilde"
           helpText="Klikk på bildet for å sette fokuspunkt." />
+
+        <KInputToggle
+          v-model="user.config.resetPasswordOnFirstLogin"
+          name="user[config][resetPassword]"
+          label="Bruker må sette nytt passord ved første innlogging" />
       </div>
     </section>
   </KForm>

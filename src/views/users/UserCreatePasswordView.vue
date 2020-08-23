@@ -5,10 +5,13 @@
         Brukere
       </template>
       <template v-slot:subtitle>
-        Endre brukerinfo
+        Nytt passord
       </template>
     </ContentHeader>
-    <UserForm
+    <div class="notice">
+      Vi anbefaler deg å sette ditt eget, sikre passord ved første innlogging.
+    </div>
+    <UserPasswordForm
       :user="user"
       :save="save" />
   </article>
@@ -17,19 +20,13 @@
 <script>
 
 import gql from 'graphql-tag'
-import UserForm from './UserForm'
+import UserPasswordForm from './UserPasswordForm'
+import GET_ME from '../../gql/users/ME_QUERY.graphql'
 import GET_USER from '../../gql/users/USER_QUERY.graphql'
 
 export default {
   components: {
-    UserForm
-  },
-
-  props: {
-    userId: {
-      type: [String, Number],
-      required: true
-    }
+    UserPasswordForm
   },
 
   data () {
@@ -41,7 +38,7 @@ export default {
     async save (setLoader) {
       setLoader(true)
 
-      const userParams = this.$utils.stripParams(this.user, ['__typename', 'passwordConfirm', 'id', 'active', 'lastLogin', 'deletedAt'])
+      const userParams = this.$utils.stripParams(this.user, ['__typename', 'passwordConfirm', 'id', 'active', 'deletedAt', 'lastLogin'])
       this.$utils.validateImageParams(userParams, ['avatar'])
 
       if (userParams.config) {
@@ -62,12 +59,12 @@ export default {
           `,
           variables: {
             userParams,
-            userId: this.userId
+            userId: this.me.id
           }
         })
 
         setLoader(false)
-        this.$toast.success({ message: 'Bruker oppdatert' })
+        this.$toast.success({ message: 'Passord oppdatert' })
         this.$router.push({ name: 'users' })
       } catch (err) {
         this.$utils.showError(err)
@@ -77,17 +74,19 @@ export default {
   },
 
   apollo: {
+    me: GET_ME,
+
     user: {
       query: GET_USER,
       fetchPolicy: 'no-cache',
       variables () {
         return {
-          userId: this.userId
+          userId: this.me.id
         }
       },
 
       skip () {
-        return !this.userId
+        return !this.me
       }
     }
   }
@@ -95,5 +94,7 @@ export default {
 </script>
 
 <style>
-
+  .notice {
+    margin-bottom: 2rem;
+  }
 </style>

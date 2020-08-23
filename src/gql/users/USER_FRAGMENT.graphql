@@ -18,7 +18,9 @@ fragment user on User {
 
   config {
     showOnboarding
+    resetPasswordOnFirstLogin
   }
 
+  lastLogin
   deletedAt
 }

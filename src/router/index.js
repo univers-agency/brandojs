@@ -13,6 +13,7 @@ import PageSectionCreateView from '../views/pages/PageSectionCreateView'
 import PageSectionEditView from '../views/pages/PageSectionEditView'
 
 import UserCreateView from '../views/users/UserCreateView'
+import UserCreatePasswordView from '../views/users/UserCreatePasswordView'
 import UserEditView from '../views/users/UserEditView'
 
 import ImagesView from '../views/images/ImagesView'
@@ -159,6 +160,11 @@ const routes = [
     path: '/users/new',
     name: 'users-new',
     component: UserCreateView
+  },
+  {
+    path: '/users/new-password',
+    name: 'users-new-password',
+    component: UserCreatePasswordView
   },
   {
     path: '/users/edit/:userId',

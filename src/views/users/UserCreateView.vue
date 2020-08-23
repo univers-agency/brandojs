@@ -27,14 +27,17 @@ export default {
   data () {
     return {
       user: {
-        language: 'no'
+        language: 'no',
+        config: {
+          resetPasswordOnFirstLogin: true
+        }
       }
     }
   },
 
   methods: {
     async save () {
-      const userParams = this.$utils.stripParams(this.user, ['__typename', 'passwordConfirm', 'id', 'deletedAt'])
+      const userParams = this.$utils.stripParams(this.user, ['__typename', 'passwordConfirm', 'id', 'lastLogin', 'deletedAt'])
       this.$utils.validateImageParams(userParams, ['avatar'])
 
       if (userParams.config) {

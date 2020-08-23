@@ -49,6 +49,9 @@ fragment page on Page {
         thumb: url(size: "xlarge")
       }
     }
+
+    insertedAt
+    updatedAt
   }
 
   fragments {
@@ -57,7 +60,6 @@ fragment page on Page {
     key
     parentKey
     language
-    updatedAt
     pageId
     data
 
@@ -68,6 +70,9 @@ fragment page on Page {
         thumb: url(size: "xlarge")
       }
     }
+
+    insertedAt
+    updatedAt
   }
 
   insertedAt

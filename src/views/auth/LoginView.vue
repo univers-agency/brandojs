@@ -153,7 +153,11 @@ export default {
                   }
                 })
                 this.$root.ready = true
-                this.$router.push({ name: 'dashboard' })
+                if (json.config && json.config.reset_password_on_first_login && !json.last_login) {
+                  this.$router.push({ name: 'users-new-password' })
+                } else {
+                  this.$router.push({ name: 'dashboard' })
+                }
               }
             })
           }
