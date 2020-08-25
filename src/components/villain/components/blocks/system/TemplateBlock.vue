@@ -239,6 +239,14 @@ export default {
       }
     },
 
+    findTemplate () {
+      const id = this.block.data.id
+
+      if (id) {
+        return this.available.templates.find(t => t.data.id === id)
+      }
+    },
+
     deleteEntry (entry) {
       this.$delete(this.block.data.entries, this.block.data.entries.indexOf(entry))
     },
@@ -316,11 +324,18 @@ export default {
     },
 
     replaceRef (exp, refName, refs) {
-      const ref = this.findRef(refName, refs)
+      let ref = this.findRef(refName, refs)
+
+      if (!ref) {
+        // ref not found —— the template might have been updated.
+        const t = this.findTemplate()
+        ref = this.findRef(refName, t.data.refs)
+      }
 
       if (ref.deleted) {
         return ''
       }
+
       return `<slot name="${refName}"></slot>`
     },
 
