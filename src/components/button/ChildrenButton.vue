@@ -65,7 +65,7 @@ export default {
   button, a {
     @fontsize sm/1;
     color: theme(colors.dark);
-    border: 1px solid theme(colors.dark);
+    border: 1px solid theme(colors.grayLight);
     background-color: transparent;
     height: 48px;
     border-radius: 30px;

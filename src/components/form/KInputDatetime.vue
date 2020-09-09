@@ -141,6 +141,9 @@ export default {
 
   watch: {
     innerValue (value) {
+      if (value === '') {
+        value = null
+      }
       this.$emit('input', value)
     },
 

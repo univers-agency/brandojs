@@ -21,6 +21,12 @@ import ImageCategoryDetailView from '../views/images/ImageCategoryDetailView'
 import ImageCategoryEditView from '../views/images/ImageCategoryEditView'
 import ImageSeriesEditView from '../views/images/ImageSeriesEditView'
 
+import MenuListView from '../views/navigation/MenuListView'
+import MenuCreateView from '../views/navigation/MenuCreateView'
+import MenuEditView from '../views/navigation/MenuEditView'
+import MenuItemCreateView from '../views/navigation/MenuItemCreateView'
+import MenuItemEditView from '../views/navigation/MenuItemEditView'
+
 import LoginView from '../views/auth/LoginView'
 import LogoutView from '../views/auth/LogoutView'
 
@@ -100,21 +106,76 @@ const routes = [
     name: 'files',
     component: IdentityView
   },
+
+  {
+    path: '/navigation',
+    name: 'navigation',
+    component: MenuListView
+  },
+
+  {
+    path: '/navigation/menu/new',
+    name: 'navigation-new',
+    component: MenuCreateView
+  },
+
+  {
+    path: '/navigation/menu/edit/:menuId',
+    name: 'navigation-edit',
+    component: MenuEditView,
+    props: (route) => {
+      const menuId = Number.parseInt(route.params.menuId, 10)
+      if (Number.isNaN(menuId)) {
+        return 0
+      }
+      return { menuId }
+    }
+  },
+
+  {
+    path: '/navigation/menuitem/:menuId/new',
+    name: 'navigation-items-new',
+    component: MenuItemCreateView,
+    props: (route) => {
+      const menuId = Number.parseInt(route.params.menuId, 10)
+      if (Number.isNaN(menuId)) {
+        return 0
+      }
+      return { menuId }
+    }
+  },
+
+  {
+    path: '/navigation/menuitem/:menuItemId/edit',
+    name: 'navigation-items-edit',
+    component: MenuItemEditView,
+    props: (route) => {
+      const menuItemId = Number.parseInt(route.params.menuItemId, 10)
+      if (Number.isNaN(menuItemId)) {
+        return 0
+      }
+      return { menuItemId }
+    }
+  },
+
   {
     path: '/pages',
     name: 'pages',
     component: PageListView
   },
+
   {
     path: '/pages/templates',
     name: 'templates',
     component: TemplatesView
   },
+
   {
     path: '/pages/new',
     name: 'pages-new',
     component: PageCreateView
   },
+
   {
     path: '/pages/edit/:pageId',
     name: 'pages-edit',
@@ -127,6 +188,7 @@ const routes = [
       return { pageId }
     }
   },
+
   {
     path: '/pages/:pageId/sections/new',
     name: 'sections-new',
@@ -139,6 +201,7 @@ const routes = [
       return { pageId }
     }
   },
+
   {
     path: '/pages/sections/edit/:sectionId',
     name: 'sections-edit',
@@ -151,21 +214,25 @@ const routes = [
       return { sectionId }
     }
   },
+
   {
     path: '/users',
     name: 'users',
     component: UserListView
   },
+
   {
     path: '/users/new',
     name: 'users-new',
     component: UserCreateView
   },
+
   {
     path: '/users/new-password',
     name: 'users-new-password',
     component: UserCreatePasswordView
   },
+
   {
     path: '/users/edit/:userId',
     name: 'users-edit',

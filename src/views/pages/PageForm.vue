@@ -35,6 +35,14 @@
           type="text"
           label="META beskrivelse"
           help-text="(for søkemotorer)" />
+
+        <KInputImage
+          v-model="page.metaImage"
+          small
+          name="page[metaImage]"
+          preview-key="original"
+          label="Delebilde (META bilde)"
+          help-text="Om du trenger et spesialtilpasset bilde for deling. Beskjæres til 1200x630." />
       </div>
       <div class="half">
         <KInputSelect
@@ -76,13 +84,11 @@
           label="Ekstra CSS klasser"
           placeholder="Ekstra CSS klasser" />
 
-        <KInputImage
-          v-model="page.metaImage"
-          small
-          name="page[metaImage]"
-          preview-key="original"
-          label="Delebilde (META bilde)"
-          help-text="Om du trenger et spesialtilpasset bilde for deling. Beskjæres til 1200x630." />
+        <KInputDatetime
+          v-model="page.publishAt"
+          name="page[publishAt]"
+          label="Tidspunkt for publisering."
+          help-text="Kan være blankt for å publisere umiddelbart" />
       </div>
     </section>
     <Villain

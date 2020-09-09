@@ -301,6 +301,12 @@ export default {
 .villain-block-wrapper {
   margin: 1rem;
   position: relative;
+
+  &.multi {
+    > [data-type="template"] {
+      background-color: transparent;
+    }
+  }
 }
 
 .villain-extra-padding {
@@ -311,12 +317,10 @@ export default {
 
 .villain-block {
   background-color: theme(colors.villain.blockBackground);
-  padding: 1rem;
-  padding-right: 2rem;
+  padding: 1.75rem 2rem 1rem 1rem;
   min-height: 105px;
   position: relative;
   border: 1px solid theme(colors.villain.blockBorder);
-  border-radius: 10px;
   transition: border 500ms ease;
 
   input:focus, textarea:focus {
@@ -377,11 +381,11 @@ export default {
       opacity: 1;
     }
 
-    .helpful-actions {
+    > .helpful-actions {
       opacity: 1;
     }
 
-    .villain-template-description, .villain-block-description {
+    > .villain-template-description, > .villain-block-description {
       transition: opacity 300ms ease;
       opacity: 1;
     }
@@ -446,11 +450,11 @@ export default {
   }
 
   .villain-template-description, .villain-block-description {
-    background-color: #fafafa;
+    @font mono;
     color: #000;
-    font-size: 9px;
-    border-radius: 8px 0 0 0;
-    padding: 3px 5px;
+    font-size: 10px;
+    border-radius: 0;
+    padding: 8px 1rem;
     font-weight: normal;
     display: inline-block;
     position: absolute;
@@ -729,6 +733,7 @@ export default {
   width: 100%;
   padding: 0;
   line-height: 1.1;
+  font-weight: 500;
 }
 
 .villain-markdown-input,

@@ -87,6 +87,7 @@ export default {
   apollo: {
     imageSeries: {
       query: GET_IMAGE_SERIES,
+      fetchPolicy: 'no-cache',
       variables () {
         return {
           seriesId: this.imageSeriesId

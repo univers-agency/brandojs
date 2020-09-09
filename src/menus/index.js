@@ -36,6 +36,12 @@ export default {
           ]
         },
         {
+          name: 'Navigasjon',
+          to: {
+            name: 'navigation'
+          }
+        },
+        {
           name: 'Brukere',
           to: {
             name: 'users'
@@ -100,7 +106,14 @@ export default {
               }
             }
           ]
-        }, {
+        },
+        {
+          text: 'Navigation',
+          to: {
+            name: 'navigation'
+          }
+        },
+        {
           name: 'Users',
           to: {
             name: 'users'

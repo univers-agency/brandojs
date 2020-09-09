@@ -233,7 +233,7 @@ export default {
         filter: null,
         offset: 0,
         limit: 50,
-        status: 'published'
+        status: 'all'
       }
     }
   },

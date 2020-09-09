@@ -57,17 +57,6 @@ export default {
                 imageCategoryParams: $imageCategoryParams
               ) {
                   id
-                  name
-                  slug
-
-                  cfg {
-                    uploadPath
-                  }
-
-                  creator {
-                    id
-                    name
-                  }
                 }
               }
           `,
@@ -88,6 +77,7 @@ export default {
   apollo: {
     imageCategory: {
       query: GET_IMAGE_CATEGORY,
+      fetchPolicy: 'no-cache',
       variables () {
         return {
           categoryId: this.imageCategoryId

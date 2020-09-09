@@ -2,6 +2,7 @@
   <Block
     :block="block"
     :parent="parent"
+    :class="{ multi: block.data.multi }"
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
     @duplicate="$emit('duplicate', $event)"
@@ -38,7 +39,7 @@
             get: getOrder,
             set: storeOrder
           }}"
-        name="fade-move"
+        name="fade-fast"
         tag="div"
         class="sort-container">
         <div
@@ -262,12 +263,18 @@ export default {
     },
 
     replaceVars (srcCode) {
-      const replacedVarsCode = srcCode.replace(/\${(\w+)}/g, this.replaceVar)
+      const replacedVarsCode = srcCode.replace(/\${(.*)}/g, this.replaceVar)
       return replacedVarsCode
     },
 
     replaceVar (exp, varName) {
-      return this.findVar(varName)
+      const ret = this.findVar(varName)
+
+      if (ret) {
+        return ret
+      }
+
+      return `<span v-popover="'Skiftes automatisk ut med en verdi når objektet lagres'" class="villain-entry-var"><span v-pre>{{ ${varName} }}</span></span>`
     },
 
     updateVars ({ newVars, entryId }) {
@@ -416,14 +423,14 @@ export default {
 
     findVar (varName) {
       if (!this.block.data.vars) {
-        return `\${${varName}}`
+        return null
       }
 
       if (Object.prototype.hasOwnProperty.call(this.block.data.vars, varName)) {
         return this.block.data.vars[varName].value
       }
 
-      return `\${${varName}}`
+      return null
     },
 
     buildData (refs) {
@@ -503,12 +510,18 @@ export default {
 }
 </script>
 <style lang="postcss" scoped>
+
   .template-entry {
-    margin-top: 1rem;
+    .multi .sort-container & {
+      &:first-of-type {
+        margin-top: 0;
+      }
+      margin-top: 1rem;
+    }
+
     margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    background-color: #fbfbfb;
-    border-radius: 10px;
+    padding: 1rem;
+    background-color: #fbf5f2;
   }
 
   .entry-toolbar {
@@ -518,6 +531,10 @@ export default {
     padding-left: 1rem;
     padding-right: 1rem;
 
+    .helpful-actions {
+      margin-top: 0;
+    }
+
     > * + * {
       margin-left: 0.25rem;
     }
@@ -525,20 +542,29 @@ export default {
 
   .add-multi-entry {
     @font mono xs/1;
-    background-color: #efefef;
+    border: 1px solid #1a47ff;
     padding: 1rem;
-    border-top: 1px solid #dcdcdc;
+    background-color: #ffffff;
     margin-top: 1rem;
     text-align: center;
     text-transform: uppercase;
     cursor: pointer;
+    display: inline-block;
+    margin: 0 auto;
+    text-align: center;
 
     &:hover {
-      background-color: #fafafa;
+      background-color: #1a47ff;
+      color: #ffffff;
     }
   }
 
   >>> .villain-entry-var {
+    padding: 4px 10px;
+    background-color: gold;
+    font-family: mono;
+    font-size: 17px;
+
     &:hover {
       border-radius: 5px;
       background-color: yellow;

@@ -9,7 +9,9 @@
         </label>
       </div>
 
-      <table style="table-layout: fixed">
+      <table
+        class="kinput-table"
+        style="table-layout: fixed">
         <slot name="head"></slot>
         <transition-group
           v-sortable="{
@@ -269,13 +271,14 @@ export default {
     }
   }
 
-  table {
+  .kinput-table {
     width: 100%;
 
     tr {
       border-bottom: 1px solid #ccc;
 
       td {
+        vertical-align: top;
         padding: 12px 0;
         padding-right: 15px;
 

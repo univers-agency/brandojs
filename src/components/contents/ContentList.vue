@@ -117,7 +117,7 @@
               <Status
                 v-else
                 :center="true"
-                :status="entry.status" />
+                :entry="entry" />
             </div>
           </template>
           <slot
@@ -138,11 +138,15 @@
         Last inn flere
       </ButtonSecondary>
     </div>
+    <div
+      v-if="entries.length === 0"
+      class="contentlist-empty">
+      <slot name="empty"></slot>
+    </div>
   </div>
 </template>
 
 <script>
-import { gsap } from 'gsap'
 import debounce from 'lodash.debounce'
 
 export default {
@@ -366,6 +370,15 @@ export default {
 </script>
 
 <style lang="postcss">
+  .contentlist-empty {
+    height: 25vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 600px;
+    @fontsize h2;
+  }
+
   .list-tools {
     @space margin-bottom xs;
     display: flex;

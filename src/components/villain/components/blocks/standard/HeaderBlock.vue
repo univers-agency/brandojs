@@ -97,15 +97,15 @@ export default {
       const level = parseInt(this.block.data.level)
       switch (level) {
         case 1:
-          return 4
+          return 2.75
         case 2:
-          return 3
+          return 2.5
         case 3:
-          return 2
+          return 2.25
         case 4:
-          return 1.5
+          return 2
         case 5:
-          return 1
+          return 1.75
         case 6:
           return 0.75
         default:

@@ -435,7 +435,7 @@ export default {
 
     &.lead, &.lede {
       p {
-        @fontsize xl;
+        @fontsize lg;
       }
     }
 
@@ -447,7 +447,7 @@ export default {
     }
 
     h2 {
-      @fontsize xl;
+      @fontsize lg(1.2);
       line-height: 1.05;
       font-weight: 500;
       margin-top: 0;
@@ -460,11 +460,10 @@ export default {
     }
 
     h3 {
-      @fontsize base;
+      @fontsize base(1.2);
       font-weight: 500;
       margin-top: 0;
       margin-bottom: 5px;
-      text-transform: uppercase;
 
       a {
         border-bottom: 2px solid theme(colors.peachDarkest);

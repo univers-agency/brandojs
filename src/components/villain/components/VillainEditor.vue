@@ -1064,13 +1064,12 @@ export default {
 }
 
 .villain-editor {
-  background-color: theme(colors.peach);
   background: repeating-linear-gradient(
     -45deg,
     #fff,
-    #fff 2px,
-    theme(colors.villain.stripe) 2px,
-    theme(colors.villain.stripe) 2px * 2
+    #FFF 2px,
+    #faeeea 2px,
+    #faeeea 3px
   );
   padding-top: 1rem;
   padding-bottom: 1rem;

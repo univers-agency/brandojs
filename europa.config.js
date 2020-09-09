@@ -12,6 +12,7 @@ module.exports = {
 
     colors: () => ({
       dark: '#052752',
+      grayLight: '#BCBCBC',
       input: '#FAEFEA',
       peach: '#FCF5F3',
       peachLighter: '#fffbfa',
@@ -235,9 +236,9 @@ module.exports = {
           mobile: '16px',
           ipad_portrait: '17px',
           ipad_landscape: '18px',
-          desktop_md: '19px',
-          desktop_lg: '21px',
-          desktop_xl: '22px'
+          desktop_md: '18px',
+          desktop_lg: '20px',
+          desktop_xl: '20px'
         },
 
         lg: {

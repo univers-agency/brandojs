@@ -57,21 +57,28 @@
           v-model="cfg.rows"
           name="data[data]"
           label="Datatabell"
+          :sortable="true"
           :delete-rows="true"
           :add-rows="false">
           <template v-slot:row="{ entry }">
             <td>
-              <KInput
-                v-model="entry.key"
-                name="entry[key]"
-                placeholder="Nøkkel"
-                label="Nøkkel" />
+              <div class="mt-2 mb-2">
+                <KInput
+                  v-model="entry.key"
+                  compact
+                  name="entry[key]"
+                  placeholder="Nøkkel"
+                  label="" />
+              </div>
 
-              <KInput
-                v-model="entry.value"
-                name="entry[value]"
-                placeholder="Verdi"
-                label="Verdi" />
+              <div class="mb-2">
+                <KInput
+                  v-model="entry.value"
+                  compact
+                  name="entry[value]"
+                  placeholder="Verdi"
+                  label="" />
+              </div>
             </td>
           </template>
         </KInputTable>

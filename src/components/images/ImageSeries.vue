@@ -34,7 +34,7 @@
       <ButtonSecondary
         v-if="showDelete"
         @click.native.prevent="deleteSeries(imageSeries)">
-        Slett
+        Slett serie
       </ButtonSecondary>
     </div>
 

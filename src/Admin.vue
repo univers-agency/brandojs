@@ -1034,7 +1034,7 @@ export default {
   height: 40px;
   border-radius: 20px;
   line-height: 1;
-  border: 1px solid theme(colors.dark);
+  border: 1px solid theme(colors.grayLight);
   font-family: theme(typography.families.mono);
   font-size: 14px;
   text-transform: uppercase;
@@ -1064,7 +1064,7 @@ export default {
   display: inline-block;
   padding: 5px 6px 4px;
   line-height: 1;
-  border: 1px solid theme(colors.blue);
+  border: 1px solid theme(colors.grayLight);
   user-select: none;
 
   & + .badge {

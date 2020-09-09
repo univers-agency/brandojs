@@ -109,6 +109,7 @@ export default {
 <style lang="postcss" scoped>
   input {
     @fontsize base;
+    font-family: theme(typography.families.mono);
     padding-top: 12px;
     padding-bottom: 12px;
     padding-left: 15px;

@@ -5,11 +5,11 @@ query ImageCategory ($categoryId: ID!, $imageSeriesLimit: Int, $imageSeriesOffse
     name
     slug
     cfg {
-      allowedMimetypes
-      defaultSize
-      uploadPath
-      randomFilename
-      sizeLimit
+      allowed_mimetypes
+      default_size
+      upload_path
+      random_filename
+      size_limit
       sizes
       srcset {
         key

@@ -61,7 +61,7 @@
       <template slot="help">
         <p>
           For å slette et bilde i bildekarusellen, klikker du på bildet, deretter klikker du på søplekasse-ikonet (<i class="fa fa-trash" />)<br><br>
-          For å gi bildene bildetekst, klikker du på tannhjulet (<i class="fa fa-cog" />) og deretter "Endre bildetekster"<br><br>
+          For å gi bildene bildetekst, klikker du på "Konfigurér galleriblokk" og deretter "Endre bildetekster"<br><br>
           For å sortere bildene kan du dra og slippe de i ønsket rekkefølge.
         </p>
       </template>
@@ -69,12 +69,36 @@
     <BlockConfig
       ref="config">
       <template #default>
+        <div class="buttons mb-3">
+          <template
+            v-if="block.data.images.length">
+            <ButtonSecondary
+              v-if="listStyle"
+              @click="listStyle = false; showUpload = false; showTitles = false; showImages = true">
+              Vis som grid
+            </ButtonSecondary>
+            <ButtonSecondary
+              v-else
+              @click="listStyle = true; showUpload = false; showTitles = false; showImages = true">
+              Vis som liste
+            </ButtonSecondary>
+            <ButtonSecondary @click="showUpload = true; showImages = false; showTitles = false">
+              Last opp bilder
+            </ButtonSecondary>
+            <ButtonSecondary @click="showTitles = true; showImages = false; showUpload = false">
+              Endre bildetekster
+            </ButtonSecondary>
+          </template>
+        </div>
         <div
-          v-if="showTitles">
+          v-if="showTitles"
+          class="title-cfg">
           <KInputTable
             v-model="block.data.images"
             name="data[images]"
             label="Bildetekster"
+            id-key="url"
+            :sortable="false"
             :delete-rows="false"
             :add-rows="false">
             <template v-slot:row="{ entry }">
@@ -105,13 +129,6 @@
             <template v-slot:new="">
             </template>
           </KInputTable>
-
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="showTitles = false; showImages = true">
-            OK
-          </button>
         </div>
         <div
           v-if="showUpload">
@@ -154,17 +171,6 @@
         <div
           v-if="showImages && listStyle"
           class="villain-image-library mt-4">
-          <div class="buttons col-12 mb-3">
-            <ButtonSecondary @click="listStyle = false">
-              Vis som grid
-            </ButtonSecondary>
-            <ButtonSecondary @click="showUpload = true; showImages = false">
-              Last opp bilder
-            </ButtonSecondary>
-            <ButtonSecondary @click="showTitles = true; showImages = false">
-              Endre bildetekster
-            </ButtonSecondary>
-          </div>
           <table
             class="table villain-image-table">
             <tr
@@ -198,17 +204,6 @@
         <div
           v-else-if="showImages && !listStyle"
           class="villain-image-library row">
-          <div class="buttons col-12 mb-3">
-            <ButtonSecondary @click="listStyle = true">
-              Vis som liste
-            </ButtonSecondary>
-            <ButtonSecondary @click="showUpload = true; showImages = false">
-              Last opp bilder
-            </ButtonSecondary>
-            <ButtonSecondary @click="showTitles = true; showImages = false">
-              Endre bildetekster
-            </ButtonSecondary>
-          </div>
           <div
             v-for="i in images"
             :key="i.id"
@@ -221,11 +216,10 @@
           </div>
           <div
             class="col-12 form-group mt-4">
-            <label>CSS klasser</label>
-            <input
+            <KInput
               v-model="block.data.class"
-              class="form-control"
-              type="input">
+              name="block[data][class]"
+              label="CSS klasser" />
           </div>
         </div>
 
@@ -418,7 +412,9 @@ export default {
 
       this.showImages = false
       this.uploading = false
-      this.showConfig = false
+      this.showTitles = true
+      this.showUpload = false
+      this.$refs.config.closeConfig()
     },
 
     async upload (f) {
@@ -510,5 +506,18 @@ export default {
 
   .actions {
     text-align: center;
+  }
+
+  >>> .buttons {
+    display: flex;
+  }
+
+  .title-cfg {
+    >>> .panes {
+      padding-top: 20px;
+      & > * {
+        min-width: auto !important;
+      }
+    }
   }
 </style>

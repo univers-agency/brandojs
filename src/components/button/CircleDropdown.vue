@@ -167,7 +167,7 @@ export default {
 
       .main-circle {
         transition: fill 0.3s ease;
-        stroke: theme(colors.dark);
+        stroke: theme(colors.grayLight);
         fill: transparent;
 
         &.inverted {

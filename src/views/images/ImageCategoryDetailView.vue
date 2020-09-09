@@ -216,37 +216,14 @@ export default {
     },
 
     removeDeletedImage ({ id, imageSeriesId }) {
-      const query = {
-        query: GET_IMAGE_CATEGORY,
-        variables: {
-          categoryId: this.imageCategoryId
-        }
-      }
-
-      const store = this.$apolloProvider.defaultClient.store.cache
-
-      try {
-        const data = store.readQuery(query)
-        const series = data.imageCategory.imageSeries.find(s => parseInt(s.id) === parseInt(imageSeriesId))
-        const idx = series.images.findIndex(i => parseInt(i.id) === parseInt(id))
-
-        if (idx !== -1) {
-          series.images.splice(idx, 1)
-
-          store.writeQuery({
-            ...query,
-            data
-          })
-        }
-      } catch (err) {
-        console.error(err)
-      }
+      this.$apollo.queries.imageCategory.refresh()
     }
   },
 
   apollo: {
     imageCategory: {
       query: GET_IMAGE_CATEGORY,
+      fetchPolicy: 'no-cache',
       variables () {
         return {
           categoryId: this.imageCategoryId,
