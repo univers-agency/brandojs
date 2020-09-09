@@ -1133,7 +1133,7 @@ export default {
     padding-bottom: 14px;
     padding-left: 23px;
     padding-right: 23px;
-    border: 1px solid theme(colors.dark);
+    border: 1px solid theme(colors.dark) !important;
     line-height: 1;
     font-size: 18px;
   }

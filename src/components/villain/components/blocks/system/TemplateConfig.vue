@@ -45,6 +45,7 @@
               Hent orginale variabler
             </button>
           </div>
+
           <div>
             <h4>Refererte blokker [{{ refs.length }}]</h4>
             <div class="form-group">
@@ -57,6 +58,19 @@
                 {{ ref.name }} — Erstatt med referanseblokk
               </button>
             </div>
+          </div>
+        </div>
+        <div class="panes">
+          <div>
+            <h4>Slettede blokker [{{ deletedBlocks.length }}]</h4>
+            <button
+              v-for="(b, idx) in deletedBlocks"
+              :key="idx"
+              type="button"
+              class="btn-secondary"
+              @click="undelete(b)">
+              {{ b.name }} — Gjenopprett
+            </button>
           </div>
         </div>
       </KModal>
@@ -95,6 +109,12 @@ export default {
     }
   },
 
+  computed: {
+    deletedBlocks () {
+      return this.refs.filter(r => r.deleted)
+    }
+  },
+
   inject: [
     'available'
   ],
@@ -128,6 +148,19 @@ export default {
       const newRefs = [
         ...this.refs.slice(0, refIdx),
         foundRef,
+        ...this.refs.slice(refIdx + 1)
+      ]
+
+      this.$emit('updateRefs', { newRefs, entryId: this.entryId })
+    },
+
+    undelete (ref) {
+      const refIdx = this.refs.indexOf(ref)
+      delete ref.deleted
+
+      const newRefs = [
+        ...this.refs.slice(0, refIdx),
+        ref,
         ...this.refs.slice(refIdx + 1)
       ]
 

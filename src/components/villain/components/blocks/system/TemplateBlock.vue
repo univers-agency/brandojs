@@ -201,7 +201,7 @@ export default {
       const builtSlots = this.buildSlots(entry.refs)
 
       const template = `
-        <component :is="buildCmp()" :entryData="entryData">
+        <component :is="buildCmp()" :entry-data="entryData">
           ${replacedContent}
           ${builtSlots}
         </component>

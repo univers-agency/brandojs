@@ -465,9 +465,9 @@ export default {
   }
 
   .villain-block-picture {
-    min-width: auto;
-    max-width: 40vw;
-    margin: 0 auto;
+    /* min-width: auto; */
+    /* max-width: 40vw; */
+    /* margin: 0 auto; */
     text-align: center;
   }
 

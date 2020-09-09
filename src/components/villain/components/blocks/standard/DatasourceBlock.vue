@@ -37,12 +37,6 @@
               </transition-group>
             </template>
           </div>
-          <div class="helpful-actions">
-            <ButtonTiny
-              @click="$refs.config.openConfig()">
-              Konfigurér datakilde
-            </ButtonTiny>
-          </div>
         </div>
         <div
           v-else
@@ -55,6 +49,12 @@
             </ButtonTiny>
           </div>
         </div>
+      </div>
+      <div class="helpful-actions">
+        <ButtonTiny
+          @click="$refs.config.openConfig()">
+          Konfigurér datakilde
+        </ButtonTiny>
       </div>
       <BlockConfig
         ref="config">

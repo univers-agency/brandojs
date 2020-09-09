@@ -38,7 +38,7 @@
           @click="duplicateBlock">
           <FontAwesomeIcon
             v-popover.left="'Duplisér blokken'"
-            icon="clone"
+            :icon="['far', 'clone']"
             size="xs"
             fixed-width />
         </div>
@@ -67,7 +67,7 @@
           @click="deleteBlock">
           <FontAwesomeIcon
             v-popover.left="'Slett blokken'"
-            icon="trash-alt"
+            :icon="['far', 'times-circle']"
             size="xs"
             fixed-width />
         </div>
@@ -330,11 +330,11 @@ export default {
   }
 
   .helpful-actions {
-    margin-top: 25px;
+    margin-top: 1rem;
     opacity: 0;
     transition: opacity 300ms ease;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-end;
 
     > * {
@@ -382,6 +382,14 @@ export default {
     }
 
     > .helpful-actions {
+      opacity: 1;
+    }
+
+    > div > .helpful-actions {
+      opacity: 1;
+    }
+
+    .template-entry > .entry-toolbar > .helpful-actions {
       opacity: 1;
     }
 
