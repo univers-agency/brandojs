@@ -87,7 +87,7 @@
         <KInputDatetime
           v-model="page.publishAt"
           name="page[publishAt]"
-          label="Tidspunkt for publisering."
+          label="Tidspunkt for publisering"
           help-text="Kan være blankt for å publisere umiddelbart" />
       </div>
     </section>

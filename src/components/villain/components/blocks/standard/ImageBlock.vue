@@ -9,7 +9,7 @@
       @duplicate="$emit('duplicate', $event)"
       @delete="$emit('delete', $event)">
       <div class="villain-block-image">
-        <div v-if="previewUrl && previewUrl !== ''">
+        <template v-if="previewUrl && previewUrl !== ''">
           <img
             :src="previewUrl"
             class="img-fluid">
@@ -19,7 +19,7 @@
               Konfigurér bildeblokk
             </ButtonTiny>
           </div>
-        </div>
+        </template>
         <div
           v-else
           class="villain-block-image-empty">
@@ -464,6 +464,15 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    .drop {
+      .helpful-actions {
+        opacity: 1;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+      }
+    }
 
     svg {
       height: 30%;

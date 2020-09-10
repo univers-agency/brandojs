@@ -635,6 +635,10 @@ export default {
   .row {
     @row;
 
+    &.baseline {
+      align-items: baseline;
+    }
+
     .half, .w50 {
       @column 8/16;
     }

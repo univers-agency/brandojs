@@ -216,10 +216,9 @@ export default {
   }
 
   .villain-block-list {
-    margin: 0 auto;
 
     .villain-block-list-item {
-      padding: 0 2rem;
+      padding: 0 1rem;
 
       &:hover {
         cursor: move;
@@ -227,11 +226,7 @@ export default {
 
       .villain-block-list-item-key {
         font-weight: 500;
-        padding-right: 2rem;
-        text-align: right;
-      }
-      .villain-block-list-item-value {
-        padding-left: 2rem;
+        padding-right: 1rem;
       }
     }
   }

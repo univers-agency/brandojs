@@ -528,8 +528,6 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-items: baseline;
-    padding-left: 1rem;
-    padding-right: 1rem;
 
     .helpful-actions {
       margin-top: 0;

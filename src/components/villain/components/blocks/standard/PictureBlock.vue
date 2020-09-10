@@ -468,7 +468,7 @@ export default {
     /* min-width: auto; */
     /* max-width: 40vw; */
     /* margin: 0 auto; */
-    text-align: center;
+    /* text-align: center; */
   }
 
   .preview-image {
