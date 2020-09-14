@@ -20,7 +20,6 @@ export default class ActionButton extends Mark {
           default: null
         }
       },
-      inclusive: false,
       parseDOM: [
         {
           tag: 'a[class="action-button"]',
