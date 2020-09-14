@@ -294,6 +294,10 @@ export default {
           width: 35px;
           text-align: right;
         }
+
+        >>> &.monospace {
+          @font mono base(0.8);
+        }
       }
 
       th {
