@@ -13,6 +13,12 @@
     </section>
     <section class="row">
       <div class="half">
+        <KInputToggle
+          v-if="advancedConfig"
+          v-model="page.isHomepage"
+          name="config[isHomepage]"
+          label="Nettstedets hovedside" />
+
         <KInputSelect
           v-model="page.language"
           rules="required"
@@ -86,6 +92,7 @@
 
         <KInputDatetime
           v-model="page.publishAt"
+          :null="true"
           name="page[publishAt]"
           label="Tidspunkt for publisering"
           help-text="Kan være blankt for å publisere umiddelbart" />

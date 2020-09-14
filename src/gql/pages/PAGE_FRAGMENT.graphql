@@ -8,6 +8,7 @@ fragment page on Page {
   language
   data
   cssClasses
+  isHomepage
 
   metaDescription
   metaImage {
