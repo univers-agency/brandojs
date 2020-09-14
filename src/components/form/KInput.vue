@@ -136,6 +136,11 @@ export default {
       font-family: theme(typography.families.mono);
       padding-bottom: 12px;
       padding-top: 16px;
+
+      &::placeholder {
+        @fontsize base(0.8);
+        font-family: theme(typography.families.mono);
+      }
     }
 
     &.invert {
