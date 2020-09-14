@@ -66,12 +66,14 @@
             <template v-if="editing">
               <KInput
                 v-model="category.label"
+                monospace
                 :name="`category[${category.id}][label]`"
                 rules="required"
                 label="Kategori — etikett" />
 
               <KInput
                 v-model="category.key"
+                monospace
                 :name="`category[${category.id}][key]`"
                 rules="required"
                 label="Kategori — nøkkel" />
@@ -88,16 +90,16 @@
               label="">
               <template v-slot:head>
                 <tr>
-                  <th>Label</th>
+                  <th>Etikett</th>
                   <th>Verdi</th>
                   <th></th>
                 </tr>
               </template>
               <template v-slot:row="{ entry }">
-                <td>
+                <td class="monospace">
                   {{ entry.label }}
                 </td>
-                <td>
+                <td class="monospace">
                   <template v-if="entry.type === 'text'">
                     {{ entry.data.value }}
                   </template>
@@ -131,10 +133,20 @@
                     rules="required"
                     label="Nøkkel" />
 
-                  <KInput
+                  <KInputSelect
                     v-if="editing"
                     v-model="editEntry.type"
                     :name="`global[type]`"
+                    :options="[{
+                      id: 'boolean',
+                      name: 'Boolean',
+                    }, {
+                      id: 'html',
+                      name: 'HTML',
+                    }, {
+                      id: 'text',
+                      name: 'text',
+                    }]"
                     rules="required"
                     label="Type" />
 
@@ -166,16 +178,20 @@
                 v-if="editing"
                 v-slot:new="{ newEntry }">
                 <td>
-                  <input
+                  <KInput
                     v-model="newEntry.label"
+                    monospace
+                    slim
                     placeholder="Etikett"
-                    type="text">
+                    name="newEntry[label]" />
                 </td>
                 <td>
-                  <input
+                  <KInput
                     v-model="newEntry.key"
+                    monospace
+                    slim
                     placeholder="nøkkel"
-                    type="text">
+                    name="newEntry[name]" />
                 </td>
               </template>
             </KInputTable>
@@ -307,15 +323,24 @@ export default {
   }
 
   .category {
-    border: 1px solid theme(colors.blue);
-    padding: 2rem;
-
     h3 {
+      @fontsize lg;
       @space margin-bottom sm;
+      font-weight: 500;
+    }
+
+    >>> .input-table {
+      margin-bottom: 0;
     }
   }
 
   .form-wrapper + .form-wrapper {
     margin-top: 2.5rem;
+  }
+
+  .form-wrapper {
+    border: 1px solid theme(colors.blue);
+    padding: 2rem;
+    max-width: 800px;
   }
 </style>
