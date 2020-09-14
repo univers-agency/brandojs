@@ -263,18 +263,23 @@ export default {
     },
 
     replaceVars (srcCode) {
-      const replacedVarsCode = srcCode.replace(/\${(.*)}/g, this.replaceVar)
+      // TODO: when lookbehind is implemented: /(?<!<\/?[^>]*|&[^;]*)(\${.*?})/g
+      const replacedVarsCode = srcCode.replace(/<.*?>|(\$\{.*?\})/g, this.replaceVar)
       return replacedVarsCode
     },
 
     replaceVar (exp, varName) {
-      const ret = this.findVar(varName)
+      if (varName) {
+        const ret = this.findVar(varName)
 
-      if (ret) {
-        return ret
+        if (ret) {
+          return ret
+        }
+
+        return `<span v-popover="'Skiftes automatisk ut med en verdi når objektet lagres'" class="villain-entry-var"><span v-pre>{{ ${varName} }}</span></span>`
       }
 
-      return `<span v-popover="'Skiftes automatisk ut med en verdi når objektet lagres'" class="villain-entry-var"><span v-pre>{{ ${varName} }}</span></span>`
+      return exp
     },
 
     updateVars ({ newVars, entryId }) {
