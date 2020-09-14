@@ -90,6 +90,11 @@ export default {
       }
     },
 
+    null: {
+      type: Boolean,
+      default: false
+    },
+
     helpText: {
       type: String,
       default: null
@@ -117,10 +122,7 @@ export default {
     },
 
     value: {
-      type: String,
-      default: () => {
-        return moment.tz('Europe/Oslo').format('YYYY-MM-DD')
-      }
+      type: String
     }
   },
 
@@ -148,6 +150,12 @@ export default {
 
   created () {
     this.innerValue = this.value
+
+    if (!this.innerValue) {
+      if (!this.null) {
+        this.innerValue = moment.tz('Europe/Oslo').format('YYYY-MM-DD')
+      }
+    }
   }
 }
 </script>
