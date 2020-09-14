@@ -57,6 +57,11 @@
             class="link name-link">
             {{ entry.title }}
           </router-link><br>
+          <FontAwesomeIcon
+            v-if="entry.isHomepage"
+            class="mr-1"
+            size="xs"
+            icon="home" />
           <div class="badge">{{ entry.key }}</div>
         </div>
         <div class="col-2 justify-end">
