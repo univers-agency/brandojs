@@ -5,6 +5,8 @@ import UserListView from '../views/users/UserListView'
 import IdentityView from '../views/config/IdentityView'
 import GlobalsView from '../views/config/GlobalsView'
 
+import FilesView from '../views/files/FilesView'
+
 import TemplatesView from '../views/pages/TemplatesView'
 import PageListView from '../views/pages/PageListView'
 import PageCreateView from '../views/pages/PageCreateView'
@@ -59,6 +61,11 @@ const routes = [
     path: '/config/globals',
     name: 'config-globals',
     component: GlobalsView
+  },
+  {
+    path: '/files',
+    name: 'files',
+    component: FilesView
   },
   {
     path: '/images',
