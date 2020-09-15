@@ -108,11 +108,6 @@ const routes = [
       return { imageCategoryId }
     }
   },
-  {
-    path: '/files',
-    name: 'files',
-    component: IdentityView
-  },
 
   {
     path: '/navigation',

@@ -465,11 +465,24 @@ export default {
             break
 
           case 'datasource':
-            if (block.data.wrapper) {
-              this.$alerts.alertError('OBS!', 'Datakilden har et gammelt format. Flytt `wrapper` til template. Koden finner du i konsollen. OBS! Wrapper nulles ut ved lagring av dette skjemaet!')
-              console.log('Datakilde-wrapper til template #', block.data.template)
-              console.log(block.data.wrapper)
+            if (block.data.wrapper || block.data.template) {
+              this.$alerts.alertError('OBS!', 'Datakilden har et gammelt format. Flytt malkode og `wrapper` til datakildens eget felt. Wrapperkode og malkode finner du i konsollen OBS! Wrapper og mal nulles ut ved lagring av dette skjemaet!')
+              if (block.data.wrapper) {
+                console.error('Datasource/Datakilde-wrapper\r\n\r\n', block.data.wrapper)
+              }
+              if (block.data.template) {
+                // find template
+                const t = this.availableTemplates.find(t => parseInt(t.data.id) === parseInt(block.data.template))
+                console.log(this.availableTemplates)
+                console.log(block.data.template)
+                if (t) {
+                  console.error('Datasource/Malkode\r\n\r\n', t.data.code)
+                } else {
+                  console.error('Datasource/Malkode: fant ikke malen')
+                }
+              }
               delete block.data.wrapper
+              delete block.data.template
             }
             break
         }

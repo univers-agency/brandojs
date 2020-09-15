@@ -44,7 +44,7 @@
           <i class="fa fa-fw fa-database"></i>
           <div class="actions">
             <ButtonTiny
-              @click="$refs.config.openConfig()">
+              @click="openConfig">
               Konfigurér datakilde
             </ButtonTiny>
           </div>
@@ -52,7 +52,7 @@
       </div>
       <div class="helpful-actions">
         <ButtonTiny
-          @click="$refs.config.openConfig()">
+          @click="openConfig">
           Konfigurér datakilde
         </ButtonTiny>
       </div>
@@ -95,36 +95,19 @@
                 v-model="block.data.arg"
                 name="data[arg]"
                 label="Argument" />
-            </div>
-            <div>
-              <KInputSelect
-                v-if="templates.length"
-                v-model="block.data.template"
-                rules="required"
-                :options="templates"
-                optionValueKey="id"
-                optionLabelKey="name"
-                name="data[template]"
-                label="Mal" />
-              <div v-else>
-                Fant ingen tilgjengelige maler!
-              </div>
 
               <KInputNumber
                 v-if="block.data.type === 'selection'"
                 v-model="block.data.limit"
                 name="data[limit]"
                 label="Maks antall" />
-
-              <KInputTextarea
-                v-model="block.data.wrapper"
-                :monospace="true"
-                :rows="8"
-                name="data[wrapper]"
-                label="Wrapper"
-                help-text="OBS! Ikke bruk dette feltet! Sett `wrapper`-verdi direkte i MALEN istedet!" />
             </div>
+            <div></div>
           </div>
+          <KInputCode
+            v-model="block.data.code"
+            label="Mal for datakilden"
+            name="data[code]" />
         </template>
       </BlockConfig>
       <KModal
@@ -229,7 +212,6 @@ export default {
   async created () {
     console.debug('<DatasourceBlock /> created')
     this.getModules()
-    this.getTemplates()
     if (this.block.data.module) {
       this.getModuleKeys()
     }
@@ -241,6 +223,10 @@ export default {
   },
 
   methods: {
+    openConfig () {
+      this.$refs.config.openConfig()
+    },
+
     refreshSelectedEntries () {
       this.selectedEntries = this.block.data.ids.map(id => this.availableEntries.find(e => parseInt(e.id) === parseInt(id)))
     },
@@ -276,14 +262,6 @@ export default {
 
     getModuleQueries (val) {
       this.availableModuleQueries = this.availableModuleKeys[val].map(t => ({ name: t, value: t }))
-    },
-
-    getTemplates () {
-      this.adminChannel.channel
-        .push('templates:list_templates')
-        .receive('ok', payload => {
-          this.templates = payload.templates
-        })
     },
 
     selectEntries () {

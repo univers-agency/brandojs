@@ -28,8 +28,8 @@
 
 <script>
 import CodeMirror from 'codemirror'
-import 'codemirror/mode/htmlmixed/htmlmixed.js'
 import 'codemirror/addon/display/autorefresh.js'
+import 'codemirror/addon/mode/overlay'
 
 export default {
   props: {
@@ -141,9 +141,12 @@ export default {
 
   methods: {
     bindEditor () {
+      CodeMirror.defineMode('htmltwig', function (config, parserConfig) {
+        return CodeMirror.overlayMode(CodeMirror.getMode(config, parserConfig.backdrop || 'text/html'), CodeMirror.getMode(config, 'twig'))
+      })
       this.codeMirror = CodeMirror.fromTextArea(this.$refs.txt, {
         autoRefresh: true,
-        mode: 'htmlmixed',
+        mode: 'htmltwig',
         theme: 'duotone-light',
         tabSize: 2,
         line: true,
@@ -155,7 +158,7 @@ export default {
         styleSelectedText: true
       })
 
-      this.codeMirror.setValue(this.innerValue)
+      this.codeMirror.setValue(this.innerValue || '')
 
       this.codeMirror.on('change', cm => {
         this.innerValue = cm.getValue()

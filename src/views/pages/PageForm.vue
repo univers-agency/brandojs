@@ -48,7 +48,7 @@
           name="page[metaImage]"
           preview-key="original"
           label="Delebilde (META bilde)"
-          help-text="Om du trenger et spesialtilpasset bilde for deling. Beskjæres til 1200x630." />
+          help-text="Om du trenger et spesialtilpasset bilde for deling.<br>Beskjæres til 1200x630." />
       </div>
       <div class="half">
         <KInputSelect
@@ -96,6 +96,10 @@
           name="page[publishAt]"
           label="Tidspunkt for publisering"
           help-text="Kan være blankt for å publisere umiddelbart" />
+
+        <ButtonSecondary v-if="advancedConfig">
+          Konfigurer sideegenskaper
+        </ButtonSecondary>
       </div>
     </section>
     <Villain

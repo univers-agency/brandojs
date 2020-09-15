@@ -284,7 +284,7 @@
 import VueSlideUpDown from 'vue-slide-up-down'
 import IconDropdown from '../components/icons/IconDropdown'
 import CodeMirror from 'codemirror'
-import 'codemirror/mode/htmlmixed/htmlmixed.js'
+import 'codemirror/mode/twig/twig.js'
 import 'codemirror/mode/javascript/javascript.js'
 import 'codemirror/addon/display/autorefresh.js'
 
@@ -352,7 +352,7 @@ export default {
   async mounted () {
     this.templates = await fetchTemplates('all', { authorization: `Bearer ${this.getToken()}` }, this.urls.templates)
     this.codeMirror = CodeMirror(document.querySelector('#builder-template'), {
-      mode: 'htmlmixed',
+      mode: 'twig',
       theme: 'duotone-light',
       autoRefresh: true,
       tabSize: 2,

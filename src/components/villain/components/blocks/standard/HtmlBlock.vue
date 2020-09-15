@@ -19,7 +19,7 @@
 
 <script>
 import CodeMirror from 'codemirror'
-import 'codemirror/mode/htmlmixed/htmlmixed.js'
+import 'codemirror/mode/twig/twig.js'
 import 'codemirror/addon/display/autorefresh.js'
 
 import Block from '../system/Block'
@@ -57,7 +57,7 @@ export default {
 
   mounted () {
     this.codeMirror = CodeMirror.fromTextArea(this.$refs.txt, {
-      mode: 'htmlmixed',
+      mode: 'twig',
       theme: 'duotone-light',
       autoRefresh: true,
       tabSize: 2,

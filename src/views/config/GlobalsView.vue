@@ -106,6 +106,21 @@
                   <template v-else-if="entry.type === 'boolean'">
                     <CheckOrX :val="entry.data.value" />
                   </template>
+                  <template v-else-if="entry.type === 'html'">
+                    HTML
+                  </template>
+                  <template v-else-if="entry.type === 'color'">
+                    <svg
+                      style="display: inline-block; margin-right: 5px;"
+                      width="15"
+                      height="15">
+                      <circle
+                        :fill="entry.data.value"
+                        cx="7.5"
+                        cy="7.5"
+                        r="7.5" />
+                    </svg>{{ entry.data.value }}
+                  </template>
                 </td>
               </template>
               <template #edit="{ editEntry, callback }">
@@ -138,15 +153,19 @@
                     v-model="editEntry.type"
                     :name="`global[type]`"
                     :options="[{
-                      id: 'boolean',
-                      name: 'Boolean',
-                    }, {
-                      id: 'html',
-                      name: 'HTML',
-                    }, {
-                      id: 'text',
-                      name: 'text',
-                    }]"
+                                 id: 'boolean',
+                                 name: 'Boolean',
+                               }, {
+                                 id: 'html',
+                                 name: 'HTML',
+                               }, {
+                                 id: 'text',
+                                 name: 'text',
+                               },
+                               {
+                                 id: 'color',
+                                 name: 'color',
+                               }]"
                     rules="required"
                     label="Type" />
 
@@ -169,7 +188,14 @@
                       v-model="editEntry.data.value"
                       :name="`global[data][value]`"
                       rules="required"
-                      label="" />
+                      label="Verdi" />
+                  </template>
+                  <template v-if="editEntry.type === 'color'">
+                    <KInputColor
+                      v-model="editEntry.data.value"
+                      :name="`global[data][value]`"
+                      rules="required"
+                      label="Verdi" />
                   </template>
                 </KModal>
               </template>
