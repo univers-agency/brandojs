@@ -3,7 +3,7 @@
     :back="{ name: 'users' }"
     @save="save">
     <section class="row">
-      <div class="half">
+      <div class="sized">
         <KInput
           v-model="user.name"
           label="Navn"

@@ -3,6 +3,7 @@
     :name="name"
     :label="label"
     :rules="rules"
+    :compact="compact"
     :maxlength="maxlength"
     :helpText="helpText"
     :value="value">
@@ -48,6 +49,11 @@ export default {
       type: String,
       required: false,
       default: null
+    },
+
+    compact: {
+      type: Boolean,
+      default: false
     },
 
     maxlength: {

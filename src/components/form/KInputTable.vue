@@ -11,7 +11,7 @@
 
       <table
         class="kinput-table"
-        style="table-layout: fixed">
+        :style="fixedLayout ? 'table-layout: fixed' : ''">
         <slot name="head"></slot>
         <transition-group
           v-sortable="{
@@ -35,7 +35,7 @@
             :data-id="entry[idKey]">
             <td
               v-if="sortable"
-              style="width: 50px">
+              style="width: 50px; vertical-align: middle">
               <SequenceHandle class="sequence-handle" />
             </td>
             <slot
@@ -133,6 +133,11 @@ export default {
     },
 
     addRows: {
+      type: Boolean,
+      default: true
+    },
+
+    fixedLayout: {
       type: Boolean,
       default: true
     },
@@ -291,7 +296,11 @@ export default {
         }
 
         &.action {
-          width: 35px;
+          width: 45px;
+          text-align: right;
+        }
+
+        >>> &.align-right {
           text-align: right;
         }
 
@@ -305,6 +314,10 @@ export default {
         font-weight: 500;
         text-align: left;
         border-bottom: 1px solid theme(colors.dark);
+
+        >>> &.align-right {
+          text-align: right;
+        }
       }
 
       &.input-row {

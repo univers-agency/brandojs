@@ -1,43 +1,43 @@
 <template>
   <div>
     <svg
-      v-if="publishAt"
+      v-if="entry.publishAt"
       v-popover="'Publiseres ' + publishTime"
-      width="13"
-      height="13"
-      viewBox="0 0 13 13"
+      width="11"
+      height="11"
+      viewBox="0 0 11 11"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">
       <circle
         :class="status"
-        cx="6.5"
-        cy="6.5"
-        r="6.5" />
+        cx="5.5"
+        cy="5.5"
+        r="5.5" />
       <line
-        x1="6.5"
-        y1="2"
-        x2="6.5"
-        y2="7"
+        x1="5.5"
+        y1="1"
+        x2="5.5"
+        y2="6"
         stroke="white" />
       <line
-        x1="7"
-        y1="6.5"
-        x2="9"
-        y2="6.5"
+        x1="6"
+        y1="5.5"
+        x2="8"
+        y2="5.5"
         stroke="white" />
     </svg>
 
     <svg
       v-else
       xmlns="http://www.w3.org/2000/svg"
-      width="13"
-      height="13"
-      viewBox="0 0 13 13">
+      width="11"
+      height="11"
+      viewBox="0 0 11 11">
       <circle
         :class="status"
-        r="6.5"
-        cy="6.5"
-        cx="6.5" />
+        r="5.5"
+        cy="5.5"
+        cx="5.5" />
     </svg>
     <slot></slot>
   </div>
@@ -54,12 +54,6 @@ export default {
     }
   },
 
-  data () {
-    return {
-      publishAt: false
-    }
-  },
-
   computed: {
     publishTime () {
       if (this.publishAt) {
@@ -69,7 +63,8 @@ export default {
     },
 
     status () {
-      if (this.publishAt) {
+      if (this.entry.publishAt) {
+        console.log('publishAt', this.entry.publishAt)
         if (moment.utc(this.entry.publishAt).diff(moment.utc()) < 0) {
           return this.entry.status
         } else {
@@ -78,20 +73,6 @@ export default {
       }
 
       return this.entry.status
-    }
-  },
-
-  watch: {
-    entry () {
-      if (Object.prototype.hasOwnProperty.call(this.entry, 'publishAt') && this.entry.publishAt !== null) {
-        this.publishAt = true
-      }
-    }
-  },
-
-  created () {
-    if (Object.prototype.hasOwnProperty.call(this.entry, 'publishAt') && this.entry.publishAt !== null) {
-      this.publishAt = true
     }
   }
 }

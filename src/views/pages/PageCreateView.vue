@@ -39,7 +39,14 @@ export default {
 
   methods: {
     async save () {
-      const pageParams = this.$utils.stripParams(this.page, ['__typename', 'id', 'slug', 'deletedAt'])
+      let pageParams = this.$utils.stripParams(this.page, ['__typename', 'id', 'slug', 'deletedAt'])
+
+      const properties = pageParams.properties.map(g => {
+        return { ...g, data: JSON.stringify(g.data) }
+      })
+
+      pageParams = { ...pageParams, properties: properties }
+
       this.$utils.validateImageParams(pageParams, ['metaImage'])
 
       try {

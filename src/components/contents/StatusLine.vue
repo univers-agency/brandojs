@@ -102,7 +102,7 @@ export default {
     margin-right: 9px;
 
     circle {
-      fill: theme(colors.blue);
+      fill: theme(colors.status.published);
 
       &.draft {
         fill: theme(colors.status.draft);

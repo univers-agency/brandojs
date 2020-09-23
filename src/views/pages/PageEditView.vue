@@ -66,7 +66,7 @@ export default {
 
   methods: {
     async save () {
-      const pageParams = this.$utils.stripParams(
+      let pageParams = this.$utils.stripParams(
         this.page, [
           '__typename',
           'id',
@@ -79,7 +79,16 @@ export default {
           'fragments',
           'parent'
         ])
+
+      const properties = pageParams.properties.map(g => {
+        delete g.__typename
+        return { ...g, data: JSON.stringify(g.data) }
+      })
+
+      pageParams = { ...pageParams, properties: properties }
+
       this.$utils.validateImageParams(pageParams, ['metaImage'])
+
       try {
         await this.$apollo.mutate({
           mutation: gql`

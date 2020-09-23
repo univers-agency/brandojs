@@ -13,7 +13,8 @@ module.exports = {
     colors: () => ({
       dark: '#052752',
       grayLight: '#BCBCBC',
-      input: '#FAEFEA',
+      /* input: '#FAEFEA', */
+      input: '#f6f6f6',
       peach: '#FCF5F3',
       peachLighter: '#fffbfa',
       peachDarker: '#F6DFD5',
@@ -129,10 +130,10 @@ module.exports = {
           label: {
             iphone: '15px',
             mobile: '15px',
-            ipad_portrait: '17px',
-            ipad_landscape: '18px',
-            desktop_md: '18px',
-            desktop_lg: '18px',
+            ipad_portrait: '16px',
+            ipad_landscape: '16px',
+            desktop_md: '16px',
+            desktop_lg: '17px',
             desktop_xl: '18px'
           }
         },
@@ -324,12 +325,12 @@ module.exports = {
             'font-weight': '500'
           },
           desktop_lg: {
-            'font-size': '52px',
+            'font-size': '49px',
             'letter-spacing': '-0.5px',
             'font-weight': '500'
           },
           desktop_xl: {
-            'font-size': '60px',
+            'font-size': '54px',
             'letter-spacing': '-0.5px',
             'font-weight': '500'
           }

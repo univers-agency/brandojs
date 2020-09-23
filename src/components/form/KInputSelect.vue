@@ -3,6 +3,7 @@
     :name="name"
     :label="label"
     :rules="rules"
+    :compact="compact"
     :helpText="helpText"
     :value="value">
     <template v-slot>
@@ -150,6 +151,11 @@ export default {
       default: null
     },
 
+    compact: {
+      type: Boolean,
+      default: false
+    },
+
     disabled: {
       type: Boolean,
       default: false
@@ -166,7 +172,8 @@ export default {
 
     label: {
       type: String,
-      required: true
+      required: false,
+      default: null
     },
 
     placeholder: {

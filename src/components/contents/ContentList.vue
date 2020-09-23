@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="entries"
     class="list"
     :data-level="level">
     <div
@@ -27,7 +28,7 @@
           </div>
           <input
             v-model="filters[k]"
-            placeholder="Search"
+            placeholder="Søk"
             type="text"
             @input="filterInput()" />
         </div>
@@ -471,7 +472,7 @@ export default {
 
   .list {
     &[data-level="1"] {
-      @space margin-top sm;
+      margin-top: 1rem;
     }
 
     &[data-level="2"] {

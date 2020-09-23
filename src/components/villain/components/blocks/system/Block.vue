@@ -317,7 +317,7 @@ export default {
 
 .villain-block {
   background-color: theme(colors.villain.blockBackground);
-  padding: 1.75rem 2rem 1rem 1rem;
+  padding: 1.75rem 1rem 1rem 1rem;
   min-height: 105px;
   position: relative;
   border: 1px solid theme(colors.villain.blockBorder);

@@ -35,6 +35,14 @@ fragment page on Page {
     slug
   }
 
+  properties {
+    id
+    label
+    key
+    type
+    data
+  }
+
   children {
     id
     key
@@ -42,6 +50,14 @@ fragment page on Page {
     slug
     language
     data
+
+    properties {
+      id
+      label
+      key
+      type
+      data
+    }
 
     creator {
       id

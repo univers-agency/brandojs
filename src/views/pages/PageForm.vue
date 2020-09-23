@@ -4,21 +4,15 @@
     :back="{ name: 'pages' }"
     @save="save">
     <section class="row">
-      <div class="half">
+      <div class="sized">
         <KInputToggle
           v-model="advancedConfig"
           name="config[advanced]"
           label="Avanserte valg" />
       </div>
     </section>
-    <section class="row">
-      <div class="half">
-        <KInputToggle
-          v-if="advancedConfig"
-          v-model="page.isHomepage"
-          name="config[isHomepage]"
-          label="Nettstedets hovedside" />
-
+    <section class="row baseline">
+      <div class="sized">
         <KInputSelect
           v-model="page.language"
           rules="required"
@@ -27,30 +21,6 @@
           name="page[language]"
           label="Språk" />
 
-        <KInput
-          v-model="page.title"
-          label="Tittel"
-          rules="required"
-          placeholder="Tittel"
-          name="page[title]" />
-
-        <KInputTextarea
-          v-model="page.metaDescription"
-          :rows="5"
-          name="page[metaDescription]"
-          type="text"
-          label="META beskrivelse"
-          help-text="(for søkemotorer)" />
-
-        <KInputImage
-          v-model="page.metaImage"
-          small
-          name="page[metaImage]"
-          preview-key="original"
-          label="Delebilde (META bilde)"
-          help-text="Om du trenger et spesialtilpasset bilde for deling.<br>Beskjæres til 1200x630." />
-      </div>
-      <div class="half">
         <KInputSelect
           v-model="page.parentId"
           :options="parents"
@@ -62,6 +32,13 @@
             [{{ option.language.toUpperCase() }}] {{ option.title }}
           </template>
         </KInputSelect>
+
+        <KInput
+          v-model="page.title"
+          label="Tittel"
+          rules="required"
+          placeholder="Tittel"
+          name="page[title]" />
 
         <template v-if="templates">
           <KInputSelect
@@ -76,32 +53,251 @@
 
         <KInput
           v-model="page.key"
+          monospace
           rules="required"
           name="page[key]"
           type="text"
           label="Nøkkel"
           placeholder="Nøkkel" />
+      </div>
+      <div class="half">
+        <fieldset>
+          <KInputToggle
+            v-if="advancedConfig"
+            v-model="page.isHomepage"
+            name="config[isHomepage]"
+            label="Nettstedets hovedside" />
 
-        <KInput
-          v-if="advancedConfig"
-          v-model="page.cssClasses"
-          name="page[cssClasses]"
-          type="text"
-          label="Ekstra CSS klasser"
-          placeholder="Ekstra CSS klasser" />
+          <KInput
+            v-if="advancedConfig"
+            v-model="page.cssClasses"
+            name="page[cssClasses]"
+            type="text"
+            label="Ekstra CSS klasser"
+            placeholder="Ekstra CSS klasser" />
 
-        <KInputDatetime
-          v-model="page.publishAt"
-          :null="true"
-          name="page[publishAt]"
-          label="Tidspunkt for publisering"
-          help-text="Kan være blankt for å publisere umiddelbart" />
+          <KInputTextarea
+            v-model="page.metaDescription"
+            :rows="5"
+            name="page[metaDescription]"
+            type="text"
+            label="META beskrivelse"
+            help-text="Kort beskrivelse (for søkemotorer)" />
 
-        <ButtonSecondary v-if="advancedConfig">
-          Konfigurer sideegenskaper
-        </ButtonSecondary>
+          <KInputImage
+            v-model="page.metaImage"
+            small
+            name="page[metaImage]"
+            preview-key="original"
+            label="Delebilde (META bilde)"
+            help-text="Om du trenger et spesialtilpasset bilde for deling.<br>Beskjæres til 1200x630." />
+        </fieldset>
       </div>
     </section>
+    <KInputTable
+      v-if="advancedConfig"
+      v-model="page.properties"
+      :new-entry-template="{ type: 'boolean', label: '', key: '', data: { value: ''}}"
+      :delete-rows="true"
+      :edit-rows="true"
+      :add-rows="true"
+      :fixed-layout="false"
+      class="bordered"
+      :name="`page[properties]`"
+      label="Sideegenskaper (avansert)">
+      <template v-slot:head>
+        <tr>
+          <th>Etikett</th>
+          <th>Nøkkel</th>
+          <th>Type</th>
+          <th>Verdi</th>
+          <th></th>
+        </tr>
+      </template>
+      <template v-slot:row="{ entry }">
+        <td class="monospace">
+          {{ entry.label }}
+        </td>
+        <td class="monospace">
+          {{ entry.key }}
+        </td>
+        <td class="monospace">
+          {{ entry.type }}
+        </td>
+        <td class="monospace">
+          <template v-if="entry.type === 'text'">
+            {{ entry.data.value }}
+          </template>
+          <template v-else-if="entry.type === 'boolean'">
+            <CheckOrX :val="entry.data.value" />
+          </template>
+          <template v-else-if="entry.type === 'html'">
+            {{ entry.data.value }}
+          </template>
+          <template v-else-if="entry.type === 'color'">
+            <svg
+              style="display: inline-block; margin-right: 5px;"
+              width="15"
+              height="15">
+              <circle
+                :fill="entry.data.value"
+                cx="7.5"
+                cy="7.5"
+                r="7.5" />
+            </svg>{{ entry.data.value }}
+          </template>
+        </td>
+      </template>
+      <template #edit="{ editEntry, callback }">
+        <td class="monospace">
+          <KInput
+            v-model="editEntry.label"
+            :name="`prop[label]`"          />
+        </td>
+        <td class="monospace">
+          <KInput
+            v-model="editEntry.key"
+            :name="`prop[key]`"          />
+        </td>
+        <td class="monospace">
+          <KInputSelect
+            v-model="editEntry.type"
+            :name="`prop[type]`"
+            :options="[
+              {
+                id: 'boolean',
+                name: 'Boolean',
+              }, {
+                id: 'html',
+                name: 'HTML',
+              }, {
+                id: 'text',
+                name: 'text',
+              },
+              {
+                id: 'color',
+                name: 'color',
+              }]" />
+        </td>
+        <td class="monospace">
+          <template v-if="editEntry.type === 'text'">
+            <KInput
+              v-model="editEntry.data.value"
+              :name="`prop[data][value]`" />
+          </template>
+          <template v-else-if="editEntry.type === 'boolean'">
+            <KInputToggle
+              v-model="editEntry.data.value"
+              :name="`prop[data][value]`" />
+          </template>
+          <template v-if="editEntry.type === 'html'">
+            <KInputRichText
+              v-model="editEntry.data.value"
+              :name="`prop[data][value]`" />
+          </template>
+          <template v-if="editEntry.type === 'color'">
+            <KInputColor
+              v-model="editEntry.data.value"
+              :name="`prop[data][value]`" />
+          </template>
+        </td>
+      </template>
+
+      <template
+        v-slot:new="{ newEntry }">
+        <td class="monospace">
+          <KInput
+            v-model="newEntry.label"
+            :name="`prop[label]`"
+            compact />
+        </td>
+        <td class="monospace">
+          <KInput
+            v-model="newEntry.key"
+            :name="`prop[key]`"
+            compact />
+        </td>
+        <td class="monospace">
+          <KInputSelect
+            v-model="newEntry.type"
+            compact
+            :name="`prop[type]`"
+            :options="[
+              {
+                id: 'boolean',
+                name: 'Boolean',
+              }, {
+                id: 'html',
+                name: 'HTML',
+              }, {
+                id: 'text',
+                name: 'text',
+              },
+              {
+                id: 'color',
+                name: 'color',
+              }]" />
+        </td>
+        <td class="monospace">
+          <template v-if="newEntry.type === 'text'">
+            <KInput
+              v-model="newEntry.data.value"
+              compact
+              :name="`prop[data][value]`" />
+          </template>
+          <template v-else-if="newEntry.type === 'boolean'">
+            <KInputToggle
+              v-model="newEntry.data.value"
+              compact
+              :name="`prop[data][value]`" />
+          </template>
+          <template v-if="newEntry.type === 'html'">
+            <KInputRichText
+              v-model="newEntry.data.value"
+              compact
+              :name="`prop[data][value]`" />
+          </template>
+          <template v-if="newEntry.type === 'color'">
+            <KInputColor
+              v-model="newEntry.data.value"
+              compact
+              :name="`prop[data][value]`" />
+          </template>
+        </td>
+      </template>
+    </KInputTable>
+    <template
+      v-for="prop in page.properties"
+      v-else>
+      <template v-if="prop.type === 'text'">
+        <KInput
+          :key="prop.key"
+          v-model="prop.data.value"
+          :label="prop.label"
+          :name="`prop[${prop.key}][value]`" />
+      </template>
+      <template v-else-if="prop.type === 'boolean'">
+        <KInputToggle
+          :key="prop.key"
+          v-model="prop.data.value"
+          :label="prop.label"
+          :name="`prop[${prop.key}][value]`" />
+      </template>
+      <template v-if="prop.type === 'html'">
+        <KInputRichText
+          :key="prop.key"
+          v-model="prop.data.value"
+          :label="prop.label"
+          :name="`prop[${prop.key}][value]`" />
+      </template>
+      <template v-if="prop.type === 'color'">
+        <KInputColor
+          :key="prop.key"
+          v-model="prop.data.value"
+          :label="prop.label"
+          :name="`prop[${prop.key}][value]`" />
+      </template>
+    </template>
     <Villain
       v-model="page.data"
       rules="required"

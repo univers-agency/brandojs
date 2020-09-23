@@ -84,8 +84,7 @@ export default {
   data () {
     return {
       options: [
-        { value: 'draft', label: 'Kladd' },
-        { value: 'pending', label: 'Venter' },
+        { value: 'draft', label: 'Utkast' },
         { value: 'published', label: 'Publisert' },
         { value: 'disabled', label: 'Deaktivert' }
       ]

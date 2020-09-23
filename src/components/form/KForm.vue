@@ -131,6 +131,20 @@ export default {
     width: 100%;
   }
 
+  >>> fieldset {
+    margin: 0;
+    padding: 0.75em 0.75em 0.75em;
+    border: 0;
+    margin-bottom: 2rem;
+    box-shadow: 0px 0px 2px 0px #0000001c;
+
+    .field-wrapper {
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+  }
+
   .live-preview-icon {
     @space right container;
     position: absolute;

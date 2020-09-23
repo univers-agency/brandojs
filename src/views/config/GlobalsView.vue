@@ -80,17 +80,21 @@
             </template>
 
             <KInputTable
-              v-if="category.globals"
+              v-if="editing"
               v-model="category.globals"
-              :new-entry-template="{ type: 'text', label: '', key: '', data: { value: ''}}"
-              :delete-rows="editing"
+              :new-entry-template="{ type: 'boolean', label: '', key: '', data: { value: ''}}"
+              :delete-rows="true"
               :edit-rows="true"
-              :add-rows="editing"
+              :add-rows="true"
+              :fixed-layout="false"
+              class="bordered"
               :name="`category[${category.id}][globals]`"
-              label="">
+              label="Variabler">
               <template v-slot:head>
                 <tr>
                   <th>Etikett</th>
+                  <th>Nøkkel</th>
+                  <th>Type</th>
                   <th>Verdi</th>
                   <th></th>
                 </tr>
@@ -100,6 +104,12 @@
                   {{ entry.label }}
                 </td>
                 <td class="monospace">
+                  {{ entry.key }}
+                </td>
+                <td class="monospace">
+                  {{ entry.type }}
+                </td>
+                <td class="monospace">
                   <template v-if="entry.type === 'text'">
                     {{ entry.data.value }}
                   </template>
@@ -107,7 +117,7 @@
                     <CheckOrX :val="entry.data.value" />
                   </template>
                   <template v-else-if="entry.type === 'html'">
-                    HTML
+                    {{ entry.data.value }}
                   </template>
                   <template v-else-if="entry.type === 'color'">
                     <svg
@@ -124,108 +134,162 @@
                 </td>
               </template>
               <template #edit="{ editEntry, callback }">
-                <KModal
-                  ref="globalModal"
-                  v-shortkey="['esc']"
-                  :wide="editEntry.type === 'html'"
-                  ok-text="Lukk"
-                  @shortkey.native="closeGlobalModal(callback)"
-                  @ok="closeGlobalModal(callback)">
-                  <template #header>
-                    Endre variabel — {{ editEntry.label }}
-                  </template>
+                <td class="monospace">
                   <KInput
-                    v-if="editing"
                     v-model="editEntry.label"
-                    :name="`global[label]`"
-                    rules="required"
-                    label="Etikett" />
-
+                    compact
+                    :name="`prop[label]`"          />
+                </td>
+                <td class="monospace">
                   <KInput
-                    v-if="editing"
                     v-model="editEntry.key"
-                    :name="`global[key]`"
-                    rules="required"
-                    label="Nøkkel" />
-
+                    compact
+                    :name="`prop[key]`"          />
+                </td>
+                <td class="monospace">
                   <KInputSelect
-                    v-if="editing"
                     v-model="editEntry.type"
-                    :name="`global[type]`"
-                    :options="[{
-                                 id: 'boolean',
-                                 name: 'Boolean',
-                               }, {
-                                 id: 'html',
-                                 name: 'HTML',
-                               }, {
-                                 id: 'text',
-                                 name: 'text',
-                               },
-                               {
-                                 id: 'color',
-                                 name: 'color',
-                               }]"
-                    rules="required"
-                    label="Type" />
-
+                    compact
+                    :name="`prop[type]`"
+                    :options="[
+                      {
+                        id: 'boolean',
+                        name: 'Boolean',
+                      }, {
+                        id: 'html',
+                        name: 'HTML',
+                      }, {
+                        id: 'text',
+                        name: 'text',
+                      },
+                      {
+                        id: 'color',
+                        name: 'color',
+                      }]" />
+                </td>
+                <td class="monospace">
                   <template v-if="editEntry.type === 'text'">
                     <KInput
                       v-model="editEntry.data.value"
-                      :name="`global[data][value]`"
-                      rules="required"
-                      label="Verdi" />
+                      compact
+                      :name="`prop[data][value]`" />
                   </template>
                   <template v-else-if="editEntry.type === 'boolean'">
                     <KInputToggle
                       v-model="editEntry.data.value"
-                      :name="`global[data][value]`"
-                      rules="required"
-                      label="Verdi" />
+                      compact
+                      :name="`prop[data][value]`" />
                   </template>
                   <template v-if="editEntry.type === 'html'">
                     <KInputRichText
                       v-model="editEntry.data.value"
-                      :name="`global[data][value]`"
-                      rules="required"
-                      label="Verdi" />
+                      compact
+                      :name="`prop[data][value]`" />
                   </template>
                   <template v-if="editEntry.type === 'color'">
                     <KInputColor
                       v-model="editEntry.data.value"
-                      :name="`global[data][value]`"
-                      rules="required"
-                      label="Verdi" />
+                      compact
+                      :name="`prop[data][value]`" />
                   </template>
-                </KModal>
+                </td>
               </template>
 
               <template
-                v-if="editing"
                 v-slot:new="{ newEntry }">
-                <td>
+                <td class="monospace">
                   <KInput
                     v-model="newEntry.label"
-                    monospace
-                    slim
-                    placeholder="Etikett"
-                    name="newEntry[label]" />
+                    :name="`prop[label]`"
+                    compact />
                 </td>
-                <td>
+                <td class="monospace">
                   <KInput
                     v-model="newEntry.key"
-                    monospace
-                    slim
-                    placeholder="nøkkel"
-                    name="newEntry[name]" />
+                    :name="`prop[key]`"
+                    compact />
+                </td>
+                <td class="monospace">
+                  <KInputSelect
+                    v-model="newEntry.type"
+                    compact
+                    :name="`prop[type]`"
+                    :options="[
+                      {
+                        id: 'boolean',
+                        name: 'Boolean',
+                      }, {
+                        id: 'html',
+                        name: 'HTML',
+                      }, {
+                        id: 'text',
+                        name: 'text',
+                      },
+                      {
+                        id: 'color',
+                        name: 'color',
+                      }]" />
+                </td>
+                <td class="monospace">
+                  <template v-if="newEntry.type === 'text'">
+                    <KInput
+                      v-model="newEntry.data.value"
+                      compact
+                      :name="`prop[data][value]`" />
+                  </template>
+                  <template v-else-if="newEntry.type === 'boolean'">
+                    <KInputToggle
+                      v-model="newEntry.data.value"
+                      compact
+                      :name="`prop[data][value]`" />
+                  </template>
+                  <template v-if="newEntry.type === 'html'">
+                    <KInputRichText
+                      v-model="newEntry.data.value"
+                      compact
+                      :name="`prop[data][value]`" />
+                  </template>
+                  <template v-if="newEntry.type === 'color'">
+                    <KInputColor
+                      v-model="newEntry.data.value"
+                      compact
+                      :name="`prop[data][value]`" />
+                  </template>
                 </td>
               </template>
             </KInputTable>
-            <div
-              v-if="!category.globals.length && !editing"
-              class="empty-globals">
-              Ingen tilgjengelige globaler
-            </div>
+            <template
+              v-for="global in category.globals"
+              v-else>
+              <template v-if="global.type === 'text'">
+                <KInput
+                  :key="global.key"
+                  v-model="global.data.value"
+                  :label="global.label"
+                  :name="`prop[${global.key}][value]`" />
+              </template>
+              <template v-else-if="global.type === 'boolean'">
+                <KInputToggle
+                  :key="global.key"
+                  v-model="global.data.value"
+                  :label="global.label"
+                  :name="`prop[${global.key}][value]`" />
+              </template>
+              <template v-if="global.type === 'html'">
+                <KInputRichText
+                  :key="global.key"
+                  v-model="global.data.value"
+                  :label="global.label"
+                  :name="`prop[${global.key}][value]`" />
+              </template>
+              <template v-if="global.type === 'color'">
+                <KInputColor
+                  :key="global.key"
+                  v-model="global.data.value"
+                  :label="global.label"
+                  :name="`prop[${global.key}][value]`" />
+              </template>
+            </template>
           </div>
         </template>
       </KForm>
@@ -367,6 +431,5 @@ export default {
   .form-wrapper {
     border: 1px solid theme(colors.blue);
     padding: 2rem;
-    max-width: 800px;
   }
 </style>

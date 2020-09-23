@@ -25,16 +25,18 @@
                 !TODO - RENDER THIS BASED ON `v.type`
                -->
               <div class="field-wrapper">
-                <div class="label-wrapper">
-                  <label class="control-label">
-                    {{ v.label }}
-                  </label>
-                </div>
-                <input
-                  :name="`vars[${key}]`"
-                  :value="localVars[key].value"
-                  type="text"
-                  @input="localVars[key].value = $event.target.value">
+                <template v-if="localVars[key].type === 'text'">
+                  <KInput
+                    v-model="localVars[key].value"
+                    :name="`vars[${key}]`"
+                    :label="v.label" />
+                </template>
+                <template v-else-if="localVars[key].type === 'boolean'">
+                  <KInputToggle
+                    v-model="localVars[key].value"
+                    :name="`vars[${key}]`"
+                    :label="v.label" />
+                </template>
               </div>
             </div>
 
@@ -60,7 +62,7 @@
             </div>
           </div>
         </div>
-        <div class="panes">
+        <div class="panes mt-2">
           <div>
             <h4>Slettede blokker [{{ deletedBlocks.length }}]</h4>
             <button
@@ -124,8 +126,12 @@ export default {
   },
 
   methods: {
-    setLocalVars () {
-      this.localVars = cloneDeep(this.vars)
+    setLocalVars (vars = null) {
+      if (vars) {
+        this.localVars = cloneDeep(vars)
+      } else {
+        this.localVars = cloneDeep(this.vars)
+      }
     },
 
     updateVars () {
@@ -134,8 +140,9 @@ export default {
 
     refetchVars () {
       const foundTemplate = this.available.templates.find(t => parseInt(t.data.id) === parseInt(this.templateId))
-      this.$emit('updateVars', { newVars: foundTemplate.data.vars, entryId: this.entryId })
-      this.setLocalVars()
+      const newVars = foundTemplate.data.vars
+      this.$emit('updateVars', { newVars: newVars, entryId: this.entryId })
+      this.setLocalVars(newVars)
     },
 
     replaceRefWithSource (ref) {

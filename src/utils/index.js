@@ -1,5 +1,6 @@
 import pick from './pick'
 import showError from './showError'
+import validateFileParams from './validateFileParams'
 import validateImageParams from './validateImageParams'
 import validateImageSeriesParams from './validateImageSeriesParams'
 import stripParams from './stripParams'
@@ -16,6 +17,7 @@ export const utils = {
   jaroDistance,
   showError,
   humanFilesize,
+  validateFileParams,
   validateImageParams,
   validateImageSeriesParams,
   stripParams,

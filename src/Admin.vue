@@ -635,12 +635,30 @@ export default {
   .row {
     @row;
 
+    @responsive <=ipad_landscape {
+      flex-wrap: wrap;
+    }
+
     &.baseline {
       align-items: baseline;
     }
 
-    .half, .w50 {
-      @column 8/16;
+    .sized {
+      @column 8/16 desktop_xl;
+      @column 10/16 desktop_lg;
+      @column 10/16 desktop_md;
+      @column 16/16 <=ipad_landscape;
+    }
+
+    .sized + .half {
+      @column 8/16 desktop_xl;
+      @column 6/16 desktop_lg;
+      @column 6/16 desktop_md;
+      @column 16/16 <=ipad_landscape;
+    }
+
+    .w50, .half {
+      @column 8/16 >=desktop_md;
     }
 
     .third, .w33 {

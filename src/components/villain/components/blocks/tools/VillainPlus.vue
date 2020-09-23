@@ -74,6 +74,12 @@
             ref="templates"
             class="villain-editor-plus-available-templates">
             <div
+              class="datasource-block"
+              @click="addDatasource">
+              + Datakilde (avansert)
+            </div>
+
+            <div
               v-for="(tpls, key) in nonGeneralNamespacedTemplates"
               :key="key"
               class="villain-editor-plus-available-templates-group"
@@ -271,6 +277,14 @@ export default {
       this.$emit('add', { block: block, after: this.after, parent: this.parent })
     },
 
+    addDatasource () {
+      const ds = this.available.blocks.find(b => b.component === 'Datasource')
+      const block = { ...ds, uid: createUID() }
+      this.active = false
+      this.showingTemplates = false
+      this.$emit('add', { block: block, after: this.after, parent: this.parent })
+    },
+
     addTemplate (tp) {
       const block = { ...tp, uid: createUID() }
       this.active = false
@@ -334,6 +348,14 @@ export default {
       }
     }
   }
+
+.datasource-block {
+  text-transform: uppercase;
+  font-family: Mono;
+  font-size: 13px;
+  text-align: right;
+  padding-bottom: 11px;
+}
 
 .villain-editor-plus-available-templates {
   background-color: theme(colors.villain.blockBackground);

@@ -254,12 +254,19 @@ export default {
 
     replaceContent ({ refs, vars }) {
       const srcCode = this.getSourceCode()
+      // throw out logic(?)
+      const srcWithReplacedLogic = this.replaceLogic(srcCode)
       // replace all variables
-      const srcWithReplacedVars = this.replaceVars(srcCode)
+      const srcWithReplacedVars = this.replaceVars(srcWithReplacedLogic)
       const srcWithReplacedEntry = this.replaceEntries(srcWithReplacedVars)
       // replace all refs
       const srcWithReplacedVarsRefs = this.replaceRefs(srcWithReplacedEntry, refs)
       return srcWithReplacedVarsRefs
+    },
+
+    replaceLogic (srcCode) {
+      const replacedLogicCode = srcCode.replace(/({% if \w+ == \w+ %}(.|\n)*?{% endif %})/mg, '')
+      return replacedLogicCode
     },
 
     replaceVars (srcCode) {

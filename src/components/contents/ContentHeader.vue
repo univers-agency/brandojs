@@ -31,9 +31,9 @@ export default {}
 
 <style lang="postcss" scoped>
   #content-header {
-    @space margin-top sm;
-    @space padding-bottom md;
-    @space margin-bottom md;
+    @space margin-top md;
+    @space padding-bottom xs;
+    @space margin-bottom sm;
     flex-direction: column;
     border-bottom: 1px solid theme(colors.dark);
 

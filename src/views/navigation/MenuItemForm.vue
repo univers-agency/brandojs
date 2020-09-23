@@ -4,7 +4,7 @@
     :back="{ name: 'navigation' }"
     @save="save">
     <section class="row">
-      <div class="half">
+      <div class="sized">
         <KInputStatus
           v-model="menuItem.status"
           name="menuItem[status]"

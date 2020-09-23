@@ -13,6 +13,7 @@ import KInputTextarea from './KInputTextarea'
 import KInputEmail from './KInputEmail'
 import KInputRadios from './KInputRadios'
 import KInputCheckbox from './KInputCheckbox'
+import KInputFile from './KInputFile'
 import KInputImage from './KInputImage'
 import KInputImageSeries from './KInputImageSeries'
 import KInputPassword from './KInputPassword'
@@ -41,6 +42,7 @@ export {
   KInputRadios,
   KInputRichText,
   KInputCheckbox,
+  KInputFile,
   KInputImage,
   KInputImageSeries,
   KInputSelect,

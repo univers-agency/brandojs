@@ -43,7 +43,8 @@ export default {
 
     label: {
       type: String,
-      required: true
+      required: false,
+      default: null
     },
 
     rules: {

@@ -6,6 +6,11 @@
           Editérer {<strong> {{ currentTemplate.data.class }} </strong>}
           <ButtonSmall
             position="static"
+            @click.native="duplicateTemplate(currentTemplate)">
+            Duplisér
+          </ButtonSmall>
+          <ButtonSmall
+            position="static"
             @click.native="deleteTemplate(currentTemplate)">
             Slett
           </ButtonSmall>
@@ -493,6 +498,18 @@ export default {
       this.currentTemplate = template
 
       this.codeMirror.setValue(template.data.code)
+      this.codeMirror.refresh()
+    },
+
+    duplicateTemplate (template) {
+      const newTemplate = this.$utils.clone(template)
+      delete newTemplate.data.id
+      newTemplate.data.name = `${newTemplate.data.name} kopi`
+
+      this.resetRef()
+      this.currentTemplate = newTemplate
+
+      this.codeMirror.setValue(newTemplate.data.code)
       this.codeMirror.refresh()
     },
 
