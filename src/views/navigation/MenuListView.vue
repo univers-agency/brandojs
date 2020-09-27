@@ -67,10 +67,9 @@
         <div class="col-1">
           <CircleDropdown>
             <li>
-              <router-link
-                :to="{ name: 'navigation-items-new', params: { menuId: entry.id } }">
+              <button @click="createSubItem(entry.id)">
                 {{ $t('menus.new-item') }}
-              </router-link>
+              </button>
             </li>
             <li>
               <router-link
@@ -355,8 +354,6 @@ export default {
 
     createSubItem (menuId, itemId) {
       const menu = this.menus.find(m => parseInt(m.id) === parseInt(menuId))
-
-      const item = this.findItem(menu.items, itemId)
       const newItems = [{
         id: this.$utils.guid(),
         key: 'key',
@@ -366,7 +363,12 @@ export default {
         items: [],
         url: '/url'
       }]
-      this.$set(item, 'items', [...item.items, ...newItems])
+      if (itemId) {
+        const item = this.findItem(menu.items, itemId)
+        this.$set(item, 'items', [...item.items, ...newItems])
+      } else {
+        this.$set(menu, 'items', [...menu.items, ...newItems])
+      }
     },
 
     findItem (items, itemId) {
@@ -556,7 +558,8 @@ export default {
 
 <style lang="postcss" scoped>
   .title {
-    @fontsize base;
+    @fontsize base(0.8);
+    font-family: theme(typography.families.mono);
   }
 
   .arrow {
