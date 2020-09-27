@@ -5,17 +5,6 @@ fragment menuFields on MenuItem {
   title
   url
   openInNewWindow
-
-  creator {
-    id
-    name
-    avatar {
-      thumb: url(size: "xlarge")
-    }
-  }
-
-  insertedAt
-  updatedAt
 }
 
 fragment recursiveMenuItem on MenuItem {
@@ -37,17 +26,5 @@ fragment menuItem on MenuItem {
   title
   url
   openInNewWindow
-
-  creator {
-    id
-    name
-    avatar {
-      thumb: url(size: "xlarge")
-    }
-  }
-
   ...recursiveMenuItem
-
-  insertedAt
-  updatedAt
 }

@@ -128,7 +128,8 @@
         <div class="children">
           <slot
             name="children"
-            v-bind:entry="entry"></slot>
+            v-bind:entry="entry"
+            v-bind:children="childProperty ? entry[childProperty]: []"></slot>
         </div>
       </div>
     </transition-group>
@@ -182,6 +183,12 @@ export default {
       default: true
     },
 
+    /* If the entry has children, this is the prop they are under (items, children, events, etc) */
+    childProperty: {
+      type: String,
+      default: null
+    },
+
     /*
     Keys we can choose between for filtering
     */
@@ -198,6 +205,11 @@ export default {
     sortable: {
       type: Boolean,
       default: false
+    },
+
+    sortableIntegerIds: {
+      type: Boolean,
+      default: true
     },
 
     /* if the sorting gets dragged between lists */
@@ -363,7 +375,11 @@ export default {
     },
 
     storeOrder (sortable) {
-      this.sortedArray = sortable.toArray().map(Number)
+      if (this.sortableIntegerIds) {
+        this.sortedArray = sortable.toArray().map(Number)
+      } else {
+        this.sortedArray = sortable.toArray()
+      }
       this.$emit('sort', this.sortedArray)
     }
   }

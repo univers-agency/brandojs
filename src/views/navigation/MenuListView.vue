@@ -28,6 +28,7 @@
       :sortable="true"
       :status="true"
       :filter-keys="['title']"
+      child-property="items"
       @updateQuery="queryVars = $event"
       @sort="sortMenus">
       <template #empty>
@@ -56,11 +57,7 @@
           <div class="badge">{{ entry.key }}</div>
         </div>
         <div class="col-2 justify-end">
-          <ChildrenButton
-            :id="entry.id"
-            :length="(entry.items ? entry.items.length : 0)"
-            :visible-children="visibleChildren">
-          </ChildrenButton>
+          <div class="badge">{{ $t('menus.menu') }}</div>
         </div>
         <div class="col-4 justify-end">
           <ItemMeta
@@ -98,68 +95,202 @@
               </button>
             </li>
           </CircleDropdown>
+          <KModal
+            v-if="showEditMenuModal === entry.id"
+            ref="editModal"
+            v-shortkey="['esc', 'enter']"
+            @shortkey.native="showEditMenuModal = 0">
+            <MenuItemForm
+              :menuItem="entry"
+              :save="save" />
+          </KModal>
         </div>
       </template>
-      <template v-slot:children="{ entry }">
-        <template v-if="visibleChildren.includes(entry.id)">
-          <ContentList
-            v-if="entry.items.length"
-            :level="2"
-            :entries="entry.items"
-            :sortable="true"
-            :status="true"
-            :sort-parent="entry.id"
-            sequence-handle="item-sequence-handle"
-            @sort="sortItems($event, entry.id)">
-            <template v-slot:row="{ entry: item }">
-              <div class="col-1">
-                <div class="circle">
+      <template v-slot:children="{ children, entry: rootMenu }">
+        <ContentList
+          v-if="children.length"
+          :level="2"
+          :entries="children"
+          :sortable="true"
+          :status="true"
+          :sort-parent="rootMenu.id"
+          :sortableIntegerIds="false"
+          child-property="items"
+          sequence-handle="item-sequence-handle"
+          @sort="sortItems($event, rootMenu, rootMenu)">
+          <template v-slot:row="{ entry: item }">
+            <div class="col-1">
+              <div class="circle">
+              </div>
+            </div>
+            <div class="col-6 subtitle">
+              <div class="arrow">↳</div>
+              <div class="flex-v">
+                <div
+                  class="clickable"
+                  @click="showEditMenuItemModal = item.id">
+                  {{ item.title || 'Ingen tittel' }}
+                </div>
+                <div class="keys">
+                  <div class="badge">{{ item.key }}</div>
                 </div>
               </div>
-              <div class="col-6 subtitle">
-                <div class="arrow">↳</div>
-                <div class="flex-v">
-                  <router-link
-                    :to="{ name: 'navigation-items-edit', params: { menuItemId: item.id } }">
-                    {{ item.title || 'Ingen tittel' }}
-                  </router-link>
-                  <div class="keys">
-                    <div class="badge">{{ item.key }}</div>
+            </div>
+            <div class="col-3 justify-end">
+              <div class="badge">{{ $t('menus.item') }}</div>
+            </div>
+            <div class="col-4 justify-end">
+            </div>
+            <div class="col-1">
+              <CircleDropdown>
+                <li>
+                  <button @click="showEditMenuItemModal = item.id">
+                    {{ $t('menus.edit-item') }}
+                  </button>
+                </li>
+
+                <li>
+                  <button @click="createSubItem(rootMenu.id, item.id)">
+                    {{ $t('menus.new-subitem') }}
+                  </button>
+                </li>
+
+                <li>
+                  <button @click="deleteItem(rootMenu, item)">{{ $t('menus.delete-item') }}</button>
+                </li>
+              </CircleDropdown>
+              <KModal
+                v-if="showEditMenuItemModal === item.id"
+                ref="editModal"
+                v-shortkey="['esc', 'enter']"
+                @ok="saveItem(rootMenu.id)"
+                @shortkey.native="showEditMenuItemModal = 0">
+                <KInputStatus
+                  v-model="item.status"
+                  name="item[status]"
+                  rules="required"
+                  label="Status" />
+
+                <KInputToggle
+                  v-model="item.openInNewWindow"
+                  name="item[openInNewWindow]"
+                  label="Åpne i nytt vindu" />
+
+                <KInput
+                  v-model="item.title"
+                  label="Tittel"
+                  rules="required"
+                  placeholder="Tittel"
+                  name="item[title]" />
+
+                <KInput
+                  v-model="item.key"
+                  rules="required"
+                  name="item[key]"
+                  type="text"
+                  label="Nøkkel"
+                  placeholder="Nøkkel" />
+
+                <KInput
+                  v-model="item.url"
+                  rules="required"
+                  name="item[key]"
+                  label="URL"
+                  placeholder="/side" />
+              </KModal>
+            </div>
+          </template>
+          <template v-slot:children="{ children, entry }">
+            <ContentList
+              v-if="children.length"
+              :level="3"
+              :entries="children"
+              :sortable="true"
+              :status="true"
+              :sort-parent="rootMenu.id"
+              :sortableIntegerIds="false"
+              sequence-handle="item-sequence-handle"
+              @sort="sortItems($event, entry, rootMenu)">
+              <template v-slot:row="{ entry: item }">
+                <div class="col-1">
+                </div>
+                <div class="col-1">
+                  <div class="circle"></div>
+                </div>
+                <div class="col-5 subtitle">
+                  <div class="arrow">↳</div>
+                  <div class="flex-v">
+                    <div
+                      class="clickable"
+                      @click="showEditMenuItemModal = item.id">
+                      {{ item.title || 'Ingen tittel' }}
+                    </div>
+                    <div class="keys">
+                      <div class="badge">{{ item.key }}</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-3 justify-end">
-                <div class="badge">{{ $t('menus.item') }}</div>
-              </div>
-              <div class="col-4 justify-end">
-                <ItemMeta
-                  :entry="item"
-                  :user="item.creator" />
-              </div>
-              <div class="col-1">
-                <CircleDropdown>
-                  <li>
-                    <router-link
-                      :to="{ name: 'navigation-items-edit', params: { menuItemId: item.id } }">
-                      {{ $t('menus.edit-item') }}
-                    </router-link>
-                  </li>
-                  <li>
-                    <button
-                      type="button"
-                      @click="duplicateItem(item)">
-                      {{ $t('menus.duplicate-item') }}
-                    </button>
-                  </li>
+                <div class="col-3 justify-end">
+                  <div class="badge">{{ $t('menus.item') }}</div>
+                </div>
+                <div class="col-4 justify-end">
+                </div>
+                <div class="col-1">
+                  <CircleDropdown>
+                    <li>
+                      <button @click="showEditMenuItemModal = item.id">
+                        {{ $t('menus.edit-item') }}
+                      </button>
+                    </li>
 
-                  <li>
-                    <button @click="deleteItem(item)">{{ $t('menus.delete-item') }}</button>
-                  </li>
-                </CircleDropdown>
-              </div>
-            </template>
-          </ContentList>
-        </template>
+                    <li>
+                      <button @click="deleteItem(rootMenu, item)">{{ $t('menus.delete-item') }}</button>
+                    </li>
+                  </CircleDropdown>
+                  <KModal
+                    v-if="showEditMenuItemModal === item.id"
+                    ref="editModal"
+                    v-shortkey="['esc', 'enter']"
+                    @ok="saveItem(rootMenu.id)"
+                    @shortkey.native="showEditMenuItemModal = 0">
+                    <KInputStatus
+                      v-model="item.status"
+                      name="item[status]"
+                      rules="required"
+                      label="Status" />
+
+                    <KInputToggle
+                      v-model="item.openInNewWindow"
+                      name="item[openInNewWindow]"
+                      label="Åpne i nytt vindu" />
+
+                    <KInput
+                      v-model="item.title"
+                      label="Tittel"
+                      rules="required"
+                      placeholder="Tittel"
+                      name="item[title]" />
+
+                    <KInput
+                      v-model="item.key"
+                      rules="required"
+                      name="item[key]"
+                      type="text"
+                      label="Nøkkel"
+                      placeholder="Nøkkel" />
+
+                    <KInput
+                      v-model="item.url"
+                      rules="required"
+                      name="item[key]"
+                      label="URL"
+                      placeholder="/side" />
+                  </KModal>
+                </div>
+              </template>
+            </ContentList>
+          </template>
+        </ContentList>
       </template>
     </ContentList>
   </article>
@@ -169,10 +300,17 @@
 import gql from 'graphql-tag'
 import GET_MENUS from '../../gql/navigation/MENUS_QUERY.graphql'
 import locale from '../../locales/menus'
+import MenuItemForm from './MenuItemForm'
 
 export default {
+  components: {
+    MenuItemForm
+  },
+
   data () {
     return {
+      showEditMenuModal: 0,
+      showEditMenuItemModal: 0,
       visibleChildren: [],
       queryVars: {
         filter: null,
@@ -194,12 +332,100 @@ export default {
         })
     },
 
-    sortItems (seq, menuId) {
-      this.adminChannel.channel
-        .push('menu_items:sequence_items', { ids: seq })
-        .receive('ok', payload => {
-          this.$toast.success({ message: this.$t('menus.sequence-updated') })
+    sortItems (seq, menu, rootMenu) {
+      const sortedArray = menu.items.sort((a, b) => {
+        return seq.indexOf(a.id) - seq.indexOf(b.id)
+      })
+
+      this.$set(menu, 'items', sortedArray)
+
+      this.saveMenu(rootMenu)
+    },
+
+    stripItems (items) {
+      console.log('stripItems', items)
+      return items.map(i => {
+        delete i.__typename
+        if (i.items.length) {
+          i.items = this.stripItems(i.items)
+        }
+        return i
+      })
+    },
+
+    createSubItem (menuId, itemId) {
+      const menu = this.menus.find(m => parseInt(m.id) === parseInt(menuId))
+
+      const item = this.findItem(menu.items, itemId)
+      const newItems = [{
+        id: this.$utils.guid(),
+        key: 'key',
+        status: 'published',
+        openInNewWindow: false,
+        title: 'Tittel',
+        items: [],
+        url: '/url'
+      }]
+      this.$set(item, 'items', [...item.items, ...newItems])
+    },
+
+    findItem (items, itemId) {
+      for (let i = 0; i < items.length; i += 1) {
+        if (items[i].id === itemId) {
+          return items[i]
+        }
+
+        if (items[i].items.length) {
+          this.findItem(items[i].items, itemId)
+        }
+      }
+      return null
+    },
+
+    saveItem (menuId) {
+      console.log('menuId', menuId)
+      this.showEditMenuItemModal = 0
+      const menu = this.menus.find(m => parseInt(m.id) === parseInt(menuId))
+
+      this.saveMenu(menu)
+    },
+
+    async saveMenu (menu) {
+      let menuParams = this.$utils.stripParams(
+        menu, [
+          '__typename',
+          'id',
+          'insertedAt',
+          'updatedAt',
+          'creator'
+        ])
+
+      // strip items
+      menuParams = { ...menuParams, items: this.stripItems(menuParams.items) }
+
+      try {
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation UpdateMenu($menuId: ID!, $menuParams: MenuParams) {
+              updateMenu(
+                menuId: $menuId,
+                menuParams: $menuParams
+              ) {
+                id
+              }
+            }
+          `,
+          variables: {
+            menuParams,
+            menuId: menu.id
+          }
         })
+
+        this.$toast.success({ message: 'Meny oppdatert' })
+        // this.$apollo.queries.menus.refresh()
+      } catch (err) {
+        this.$utils.showError(err)
+      }
     },
 
     async duplicateMenu (menu) {
@@ -227,32 +453,15 @@ export default {
       }
     },
 
-    async duplicateItem (item) {
-      try {
-        await this.$apollo.mutate({
-          mutation: gql`
-            mutation DuplicateItem($itemId: ID!) {
-              duplicateItem(itemId: $itemId) {
-                id
-              }
-            }
-          `,
-          variables: {
-            itemId: item.id
-          },
-
-          update: (store, { data: { duplicateItem } }) => {
-            this.$apollo.queries.menus.refresh()
-          }
-        })
-
-        this.$toast.success({ message: this.$t('menus.item-duplicated') })
-      } catch (err) {
-        this.$utils.showError(err)
-      }
+    filter (items, item) {
+      const result = items.filter(o => {
+        if (o.items) o.items = this.filter(o.items, item)
+        return o !== item
+      })
+      return result
     },
 
-    async deleteItem (item) {
+    async deleteItem (rootMenu, item) {
       this.$alerts.alertConfirm(
         'OBS',
         this.$t('menus.are-you-sure-you-want-to-delete-this-item'),
@@ -260,30 +469,17 @@ export default {
           if (!confirm) {
             return false
           } else {
-            try {
-              await this.$apollo.mutate({
-                mutation: gql`
-                  mutation DeleteMenuFragment($menuFragmentId: ID!) {
-                    deleteMenuFragment(menuFragmentId: $menuFragmentId) {
-                      id
-                    }
-                  }
-                `,
-                variables: {
-                  menuFragmentId: item.id
-                },
+            let menu = this.menus.find(m => parseInt(m.id) === parseInt(rootMenu.id))
+            const idx = this.menus.indexOf(menu)
+            menu = { ...menu, items: this.filter(menu.items, item) }
 
-                update: (store, { data: { deleteMenuFragment } }) => {
-                  this.$apollo.queries.menus.refresh()
-                }
-              })
+            this.menus = [
+              ...this.menus.slice(0, idx),
+              menu,
+              ...this.menus.slice(idx + 1)
+            ]
 
-              this.$toast.success({
-                message: this.$t('menus.item-deleted')
-              })
-            } catch (err) {
-              this.$utils.showError(err)
-            }
+            this.saveMenu(menu)
           }
         }
       )
@@ -377,5 +573,9 @@ export default {
     .badge {
       margin-top: 5px;
     }
+  }
+
+  .clickable {
+    cursor: pointer;
   }
 </style>
