@@ -302,7 +302,7 @@
       v-model="page.data"
       rules="required"
       :entry-data="page"
-      :template-mode="$app.templateMode"
+      :template-mode="templateMode()"
       :templates="$app.templates"
       name="page[data]"
       label="Innhold" />
@@ -359,6 +359,15 @@ export default {
 
   mounted () {
     this.advancedConfig = false
+  },
+
+  methods: {
+    templateMode () {
+      if (typeof this.$app.templateMode === 'function') {
+        return this.$app.templateMode(this.page)
+      }
+      return this.$app.templateMode
+    }
   },
 
   apollo: {
