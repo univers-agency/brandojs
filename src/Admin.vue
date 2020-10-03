@@ -1065,6 +1065,12 @@ export default {
   align-items: center;
   user-select: none;
 
+  &.large {
+    width: 60px;
+    height: 60px;
+    border-radius: 60px;
+  }
+
   span {
     color: theme(colors.dark);
   }

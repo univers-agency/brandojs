@@ -188,7 +188,6 @@ export default {
       const url = this.url
 
       if (url.startsWith('https://player.vimeo.com/external/')) {
-        console.log('external file')
         this.$set(this.block.data, 'source', 'file')
         this.$set(this.block.data, 'remote_id', url)
         // this.showConfig = false
