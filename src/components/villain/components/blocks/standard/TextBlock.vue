@@ -18,6 +18,7 @@
           class="menubar is-hidden"
           :class="{ 'is-focused': focused }">
           <button
+            v-if="extensionEnabled('bullet_list')"
             type="button"
             class="menubar__button"
             :class="{ 'is-active': isActive.bullet_list() }"
@@ -26,6 +27,7 @@
           </button>
 
           <button
+            v-if="extensionEnabled('ordered_list')"
             type="button"
             class="menubar__button"
             :class="{ 'is-active': isActive.ordered_list() }"
@@ -34,6 +36,7 @@
           </button>
 
           <button
+            v-if="extensionEnabled('blockquote')"
             type="button"
             class="menubar__button"
             :class="{ 'is-active': isActive.blockquote() }"
@@ -95,6 +98,7 @@
 
           <template v-else>
             <button
+              v-if="extensionEnabled('bold')"
               type="button"
               class="menububble__button"
               :class="{ 'is-active': isActive.bold() }"
@@ -105,6 +109,7 @@
             </button>
 
             <button
+              v-if="extensionEnabled('italic')"
               type="button"
               class="menububble__button"
               :class="{ 'is-active': isActive.italic() }"
@@ -115,6 +120,7 @@
             </button>
 
             <button
+              v-if="extensionEnabled('strike')"
               type="button"
               class="menububble__button"
               :class="{ 'is-active': isActive.strike() }"
@@ -125,6 +131,7 @@
             </button>
 
             <button
+              v-if="extensionEnabled('underline')"
               type="button"
               class="menububble__button"
               :class="{ 'is-active': isActive.underline() }"
@@ -135,6 +142,7 @@
             </button>
 
             <button
+              v-if="extensionEnabled('paragraph')"
               type="button"
               class="menububble__button"
               :class="{ 'is-active': isActive.paragraph() }"
@@ -145,6 +153,7 @@
             </button>
 
             <button
+              v-if="extensionEnabled('h2')"
               type="button"
               class="menububble__button"
               :class="{ 'is-active': isActive.heading({ level: 2 }) }"
@@ -154,6 +163,7 @@
                 size="xs" />
             </button>
             <button
+              v-if="extensionEnabled('h3')"
               type="button"
               class="menububble__button"
               :class="{ 'is-active': isActive.heading({ level: 3 }) }"
@@ -163,6 +173,7 @@
                 size="xs" />
             </button>
             <button
+              v-if="extensionEnabled('link')"
               class="menububble__button"
               type="button"
               :class="{ 'is-active': isActive.link() }"
@@ -172,6 +183,7 @@
                 size="xs" />
             </button>
             <button
+              v-if="extensionEnabled('action_button')"
               class="menububble__button"
               type="button"
               :class="{ 'is-active': isActive.action_button() }"
@@ -266,6 +278,20 @@ export default {
 
   data () {
     return {
+      defaultExtensions: [
+        'bullet_list',
+        'ordered_list',
+        'blockquote',
+        'bold',
+        'italic',
+        'strike',
+        'underline',
+        'paragraph',
+        'h2',
+        'h3',
+        'link',
+        'action_button'
+      ],
       editor: null,
       customClass: '',
       linkUrl: null,
@@ -295,6 +321,17 @@ export default {
     console.debug('<TextBlock /> created')
     this.text = md.render(this.block.data.text)
     this.customClass = this.block.data.type
+
+    if (this.block.data.hasOwnProperty('extensions')) {
+      if (!this.block.data.extensions.length) {
+        this.extensions = this.defaultExtensions
+      } else {
+        this.extensions = this.block.data.extensions
+      }
+    } else {
+      this.extensions = this.defaultExtensions
+    }
+    console.log(this.extensions)
   },
 
   updated () {
@@ -312,27 +349,6 @@ export default {
         new OrderedList(),
         new ActionButton(),
         new Arrow(),
-        // new Emoji({
-        //   items: () => [
-        //     { id: 1, name: 'Philipp Kühn' },
-        //     { id: 2, name: 'Hans Pagel' },
-        //     { id: 3, name: 'Kris Siepert' },
-        //     { id: 4, name: 'Justin Schueler' }
-        //   ],
-        //   // is called when a suggestion starts
-        //   onEnter: ({
-        //     items, query, range, command, virtualNode
-        //   }) => {
-        //     this.query = query
-        //     this.filteredUsers = items
-        //     this.suggestionRange = range
-        //     this.renderPopup(virtualNode)
-        //     // we save the command for inserting a selected mention
-        //     // this allows us to call it inside of our custom popup
-        //     // via keyboard navigation and on click
-        //     this.insertMention = command
-        //   }
-        // }),
         new Link({ openOnClick: false }),
         new Bold(),
         new Italic(),
@@ -352,6 +368,10 @@ export default {
   },
 
   methods: {
+    extensionEnabled (ext) {
+      return this.extensions.includes(ext)
+    },
+
     showLinkMenu (attrs) {
       this.linkUrl = attrs.href
       this.linkMenuIsActive = true

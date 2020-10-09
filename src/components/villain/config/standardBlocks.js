@@ -5,7 +5,8 @@ export default [
     component: 'Text',
     dataTemplate: {
       text: '',
-      type: 'paragraph'
+      type: 'paragraph',
+      extensions: []
     }
   },
 
