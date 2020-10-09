@@ -331,11 +331,6 @@ export default {
     } else {
       this.extensions = this.defaultExtensions
     }
-    console.log(this.extensions)
-  },
-
-  updated () {
-    console.debug('<TextBlock /> updated')
   },
 
   mounted () {
