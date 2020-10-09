@@ -71,6 +71,26 @@
             size="xs"
             fixed-width />
         </div>
+        <div
+          v-if="block.hidden"
+          class="villain-block-action villain-hide"
+          @click="showBlock">
+          <FontAwesomeIcon
+            v-popover.left="'Blokken er skjult'"
+            :icon="['far', 'eye-slash']"
+            size="xs"
+            fixed-width />
+        </div>
+        <div
+          v-if="!block.hidden"
+          class="villain-block-action villain-hide"
+          @click="hideBlock">
+          <FontAwesomeIcon
+            v-popover.left="'Blokken er synlig'"
+            :icon="['far', 'eye']"
+            size="xs"
+            fixed-width />
+        </div>
       </div>
     </div>
 
@@ -237,6 +257,14 @@ export default {
       })
     },
 
+    hideBlock () {
+      this.$set(this.block, 'hidden', true)
+    },
+
+    showBlock () {
+      this.$delete(this.block, 'hidden')
+    },
+
     duplicateBlock () {
       this.$alerts.alertConfirm('OBS!', 'Er du sikker på at du vil duplisere denne blokken?', data => {
         if (data) {
@@ -377,7 +405,7 @@ export default {
   &.villain-hover {
     border: 1px solid theme(colors.villain.main);
 
-    > .villain-block-actions {
+    > .villain-block-actions > * {
       opacity: 1;
     }
 
@@ -487,13 +515,17 @@ export default {
   }
 
   .villain-block-actions {
-    opacity: 0;
     position: absolute;
     right: 0;
     top: -2px;
-    transition: 500ms opacity ease;
+
     display: flex;
     flex-direction: row-reverse;
+
+    > * {
+      opacity: 0.5;
+      transition: 500ms opacity ease;
+    }
 
     .villain-block-action {
       padding: 3px 6px;
