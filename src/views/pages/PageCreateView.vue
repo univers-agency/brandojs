@@ -32,7 +32,8 @@ export default {
         template: 'default.html',
         status: 'published',
         language: null,
-        metaDescription: ''
+        metaDescription: '',
+        properties: []
       }
     }
   },
