@@ -237,7 +237,6 @@ export default {
 
   data () {
     return {
-      innerValue: null,
       open: false,
       displayValue: '',
       searchString: '',
@@ -253,6 +252,10 @@ export default {
   },
 
   computed: {
+    innerValue () {
+      return this.selected.map(v => v[this.optionValueKey])
+    },
+
     pointerPosition () {
       return this.pointer * this.optionHeight
     },
@@ -279,15 +282,17 @@ export default {
   },
 
   watch: {
-    selected (val) {
-      this.innerValue = val.map(v => v[this.optionValueKey])
-
-      this.$emit('input', this.innerValue)
+    value (newVal, oldVal) {
+      if (newVal === oldVal) {
+        return
+      }
+      this.selectFromValue()
+      this.displayData()
     },
 
     options (newVal, oldVal) {
       if (!oldVal.length && newVal.length) {
-        // options has been initialized
+        // options have been initialized
         this.initialize()
       }
     }
@@ -299,6 +304,11 @@ export default {
 
   methods: {
     initialize () {
+      this.selectFromValue()
+      this.displayData()
+    },
+
+    selectFromValue () {
       this.selected = this.value.map(v => {
         if (typeof v === 'object') {
           return v
@@ -306,7 +316,10 @@ export default {
           return this.options.find(o => o[this.optionValueKey].toString() === v.toString())
         }
       })
-      this.displayData()
+    },
+
+    emitSelected () {
+      this.$emit('input', this.innerValue)
     },
 
     selectSimilar (option) {
@@ -369,7 +382,7 @@ export default {
     },
 
     displayData () {
-      if (!this.innerValue) {
+      if (!this.innerValue || !this.innerValue.length) {
         this.displayValue = ''
       } else {
         const lblData = this.options.find(option => option[this.optionValueKey] === this.innerValue)
@@ -392,6 +405,7 @@ export default {
         this.selected.unshift(option)
       }
       this.searchString = ''
+      this.emitSelected()
     },
 
     searchEnter () {
