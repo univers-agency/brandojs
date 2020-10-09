@@ -482,6 +482,10 @@ export default {
     font-style: normal;
   }
 
+  .monospace {
+    @font mono;
+  }
+
   .presences {
     display: flex;
     flex-wrap: wrap;
@@ -1285,7 +1289,7 @@ export default {
   max-width: 100%;
   padding: 2em;
   position: relative;
-  width: 400px;
+  width: 550px;
 }
 
 .vex.vex-theme-kurtz .vex-content h1,
