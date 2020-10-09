@@ -24,20 +24,6 @@
             </span>
           </div>
         </div>
-        <div
-          v-if="helpText || maxlength"
-          class="meta">
-          <div
-            v-if="helpText"
-            class="help-text">
-            —<span v-html="helpText" />
-          </div>
-          <div
-            v-if="maxlength"
-            class="max-length">
-            {{ maxlength - value.length }}
-          </div>
-        </div>
       </template>
       <template v-else>
         <div
@@ -53,26 +39,24 @@
             —{{ errors[0] }}
           </span>
         </div>
-
         <slot v-bind:provider="$refs.provider"></slot>
-
-        <div
-          v-if="helpText || maxlength"
-          class="meta">
-          <div
-            v-if="helpText"
-            class="help-text">
-            —<span v-html="helpText" />
-          </div>
-          <div
-            v-if="maxlength"
-            class="max-length">
-            {{ maxlength - value.length }}
-          </div>
-        </div>
       </template>
     </ValidationProvider>
     <slot name="outsideValidator"></slot>
+    <div
+      v-if="helpText || maxlength"
+      class="meta">
+      <div
+        v-if="helpText"
+        class="help-text">
+        —<span v-html="helpText" />
+      </div>
+      <div
+        v-if="maxlength"
+        class="max-length">
+        {{ maxlength - value.length }}
+      </div>
+    </div>
   </div>
 </template>
 
