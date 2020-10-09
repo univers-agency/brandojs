@@ -435,7 +435,7 @@ export default {
         background-color: theme(colors.input);
         width: 100%;
         border: 0;
-        border-left: 1px solid theme(colors.peachDarker);
+        border-left: 1px solid #ffffff;
       }
 
       .filter-key {
