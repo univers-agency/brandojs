@@ -482,6 +482,8 @@ export default {
             ]
 
             this.saveMenu(menu)
+
+            this.$apollo.queries.menus.refresh()
           }
         }
       )
@@ -500,13 +502,10 @@ export default {
             `,
             variables: {
               menuId: entryId
-            },
-
-            update: (store, { data: { deleteMenu } }) => {
-              this.$apollo.queries.menus.refresh()
             }
           })
 
+          this.$apollo.queries.menus.refresh()
           this.$toast.success({ message: this.$t('menus.menu-deleted') })
         } catch (err) {
           this.$utils.showError(err)
@@ -544,6 +543,7 @@ export default {
   apollo: {
     menus: {
       query: GET_MENUS,
+      fetchPolicy: 'no-cache',
       variables () {
         return this.queryVars
       }
