@@ -63,7 +63,10 @@ Then value is set to the transformed result
                     accept="image/*"
                     multiple="multiple"
                     @change="change" />
-                </span>
+                </span><br>
+                <div class="size-limit">
+                  Maks filstørrelse er {{ sizeLimit }}MB.
+                </div>
               </div>
             </div>
           </div>
@@ -120,6 +123,11 @@ export default {
     name: {
       type: String,
       required: true
+    },
+
+    sizeLimit: {
+      type: Number,
+      default: 3
     }
   },
 
@@ -384,7 +392,20 @@ export default {
             thumb,
             file: actualFile
           }
-          files.push(newFile)
+
+          if (newFile.size > this.sizeLimit * 1024 * 1024) {
+            const errorMsg = `
+              ${newFile.name}<br><br>
+              Filen du vil laste opp er for stor. <br><br>
+              Maks tillatt størrelse for feltet er <br><br>
+              &lt;&lt; ${this.sizeLimit}MB. &gt;&gt;<br><br>
+              Du kan komprimere filen før du laster den opp med en online tjeneste
+              som <a href="https://squoosh.app/" target="_blank" rel="noopener nofollow">squoosh.app</a> eller en mac-applikasjon
+              som f.eks <a href="https://imageoptim.com/mac/" target="_blank" rel="noopener nofollow">ImageOptim</a>.`
+            this.$alerts.alertError('OBS!', errorMsg)
+          } else {
+            files.push(newFile)
+          }
         }
       }
 
@@ -467,6 +488,11 @@ export default {
 
   div {
     @fontsize lg;
+  }
+
+  .size-limit {
+    font-size: 15px;
+    padding-top: 10px;
   }
 }
 
