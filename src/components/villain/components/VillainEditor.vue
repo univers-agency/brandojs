@@ -473,10 +473,10 @@ export default {
               if (block.data.template) {
                 // find template
                 const t = this.availableTemplates.find(t => parseInt(t.data.id) === parseInt(block.data.template))
-                console.log(this.availableTemplates)
-                console.log(block.data.template)
+
                 if (t) {
                   console.error('Datasource/Malkode\r\n\r\n', t.data.code)
+                  console.error('Datasource/Wrapper\r\n\r\n', t.data.wrapper)
                 } else {
                   console.error('Datasource/Malkode: fant ikke malen')
                 }
