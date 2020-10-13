@@ -108,7 +108,7 @@ export default {
           ]
         },
         {
-          text: 'Navigation',
+          name: 'Navigation',
           to: {
             name: 'navigation'
           }

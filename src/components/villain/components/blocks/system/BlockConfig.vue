@@ -3,11 +3,11 @@
     v-if="modalVisible"
     ref="modal"
     v-shortkey="['esc']"
-    ok-text="Lukk konfigurasjon"
+    :ok-text="$t('closeConfig')"
     @shortkey.native="closeConfig"
     @ok="closeConfig">
     <template #header>
-      <h5>Konfigurer blokk</h5>
+      <h5>{{ $t('config') }}</h5>
     </template>
     <div
       ref="config"
@@ -49,7 +49,15 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>
+<i18n>
+{
+  "en": {
+    "config": "Configure block",
+    "closeConfig": "Close config"
+  },
+  "no": {
+    "config": "Konfigurer blokk",
+    "closeConfig": "Lukk konfigurasjon"
+  }
+}
+</i18n>

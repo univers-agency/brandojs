@@ -17,7 +17,7 @@
           ref="handle"
           class="villain-block-action villain-move">
           <FontAwesomeIcon
-            v-popover.left="'Skift blokkens posisjon'"
+            v-popover.left="$t('block.move')"
             icon="arrows-alt"
             size="xs"
             fixed-width />
@@ -116,7 +116,7 @@
             type="button"
             class="btn btn-primary mt-3"
             @click="showHelp = false">
-            Lukk
+            {{ $t('close') }}
           </button>
         </div>
       </div>
@@ -324,6 +324,19 @@ export default {
   }
 }
 </script>
+
+<i18n>
+{
+  "en": {
+    "block.move": "Move block",
+    "close": "Close"
+  },
+  "no": {
+    "block.move": "Skift blokkens posisjon",
+    "close": "Lukk"
+  }
+}
+</i18n>
 
 <style lang="postcss">
 .villain-block-wrapper {

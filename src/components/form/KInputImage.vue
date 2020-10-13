@@ -239,15 +239,15 @@ export default {
       errorMessage: '',
 
       customStrings: {
-        upload: 'Dingsen du bruker støtter ikke filopplasting :(',
-        drag: 'Klikk eller slipp bildet ditt her',
-        tap: 'Tapp her for å velge et bilde fra galleriet ditt',
-        change: 'Skift bilde',
-        remove: 'Nullstill bildefelt',
-        select: 'Velg et bilde',
-        meta: 'Endre bildeinformasjon',
-        fileSize: 'Filen er for stor!',
-        fileType: 'Filtypen er ikke støttet'
+        upload: this.$t('upload'),
+        drag: this.$t('drag'),
+        tap: this.$t('tap'),
+        change: this.$t('change'),
+        remove: this.$t('remove'),
+        select: this.$t('select'),
+        meta: this.$t('meta'),
+        fileSize: this.$t('fileSize'),
+        fileType: this.$t('fileType')
       }
     }
   },
@@ -363,23 +363,12 @@ export default {
     onError (err) {
       switch (err.type) {
         case 'fileSize':
-          this.errorMessage = `
-          Filen du vil laste opp er for stor. <br><br>
-          Maks tillatt størrelse for feltet er <br><br>
-          &lt;&lt; ${err.sizeLimit}MB. &gt;&gt;<br><br>
-          Du kan komprimere filen før du laster den opp med en online tjeneste<br>
-          som <a href="https://squoosh.app/" target="_blank" rel="noopener nofollow">squoosh.app</a> eller en mac-applikasjon
-          som f.eks <a href="https://imageoptim.com/mac/" target="_blank" rel="noopener nofollow">ImageOptim</a>.
-          `
+          this.errorMessage = this.$t('fileSizeError', { sizeLimit: this.sizeLimit })
           this.showError()
           break
 
         case 'fileType':
-          this.errorMessage = `
-          Ikke tillatt filtype. <br><br>
-          Gyldige filtyper for dette felter er<br><br>
-          &lt;&lt; ${this.accept} &gt;&gt;<br><br>
-          `
+          this.errorMessage = this.$t('fileTypeError', { accept: this.accept })
           this.showError()
           break
       }
@@ -420,5 +409,35 @@ export default {
     width: 100%;
     margin-top: -1px;
   }
-
 </style>
+
+<i18n>
+{
+  "en": {
+    "upload": "Your device does not support file uploads :(",
+    "drag": "Click or drop your image her",
+    "tap": "Tap to pick an image from your gallery",
+    "change": "Change image",
+    "remove": "Reset imagefield",
+    "select": "Select image",
+    "meta": "Edit image info",
+    "fileSize": "File is too large!",
+    "fileSizeError": "The file you are trying to upload is too big. <br><br>Max allowed size for the field is <br><br>&lt;&lt; {sizeLimit}MB. &gt;&gt;<br><br>Try compressing the file with an online service<br>like <a href=\"https://squoosh.app/\" target=\"_blank\" rel=\"noopener nofollow\">squoosh.app</a> or a mac app like <a href=\"https://imageoptim.com/mac/\" target=\"_blank\" rel=\"noopener nofollow\">ImageOptim</a>.",
+    "fileType": "File type not supported",
+    "fileTypeError": "Disallowed file type. <br><br>Valid file types for this field are<br><br>&lt;&lt; {accept} &gt;&gt;<br><br>"
+  },
+  "no": {
+    "upload": "Dingsen du bruker støtter ikke filopplasting :(",
+    "drag": "Klikk eller slipp bildet ditt her",
+    "tap": "Tapp her for å velge et bilde fra galleriet ditt",
+    "change": "Skift bilde",
+    "remove": "Nullstill bildefelt",
+    "select": "Velg et bilde",
+    "meta": "Endre bildeinformasjon",
+    "fileSize": "Filen er for stor!",
+    "fileSizeError": "Filen du vil laste opp er for stor. <br><br>Maks tillatt størrelse for feltet er <br><br>&lt;&lt; {sizeLimit}MB. &gt;&gt;<br><br>Du kan komprimere filen før du laster den opp med en online tjeneste<br>som <a href=\"https://squoosh.app/\" target=\"_blank\" rel=\"noopener nofollow\">squoosh.app</a> eller en mac-applikasjon som f.eks <a href=\"https://imageoptim.com/mac/\" target=\"_blank\" rel=\"noopener nofollow\">ImageOptim</a>.",
+    "fileType": "Filtypen er ikke støttet",
+    "fileTypeError": "Ikke tillatt filtype. <br><br>Gyldige filtyper for dette felter er<br><br>&lt;&lt; {accept} &gt;&gt;<br><br>"
+  }
+}
+</i18n>

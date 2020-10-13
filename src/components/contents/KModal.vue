@@ -46,13 +46,17 @@ export default {
     okText: {
       type: String,
       required: false,
-      default: 'OK'
+      default: function () {
+        return this.$t('ok')
+      }
     },
 
     cancelText: {
       type: String,
       required: false,
-      default: 'Lukk'
+      default: function () {
+        return this.$t('close')
+      }
     },
 
     wide: {
@@ -269,3 +273,15 @@ export default {
     }
   }
 </style>
+<i18n>
+{
+  "en": {
+    "ok": "OK",
+    "close": "Close"
+  },
+  "no": {
+    "ok": "OK",
+    "close": "Lukk"
+  }
+}
+</i18n>
