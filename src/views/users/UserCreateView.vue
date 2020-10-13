@@ -2,10 +2,10 @@
   <article v-if="user">
     <ContentHeader>
       <template v-slot:title>
-        Brukere
+        {{ $t('user.title') }}
       </template>
       <template v-slot:subtitle>
-        Ny bruker
+        {{ $t('user.subtitle') }}
       </template>
     </ContentHeader>
     <UserForm
@@ -70,6 +70,15 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<i18n>
+{
+  "en": {
+    "user.title": "Users",
+    "user.subtitle": "New user"
+  },
+  "no": {
+    "user.title": "Brukere",
+    "user.subtitle": "Ny bruker"
+  }
+}
+</i18n>

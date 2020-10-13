@@ -106,32 +106,27 @@ export default {
 
     // Add the required rule
     extend('required', {
-      ...required,
-      message: 'feltet er påkrevet'
+      ...required
     })
 
     // Add the email rule
     extend('email', {
-      ...email,
-      message: 'ugyldig epost'
+      ...email
     })
 
     // Add the max rule
     extend('max', {
-      ...max,
-      message: 'kan maksimalt inneholde {length} tegn'
+      ...max
     })
 
     // Add the min rule
     extend('min', {
-      ...min,
-      message: 'må minst inneholde {length} tegn'
+      ...min
     })
 
     // Add the max rule
     extend('confirmed', {
-      ...confirmed,
-      message: 'bekreftelsesfeltet matcher ikke kildefeltet'
+      ...confirmed
     })
 
     configure({

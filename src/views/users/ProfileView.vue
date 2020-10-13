@@ -32,10 +32,10 @@
             rules="required"
             :label="$t('user.role')"
             :options="[
-              { name: 'Super', value: 'superuser' },
-              { name: 'Admin', value: 'admin' },
-              { name: 'Redaktør', value: 'editor' },
-              { name: 'Bruker', value: 'user' },
+              { name: $t('role.super'), value: 'superuser' },
+              { name: $t('role.admin'), value: 'admin' },
+              { name: $t('role.editor'), value: 'editor' },
+              { name: $t('role.user'), value: 'user' },
             ]"
             name="user[role]" />
           <KInputRadios
@@ -154,7 +154,11 @@ export default {
     "user.name.help": "name also used as entry author",
     "user.role": "Role",
     "profile.title": "Your User Profile",
-    "profile.helpText": "Administrate user info"
+    "profile.helpText": "Administrate user info",
+    "role.super": "Super",
+    "role.admin": "Admin",
+    "role.editor": "Editor",
+    "role.user": "User"
   },
   "no": {
     "user.language": "Språk",
@@ -168,7 +172,11 @@ export default {
     "user.name.help": "navnet brukes også som artikkelforfatter",
     "user.role": "Rolle",
     "profile.title": "Din brukerprofil",
-    "profile.helpText": "Administrasjon av brukerinfo"
+    "profile.helpText": "Administrasjon av brukerinfo",
+    "role.super": "Super",
+    "role.admin": "Admin",
+    "role.editor": "Redaktør",
+    "role.user": "Bruker"
   }
 }
 </i18n>

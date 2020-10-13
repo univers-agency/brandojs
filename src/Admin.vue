@@ -66,6 +66,10 @@ import { gsap } from 'gsap'
 import { Presence } from 'phoenix'
 import IdleJs from 'idle-js'
 
+import { localize } from 'vee-validate'
+import en from './locales/validator/en.json'
+import no from './locales/validator/no.json'
+
 import getCSSVar from './utils/getCSSVar'
 import GET_IDENTITY from './gql/identity/IDENTITY_QUERY.graphql'
 import GET_ME from './gql/users/ME_QUERY.graphql'
@@ -411,7 +415,9 @@ export default {
       update ({ me }) {
         if (!this.$root.initialized && me) {
           this.$i18n.locale = me.language
+          localize(me.language, me.language === 'no' ? no : en)
           this.$root.initialized = true
+
           this.initializeApp(me)
         }
 

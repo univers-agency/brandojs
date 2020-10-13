@@ -27,7 +27,7 @@
           class="villain-block-action villain-help"
           @click="helpBlock">
           <FontAwesomeIcon
-            v-popover.left="'Vis hjelp for blokken'"
+            v-popover.left="$t('block.help')"
             icon="question-circle"
             size="xs"
             fixed-width />
@@ -37,7 +37,7 @@
           class="villain-block-action villain-duplicate"
           @click="duplicateBlock">
           <FontAwesomeIcon
-            v-popover.left="'Duplisér blokken'"
+            v-popover.left="$t('block.duplicate')"
             :icon="['far', 'clone']"
             size="xs"
             fixed-width />
@@ -47,7 +47,7 @@
           class="villain-block-action villain-config"
           @click="openConfig">
           <FontAwesomeIcon
-            v-popover.left="'Endre blokkens oppsettsvalg'"
+            v-popover.left="$t('block.config')"
             icon="cog"
             size="xs"
             fixed-width />
@@ -57,7 +57,7 @@
           class="villain-block-action villain-config"
           @click="openConfig">
           <FontAwesomeIcon
-            v-popover.left="'Endre malens oppsettsvalg'"
+            v-popover.left="$t('template.config')"
             icon="file"
             size="xs"
             fixed-width />
@@ -66,7 +66,7 @@
           class="villain-block-action villain-delete"
           @click="deleteBlock">
           <FontAwesomeIcon
-            v-popover.left="'Slett blokken'"
+            v-popover.left="$t('block.delete')"
             :icon="['far', 'times-circle']"
             size="xs"
             fixed-width />
@@ -76,7 +76,7 @@
           class="villain-block-action villain-hide"
           @click="showBlock">
           <FontAwesomeIcon
-            v-popover.left="'Blokken er skjult'"
+            v-popover.left="$t('block.hidden')"
             :icon="['far', 'eye-slash']"
             size="xs"
             fixed-width />
@@ -86,7 +86,7 @@
           class="villain-block-action villain-hide"
           @click="hideBlock">
           <FontAwesomeIcon
-            v-popover.left="'Blokken er synlig'"
+            v-popover.left="$t('block.visible')"
             :icon="['far', 'eye']"
             size="xs"
             fixed-width />
@@ -99,7 +99,7 @@
       ref="help"
       class="villain-block villain-block-help">
       <div class="villain-block-help-content">
-        <h5>Hjelpetekst &rarr;</h5>
+        <h5>{{ $t('block.helpText') }} &rarr;</h5>
 
         <div
           v-if="icon"
@@ -250,7 +250,7 @@ export default {
     },
 
     deleteBlock () {
-      this.$alerts.alertConfirm('OBS!', 'Er du sikker på at du vil slette denne blokken?', data => {
+      this.$alerts.alertConfirm('OBS!', this.$t('block.deleteConfirm'), data => {
         if (data) {
           this.$emit('delete', this.block)
         }
@@ -266,7 +266,7 @@ export default {
     },
 
     duplicateBlock () {
-      this.$alerts.alertConfirm('OBS!', 'Er du sikker på at du vil duplisere denne blokken?', data => {
+      this.$alerts.alertConfirm('OBS!', this.$t('block.duplicateConfirm'), data => {
         if (data) {
           this.$emit('duplicate', this.block)
         }
@@ -328,12 +328,32 @@ export default {
 <i18n>
 {
   "en": {
+    "close": "Close",
     "block.move": "Move block",
-    "close": "Close"
+    "block.help": "Show help for block",
+    "block.duplicate": "Duplicate block",
+    "block.config": "Configure block",
+    "block.delete": "Delete block",
+    "block.hidden": "Block is hidden",
+    "block.visible": "Block is visible",
+    "block.helpText": "Help text",
+    "block.deleteConfirm": "Are you sure you want to delete this block?",
+    "block.duplicateConfirm": "Are you sure you want to duplicate this block?",
+    "template.config": "Configure template"
   },
   "no": {
+    "close": "Lukk",
     "block.move": "Skift blokkens posisjon",
-    "close": "Lukk"
+    "block.help": "Vis hjelp for blokken",
+    "block.duplicate": "Duplisér blokken",
+    "block.config": "Endre blokkens oppsettsvalg",
+    "block.delete": "Slett blokken",
+    "block.hidden": "Blokken er skjult",
+    "block.visible": "Blokken er synlig",
+    "block.helpText": "Hjelpetekst",
+    "block.deleteConfirm": "Er du sikker på at du vil slette denne blokken?",
+    "block.duplicateConfirm": "Er du sikker på at du vil duplisere denne blokken?",
+    "template.config": "Endre malens oppsettsvalg"
   }
 }
 </i18n>

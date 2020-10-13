@@ -1,11 +1,11 @@
 <template>
   <article v-if="user">
     <ContentHeader>
-      <template v-slot:title>
-        Brukere
+      <template #title>
+        {{ $t('user.title') }}
       </template>
-      <template v-slot:subtitle>
-        Endre brukerinfo
+      <template #subtitle>
+        {{ $t('user.subtitle') }}
       </template>
     </ContentHeader>
     <UserForm
@@ -93,7 +93,15 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>
+<i18n>
+{
+  "en": {
+    "user.title": "Users",
+    "user.subtitle": "Edit user"
+  },
+  "no": {
+    "user.title": "Brukere",
+    "user.subtitle": "Rediger brukerinformasjon"
+  }
+}
+</i18n>

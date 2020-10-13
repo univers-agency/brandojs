@@ -2,16 +2,16 @@
   <div class="user-list">
     <ContentHeader>
       <template #title>
-        Brukere
+        {{ $t('user.title') }}
       </template>
       <template #subtitle>
-        Administrasjon av brukere.
+        {{ $t('user.subtitle') }}
       </template>
       <template #help>
         <div class="float-right">
           <ButtonPrimary
             :to="{ name: 'users-new' }">
-            + Ny bruker
+            + {{ $t('user.new') }}
           </ButtonPrimary>
         </div>
       </template>
@@ -58,17 +58,17 @@
             <li>
               <router-link
                 :to="{ name: 'users-edit', params: { userId: entry.id } }">
-                Editér bruker
+                {{ $t('user.edit') }}
               </router-link>
               <button
                 v-if="entry.active"
                 @click="toggleActive(entry, false)">
-                Deaktiver bruker
+                {{ $t('user.deactivate') }}
               </button>
               <button
                 v-else
                 @click="toggleActive(entry, true)">
-                Aktiver bruker
+                {{ $t('user.activate') }}
               </button>
             </li>
           </CircleDropdown>
@@ -125,6 +125,27 @@ export default {
   }
 }
 </script>
+
+<i18n>
+{
+  "en": {
+    "user.title": "Users",
+    "user.subtitle": "Administrate users",
+    "user.new": "Create user",
+    "user.edit": "Edit user",
+    "user.activate": "Activate user",
+    "user.deactivate": "Deactivate user"
+  },
+  "no": {
+    "user.title": "Brukere",
+    "user.subtitle": "Administrasjon av brukere.",
+    "user.new": "Ny bruker",
+    "user.edit": "Rediger bruker",
+    "user.activate": "Aktivér bruker",
+    "user.deactivate": "Deaktivér bruker"
+  }
+}
+</i18n>
 
 <style lang="postcss" scoped>
   .name-link {
