@@ -64,12 +64,18 @@
     <BlockConfig
       ref="config">
       <template #default>
+        <input
+          ref="fileInput"
+          class="file-input"
+          type="file"
+          @change="onFileChange">
         <div
           v-if="!showImages && !block.data.url">
           <div
             class="display-icon">
             <drop
               class="drop"
+              @click.native="clickDrop"
               @dragover="dragOver = true"
               @dragleave="dragOver = false"
               @drop="handleDrop">
@@ -104,7 +110,7 @@
                 Laster opp ...
               </template>
               <template v-else>
-                Dra bildet du vil laste opp hit &uarr;
+                Klikk, eller dra bildet du vil laste opp hit &uarr;
               </template>
             </template>
           </div>
@@ -336,6 +342,16 @@ export default {
   },
 
   methods: {
+    clickDrop () {
+      this.$refs.fileInput.click()
+    },
+
+    onFileChange (e) {
+      if (e.target.files.length && e.target.files.length === 1) {
+        this.upload(e.target.files[0])
+      }
+    },
+
     resetImage () {
       this.$set(this.block.data, 'url', '')
       this.$set(this.block.data, 'sizes', {})
@@ -482,6 +498,10 @@ export default {
 
   .mb-3 {
     margin-bottom: 15px;
+  }
+
+  input[type=file] {
+    display: none;
   }
 
   .villain-block-image-empty {
