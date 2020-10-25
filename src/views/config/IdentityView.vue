@@ -2,32 +2,30 @@
   <div>
     <ContentHeader>
       <template v-slot:title>
-        Konfigurasjon
+        {{ $t('title') }}
       </template>
       <template v-slot:subtitle>
-        Identitet
+        {{ $t('subtitle') }}
       </template>
       <template v-slot:help>
-        <p>
-          Konfigurasjon av virksomhetens identitet og SEO/JSONLD.
-        </p>
+        <p>{{ $t('help') }}</p>
       </template>
     </ContentHeader>
     <KForm
       v-if="identity"
       :back="{ name: 'dashboard' }"
-      back-text="Tilbake til dashbordet"
+      :back-text="$t('back-to-dashboard')"
       @save="save">
       <template v-slot>
         <KInputRadios
           v-model="identity.type"
           rules="required"
           :options="[
-            { name: 'Organisasjon', value: 'organization' },
-            { name: 'Bedrift', value: 'corporation' }
+            { name: $t('organization'), value: 'organization' },
+            { name: $t('corporation'), value: 'corporation' }
           ]"
           name="identity[type]"
-          label="Type" />
+          :label="$t('fields.type.label')" />
 
         <div class="row">
           <div class="half">
@@ -35,16 +33,16 @@
               v-model="identity.name"
               rules="required"
               name="identity[name]"
-              label="Navn"
-              placeholder="Navn" />
+              :placeholder="$t('fields.name.label')"
+              :label="$t('fields.name.label')" />
           </div>
 
           <div class="half">
             <KInput
               v-model="identity.alternateName"
               name="identity[alternateName]"
-              label="Kortere form av navnet"
-              placeholder="AB" />
+              :placeholder="$t('fields.alternateName.placeholder')"
+              :label="$t('fields.alternateName.label')" />
           </div>
         </div>
 
@@ -53,45 +51,57 @@
             <KInput
               v-model="identity.email"
               name="identity[email]"
-              label="Epost"
-              placeholder="Epost" />
+              :placeholder="$t('fields.email.placeholder')"
+              :label="$t('fields.email.label')" />
           </div>
           <div class="half">
             <KInput
               v-model="identity.phone"
               name="identity[phone]"
-              label="Telefon"
-              placeholder="Telefon" />
+              :placeholder="$t('fields.phone.placeholder')"
+              :label="$t('fields.phone.label')" />
           </div>
         </div>
 
         <KInput
           v-model="identity.address"
           name="identity[address]"
-          label="Adresse"
-          placeholder="Adresse" />
+          :placeholder="$t('fields.address.placeholder')"
+          :label="$t('fields.address.label')" />
+
+        <KInput
+          v-model="identity.address2"
+          name="identity[address]"
+          :placeholder="$t('fields.address2.placeholder')"
+          :label="$t('fields.address2.label')" />
+
+        <KInput
+          v-model="identity.address3"
+          name="identity[address]"
+          :placeholder="$t('fields.address3.placeholder')"
+          :label="$t('fields.address3.label')" />
 
         <div class="row">
           <div class="third">
             <KInput
               v-model="identity.zipcode"
               name="identity[zipcode]"
-              label="Postnr"
-              placeholder="Postnr" />
+              :placeholder="$t('fields.zipcode.placeholder')"
+              :label="$t('fields.zipcode.label')" />
           </div>
           <div class="third">
             <KInput
               v-model="identity.city"
               name="identity[city]"
-              label="By"
-              placeholder="By" />
+              :placeholder="$t('fields.city.placeholder')"
+              :label="$t('fields.city.label')" />
           </div>
           <div class="third">
             <KInput
               v-model="identity.country"
               name="identity[country]"
-              label="Land"
-              placeholder="NO" />
+              :placeholder="$t('fields.country.placeholder')"
+              :label="$t('fields.country.label')" />
           </div>
         </div>
 
@@ -99,30 +109,30 @@
           v-model="identity.description"
           rules="required"
           name="identity[description]"
-          label="Beskrivelse"
-          placeholder="Beskrivelse" />
+          :placeholder="$t('fields.description.placeholder')"
+          :label="$t('fields.description.label')" />
 
         <div class="row">
           <div class="third">
             <KInput
               v-model="identity.titlePrefix"
               name="identity[titlePrefix]"
-              label="Tittel prefiks"
-              placeholder="AB | " />
+              :placeholder="$t('fields.titlePrefix.placeholder')"
+              :label="$t('fields.titlePrefix.label')" />
           </div>
           <div class="third">
             <KInput
               v-model="identity.title"
               name="identity[title]"
-              label="Hovedtittel (fallback)"
-              placeholder="Tittel" />
+              :placeholder="$t('fields.title.placeholder')"
+              :label="$t('fields.title.label')" />
           </div>
           <div class="third">
             <KInput
               v-model="identity.titlePostfix"
               name="identity[titlePostfix]"
-              label="Tittel postfiks"
-              placeholder=" | AB" />
+              :placeholder="$t('fields.titlePostfix.placeholder')"
+              :label="$t('fields.titlePostfix.label')" />
           </div>
         </div>
 
@@ -132,14 +142,14 @@
               v-model="identity.image"
               name="identity[image]"
               preview-key="xlarge"
-              label="Bilde" />
+              :label="$t('fields.image.label')" />
           </div>
           <div class="half">
             <KInputImage
               v-model="identity.logo"
               name="identity[logo]"
               preview-key="xlarge"
-              label="Logo" />
+              :label="$t('fields.logo.label')" />
           </div>
         </div>
 
@@ -147,19 +157,19 @@
           v-model="identity.url"
           rules="required"
           name="identity[url]"
-          label="URL"
-          placeholder="URL" />
+          :placeholder="$t('fields.url.placeholder')"
+          :label="$t('fields.url.label')" />
 
         <KInputTable
           v-model="identity.links"
           :new-entry-template="{ name: '', url: '' }"
           :edit-rows="true"
           name="user[links]"
-          label="Linker (sosiale medier)">
+          :label="$t('fields.links.label')">
           <template #head>
             <tr>
-              <th>Navn</th>
-              <th>URL</th>
+              <th>{{ $t('name') }}</th>
+              <th>{{ $t('url') }}</th>
               <th></th>
             </tr>
           </template>
@@ -201,11 +211,11 @@
           v-model="identity.metas"
           :new-entry-template="{ key: '', value: '' }"
           name="user[metas]"
-          label="META variabler">
+          :label="$t('fields.metas.label')">
           <template #head>
             <tr>
-              <th>Nøkkel</th>
-              <th>Verdi</th>
+              <th>{{ $t('key') }}</th>
+              <th>{{ $t('value') }}</th>
               <th></th>
             </tr>
           </template>
@@ -321,7 +331,7 @@ export default {
           }
         })
 
-        this.$toast.success({ message: 'Identitet oppdatert' })
+        this.$toast.success({ message: this.$t('updated') })
         this.$router.push({ name: 'dashboard' })
       } catch (err) {
         this.$utils.showError(err)
@@ -337,3 +347,77 @@ export default {
   }
 }
 </script>
+<i18n>
+  {
+    "en": {
+      "title": "Configuration",
+      "subtitle": "Identity",
+      "help": "Setup for identity and SEO/JSONLD.",
+      "back-to-dashboard": "Back to dashboard",
+      "organization": "Organization",
+      "corporation": "Corporation",
+      "name": "Name",
+      "url": "URL",
+      "key": "Key",
+      "value": "Value",
+      "updated": "Identity updated",
+      "fields": {
+        "type": {"label": "Type"},
+        "name": {"label": "Name"},
+        "alternateName": {"label": "Name, short form", "placeholder": "AB"},
+        "email": {"label": "Email", "placeholder": "my@email.com"},
+        "phone": {"label": "Phone", "placeholder": "+47 900 00 000"},
+        "address": {"label": "Address", "placeholder": "Address"},
+        "address2": {"label": "Address 2", "placeholder": "Address 2"},
+        "address3": {"label": "Address 3", "placeholder": "Address 3"},
+        "zipcode": {"label": "Zipcode", "placeholder": "0578"},
+        "city": {"label": "City", "placeholder": "Oslo"},
+        "country": {"label": "Country", "placeholder": "NO"},
+        "description": {"label": "Description", "placeholder": "Description"},
+        "titlePrefix": {"label": "Title prefix", "placeholder": "AB | "},
+        "title": {"label": "Title (fallback)", "placeholder": "Tittel"},
+        "titlePostfix": {"label": "Title postfix", "placeholder": " | AB"},
+        "image": {"label": "Image"},
+        "logo": {"label": "Logo"},
+        "url": {"label": "URL", "placeholder": "https://minside.no"},
+        "links": {"label": "Links (social media)"},
+        "metas": {"label": "META variables"}
+      }
+    },
+    "no": {
+      "title": "Konfigurasjon",
+      "subtitle": "Identitet",
+      "help": "Konfigurasjon av virksomhetens identitet og SEO/JSONLD.",
+      "back-to-dashboard": "Back to dashboard",
+      "organization": "Organisasjon",
+      "corporation": "Bedrift",
+      "name": "Navn",
+      "url": "URL",
+      "key": "Nøkkel",
+      "value": "Verdi",
+      "updated": "Identitet oppdatert",
+      "fields": {
+        "type": {"label": "Type"},
+        "name": {"label": "Navn"},
+        "alternateName": {"label": "Kortere form av navnet", "placeholder": "AB"},
+        "email": {"label": "Epost", "placeholder": "min@epost.no"},
+        "phone": {"label": "Telefon", "placeholder": "+47 900 00 000"},
+        "address": {"label": "Adresse", "placeholder": "Adresse"},
+        "address2": {"label": "Adresse 2", "placeholder": "Adresse 2"},
+        "address3": {"label": "Adresse 3", "placeholder": "Adresse 3"},
+        "zipcode": {"label": "Postnr", "placeholder": "0578"},
+        "city": {"label": "Poststed", "placeholder": "Oslo"},
+        "country": {"label": "Land", "placeholder": "NO"},
+        "description": {"label": "Beskrivelse", "placeholder": "Beskrivelse"},
+        "titlePrefix": {"label": "Tittel prefiks", "placeholder": "AB | "},
+        "title": {"label": "Hovedtittel (fallback)", "placeholder": "Tittel"},
+        "titlePostfix": {"label": "Tittel postfiks", "placeholder": " | AB"},
+        "image": {"label": "Bilde"},
+        "logo": {"label": "Logo"},
+        "url": {"label": "URL", "placeholder": "https://minside.no"},
+        "links": {"label": "Linker (sosiale medier)"},
+        "metas": {"label": "META variabler"}
+      }
+    }
+  }
+</i18n>

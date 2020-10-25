@@ -33,11 +33,11 @@ Then value is set to the transformed result
             <div class="entries__entry__actions">
               <ButtonSecondary
                 @click="save(entry)">
-                Lagre
+                {{ $t('save') }}
               </ButtonSecondary>
               <ButtonSecondary
                 @click="removeEntry(entry)">
-                Fjern
+                {{ $t('remove') }}
               </ButtonSecondary>
             </div>
           </div>
@@ -52,9 +52,9 @@ Then value is set to the transformed result
               v-if="!files.length"
               class="droparea">
               <div class="text-center">
-                Slipp filene dine her for å laste opp eller<br>
+                {{ $t('drop-files-here-to-upload') }}<br>
                 <span class="file-selector-button">
-                  Velg filer
+                  {{ $t('pick-files') }}
                   <label for="image"></label>
                   <input
                     id="image"
@@ -65,7 +65,7 @@ Then value is set to the transformed result
                     @change="change" />
                 </span><br>
                 <div class="size-limit">
-                  Maks filstørrelse er {{ sizeLimit }}MB.
+                  {{ $t('max-filesize', { sizeLimit: sizeLimit }) }}
                 </div>
               </div>
             </div>
@@ -590,3 +590,27 @@ input[type=file] {
   }
 }
 </style>
+
+<i18n>
+  {
+    "en": {
+      "save": "Save",
+      "edit": "Edit",
+      "remove": "Remove",
+      "no-connected-objects": "No connected objects",
+      "remove-files": "Remove files",
+      "drop-files-here-to-upload": "Drop files here to upload or",
+      "pick-files": "Pick files",
+      "max-filesize": "Maks filstørrelse er {sizeLimit}MB."
+    },
+    "no": {
+      "save": "Lagre",
+      "edit": "Endre",
+      "remove": "Fjern",
+      "no-connected-objects": "Ingen tilknyttede objekter",
+      "remove-files": "Fjern filer",
+      "drop-files-here-to-upload": "Slipp filene dine her for å laste opp eller",
+      "pick-files": "Plukk filer"
+    }
+  }
+</i18n>

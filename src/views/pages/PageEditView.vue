@@ -4,7 +4,7 @@
     :key="pageId">
     <ContentHeader>
       <template v-slot:title>
-        Endre innholdsside
+        {{ $t('pages.edit-page') }}
       </template>
     </ContentHeader>
     <PageForm
@@ -46,6 +46,7 @@
 import GET_PAGE from '../../gql/pages/PAGE_QUERY.graphql'
 import gql from 'graphql-tag'
 import PageForm from './PageForm'
+import locale from '../../locales/pages'
 
 export default {
   components: {
@@ -107,7 +108,7 @@ export default {
           }
         })
 
-        this.$toast.success({ message: 'Side oppdatert' })
+        this.$toast.success({ message: this.$t('pages.updated') })
         this.$router.push({ name: 'pages' })
       } catch (err) {
         this.$utils.showError(err)
@@ -163,6 +164,9 @@ export default {
         return !this.pageId
       }
     }
+  },
+  i18n: {
+    sharedMessages: locale
   }
 }
 </script>
@@ -172,14 +176,3 @@ export default {
     @space margin-top lg;
   }
 </style>
-
-<i18n>
-{
-  "en": {
-    "pages.subpages": "Subpages"
-  },
-  "no": {
-    "pages.subpages": "Undersider"
-  }
-}
-</i18n>

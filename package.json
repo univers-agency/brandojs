@@ -9,6 +9,7 @@
   },
   "main": "src/index.js",
   "dependencies": {
+    "@128technology/codemirror-liquid-mode": "^1.0.2",
     "@casl/ability": "^4.1.6",
     "@casl/vue": "^1.1.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.30",

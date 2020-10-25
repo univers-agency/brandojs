@@ -32,7 +32,7 @@
                 + {{ createEntry }}
               </template>
               <template v-else>
-                Tilbake til listen
+                {{ $t('back-to-list') }}
               </template>
             </ButtonSecondary>
           </div>
@@ -52,7 +52,7 @@
                 ref="search"
                 v-model="searchString"
                 name="search"
-                placeholder="Søk..."
+                :placeholder="$t('search')"
                 autocomplete="off"
                 spellcheck="false"
                 class="search"
@@ -90,7 +90,7 @@
                 </slot>
                 <ButtonSmall
                   @click.native.stop="selectOption(s)">
-                  Fjern
+                  {{ $t('remove') }}
                 </ButtonSmall>
               </div>
             </transition-group>
@@ -103,7 +103,7 @@
             class="similar-box">
             <div class="similar-header">
               <i class="fa fa-exclamation-circle text-danger" />
-              Fant lignende objekter
+              {{ $t('found-similar-objects') }}
             </div>
             <li
               v-for="s in similarEntries"
@@ -115,7 +115,7 @@
               {{ s[optionLabelKey] }}
               <ButtonSmall
                 @click.native.stop="selectSimilar(s)">
-                Velg
+                {{ $t('select') }}
               </ButtonSmall>
             </li>
           </div>
@@ -143,13 +143,13 @@
       <div
         class="multiselect">
         <div>
-          {{ selected.length }} valgte
+          {{ selected.length }} {{ $t('selected') }}
+          <button
+            class="button-edit"
+            @click.self.prevent.stop="toggleFromButton">
+            {{ open ? $t('close') : $t('edit') }}
+          </button>
         </div>
-        <button
-          class="button-edit"
-          @click.self.prevent.stop="toggleFromButton">
-          {{ open ? 'Lukk' : 'Endre' }}
-        </button>
       </div>
     </template>
   </KFieldBase>
@@ -398,7 +398,7 @@ export default {
       } else {
         if (!this.multiple) {
           if (this.selected.length) {
-            this.$alerts.alertError('OBS', 'Feltet er konfigurert til kun å ha én valgt verdi.')
+            this.$alerts.alertError('OBS', this.$('max-one'))
             return
           }
         }
@@ -593,3 +593,29 @@ export default {
     }
   }
 </style>
+<i18n>
+  {
+    "en": {
+"back-to-list": "Back to list",
+      "search": "Search...",
+      "remove": "Remove",
+      "found-similar-objects": "Found similar objects",
+      "select": "Select",
+      "selected": "selected",
+      "close": "Close",
+      "edit": "Edit",
+      "max-one": "The field is configured for a max of 1 selection"
+    },
+    "no": {
+      "back-to-list": "Tilbake til listen",
+      "search": "Søk...",
+      "remove": "Fjern",
+      "found-similar-objects": "Fant lignende objekter",
+      "select": "Velg",
+      "selected": "valgte",
+      "close": "Lukk",
+      "edit": "Endre",
+      "max-one": "Feltet er konfigurert til kun å ha én valgt verdi."
+    }
+  }
+</i18n>

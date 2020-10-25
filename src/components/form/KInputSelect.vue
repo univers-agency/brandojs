@@ -21,7 +21,7 @@
         v-if="open"
         ref="modalList"
         v-shortkey="['esc']"
-        ok-text="Lukk"
+        :ok-text="$t('close')"
         @shortkey.native="toggle"
         @ok="toggle()">
         <template #header>
@@ -34,12 +34,12 @@
                 + {{ createEntry }}
               </template>
               <template v-else>
-                Tilbake til listen
+                {{ $t('back-to-list') }}
               </template>
             </ButtonTiny>
 
             <ButtonTiny @click="nullValue">
-              Nullstill
+              {{ $t('reset') }}
             </ButtonTiny>
           </div>
         </template>
@@ -57,7 +57,7 @@
                 ref="search"
                 v-model="searchString"
                 name="search"
-                placeholder="Søk..."
+                :placeholder="$t('search')"
                 autocomplete="off"
                 spellcheck="false"
                 class="search"
@@ -91,7 +91,7 @@
             class="similar-box">
             <div class="similar-header">
               <i class="fa fa-exclamation-circle text-danger" />
-              Fant lignende objekter
+              {{ $t('found-similar-objects') }}
             </div>
             <li
               v-for="s in similarEntries"
@@ -103,7 +103,7 @@
               {{ s[optionLabelKey] }}
               <ButtonSmall
                 @click.native.stop="selectSimilar(s)">
-                Velg
+                {{ $t('select') }}
               </ButtonSmall>
             </li>
           </div>
@@ -120,13 +120,13 @@
           <slot
             name="selected"
             v-bind:entry="selected">
-            <span>{{ selected ? selected[optionLabelKey] : 'Ingen valgt' }}</span>
+            <span>{{ selected ? selected[optionLabelKey] : $t('empty-selection') }}</span>
           </slot>
         </div>
         <button
           class="button-edit"
           @click.self.prevent.stop="toggleFromButton">
-          {{ open ? 'Lukk' : 'Endre' }}
+          {{ open ? $t('close') : $t('edit') }}
         </button>
       </div>
     </template>
@@ -606,3 +606,27 @@ export default {
     }
   }
 </style>
+<i18n>
+  {
+    "en": {
+      "empty-selection": "No selection",
+      "close": "Close",
+      "edit": "Edit",
+      "reset": "Reset",
+      "back-to-list": "Return to list",
+      "search": "Search...",
+      "found-similar-objects": "Found similar objects",
+      "select": "Select"
+    },
+    "no": {
+      "empty-selection": "Ingen valgt",
+      "close": "Lukk",
+      "edit": "Endre",
+      "reset": "Nullstill",
+      "back-to-list": "Tilbake til listen",
+      "search": "Søk...",
+      "found-similar-objects": "Fant lignende objekter",
+      "select": "Velg"
+    }
+  }
+</i18n>

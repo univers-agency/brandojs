@@ -13,13 +13,6 @@
       label=""
       transparent
       name="data[text]" />
-    <!-- <div
-      ref="wrapper"
-      class="villain-markdown-input-wrapper">
-      <textarea
-        ref="txt"
-        class="villain-markdown-input"></textarea>
-    </div> -->
     <template slot="help">
       <p>
         Markdown formatering er en ryddig måte å formatere tekst til nettsider på.

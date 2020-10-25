@@ -4,6 +4,7 @@
       <ButtonTiny
         right
         @click="showConfig = true">
+        {{ $t('template-config') }}
         Maloppsett
       </ButtonTiny>
       <KModal
@@ -12,18 +13,15 @@
         ok-text="OK"
         @ok="closeConfig">
         <template #header>
-          Maloppsett
+          {{ $t('template-config') }}
         </template>
         <div class="panes">
           <div>
-            <h4>Blokkvariabler</h4>
+            <h4>{{ $t('block-variables') }}</h4>
 
             <div
               v-for="(v, key) in vars"
               :key="key">
-              <!--
-                !TODO - RENDER THIS BASED ON `v.type`
-               -->
               <div class="field-wrapper">
                 <template v-if="localVars[key].type === 'text'">
                   <KInput
@@ -44,12 +42,12 @@
               class="btn-secondary"
               type="button"
               @click.prevent="refetchVars">
-              Hent orginale variabler
+              {{ $t('fetch-original-variables') }}
             </button>
           </div>
 
           <div>
-            <h4>Refererte blokker [{{ refs.length }}]</h4>
+            <h4>{{ $t('refered-blocks') }} [{{ refs.length }}]</h4>
             <div class="form-group">
               <button
                 v-for="(ref, idx) in refs"
@@ -57,21 +55,21 @@
                 type="button"
                 class="btn-secondary"
                 @click="replaceRefWithSource(ref)">
-                {{ ref.name }} — Erstatt med referanseblokk
+                {{ ref.name }} — {{ $t('replace-with-ref') }}
               </button>
             </div>
           </div>
         </div>
         <div class="panes mt-2">
           <div>
-            <h4>Slettede blokker [{{ deletedBlocks.length }}]</h4>
+            <h4>{{ $t('deleted-blocks') }} [{{ deletedBlocks.length }}]</h4>
             <button
               v-for="(b, idx) in deletedBlocks"
               :key="idx"
               type="button"
               class="btn-secondary"
               @click="undelete(b)">
-              {{ b.name }} — Gjenopprett
+              {{ b.name }} — {{ $t('restore') }}
             </button>
           </div>
         </div>
@@ -259,3 +257,26 @@ export default {
     }
   }
 </style>
+<i18n>
+  {
+    "en": {
+      "key": "value",
+      "block-variables": "Block variables",
+      "fetch-original-variables": "Fetch original variables",
+      "refered-blocks": "Refered blocks",
+      "replace-with-ref": "Replace with ref",
+      "deleted-blocks": "Deleted blocks",
+      "restore": "Restore"
+    },
+    "no": {
+      "template-config": "Maloppsett",
+      "block-variables": "Blokkvariabler",
+      "fetch-original-variables": "Hent orginale variabler",
+      "refered-blocks": "Refererte blokker",
+      "replace-with-ref": "Erstatt med referanseblokk",
+      "deleted-blocks": "Slettede blokker",
+      "restore": "Gjenopprett"
+
+    }
+  }
+</i18n>

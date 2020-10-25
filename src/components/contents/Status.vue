@@ -2,7 +2,7 @@
   <div>
     <svg
       v-if="entry.publishAt"
-      v-popover="'Publiseres ' + publishTime"
+      v-popover="$t('publish-at') + publishTime"
       width="11"
       height="11"
       viewBox="0 0 11 11"
@@ -64,7 +64,6 @@ export default {
 
     status () {
       if (this.entry.publishAt) {
-        console.log('publishAt', this.entry.publishAt)
         if (moment.utc(this.entry.publishAt).diff(moment.utc()) < 0) {
           return this.entry.status
         } else {
@@ -105,3 +104,13 @@ export default {
     }
   }
 </style>
+<i18n>
+  {
+    "en": {
+      "publish-at": "Publish at "
+    },
+    "no": {
+      "publish-at": "Publiseres "
+    }
+  }
+</i18n>

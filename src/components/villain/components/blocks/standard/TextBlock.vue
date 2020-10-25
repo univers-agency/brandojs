@@ -62,7 +62,7 @@
             @shortkey.native="hideLinkMenu"
             @ok="setLinkUrl(commands.link, linkUrl)">
             <template #header>
-              Rediger link
+              {{ $t('edit-link') }}
             </template>
             <template>
               <KInput
@@ -70,7 +70,7 @@
                 v-model="linkUrl"
                 name="link[url]"
                 label="URL"
-                help-text="OBS! For å linke til en lokal side må du alltid ha med / foran (f.eks /personvern)."
+                :help-text="$t('help-text')"
                 placeholder="https://link.no" />
             </template>
           </KModal>
@@ -83,7 +83,7 @@
             @shortkey.native="hideLinkMenu"
             @ok="setActionButtonUrl(commands.action_button, actionButtonUrl)">
             <template #header>
-              Rediger knappelink
+              {{ $t('edit-action-button') }}
             </template>
             <template>
               <KInput
@@ -91,7 +91,7 @@
                 v-model="actionButtonUrl"
                 name="actionButton[url]"
                 label="URL"
-                help-text="OBS! For å linke til en lokal side må du alltid ha med / foran (f.eks /personvern)."
+                :help-text="$t('help-text')"
                 placeholder="https://link.no" />
             </template>
           </KModal>
@@ -201,7 +201,7 @@
       <div class="helpful-actions">
         <ButtonTiny
           @click="$refs.config.openConfig()">
-          Konfigurér tekstblokk
+          {{ $t('configure') }}
         </ButtonTiny>
       </div>
     </Block>
@@ -214,12 +214,12 @@
           name="data[type]"
           rules="required"
           :options="[
-            { label: 'Paragraf/brødtekst', value: 'paragraph' },
-            { label: 'Ingress', value: 'lede' }
+            { label: $t('body-text'), value: 'paragraph' },
+            { label: $t('lede-text'), value: 'lede' }
           ]"
           optionValueKey="value"
           optionLabelKey="label"
-          label="Teksttype" />
+          :label="$t('type')" />
       </template>
     </BlockConfig>
   </div>
@@ -250,7 +250,6 @@ import {
 import Link from '../../../tiptap/extensions/Link'
 import ActionButton from '../../../tiptap/extensions/ActionButton'
 import Arrow from '../../../tiptap/extensions/Arrow'
-import Emoji from '../../../tiptap/extensions/Emoji'
 import MarkdownIt from 'markdown-it'
 const md = new MarkdownIt({ html: true })
 
@@ -564,3 +563,26 @@ export default {
     }
   }
 </style>
+
+<i18n>
+  {
+    "en": {
+      "type": "Text type",
+      "body-text": "Body text",
+      "lede": "Lede text",
+      "configure": "Configure text block",
+      "edit-link": "Edit link",
+      "edit-action-button": "Edit button link",
+      "help-text": "NB! When linking to a local page, you must remember to prefix the url with '/' (i.e /privacy)."
+    },
+    "no": {
+      "type": "Teksttype",
+      "body-text": "Mengdetekst",
+      "lede": "Ingress",
+      "configure": "Konfigurér tekstblokk",
+      "edit-link": "Endre link",
+      "edit-action-button": "Rediger knappelink",
+      "help-text": "OBS! For å linke til en lokal side må du alltid ha med '/' foran (f.eks /personvern)."
+    }
+  }
+</i18n>

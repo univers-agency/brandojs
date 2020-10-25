@@ -37,16 +37,11 @@
           </label>
         </div>
       </div>
-      <div v-else>
-        Ingen tilgjengelige valg
-      </div>
     </template>
   </KFieldBase>
 </template>
 
 <script>
-
-// import { gsap } from 'gsap'
 
 export default {
   props: {
@@ -84,9 +79,9 @@ export default {
   data () {
     return {
       options: [
-        { value: 'draft', label: 'Utkast' },
-        { value: 'published', label: 'Publisert' },
-        { value: 'disabled', label: 'Deaktivert' }
+        { value: 'draft', label: this.$t('draft') },
+        { value: 'published', label: this.$t('published') },
+        { value: 'disabled', label: this.$t('deactivated') }
       ]
     }
   },
@@ -181,3 +176,19 @@ export default {
     }
   }
 </style>
+
+<i18n>
+  {
+    "en": {
+      "draft": "Draft",
+      "published": "Published",
+      "deactivated": "Deactivated"
+    },
+
+    "no": {
+      "draft": "Utkast",
+      "published": "Publisert",
+      "deactivated": "Deaktivert"
+    }
+  }
+</i18n>

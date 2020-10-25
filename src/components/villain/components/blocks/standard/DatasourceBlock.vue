@@ -13,13 +13,13 @@
           v-if="block.data.module"
           class="inside">
           <i class="fa fa-fw fa-database"></i>
-          <p>Datakilde — {{ block.data.description }}</p>
+          <p>{{ $t('datasource') }} — {{ block.data.description }}</p>
           <p><small><code>{{ block.data.module }}<br>{{ block.data.type }}|{{ block.data.query }}</code></small></p>
           <div v-if="block.data.type === 'selection'">
             <ButtonPrimary
               class="mt-2"
               @click="selectEntries">
-              Velg oppføringer
+              {{ $t('pick-entries') }}
             </ButtonPrimary>
             <template v-if="selectedEntries.length">
               <transition-group
@@ -38,22 +38,11 @@
             </template>
           </div>
         </div>
-        <div
-          v-else
-          class="villain-block-datasource-empty">
-          <i class="fa fa-fw fa-database"></i>
-          <div class="actions">
-            <ButtonTiny
-              @click="openConfig">
-              Konfigurér datakilde
-            </ButtonTiny>
-          </div>
-        </div>
       </div>
       <div class="helpful-actions">
         <ButtonTiny
           @click="openConfig">
-          Konfigurér datakilde
+          {{ $t('configure') }}
         </ButtonTiny>
       </div>
       <BlockConfig
@@ -65,8 +54,8 @@
                 v-model="block.data.description"
                 rules="required"
                 name="data[description]"
-                label="Beskrivelse"
-                placeholder="Beskrivelse av datakilden" />
+                :label="$t('description')"
+                :placeholder="$t('description.placeholder')" />
 
               <KInputRadios
                 v-model="block.data.module"
@@ -75,38 +64,38 @@
                 optionValueKey="module"
                 optionLabelKey="module"
                 name="data[module]"
-                label="Kildemodul" />
+                :label="$t('module')" />
 
               <KInputRadios
                 v-model="block.data.type"
                 rules="required"
                 :options="availableModuleTypes"
                 name="data[type]"
-                label="Type" />
+                :label="$t('type')" />
 
               <KInputRadios
                 v-model="block.data.query"
                 rules="required"
                 :options="availableModuleQueries"
                 name="data[query]"
-                label="Spørring" />
+                :label="$t('query')" />
 
               <KInput
                 v-model="block.data.arg"
                 name="data[arg]"
-                label="Argument" />
+                :label="$t('argument')" />
 
               <KInputNumber
                 v-if="block.data.type === 'selection'"
                 v-model="block.data.limit"
                 name="data[limit]"
-                label="Maks antall" />
+                :label="$t('limit')" />
             </div>
             <div></div>
           </div>
           <KInputCode
             v-model="block.data.code"
-            label="Mal for datakilden"
+            :label="$t('template')"
             name="data[code]" />
         </template>
       </BlockConfig>
@@ -114,11 +103,11 @@
         v-if="showAvailableEntries"
         ref="availableEntriesModal"
         v-shortkey="['esc', 'enter']"
-        ok-text="Lukk"
+        :ok-text="$t('close')"
         @shortkey.native="closeAvailableEntriesModal"
         @ok="closeAvailableEntriesModal">
         <template #header>
-          Velg oppføringer
+          {{ $t('pick-entries') }}
         </template>
         <ContentList
           :selectable="false"
@@ -133,12 +122,12 @@
               <ButtonTiny
                 v-if="!block.data.ids.includes(parseInt(entry.id))"
                 @click="addSelectedEntry(entry.id)">
-                Legg til
+                {{ $t('add') }}
               </ButtonTiny>
               <ButtonTiny
                 v-else
                 @click="removeSelectedEntry(entry.id)">
-                Fjern
+                {{ $t('remove') }}
               </ButtonTiny>
             </div>
           </template>
@@ -295,7 +284,7 @@ export default {
     addSelectedEntry (id) {
       if (this.block.data.limit) {
         if (this.block.data.ids.length >= this.block.data.limit) {
-          this.$alerts.alertError('Feil', `Kan kun velge ${this.block.data.limit} oppføringer`)
+          this.$alerts.alertError(this.$t('error'), this.$t('error-max', { limit: this.block.data.limit }))
           return
         }
       }
@@ -351,3 +340,43 @@ export default {
     border-bottom: 1px solid theme(colors.peach);
   }
 </style>
+<i18n>
+  {
+    "en": {
+      "datasource": "Datasource",
+      "pick-entries": "Select entries",
+      "configure": "Configure datasource",
+      "description": "Description",
+      "description.placeholder": "Description of datasource",
+      "module": "Source module",
+      "type": "Type",
+      "query": "Query",
+      "argument": "Argument",
+      "limit": "Limit",
+      "template": "Template for datasource",
+      "close": "Close",
+      "add": "Add",
+      "remove": "Remove",
+      "error": "Error",
+      "error-max": "Cannot select more than {limit} entries"
+    },
+    "no": {
+      "datasource": "Datakilde",
+      "pick-entries": "Velg oppføringer",
+      "configure": "Konfigurér datakilde",
+      "description": "Beskrivelse",
+      "description.placeholder": "Beskrivelse av datakilden",
+      "module": "Kildemodul",
+      "type": "Type",
+      "query": "Spørring",
+      "argument": "Argument",
+      "limit": "Maks antall",
+      "template": "Mal for datakilden",
+      "close": "Lukk",
+      "add": "Legg til",
+      "remove": "Fjern",
+      "error": "Feil",
+      "error-max": "Kan kun velge {limit} oppføringer"
+    }
+  }
+</i18n>

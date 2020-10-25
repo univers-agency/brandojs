@@ -22,7 +22,7 @@
         <div class="actions">
           <ButtonTiny
             @click="$refs.config.openConfig()">
-            Konfigurér kartblokk
+            {{ $t('configure') }}
           </ButtonTiny>
         </div>
       </div>
@@ -35,8 +35,8 @@
           <KInput
             v-model="url"
             name="url"
-            label="URL"
-            help-text="Lim inn embed-link fra Google Maps"
+            :label="$t('url')"
+            :help-text="$t('url-help-text')"
             @input="parseUrl" />
         </div>
         <div
@@ -45,7 +45,7 @@
           <KInput
             v-model="block.data.class"
             name="data[class]"
-            label="CSS klasser" />
+            :label="$t('css-classes')" />
         </div>
       </template>
     </BlockConfig>
@@ -157,3 +157,20 @@ export default {
     }
   }
 </style>
+
+<i18n>
+  {
+    "en": {
+      "configure": "Configure map block",
+      "url": "URL",
+      "url-help-text": "Paste embed-link from Google Maps",
+      "css-classes": "CSS classes"
+    },
+    "no": {
+      "configure": "Konfigurér kartblokk",
+      "url": "URL",
+      "url-help-text": "Lim inn embed-link fra Google Maps",
+      "css-classes": "CSS klasser"
+    }
+  }
+</i18n>

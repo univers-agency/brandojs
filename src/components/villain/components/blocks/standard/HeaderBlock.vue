@@ -18,7 +18,7 @@
       <div class="helpful-actions">
         <ButtonTiny
           @click="$refs.config.openConfig()">
-          Konfigurér overskrift
+          {{ $t('configure') }}
         </ButtonTiny>
       </div>
     </Block>
@@ -40,18 +40,18 @@
           ]"
           optionValueKey="value"
           optionLabelKey="label"
-          label="Størrelse" />
+          :label="$t('size')" />
 
         <KInput
           v-model="cfg.id"
           name="data[id]"
           label="Id"
-          help-text="Kan brukes som lenkemål (#id-navn-her)" />
+          :help-text="$t('id-help-text')" />
 
         <KInput
           v-model="cfg.class"
           name="data[class]"
-          label="CSS klasser" />
+          :label="$t('css-classes')" />
       </template>
     </BlockConfig>
   </div>
@@ -123,3 +123,20 @@ export default {
   }
 }
 </script>
+
+<i18n>
+  {
+    "en": {
+      "configure": "Configure heading",
+      "size": "Size",
+      "id-help-text": "Can be used as link target (#id-name-here)",
+      "css-classes": "CSS classes"
+    },
+    "no": {
+      "configure": "Konfigurér overskrift",
+      "size": "Størrelse",
+      "id-help-text": "Kan brukes som lenkemål (#id-navn-her)",
+      "css-classes": "CSS klasser"
+    }
+  }
+</i18n>

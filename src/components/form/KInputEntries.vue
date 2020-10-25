@@ -24,17 +24,17 @@
             <td class="action">
               <ButtonSmall
                 @click.native.stop.prevent="editEntry(entry)">
-                Endre
+                {{ $t('edit') }}
               </ButtonSmall>
               <ButtonSmall
                 @click.native.stop.prevent="removeEntry(entry)">
-                Fjern
+                {{ $t('remove') }}
               </ButtonSmall>
             </td>
           </tr>
         </table>
         <div v-else>
-          Ingen tilknyttede objekter
+          {{ $t('no-connected-objects') }}
         </div>
       </div>
 
@@ -82,7 +82,7 @@
                 <ButtonSecondary
                   :narrow="false"
                   @click.native.prevent="clearFiles">
-                  Fjern filer
+                  {{ $t('remove-files') }}
                 </ButtonSecondary>
               </div>
             </div>
@@ -90,9 +90,9 @@
               v-if="!files.length"
               class="droparea">
               <div class="text-center">
-                Slipp filene dine her for å laste opp eller<br>
+                {{ $t('drop-files-here-to-upload') }}<br>
                 <span class="file-selector-button">
-                  Velg filer
+                  {{ $t('pick-files') }}
                   <label for="image"></label>
                   <input
                     id="image"
@@ -419,6 +419,9 @@ export default {
     }
   }
 }
+/*
+Slipp filene dine her for å laste opp eller
+*/
 </script>
 
 <style lang="postcss" scoped>
@@ -624,3 +627,24 @@ table {
   padding: 0.5rem 1rem;
 }
 </style>
+
+<i18n>
+  {
+    "en": {
+      "edit": "Edit",
+      "remove": "Remove",
+      "no-connected-objects": "No connected objects",
+      "remove-files": "Remove files",
+      "drop-files-here-to-upload": "Drop files here to upload or",
+      "pick-files": "pick files"
+    },
+    "no": {
+      "edit": "Endre",
+      "remove": "Fjern",
+      "no-connected-objects": "Ingen tilknyttede objekter",
+      "remove-files": "Fjern filer",
+      "drop-files-here-to-upload": "Slipp filene dine her for å laste opp eller",
+      "pick-files": "plukk filer"
+    }
+  }
+</i18n>

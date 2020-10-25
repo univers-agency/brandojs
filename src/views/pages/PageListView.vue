@@ -41,7 +41,7 @@
         <li>
           <button
             @click="deleteEntries(entries, clearSelection)">
-            Slett sider
+            {{ $t('pages.delete-pages') }}
           </button>
         </li>
       </template>
@@ -140,7 +140,7 @@
                 <div class="flex-v">
                   <router-link
                     :to="{ name: 'sections-edit', params: { sectionId: section.id } }">
-                    {{ section.title || 'Ingen tittel' }}
+                    {{ section.title || $t('pages.no-title') }}
                   </router-link>
                   <div class="keys">
                     <div class="badge">{{ section.parentKey }}</div>
@@ -250,13 +250,13 @@ export default {
       this.adminChannel.channel
         .push('page:rerender_all')
         .receive('ok', payload => {
-          this.$toast.success({ message: 'Sidene ble gjengitt på nytt' })
+          this.$toast.success({ message: this.$t('pages.fragments-rerendered') })
         })
 
       this.adminChannel.channel
         .push('page_fragment:rerender_all')
         .receive('ok', payload => {
-          this.$toast.success({ message: 'Fragmentene ble gjengitt på nytt' })
+          this.$toast.success({ message: this.$t('pages.fragments-rerendered') })
         })
     },
 

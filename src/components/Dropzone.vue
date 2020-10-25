@@ -131,9 +131,9 @@
         v-if="!files.length"
         class="droparea">
         <div class="text-center">
-          Slipp filene dine her for å laste opp eller<br>
+          {{ $t('drop-files-here-to-upload') }}<br>
           <span class="file-selector-button">
-            Velg filer
+            {{ $t('pick-files') }}
             <label for="image"></label>
             <input
               id="image"
@@ -153,7 +153,7 @@
             type="button"
             class="btn btn-primary"
             @click.prevent="upload">
-            &uarr; Start opplasting
+            &uarr; {{ $t('start-upload') }}
           </button>
           <button
             type="button"
@@ -162,7 +162,7 @@
             <i
               class="fa fa-window-close"
               aria-hidden="true" />
-            Lukk vindu
+            {{ $t('close-window') }}
           </button>
         </div>
       </div>
@@ -173,7 +173,6 @@
 <script>
 
 import gql from 'graphql-tag'
-// import { gsap } from 'gsap'
 
 export default {
   props: {
@@ -652,3 +651,20 @@ table {
   }
 }
 </style>
+
+<i18n>
+  {
+    "en": {
+      "drop-files-here-to-upload": "Drop files here to upload or",
+      "pick-files": "Select files",
+      "start-upload": "Start upload",
+      "close-window": "Close window"
+    },
+    "no": {
+      "drop-files-here-to-upload": "Slipp filene dine her for å laste opp eller",
+      "pick-files": "Velg filer",
+      "start-upload": "Start opplasting",
+      "close-window": "Lukk vindu"
+    }
+  }
+</i18n>

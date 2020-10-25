@@ -25,7 +25,7 @@
         </div>
       </div>
       <div v-else>
-        Ingen tilgjengelige valg
+        {{ $t('no-options') }}
       </div>
     </template>
   </KFieldBase>
@@ -102,11 +102,6 @@ export default {
     }
   },
 
-  // mounted () {
-  //   gsap.set(this.$refs.input, { width: 0 })
-  //   gsap.to(this.$refs.input, { ease: 'sine.easeOut', width: '100%' })
-  // },
-
   created () {
     if (this.value) {
       this.innerValue = this.value
@@ -133,3 +128,13 @@ export default {
     }
   }
 </style>
+<i18n>
+  {
+    "en": {
+      "no-options": "No available options"
+    },
+    "no": {
+      "no-options": "Ingen tilgjengelige valg"
+    }
+  }
+</i18n>

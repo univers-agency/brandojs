@@ -2,14 +2,14 @@
   <div>
     <ContentHeader>
       <template v-slot:title>
-        Konfigurasjon
+        {{ $t('title') }}
       </template>
       <template v-slot:subtitle>
-        Globale variabler
+        {{ $t('subtitle') }}
       </template>
       <template v-slot:help>
         <p>
-          Konfigurasjon av variabler som kan brukes i innholdsmoduler og generelt på nettsiden
+          {{ $t('help') }}
         </p>
       </template>
     </ContentHeader>
@@ -18,13 +18,13 @@
       v-if="$can('admin', 'Globals')"
       v-model="editing"
       name="data[editing]"
-      label="Administrér globale variabler (avansert)" />
+      :label="$t('editing')" />
 
     <ButtonPrimary
       v-if="editing"
       class="add-category-btn"
       @click="showNewCategoryModal = true">
-      Legg til kategori
+      {{ $t('category-add') }}
     </ButtonPrimary>
 
     <KModal
@@ -36,27 +36,27 @@
       @ok="saveNewCategory"
       @cancel="closeModal">
       <template #header>
-        Legg til ny kategori
+        {{ $t('category-add') }}
       </template>
       <KInput
         v-model="newCategory.label"
         :name="`category[label]`"
         rules="required"
-        label="Etikett" />
+        :label="$t('label')" />
 
       <KInputSlug
         v-model="newCategory.key"
         :from="newCategory.label"
         :name="`category[key]`"
         rules="required"
-        label="Nøkkel" />
+        :label="$t('key')" />
     </KModal>
 
     <template v-if="globalCategories">
       <KForm
         v-for="category in globalCategories"
         :key="category.id"
-        back-text="Tilbake til dashbordet"
+        :back-text="$t('back-to-dashboard')"
         @save="saveCategory(category)">
         <template v-slot>
           <div class="category">
@@ -69,14 +69,14 @@
                 monospace
                 :name="`category[${category.id}][label]`"
                 rules="required"
-                label="Kategori — etikett" />
+                :label="$t('category') + '-' + $t('label')" />
 
               <KInput
                 v-model="category.key"
                 monospace
                 :name="`category[${category.id}][key]`"
                 rules="required"
-                label="Kategori — nøkkel" />
+                :label="$t('category') + '-' + $t('key')" />
             </template>
 
             <KInputTable
@@ -89,13 +89,13 @@
               :fixed-layout="false"
               class="bordered"
               :name="`category[${category.id}][globals]`"
-              label="Variabler">
+              :label="$t('variables')">
               <template v-slot:head>
                 <tr>
-                  <th>Etikett</th>
-                  <th>Nøkkel</th>
-                  <th>Type</th>
-                  <th>Verdi</th>
+                  <th>{{ $t('label') }}</th>
+                  <th>{{ $t('key') }}</th>
+                  <th>{{ $t('type') }}</th>
+                  <th>{{ $t('value') }}</th>
                   <th></th>
                 </tr>
               </template>
@@ -133,7 +133,7 @@
                   </template>
                 </td>
               </template>
-              <template #edit="{ editEntry, callback }">
+              <template #edit="{ editEntry }">
                 <td class="monospace">
                   <KInput
                     v-model="editEntry.label"
@@ -349,7 +349,7 @@ export default {
 
           update: (store, data) => {
             this.$apollo.queries.globalCategories.refresh()
-            this.$toast.success({ message: 'Kategori opprettet' })
+            this.$toast.success({ message: this.$t('category-created') })
           }
         })
       } catch (err) {
@@ -385,7 +385,7 @@ export default {
 
           update: (store, data) => {
             this.$apollo.queries.globalCategories.refresh()
-            this.$toast.success({ message: 'Kategori lagret' })
+            this.$toast.success({ message: this.$t('category-saved') })
           }
         })
       } catch (err) {
@@ -433,3 +433,39 @@ export default {
     padding: 2rem;
   }
 </style>
+<i18n>
+  {
+    "en": {
+      "title": "Configuration",
+      "subtitle": "Global variables",
+      "help": "Configure global variables that can be used all across the website",
+      "editing": "Configure global variables (advanced)",
+      "category": "Category",
+      "category-created": "Category created",
+      "category-saved": "Category saved",
+      "category-add": "Add category",
+      "variables": "Variables",
+      "label": "Label",
+      "key": "Key",
+      "type": "Type",
+      "value": "Value",
+      "back-to-dashboard": "Back to dashboard"
+    },
+    "no": {
+      "title": "Konfigurasjon",
+      "subtitle": "Globale variabler",
+      "help": "Konfigurasjon av variabler som kan brukes i innholdsmoduler og generelt på nettsiden",
+      "editing": "Administrér globale variabler (avansert)",
+      "category": "Kategori",
+      "category-created": "Kategori opprettet",
+      "category-saved": "Kategori lagret",
+      "category-add": "Legg til kategori",
+      "variables": "Variabler",
+      "label": "Etikett",
+      "key": "Nøkkel",
+      "type": "Type",
+      "value": "Verdi",
+      "back-to-dashboard": "Tilbake til dashbordet"
+    }
+  }
+</i18n>

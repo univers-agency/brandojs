@@ -53,17 +53,13 @@
           class="actions">
           <ButtonTiny
             @click="$refs.config.openConfig()">
-            Konfigurér galleriblokk
+            {{ $t('configure') }}
           </ButtonTiny>
         </div>
       </div>
 
       <template slot="help">
-        <p>
-          For å slette et bilde i bildekarusellen, klikker du på bildet, deretter klikker du på søplekasse-ikonet (<i class="fa fa-trash" />)<br><br>
-          For å gi bildene bildetekst, klikker du på "Konfigurér galleriblokk" og deretter "Endre bildetekster"<br><br>
-          For å sortere bildene kan du dra og slippe de i ønsket rekkefølge.
-        </p>
+        <p v-html="$t('help')" />
       </template>
     </Block>
     <BlockConfig
@@ -75,18 +71,18 @@
             <ButtonSecondary
               v-if="listStyle"
               @click="listStyle = false; showUpload = false; showTitles = false; showImages = true">
-              Vis som grid
+              {{ $t('grid') }}
             </ButtonSecondary>
             <ButtonSecondary
               v-else
               @click="listStyle = true; showUpload = false; showTitles = false; showImages = true">
-              Vis som liste
+              {{ $t('list') }}
             </ButtonSecondary>
             <ButtonSecondary @click="showUpload = true; showImages = false; showTitles = false">
-              Last opp bilder
+              {{ $t('upload-images') }}
             </ButtonSecondary>
             <ButtonSecondary @click="showTitles = true; showImages = false; showUpload = false">
-              Endre bildetekster
+              {{ $t('edit-captions') }}
             </ButtonSecondary>
           </template>
         </div>
@@ -96,7 +92,7 @@
           <KInputTable
             v-model="block.data.images"
             name="data[images]"
-            label="Bildetekster"
+            :label="$t('captions')"
             id-key="url"
             :sortable="false"
             :delete-rows="false"
@@ -113,15 +109,15 @@
                     <KInput
                       v-model="entry.title"
                       name="entry[title]"
-                      placeholder="Bildetekst"
-                      label="Bildetekst" />
+                      :placeholder="$t('caption')"
+                      :label="$t('caption')" />
 
                     <KInput
                       v-model="entry.alt"
                       name="entry[alt]"
-                      placeholder="Alt tekst"
-                      label="Alt. tekst"
-                      help-text="Beskrivelse av bildet for universell utforming" />
+                      :placeholder="$t('alt-text')"
+                      :label="$t('alt-text')"
+                      :help-text="$t('alt-text-help')" />
                   </td>
                 </div>
               </div>
@@ -156,14 +152,14 @@
           <div class="text-center mb-3">
             <template
               v-if="dragOver">
-              Slipp for å laste opp!
+              {{ $t('drop-to-upload') }}
             </template>
             <template v-else>
               <template v-if="uploading">
-                Laster opp ...
+                {{ $t('uploading') }} ...
               </template>
               <template v-else>
-                Dra bildene du vil laste opp hit &uarr;
+                {{ $t('drag-images-to-upload') }} &uarr;
               </template>
             </template>
           </div>
@@ -229,7 +225,7 @@
             type="button"
             class="btn btn-primary"
             @click="showImages = true; showUpload = false; showTitles = false">
-            Velg bilder fra bildebibliotek
+            {{ $t('pick-from-library') }}
           </button>
         </div>
       </template>
@@ -404,7 +400,7 @@ export default {
           try {
             await this.upload(files.item(i))
           } catch (e) {
-            this.$alerts.alertError('Feil', 'Feil ved opplasting :(')
+            this.$alerts.alertError(this.$t('error'), this.$t('error-uploading'))
             break
           }
         }
@@ -455,7 +451,7 @@ export default {
           ]
         } else {
           this.uploading = false
-          this.$alerts.alertError('Feil', `Feil ved opplasting :(\n\n${data.error}'`)
+          this.$alerts.alertError(this.$t('error'), this.$t('error-uploading-info', { error: data.error }))
         }
       } catch (e) {
         this.uploading = false
@@ -521,3 +517,42 @@ export default {
     }
   }
 </style>
+
+<i18n>
+  {
+    "en": {
+      "configure": "Configure gallery block",
+      "help": "To remove an image from the gallery, first click the image, then click the trashcan icon.<br><br>To caption images, click \"Configure gallery block\", then \"Edit captions\"<br><br>To sort, you can drag and drop the images in your prefered sequence",
+      "grid": "Grid",
+      "list": "List",
+      "upload-images": "Upload images",
+      "edit-captions": "Edit captions",
+      "alt-text-help": "Image description for accessibility",
+      "captions": "Captions",
+      "drop-to-upload": "Drop to upload!",
+      "uploading": "Uploading",
+      "drag-images-to-upload": "Drag and drop your wanted images here",
+      "pick-from-library": "Pick images from library",
+      "error": "Error",
+      "error-uploading": "Error uploading :(",
+      "error-uploading-info": "Error uploading :(\n\n{error}"
+    },
+    "no": {
+      "configure": "Konfigurér galleriblokk",
+      "help": "For å slette et bilde i bildekarusellen, klikker du på bildet, deretter klikker du på søplekasse-ikonet<br><br>For å gi bildene bildetekst, klikker du på \"Konfigurér galleriblokk\" og deretter \"Endre bildetekster\"<br><br>For å sortere bildene kan du dra og slippe de i ønsket rekkefølge.",
+      "grid": "Grid",
+      "list": "List",
+      "upload-images": "Last opp bilder",
+      "edit-captions": "Endre bildetekster",
+      "alt-text-help": "Beskrivelse av bildet for universell utforming",
+      "captions": "Bildetekster",
+      "drop-to-upload": "Slipp for å laste opp!",
+      "uploading": "Laster opp",
+      "drag-images-to-upload": "Dra og slipp bildene du vil laste opp hit",
+      "pick-from-library": "Velg bilder fra bildebibliotek",
+      "error": "Feil",
+      "error-uploading": "Feil ved opplasting :(",
+      "error-uploading-info": "Feil ved opplasting :(\n\n{error}"
+    }
+  }
+</i18n>

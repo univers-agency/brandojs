@@ -2,7 +2,7 @@
   <article v-if="identity">
     <ContentHeader>
       <template v-slot:title>
-        Ny innholdsside
+        {{ $t('pages.new') }}
       </template>
     </ContentHeader>
     <PageForm
@@ -15,6 +15,7 @@
 
 import gql from 'graphql-tag'
 import PageForm from './PageForm'
+import locale from '../../locales/pages'
 
 export default {
   components: {
@@ -66,7 +67,7 @@ export default {
           }
         })
 
-        this.$toast.success({ message: 'Side opprettet' })
+        this.$toast.success({ message: this.$t('pages.created') })
         this.$router.push({ name: 'pages' })
       } catch (err) {
         this.$utils.showError(err)
@@ -93,10 +94,9 @@ export default {
         return identity
       }
     }
+  },
+  i18n: {
+    sharedMessages: locale
   }
 }
 </script>
-
-<style lang="postcss" scoped>
-
-</style>

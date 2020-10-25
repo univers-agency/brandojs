@@ -57,7 +57,7 @@
               <ButtonTiny
                 right
                 @click="deleteEntry(entry)">
-                Slett
+                {{ $t('delete') }}
               </ButtonTiny>
               <TemplateConfig
                 :templateId="block.data.id"
@@ -76,7 +76,7 @@
       <div
         class="add-multi-entry"
         @click="addMultiEntry">
-        Legg til nytt objekt i &laquo;{{ getBlockName }}&raquo;
+        {{ $t('add-new-object-in') }} &laquo;{{ getBlockName }}&raquo;
       </div>
     </div>
   </Block>
@@ -84,7 +84,6 @@
 
 <script>
 
-import Vue from 'vue'
 import TemplateConfig from './TemplateConfig'
 import IconRefresh from '../../icons/IconRefresh'
 import cloneDeep from 'lodash/cloneDeep'
@@ -212,9 +211,10 @@ export default {
 
       return {
         name: 'BuildWrapper',
+        delimiters: ['%%%', '%%%'],
         template,
         created () {
-          console.debug('<BuildWrapper /> created')
+          console.debug('<BuildWrapper /> created!')
         },
         updated () {
           console.debug('<BuildWrapper /> updated')
@@ -230,7 +230,7 @@ export default {
                   entryData: entryData
                 }
               },
-
+              delimiters: ['%%%%', '%%%%'],
               template: `
                 <div>${replacedContent}</div>
               `
@@ -265,13 +265,25 @@ export default {
     },
 
     replaceLogic (srcCode) {
-      const replacedLogicCode = srcCode.replace(/({% if \w+ == \w+ %}(.|\n)*?{% endif %})/mg, '')
+      let replacedLogicCode = srcCode.replace(/(\{% for (\w+) in [a-zA-Z0-9.?|"-]+ %\})(.*?)(\{% endfor %\})/gs, this.replaceForLogic)
+      replacedLogicCode = replacedLogicCode.replace(/\{% comment %\}((.|\n)*?)\{% endcomment %\}/gs, this.replaceCommentLogic)
+      replacedLogicCode = replacedLogicCode.replace(/(\{% if [a-zA-Z0-9.?|_"-]+ (==|!=) [a-zA-Z0-9.?|_"-]+ %\}(.|\n)*?\{% endif %\})/sg, '')
+      replacedLogicCode = replacedLogicCode.replace(/(\{% if [a-zA-Z0-9.?|_"-]+ %\}(.|\n)*?\{% endif %\})/sg, '')
       return replacedLogicCode
+    },
+
+    replaceCommentLogic (exp, comment) {
+      return `<span v-popover="''" class="villain-entry-comment"><span v-pre>${comment}</span></span>`
+    },
+
+    replaceForLogic (exp, f) {
+      // return '<span v-popover="\'Loop\'" class="villain-entry-var"><span v-pre>[ loop ]</span></span>'
+      return ''
     },
 
     replaceVars (srcCode) {
       // TODO: when lookbehind is implemented: /(?<!<\/?[^>]*|&[^;]*)(\${.*?})/g
-      const replacedVarsCode = srcCode.replace(/<.*?>|(\$\{.*?\})/g, this.replaceVar)
+      const replacedVarsCode = srcCode.replace(/<.*?>|(\{\{.*?\}\})/g, this.replaceVar)
       return replacedVarsCode
     },
 
@@ -283,7 +295,7 @@ export default {
           return ret
         }
 
-        return `<span v-popover="'Skiftes automatisk ut med en verdi når objektet lagres'" class="villain-entry-var"><span v-pre>{{ ${varName} }}</span></span>`
+        return `<span v-popover="'Skiftes automatisk ut med en verdi når objektet lagres'" class="villain-entry-var"><span v-pre>${varName}</span></span>`
       }
 
       return exp
@@ -302,7 +314,7 @@ export default {
 
     replaceEntries (srcCode) {
       if (this.available.entryData !== {}) {
-        const replacedEntriesCode = srcCode.replace(/\${entry:(\w+)}/g, this.replaceEntry)
+        const replacedEntriesCode = srcCode.replace(/\{\{ entry.(\w+) \}}/g, this.replaceEntry)
         return replacedEntriesCode
       }
       return srcCode
@@ -310,16 +322,16 @@ export default {
 
     replaceEntry (exp, entryVar) {
       if (this.available.entryData) {
-        return `<span v-popover="'\${entry:${entryVar}}'" class="villain-entry-var">${this.lookupEntryVar(entryVar)}</span>`
+        return `<span v-popover="'{{ entry.${entryVar} }}'" class="villain-entry-var">${this.lookupEntryVar(entryVar)}</span>`
       } else {
-        return '${entry:' + entryVar + '}'
+        return '{{ entry.' + entryVar + ' }}'
       }
       // return `${this.available.entryData[entryVar] || 'mangler entryData'}`
     },
 
     lookupEntryVar (entryVar) {
       const camelCasedVar = camelCase(entryVar)
-      return `{{ entryData.${camelCasedVar} }}`
+      return `%%% entryData.${camelCasedVar} %%%`
       // return `${this.available.entryData[entryVar] || 'mangler entryData'}`
     },
 
@@ -570,10 +582,11 @@ export default {
   }
 
   >>> .villain-entry-var {
-    padding: 4px 10px;
+    padding: 4px 5px;
     background-color: gold;
     font-family: mono;
-    font-size: 17px;
+    font-size: 12px;
+    border-radius: 7px;
 
     &:hover {
       border-radius: 5px;
@@ -581,4 +594,30 @@ export default {
       cursor: help;
     }
   }
+
+  >>> .villain-entry-comment {
+    padding: 4px 5px;
+    background-color: pink;
+    font-family: mono;
+    font-size: 12px;
+    border-radius: 7px;
+
+    &:hover {
+      border-radius: 5px;
+      background-color: pink;
+      cursor: help;
+    }
+  }
 </style>
+<i18n>
+  {
+    "en": {
+      "delete": "Delete",
+      "add-new-object-in": "Add new entry to"
+    },
+    "no": {
+      "delete": "Slett",
+      "add-new-object-in": "Legg til nytt objekt i"
+    }
+  }
+</i18n>

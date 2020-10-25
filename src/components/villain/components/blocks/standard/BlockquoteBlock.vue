@@ -9,11 +9,11 @@
     @delete="$emit('delete', $event)">
     <KInputTextarea
       v-model="block.data.text"
-      label="Sitat"
+      :label="$t('quote')"
       name="data[text]" />
     <KInput
       v-model="block.data.cite"
-      label="Sitatforfatter"
+      :label="$t('quote-author')"
       name="data[cite]" />
   </Block>
 </template>
@@ -56,3 +56,15 @@ export default {
   }
 }
 </script>
+<i18n>
+  {
+    "en": {
+      "quote": "Quote",
+      "quote-author": "Quote author"
+    },
+    "no": {
+      "quote": "Sitat",
+      "quote-author": "Sitatforfatter"
+    }
+  }
+</i18n>

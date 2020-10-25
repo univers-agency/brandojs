@@ -28,14 +28,14 @@
         @shortkey.native="toggle"
         @ok="toggle()">
         <template #header>
-          Rediger videodata
+          {{ $t("edit-video-data") }}
         </template>
         <div>
           <KInput
             v-model="url"
             name="video[url]"
-            label="Lim inn link til video"
-            help-text="f.eks: <code>https://vimeo.com/76979871</code>" />
+            :label="$t('paste-video-link')"
+            help-text="i.e.: <code>https://vimeo.com/76979871</code>" />
         </div>
         <div
           v-for="(msg, idx) in messages"
@@ -60,7 +60,7 @@
         <button
           class="button-edit"
           @click.self.prevent.stop="toggleFromButton">
-          {{ open ? 'Lukk' : 'Endre' }}
+          {{ open ? $t('close') : $t('edit') }}
         </button>
       </div>
     </template>
@@ -218,7 +218,7 @@ export default {
       let match
       const url = this.url
 
-      this.messages.push('Analyserer lenken...')
+      this.messages.push(this.$t('analyze-link'))
 
       if (url.startsWith('https://player.vimeo.com/external/')) {
         this.source = 'file'
@@ -237,27 +237,17 @@ export default {
         if (!{}.hasOwnProperty.call(this.providers, this.source)) {
           return false
         }
-
-        this.messages.push('Video er EMBED')
       }
 
       this.html = this.providers[this.source].html
         .replace('{{protocol}}', window.location.protocol)
         .replace('{{remote_id}}', this.remoteId)
 
-      this.messages.push(`Video er av type ${this.source}`)
-      this.messages.push(`Video har ID ${this.remoteId}`)
-
       // grab oEmbed via Brando
       if (this.source !== 'file') {
-        this.messages.push('Kontakter oEmbed API...')
         this.adminChannel.channel
           .push('oembed:get', { source: this.source, url: this.url })
           .receive('ok', ({ result }) => {
-            this.messages.push('Henter ut bredde/høyde')
-
-            console.log(result)
-
             this.width = result.width
             this.height = result.height
             this.thumbnailUrl = result.thumbnail_url
@@ -366,3 +356,22 @@ export default {
     }
   }
 </style>
+
+<i18n>
+  {
+    "en": {
+      "edit-video-data": "Edit video data",
+      "paste-video-link": "Paste video link",
+      "close": "Close",
+      "edit": "Edit",
+      "analyze-link": "Analyzing link..."
+    },
+    "no": {
+      "edit-video-data": "Endre videodata",
+      "paste-video-link": "Lim inn link til video",
+      "close": "Lukk",
+      "edit": "Endre",
+      "analyze-link": "Analyserer lenken..."
+    }
+  }
+</i18n>

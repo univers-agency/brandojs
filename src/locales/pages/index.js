@@ -1,20 +1,71 @@
 export default {
   en: {
+    fields: {
+      advancedConfig: {
+        label: 'Advanced configuration'
+      },
+      language: {
+        label: 'Language'
+      },
+      parentId: {
+        label: 'Parent page'
+      },
+      title: {
+        label: 'Title'
+      },
+      template: {
+        label: 'Template'
+      },
+      key: {
+        label: 'Key'
+      },
+      isHomepage: {
+        label: 'Homepage'
+      },
+      cssClasses: {
+        label: 'Extra CSS classes'
+      },
+      metaDescription: {
+        label: 'META description',
+        helpText: 'Short description (for search engines)'
+      },
+      metaImage: {
+        label: 'META image',
+        helpText: 'If you need a custom image for sharing. <br>Cropped to 1200x630'
+      },
+      properties: {
+        label: 'Page properties (advanced)'
+      },
+      data: {
+        label: 'Contents'
+      }
+    },
+    'pages.label': 'Label',
+    'pages.key': 'Key',
+    'pages.type': 'Type',
+    'pages.value': 'Value',
+
     'pages.title': 'Pages and sections',
     'pages.subtitle': 'Content administration',
+    'pages.created': 'Page created',
+    'pages.updated': 'Page updated',
     'pages.index': 'Index',
     'pages.actions': 'Actions',
+    'pages.fragments-rerendered': 'Fragments rerendered',
+    'pages.pages-rerendered': 'Pages rerendered',
     'pages.new': 'New page',
     'pages.reprocess': 'Reprocess pages/sections',
     'pages.new-section': 'New section',
     'pages.section': 'Section',
     'pages.sequence-updated': 'Sequence updated',
     'pages.delete-page': 'Delete page',
+    'pages.delete-pages': 'Delete pages',
     'pages.duplicate-page': 'Duplicate page',
     'pages.duplicate-section': 'Duplicate section',
     'pages.edit-section': 'Edit section',
     'pages.delete-section': 'Delete section',
     'pages.are-you-sure-you-want-to-delete-this-section': 'Are you sure you want to delete this section?',
+    'pages.no-title': 'No title',
     'pages.edit-page': 'Edit page',
     'pages.reprocess-page': 'Reprocess page',
     'pages.section-deleted': 'Section deleted',
@@ -24,14 +75,63 @@ export default {
     'pages.page-duplicated': 'Page duplicated',
     'pages.section-duplicated': 'Section duplicated',
     'pages.subpage': 'Subpage',
+    'pages.subpages': 'Subpages',
     'pages.edit-subpage': 'Edit subpage',
     'pages.delete-subpage': 'Delete subpage'
   },
   no: {
+    fields: {
+      advancedConfig: {
+        label: 'Avansert oppsett'
+      },
+      language: {
+        label: 'Språk'
+      },
+      parentId: {
+        label: 'Tilhørende side'
+      },
+      title: {
+        label: 'Tittel'
+      },
+      template: {
+        label: 'Sidemal'
+      },
+      key: {
+        label: 'Nøkkel'
+      },
+      isHomepage: {
+        label: 'Nettstedets hovedside'
+      },
+      cssClasses: {
+        label: 'Ekstra CSS klasser'
+      },
+      metaDescription: {
+        label: 'META beskrivelse',
+        helpText: 'Kort beskrivelse (for søkemotorer)'
+      },
+      metaImage: {
+        label: 'Delebilde (META bilde)',
+        helpText: 'Om du trenger et spesialtilpasset bilde for deling.<br>Beskjæres til 1200x630.'
+      },
+      properties: {
+        label: 'Sideegenskaper (avansert)'
+      },
+      data: {
+        label: 'Innhold'
+      }
+    },
+    'pages.label': 'Merkelapp',
+    'pages.key': 'Nøkkel',
+    'pages.type': 'Type',
+    'pages.value': 'Verdi',
     'pages.title': 'Sider og seksjoner',
     'pages.subtitle': 'Innholdsadministrasjon',
+    'pages.created': 'Side opprettet',
+    'pages.updated': 'Side oppdatert',
     'pages.index': 'Oversikt',
     'pages.actions': 'Handlinger',
+    'pages.fragments-rerendered': 'Fragmentene ble gjengitt på nytt',
+    'pages.pages-rerendered': 'Sidene ble gjengitt på nytt',
     'pages.new': 'Ny side',
     'pages.reprocess': 'Behandle sider og seksjoner på nytt',
     'pages.delete-section': 'Slett seksjon',
@@ -40,7 +140,9 @@ export default {
     'pages.section': 'Seksjon',
     'pages.sequence-updated': 'Rekkefølge oppdatert',
     'pages.are-you-sure-you-want-to-delete-this-section': 'Er du sikker på at du vil slette denne seksjonen?',
+    'pages.no-title': 'Ingen tittel',
     'pages.delete-page': 'Slett siden',
+    'pages.delete-pages': 'Slett sidene',
     'pages.duplicate-page': 'Dupliser side',
     'pages.duplicate-section': 'Dupliser seksjon',
     'pages.edit-section': 'Rediger seksjon',
@@ -52,6 +154,7 @@ export default {
     'pages.page-duplicated': 'Siden ble duplisert',
     'pages.section-duplicated': 'Seksjonen ble duplisert',
     'pages.subpage': 'Underside',
+    'pages.subpages': 'Undersider',
     'pages.edit-subpage': 'Endre underside',
     'pages.delete-subpage': 'Slett underside'
   }

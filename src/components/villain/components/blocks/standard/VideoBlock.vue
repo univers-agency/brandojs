@@ -20,7 +20,7 @@
           <div class="helpful-actions">
             <ButtonTiny
               @click="$refs.config.openConfig()">
-              Konfigurér video
+              {{ $t('configure') }}
             </ButtonTiny>
           </div>
         </template>
@@ -33,7 +33,7 @@
           <div class="helpful-actions">
             <ButtonTiny
               @click="$refs.config.openConfig()">
-              Konfigurér video
+              {{ $t('configure') }}
             </ButtonTiny>
           </div>
         </template>
@@ -46,7 +46,7 @@
           <div class="actions">
             <ButtonTiny
               @click="$refs.config.openConfig()">
-              Konfigurér videoblokk
+              {{ $t('configure') }}
             </ButtonTiny>
           </div>
         </div>
@@ -57,45 +57,45 @@
       v-model="block.data">
       <template #default>
         <div class="desc">
-          Lim inn link til youtube, vimeo eller ekstern fil. <br>
-          F.eks <strong>http://www.youtube.com/watch?v=jlbunmCbTBA</strong>
+          {{ $t('paste-link') }} <br>
+          I.e. <strong>https://www.youtube.com/watch?v=jlbunmCbTBA</strong>
         </div>
         <div>
           <template
             v-if="block.data.remote_id">
             <KInput
+              v-model="url"
+              name="url"
+              :label="$t('paste-link')"
+              placeholder="https://www.youtube.com/watch?v=jlbunmCbTBA"
+              @input="parseUrl" />
+
+            <KInput
               v-model="block.data.remote_id"
               name="data[remote_id]"
               disabled
-              :label="`Eksisterende data — ${block.data.source}`"
+              :label="$t('existing-data') + ` — ${block.data.source}`"
               placeholder="ID" />
 
             <KInput
               v-model="block.data.link"
               name="data[link]"
-              label="Link video til denne URL"
+              :label="$t('link-video-to-url')"
               placeholder="google.com" />
 
             <KInput
               v-model="block.data.poster"
               name="data[poster]"
-              label="URL til posterbilde"
+              :label="$t('poster-url')"
               placeholder="https://link.com/image.jpg" />
           </template>
-
-          <KInput
-            v-model="url"
-            name="url"
-            label="Lim inn videoens adresse"
-            placeholder="Videoadresse"
-            @input="parseUrl" />
         </div>
         <div v-if="block.data.url">
           <KInput
             v-model="block.data.class"
             name="data[class]"
-            label="Ekstra CSS klasser"
-            placeholder="CSS klasser" />
+            :label="$t('css-classes')"
+            placeholder=".my-class .another-class" />
         </div>
       </template>
     </BlockConfig>
@@ -243,3 +243,24 @@ export default {
     margin-bottom: 20px;
   }
 </style>
+
+<i18n>
+  {
+    "en": {
+      "configure": "Configure video block",
+      "paste-link": "Paste URL to youtube, vimeo or external file.",
+      "existing-data": "Existing data",
+      "link-video-to-url": "Link video to URL",
+      "poster-url": "URL for poster",
+      "css-classes": "Extra CSS classes"
+    },
+    "no": {
+      "configure": "Konfigurér videoblokk",
+      "paste-link": "Lim inn link til youtube, vimeo eller ekstern fil.",
+      "existing-data": "Eksisterende data",
+      "link-video-to-url": "Link video til denne URL",
+      "poster-url": "URL for posterbilde",
+      "css-classes": "Ekstra CSS-klasser"
+    }
+  }
+</i18n>

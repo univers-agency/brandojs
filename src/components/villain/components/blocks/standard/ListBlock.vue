@@ -15,7 +15,7 @@
         <div class="actions">
           <ButtonSecondary
             @click="$refs.config.openConfig()">
-            Konfigurér liste
+            {{ $t('configure') }}
           </ButtonSecondary>
         </div>
       </div>
@@ -43,7 +43,7 @@
         <div class="helpful-actions">
           <ButtonTiny
             @click="$refs.config.openConfig()">
-            Konfigurér liste
+            {{ $t('configure') }}
           </ButtonTiny>
         </div>
       </div>
@@ -55,25 +55,25 @@
       <template #default="{ cfg }">
         <KInputToggle
           v-model="advanced"
-          label="Avansert oppsett"
+          :label="$t('advanced-setup')"
           name="data[advanced]" />
 
         <KInput
           v-if="advanced"
           v-model="cfg.id"
-          label="Listens CSS-ID"
+          :label="$t('list-css-id')"
           name="data[id]" />
 
         <KInput
           v-if="advanced"
           v-model="cfg.class"
-          label="Listens CSS-klasser"
+          :label="$t('list-css-classes')"
           name="data[class]" />
 
         <KInputTable
           v-model="cfg.rows"
           name="data[data]"
-          label="Liste"
+          :label="$t('list')"
           id-key="key"
           :delete-rows="true"
           :add-rows="false">
@@ -83,14 +83,13 @@
                 v-if="advanced"
                 v-model="entry.class"
                 name="entry[class]"
-                placeholder=""
-                label="CSS-klasse" />
+                :label="$t('css-class')" />
 
               <KInputRichText
                 v-model="entry.value"
                 name="entry[value]"
-                placeholder="Innhold"
-                label="Innhold" />
+                :placeholder="$t('content')"
+                :label="$t('content')" />
             </td>
           </template>
         </KInputTable>
@@ -98,7 +97,7 @@
         <div class="d-flex justify-content-center">
           <ButtonSecondary
             @click="addItem(cfg)">
-            Legg til ny linje
+            {{ $t('add-new-line') }}
           </ButtonSecondary>
         </div>
       </template>
@@ -265,3 +264,23 @@ export default {
   }
 
 </style>
+<i18n>
+  {
+    "en": {
+      "configure": "Configure list block",
+      "list-css-id": "List CSS id",
+      "list-css-classes": "List CSS-classes",
+      "list": "List",
+      "css-class": "CSS class",
+      "content": "Content"
+    },
+    "no": {
+      "configure": "Konfigurér liste",
+      "list-css-id": "Listens CSS id",
+      "list-css-classes": "Listens CSS-klasser",
+      "list": "Liste",
+      "css-class": "CSS klasse",
+      "content": "Innhold"
+    }
+  }
+</i18n>

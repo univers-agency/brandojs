@@ -99,7 +99,7 @@ export default {
     async validate () {
       const isValid = await this.$refs.observer.validate()
       if (!isValid) {
-        this.$alerts.alertError('Feil i skjema', 'Vennligst se over og rett feil i rødt')
+        this.$alerts.alertError(this.$t('error-form'), this.$t('errors-in-schema'))
         this.loading = false
         return
       }
@@ -169,12 +169,16 @@ export default {
   "en": {
     "add": "Add",
     "save": "Save",
-    "back": "Back to index"
+    "back": "Back to index",
+    "error-form": "Form error",
+    "errors-in-schema": "Please correct fields with errors"
   },
   "no": {
     "add": "Legg til",
     "save": "Lagre",
-    "back": "Tilbake til oversikten"
+    "back": "Tilbake til oversikten",
+    "error-form": "Feil i skjema",
+    "errors-in-schema": "Vennligst se over og rett feil i rødt"
   }
 }
 </i18n>

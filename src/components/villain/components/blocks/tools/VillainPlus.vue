@@ -11,7 +11,7 @@
           ref="plusLink"
           @click="clickPlus">
           <template v-if="draggingOver">
-            Flytt blokken hit
+            {{ $t('move-block-here') }}
           </template>
           <template v-if="!draggingOver">
             <svg
@@ -76,7 +76,7 @@
             <div
               class="datasource-block"
               @click="addDatasource">
-              + Datakilde (avansert)
+              {{ $t('add-datasource') }}
             </div>
 
             <div
@@ -352,9 +352,10 @@ export default {
 .datasource-block {
   text-transform: uppercase;
   font-family: Mono;
-  font-size: 13px;
+  font-size: 11px;
   text-align: right;
   padding-bottom: 11px;
+  cursor: pointer;
 }
 
 .villain-editor-plus-available-templates {
@@ -561,5 +562,17 @@ export default {
     }
   }
 }
-
 </style>
+
+<i18n>
+  {
+    "en": {
+      "move-block-here": "Move block here",
+      "add-datasource": "+ Datasource (advanced)"
+    },
+    "no": {
+      "move-block-here": "Flytt blokken hit",
+      "add-datasource": "+ Datakilde (avansert)"
+    }
+  }
+</i18n>

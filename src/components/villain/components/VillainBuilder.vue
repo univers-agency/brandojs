@@ -289,9 +289,11 @@
 import VueSlideUpDown from 'vue-slide-up-down'
 import IconDropdown from '../components/icons/IconDropdown'
 import CodeMirror from 'codemirror'
-import 'codemirror/mode/twig/twig.js'
+import updateCodeMirrorInstance from '@128technology/codemirror-liquid-mode'
+import '@128technology/codemirror-liquid-mode/liquid.css'
 import 'codemirror/mode/javascript/javascript.js'
 import 'codemirror/addon/display/autorefresh.js'
+import 'codemirror/addon/mode/overlay.js'
 
 import fetchTemplates from '../utils/fetchTemplates'
 import storeTemplate from '../utils/storeTemplate'
@@ -356,8 +358,9 @@ export default {
 
   async mounted () {
     this.templates = await fetchTemplates('all', { authorization: `Bearer ${this.getToken()}` }, this.urls.templates)
+    updateCodeMirrorInstance(CodeMirror)
     this.codeMirror = CodeMirror(document.querySelector('#builder-template'), {
-      mode: 'twig',
+      mode: 'liquid',
       theme: 'duotone-light',
       autoRefresh: true,
       tabSize: 2,

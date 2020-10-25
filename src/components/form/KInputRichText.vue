@@ -57,7 +57,7 @@
               @shortkey.native="hideLinkMenu"
               @ok="setLinkUrl(commands.link, linkUrl)">
               <template #header>
-                Rediger link
+                {{ $t('edit-link') }}
               </template>
               <template>
                 <KInput
@@ -65,7 +65,7 @@
                   v-model="linkUrl"
                   name="link[url]"
                   label="URL"
-                  help-text="OBS! For å linke til en lokal side må du alltid ha med / foran (f.eks /personvern)."
+                  :help-text="$t('help-text')"
                   placeholder="https://link.no" />
               </template>
             </KModal>
@@ -78,7 +78,7 @@
               @shortkey.native="hideLinkMenu"
               @ok="setActionButtonUrl(commands.action_button, actionButtonUrl)">
               <template #header>
-                Rediger knappelink
+                {{ $t('edit-action-button') }}
               </template>
               <template>
                 <KInput
@@ -86,7 +86,7 @@
                   v-model="actionButtonUrl"
                   name="actionButton[url]"
                   label="URL"
-                  help-text="OBS! For å linke til en lokal side må du alltid ha med / foran (f.eks /personvern)."
+                  :help-text="$t('help-text')"
                   placeholder="https://link.no" />
               </template>
             </KModal>
@@ -604,3 +604,17 @@ export default {
     }
   }
 </style>
+<i18n>
+  {
+    "en": {
+      "edit-link": "Edit link",
+      "edit-action-button": "Edit button link",
+      "help-text": "NB! When linking to a local page, you must remember to prefix the url with '/' (i.e /privacy)."
+    },
+    "no": {
+      "edit-link": "Endre link",
+      "edit-action-button": "Rediger knappelink",
+      "help-text": "OBS! For å linke til en lokal side må du alltid ha med '/' foran (f.eks /personvern)."
+    }
+  }
+</i18n>

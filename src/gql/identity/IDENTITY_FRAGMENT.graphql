@@ -6,6 +6,8 @@ fragment identity on Identity {
   email
   phone
   address
+  address2
+  address3
   zipcode
   city
   country

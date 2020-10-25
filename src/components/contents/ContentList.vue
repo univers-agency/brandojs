@@ -28,7 +28,7 @@
           </div>
           <input
             v-model="filters[k]"
-            placeholder="Søk"
+            :placeholder="$t('search')"
             type="text"
             @input="filterInput()" />
         </div>
@@ -51,10 +51,10 @@
         <div
           v-if="selectedRows.length"
           class="selected">
-          Med
+          {{ $t('with') }}
           <div class="circle">
             <span>{{ selectedRows.length }}</span>
-          </div> valgte utfør handling &rarr;
+          </div> {{ $t('selected-perform') }} &rarr;
           <CircleDropdown :inverted="true">
             <slot
               name="selected"
@@ -103,8 +103,7 @@
           @click.stop="select(entry[entryKey])">
           <template v-if="sortable">
             <div class="col-1">
-              <SequenceHandle
-                :class="sequenceHandle" />
+              <SequenceHandle :class="sequenceHandle" />
             </div>
           </template>
           <template v-if="status">
@@ -137,7 +136,7 @@
       <ButtonSecondary
         class="mt-3"
         @click="$emit('more')">
-        Last inn flere
+        {{ $t('more') }}
       </ButtonSecondary>
     </div>
     <div
@@ -149,6 +148,7 @@
 </template>
 
 <script>
+
 import debounce from 'lodash.debounce'
 
 export default {
@@ -425,17 +425,17 @@ export default {
       display: flex;
       align-items: center;
       background-color: theme(colors.input);
+      height: 100%;
 
       input {
         @fontsize base;
-        padding-top: 12px;
+        padding-top: 15px;
         padding-bottom: 12px;
         padding-left: 15px;
         padding-right: 15px;
         background-color: theme(colors.input);
         width: 100%;
         border: 0;
-        border-left: 1px solid #ffffff;
       }
 
       .filter-key {
@@ -529,7 +529,6 @@ export default {
         &:after {
           opacity: 1;
           transform: scale(0.8) translateY(2px) rotate(45deg);
-          /* transition: transform 250ms ease, opacity 250ms ease, color 250ms ease; */
         }
       }
     }
@@ -583,3 +582,20 @@ export default {
     }
   }
 </style>
+
+<i18n>
+{
+  "en": {
+    "search": "Search...",
+    "with": "With",
+    "selected-perform": "selected, do:",
+    "more": "Load more, if available"
+  },
+  "no": {
+    "search": "Søk...",
+    "with": "Med",
+    "selected-perform": "valgte utfør handling:",
+    "more": "Last inn flere, hvis tilgjengelig"
+  }
+}
+</i18n>

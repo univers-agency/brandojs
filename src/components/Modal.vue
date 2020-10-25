@@ -116,7 +116,9 @@ export default {
 
     cancelText: {
       type: String,
-      default: 'Tilbake'
+      default: function () {
+        this.$t('back')
+      }
     },
 
     okClass: {
@@ -327,3 +329,13 @@ export default {
     position: relative;
   }
 </style>
+<i18n>
+  {
+    "en": {
+      "back": "Back"
+    },
+    "no": {
+      "back": "Tilbake"
+    }
+  }
+</i18n>

@@ -25,7 +25,7 @@
         <div class="helpful-actions">
           <ButtonTiny
             @click="$refs.config.openConfig()">
-            Konfigurér SVG
+            {{ $t('configure') }}
           </ButtonTiny>
         </div>
       </div>
@@ -38,12 +38,12 @@
         <KInputCode
           v-model="cfg.code"
           name="data[code]"
-          label="Kode" />
+          :label="$t('code')" />
 
         <KInput
           v-model="cfg.class"
           name="data[class]"
-          label="CSS klasser" />
+          :label="$t('css-classes')" />
       </template>
     </BlockConfig>
   </div>
@@ -120,3 +120,18 @@ export default {
     }
   }
 </style>
+
+<i18n>
+  {
+    "en": {
+      "configure": "Configure SVG",
+      "code": "Code",
+      "css-classes": "CSS classes"
+    },
+    "no": {
+      "configure": "Konfigurér SVG",
+      "code": "Kode",
+      "css-classes": "CSS-klasser"
+    }
+  }
+</i18n>

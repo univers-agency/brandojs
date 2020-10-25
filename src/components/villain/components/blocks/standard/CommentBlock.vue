@@ -6,14 +6,14 @@
     @move="$emit('move', $event)"
     @duplicate="$emit('duplicate', $event)"
     @delete="$emit('delete', $event)">
-    <template #description> (vises ikke)</template>
+    <template #description></template>
     <div class="villain-block-comment">
       <KInputCode
         v-model="block.data.text"
         transparent
         :line-numbers="false"
         name="data[text]"
-        label="Kommentar" />
+        :label="$t('comment')" />
     </div>
   </Block>
 </template>
@@ -71,3 +71,14 @@ export default {
     background-color: transparent;
   }
 </style>
+
+<i18n>
+  {
+    "en": {
+      "comment": "Comment"
+    },
+    "no": {
+      "comment": "Kommentar"
+    }
+  }
+</i18n>

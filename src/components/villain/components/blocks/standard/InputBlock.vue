@@ -20,20 +20,20 @@
       <template #default>
         <KInput
           v-model="block.data.label"
-          label="Label"
-          placeholder="Label"
+          :label="$t('label')"
+          :placeholder="$t('label')"
           name="data[label]" />
 
         <KInput
           v-model="block.data.placeholder"
-          label="Placeholder"
-          placeholder="Placeholder"
+          :label="$t('placeholder')"
+          :placeholder="$t('placeholder')"
           name="data[placeholder]" />
 
         <KInput
           v-model="block.data.help_text"
-          label="Help text"
-          placeholder="Help text"
+          :label="$t('help-text')"
+          :placeholder="$t('help-text')"
           name="data[help_text]" />
       </template>
     </BlockConfig>
@@ -73,3 +73,18 @@ export default {
   }
 }
 </script>
+
+<i18n>
+  {
+    "en": {
+      "label": "Label",
+      "placeholder": "Placeholder",
+      "help-text": "Help text"
+    },
+    "no": {
+      "label": "Etikett",
+      "placeholder": "Plassholder",
+      "help-text": "Hjelpetekst"
+    }
+  }
+</i18n>

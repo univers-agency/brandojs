@@ -15,7 +15,7 @@
         <div class="actions">
           <ButtonSecondary
             @click="$refs.config.openConfig()">
-            Konfigurér datatabell
+            {{ $t('configure') }}
           </ButtonSecondary>
         </div>
       </div>
@@ -43,7 +43,7 @@
         <div class="helpful-actions">
           <ButtonTiny
             @click="$refs.config.openConfig()">
-            Konfigurér tabell
+            {{ $t('configure') }}
           </ButtonTiny>
         </div>
       </div>
@@ -67,7 +67,7 @@
                   v-model="entry.key"
                   compact
                   name="entry[key]"
-                  placeholder="Nøkkel"
+                  :placeholder="$t('key')"
                   label="" />
               </div>
 
@@ -76,7 +76,7 @@
                   v-model="entry.value"
                   compact
                   name="entry[value]"
-                  placeholder="Verdi"
+                  :placeholder="$t('value')"
                   label="" />
               </div>
             </td>
@@ -86,7 +86,7 @@
         <div class="d-flex justify-content-center">
           <ButtonSecondary
             @click="addItem(cfg)">
-            Legg til ny linje
+            {{ $t('add-line') }}
           </ButtonSecondary>
         </div>
       </template>
@@ -130,7 +130,6 @@ export default {
 
   methods: {
     forceUpdate (data) {
-      console.log('forceUpdate', data)
       this.$set(this.block, 'data', data)
     },
 
@@ -160,7 +159,7 @@ export default {
     addItem (cfg) {
       cfg.rows = [
         ...cfg.rows,
-        { id: this.$utils.guid(), key: 'Nøkkel', value: 'Innhold' }
+        { id: this.$utils.guid(), key: this.$t('key'), value: this.$t('value') }
       ]
     }
   }
@@ -227,3 +226,19 @@ export default {
   }
 
 </style>
+<i18n>
+  {
+    "en": {
+      "configure": "Configure datatable",
+      "key": "Key",
+      "value": "Value",
+      "add-line": "Add line"
+    },
+    "no": {
+      "configure": "Konfigurér datatabell",
+      "key": "Nøkkel",
+      "value": "Verdi",
+      "add-line": "Legg til ny linje"
+    }
+  }
+</i18n>

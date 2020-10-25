@@ -17,7 +17,7 @@
           <div class="helpful-actions">
             <ButtonTiny
               @click="$refs.config.openConfig()">
-              Konfigurér bildeblokk
+              {{ $t('configure') }}
             </ButtonTiny>
           </div>
         </template>
@@ -55,7 +55,7 @@
           <div class="actions">
             <ButtonTiny
               @click="$refs.config.openConfig()">
-              Konfigurér bildeblokk
+              {{ $t('configure') }}
             </ButtonTiny>
           </div>
         </div>
@@ -103,14 +103,14 @@
           <div class="text-center mb-2">
             <template
               v-if="dragOver">
-              Slipp for å laste opp!
+              {{ $t('drop-to-upload') }}
             </template>
             <template v-else>
               <template v-if="uploading">
-                Laster opp ...
+                {{ $t('uploading') }}
               </template>
               <template v-else>
-                Klikk, eller dra bildet du vil laste opp hit &uarr;
+                {{ $t('drag-images-to-upload') }}
               </template>
             </template>
           </div>
@@ -120,8 +120,8 @@
           v-if="showImages && listStyle"
           class="villain-image-library">
           <div class="col-12 mb-3">
-            <ButtonSecondary @click="listStyle = false">Vis thumbnails</ButtonSecondary>
-            <ButtonSecondary @click="showImages = false">Skjul bildeliste</ButtonSecondary>
+            <ButtonSecondary @click="listStyle = false">{{ $t('show-thumbnails') }}</ButtonSecondary>
+            <ButtonSecondary @click="showImages = false">{{ $t('hide-image-list') }}</ButtonSecondary>
           </div>
           <table
             class="table villain-image-table">
@@ -156,8 +156,8 @@
           v-else-if="showImages && !listStyle"
           class="villain-image-library">
           <div class="col-12 mb-3">
-            <ButtonSecondary @click="listStyle = true">Vis listevisning</ButtonSecondary>
-            <ButtonSecondary @click="showImages = false">Skjul bildeliste</ButtonSecondary>
+            <ButtonSecondary @click="listStyle = true">{{ $t('show-image-list') }}</ButtonSecondary>
+            <ButtonSecondary @click="showImages = false">{{ $t('hide-image-list') }}</ButtonSecondary>
           </div>
           <div
             v-for="i in images"
@@ -177,60 +177,60 @@
                 <KInputToggle
                   v-model="advancedConfig"
                   name="config[advanced]"
-                  label="Vis avansert konfigurasjon" />
+                  :label="$t('show-advanced-config')" />
 
                 <KInput
                   v-model="block.data.title"
                   name="data[title]"
-                  label="Tittel"
-                  placeholder="Tittel" />
+                  :placeholder="$t('title')"
+                  :label="$t('title')" />
 
                 <KInput
                   v-model="block.data.alt"
                   name="data[alt]"
-                  label="Alt. tekst (om bildet ikke laster)"
-                  placeholder="Alt. tekst" />
+                  :placeholder="$t('alt')"
+                  :label="$t('alt')" />
 
                 <KInput
                   v-model="block.data.credits"
                   name="data[credits]"
-                  label="Krediteringer"
-                  placeholder="Krediteringer" />
+                  :placeholder="$t('credits')"
+                  :label="$t('credits')" />
 
                 <KInput
                   v-model="block.data.link"
                   name="data[link]"
-                  label="Link til"
-                  placeholder="Link" />
+                  :placeholder="$t('link')"
+                  :label="$t('link')" />
 
                 <div v-show="advancedConfig">
                   <KInput
                     v-model="block.data.url"
                     name="data[url]"
-                    label="Kilde (avansert)"
-                    placeholder="Kilde" />
+                    :placeholder="$t('url')"
+                    :label="$t('url')" />
 
                   <KInputTextarea
                     v-model="block.data.media_queries"
                     name="data[media_queries]"
-                    label="Media Queries (avansert)" />
+                    :label="$t('media_queries')" />
 
                   <KInputTextarea
                     v-model="block.data.srcset"
                     name="data[srcset]"
-                    label="Srcset (avansert)" />
+                    :label="$t('srcset')" />
 
                   <KInput
                     v-model="block.data.img_class"
                     name="data[img_class]"
-                    label="CSS klasser (img)"
-                    placeholder="classname1 classname2" />
+                    :placeholder="$t('img_class')"
+                    :label="$t('img_class')" />
 
                   <KInput
                     v-model="block.data.picture_class"
                     name="data[picture_class]"
-                    label="CSS klasser (picture)"
-                    placeholder="classname1 classname2" />
+                    :placeholder="$t('picture_class')"
+                    :label="$t('picture_class')" />
                 </div>
               </div>
 
@@ -240,14 +240,14 @@
                   type="button"
                   class="btn btn-primary"
                   @click="getImages">
-                  Velg bilde fra bildebibliotek
+                  {{ $t('pick-from-library') }}
                 </button>
                 <button
                   v-if="block.data.url !== ''"
                   type="button"
                   class="btn btn-primary ml-3"
                   @click="resetImage">
-                  Nullstill bildeblokk
+                  {{ $t('reset-image-block') }}
                 </button>
               </div>
             </div>
@@ -386,10 +386,10 @@ export default {
           this.images = data.images
           this.showImages = true
         } else {
-          this.$alerts.alertError('Feil', 'Fant ingen bilder i biblioteket. Last opp et i stedet!')
+          this.$alerts.alertError(this.$t('error'), this.$t('empty-library'))
         }
       } catch (e) {
-        this.$alerts.alertError('Feil', 'Klarte ikke koble til bildebiblioteket!')
+        this.$alerts.alertError(this.$t('error'), this.$t('library-connection-error'))
         console.error(e)
       }
     },
@@ -416,7 +416,7 @@ export default {
       const files = event.dataTransfer.files
 
       if (files.length > 1) {
-        this.$alerts.alertError('OBS', 'Du kan kun laste opp et bilde av gangen her. For å laste opp mange i en sleng, bruk "Bilder"-modulen i admin!')
+        this.$alerts.alertError(this.$t('error'), this.$t('max-one-image'))
         this.dragOver = false
         return false
       }
@@ -464,11 +464,11 @@ export default {
           this.showConfig = false
         } else {
           this.uploading = false
-          this.$alerts.alertError('Feil', `Feil ved opplasting :(\n\n${data.error}'`)
+          this.$alerts.alertError(this.$t('error'), this.$t('error-uploading-info', { error: data.error }))
         }
       } catch (e) {
         this.uploading = false
-        this.$alerts.alertError('Feil', `Feil ved opplasting :(\n\n${e}`)
+        this.$alerts.alertError(this.$t('error'), this.$t('error-uploading-info', { error: e }))
       }
     }
   }
@@ -478,13 +478,6 @@ export default {
   .img-fluid {
     min-width: auto;
     max-width: 100%;
-  }
-
-  .villain-block-picture {
-    /* min-width: auto; */
-    /* max-width: 40vw; */
-    /* margin: 0 auto; */
-    /* text-align: center; */
   }
 
   .preview-image {
@@ -516,3 +509,76 @@ export default {
     }
   }
 </style>
+
+<i18n>
+  {
+    "en": {
+      "configure": "Configure gallery block",
+      "help": "To remove an image from the gallery, first click the image, then click the trashcan icon.<br><br>To caption images, click \"Configure gallery block\", then \"Edit captions\"<br><br>To sort, you can drag and drop the images in your prefered sequence",
+      "grid": "Grid",
+      "list": "List",
+      "upload-images": "Upload images",
+      "edit-captions": "Edit captions",
+      "alt-text-help": "Image description for accessibility",
+      "captions": "Captions",
+      "drop-to-upload": "Drop to upload!",
+      "uploading": "Uploading",
+      "drag-images-to-upload": "Click or drag and drop your wanted images here",
+      "pick-from-library": "Pick image from library",
+      "error": "Error",
+      "error-uploading": "Error uploading :(",
+      "error-uploading-info": "Error uploading :(\n\n{error}",
+      "show-thumbnails": "Show thumbnails",
+      "show-image-list": "Show list view",
+      "hide-image-list": "Hide list view",
+      "show-advanced-config": "Show advanced configuration opts",
+      "title": "Title",
+      "alt": "Alt. text (description for accessibility)",
+      "credits": "Credits",
+      "link": "Image should link to",
+      "url": "Source (advanced)",
+      "media_queries": "Media queries (advanced)",
+      "srcset": "Srcset (advanced)",
+      "img_class": "CSS classes (img)",
+      "picture_class": "CSS classes (picture)",
+      "reset-image-block": "Reset image block",
+      "empty-library": "No images found in library. Upload one instead!",
+      "library-connection-error": "Failed connecting to image library!",
+      "max-one-image": "You can max upload ONE image to the image block."
+    },
+    "no": {
+      "configure": "Konfigurér galleriblokk",
+      "help": "For å slette et bilde i bildekarusellen, klikker du på bildet, deretter klikker du på søplekasse-ikonet<br><br>For å gi bildene bildetekst, klikker du på \"Konfigurér galleriblokk\" og deretter \"Endre bildetekster\"<br><br>For å sortere bildene kan du dra og slippe de i ønsket rekkefølge.",
+      "grid": "Grid",
+      "list": "List",
+      "upload-images": "Last opp bilder",
+      "edit-captions": "Endre bildetekster",
+      "alt-text-help": "Beskrivelse av bildet for universell utforming",
+      "captions": "Bildetekster",
+      "drop-to-upload": "Slipp for å laste opp!",
+      "uploading": "Laster opp",
+      "drag-images-to-upload": "Klikk, eller dra bildet du vil laste opp hit",
+      "pick-from-library": "Velg bilde fra bildebibliotek",
+      "error": "Feil",
+      "error-uploading": "Feil ved opplasting :(",
+      "error-uploading-info": "Feil ved opplasting :(\n\n{error}",
+      "show-thumbnails": "Vis thumbnails",
+      "show-image-list": "Vis listevisning",
+      "hide-image-list": "Skjul bildeliste",
+      "show-advanced-config": "Vis avansert konfigurasjon",
+      "title": "Tittel",
+      "alt": "Alt. tekst (beskrivelse for universell utforming)",
+      "credits": "Krediteringer",
+      "link": "Bildet linker til",
+      "url": "Kilde (avansert)",
+      "media_queries": "Media queries (avansert)",
+      "srcset": "Srcset (avansert)",
+      "img_class": "CSS klasser (img)",
+      "picture_class": "CSS klasser (picture)",
+      "reset-image-block": "Nullstill bildeblokk",
+      "empty-library": "Fant ingen bilder i biblioteket. Last opp et i stedet!",
+      "library-connection-error": "Klarte ikke koble til bildebiblioteket!",
+      "max-one-image": "Du kan kun laste opp ett bilde til denne blokken."
+    }
+  }
+</i18n>

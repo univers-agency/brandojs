@@ -8,10 +8,10 @@
         <KInputToggle
           v-model="advancedConfig"
           name="config[advanced]"
-          label="Avanserte valg" />
+          :label="$t('fields.advancedConfig.label')" />
       </div>
     </section>
-    <section class="row baseline">
+    <section class="row">
       <div class="sized">
         <KInputSelect
           v-model="page.language"
@@ -19,7 +19,7 @@
           :options="identity.languages"
           optionValueKey="id"
           name="page[language]"
-          label="Språk" />
+          :label="$t('fields.language.label')" />
 
         <KInputSelect
           v-model="page.parentId"
@@ -27,7 +27,7 @@
           option-value-key="id"
           option-label-key="title"
           name="page[parentId]"
-          label="Tilhørende side">
+          :label="$t('fields.parentId.label')">
           <template v-slot:label="{ option }">
             [{{ option.language.toUpperCase() }}] {{ option.title }}
           </template>
@@ -35,9 +35,9 @@
 
         <KInput
           v-model="page.title"
-          label="Tittel"
+          :label="$t('fields.title.label')"
+          :placeholder="$t('fields.title.label')"
           rules="required"
-          placeholder="Tittel"
           name="page[title]" />
 
         <template v-if="templates">
@@ -48,7 +48,7 @@
             :options="templates"
             optionValueKey="value"
             name="page[template]"
-            label="Sidemal" />
+            :label="$t('fields.template.label')" />
         </template>
 
         <KInput
@@ -57,8 +57,8 @@
           rules="required"
           name="page[key]"
           type="text"
-          label="Nøkkel"
-          placeholder="Nøkkel" />
+          :label="$t('fields.key.label')"
+          :placeholder="$t('fields.key.label')" />
       </div>
       <div class="half">
         <fieldset>
@@ -66,31 +66,31 @@
             v-if="advancedConfig"
             v-model="page.isHomepage"
             name="config[isHomepage]"
-            label="Nettstedets hovedside" />
+            :label="$t('fields.isHomepage.label')" />
 
           <KInput
             v-if="advancedConfig"
             v-model="page.cssClasses"
             name="page[cssClasses]"
             type="text"
-            label="Ekstra CSS klasser"
-            placeholder="Ekstra CSS klasser" />
+            :placeholder="$t('fields.cssClasses.label')"
+            :label="$t('fields.cssClasses.label')" />
 
           <KInputTextarea
             v-model="page.metaDescription"
             :rows="5"
             name="page[metaDescription]"
             type="text"
-            label="META beskrivelse"
-            help-text="Kort beskrivelse (for søkemotorer)" />
+            :help-text="$t('fields.metaDescription.helpText')"
+            :label="$t('fields.metaDescription.label')" />
 
           <KInputImage
             v-model="page.metaImage"
             small
             name="page[metaImage]"
             preview-key="original"
-            label="Delebilde (META bilde)"
-            help-text="Om du trenger et spesialtilpasset bilde for deling.<br>Beskjæres til 1200x630." />
+            :help-text="$t('fields.metaImage.helpText')"
+            :label="$t('fields.metaImage.label')" />
         </fieldset>
       </div>
     </section>
@@ -104,13 +104,13 @@
       :fixed-layout="false"
       class="bordered"
       :name="`page[properties]`"
-      label="Sideegenskaper (avansert)">
+      :label="$t('fields.properties.label')">
       <template v-slot:head>
         <tr>
-          <th>Etikett</th>
-          <th>Nøkkel</th>
-          <th>Type</th>
-          <th>Verdi</th>
+          <th>{{ $t('pages.label') }}</th>
+          <th>{{ $t('pages.key') }}</th>
+          <th>{{ $t('pages.type') }}</th>
+          <th>{{ $t('pages.value') }}</th>
           <th></th>
         </tr>
       </template>
@@ -148,7 +148,7 @@
           </template>
         </td>
       </template>
-      <template #edit="{ editEntry, callback }">
+      <template #edit="{ editEntry }">
         <td class="monospace">
           <KInput
             v-model="editEntry.label"
@@ -304,14 +304,15 @@
       :entry-data="page"
       :template-mode="templateMode()"
       :templates="$app.templates"
-      name="page[data]"
-      label="Innhold" />
+      :label="$t('fields.data.label')"
+      name="page[data]" />
   </KForm>
 </template>
 
 <script>
 import gql from 'graphql-tag'
 import LivePreview from '../../mixins/LivePreview'
+import locale from '../../locales/pages'
 
 export default {
   mixins: [
@@ -398,6 +399,9 @@ export default {
         }
       `
     }
+  },
+  i18n: {
+    sharedMessages: locale
   }
 }
 </script>

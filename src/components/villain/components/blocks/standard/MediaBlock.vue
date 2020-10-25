@@ -11,7 +11,7 @@
       <div
         class="villain-block-media-empty">
         <div class="choose">
-          Velg medietype for blokken
+          {{ $t('pick') }}
         </div>
         <div class="actions">
           <ButtonTiny
@@ -100,3 +100,13 @@ export default {
     }
   }
 </style>
+<i18n>
+  {
+    "en": {
+      "pick": "Choose media type for this block"
+    },
+    "no": {
+      "pick": "Velg medietype for blokken"
+    }
+  }
+</i18n>

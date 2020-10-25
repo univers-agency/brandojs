@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@128technology/codemirror-liquid-mode@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@128technology/codemirror-liquid-mode/-/codemirror-liquid-mode-1.0.2.tgz#e4da022a4eda2b249588aac860b9a90b04c8b6e8"
+  integrity sha512-pBDIhWywN2Ic+W4YSqrNkvwZNHvT1GOuFvgRbPdjLm1RGFMvayRlNfaLQQZgxkO4rVMEdPOtpv/EXnZ/IYn5TA==
+
 "@ant-design-vue/babel-helper-vue-transform-on@^1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@ant-design-vue/babel-helper-vue-transform-on/-/babel-helper-vue-transform-on-1.0.1.tgz#d219d92f4e1fc5e7add211c347c7fa000518b623"

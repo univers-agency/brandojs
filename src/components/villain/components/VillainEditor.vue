@@ -12,7 +12,7 @@
     <div
       v-if="showAutosaves"
       class="villain-editor-autosave-list-popup">
-      Autolagrede versjoner
+      {{ $t('autosaved-versions') }}
       <div
         v-for="(a, idx) in autosaveEntries"
         :key="idx"
@@ -22,7 +22,7 @@
         </div>
         <ButtonSmall
           @click.native.prevent="restoreAutosave(a)">
-          Gjenopprett denne versjonen
+          {{ $t('restore-this-version') }}
         </ButtonSmall>
       </div>
     </div>
@@ -30,7 +30,7 @@
       <div
         class="villain-editor-instructions">
         <template v-if="showPlus">
-          Trykk på "+" under for å legge til en innholdsblokk
+          {{ $t('click-plus-to-add-block') }}
         </template>
       </div>
       <div class="villain-editor-controls float-right">
@@ -38,12 +38,12 @@
           {{ autosaveStatus }}
         </div>
         <div
-          v-popover="'Vis autolagrede versjoner'"
+          v-popover="$t('show-autosaved-versions')"
           @click="toggleAutosaves">
           <IconAutosave />
         </div>
         <div
-          v-popover="showSource ? 'Lukk kildekodevisning' : 'Vis kildekode'"
+          v-popover="showSource ? $t('close-source-view') : $t('open-source-view')"
           @click="toggleSource()">
           <template v-if="showSource">
             <IconClose />
@@ -53,7 +53,7 @@
           </template>
         </div>
         <div
-          v-popover="fullscreen ? 'Lukk fullskjermsmodus' : 'Vis fullskjermsmodus'"
+          v-popover="fullscreen ? $t('close-fullscreen') : $t('open-fullscreen')"
           @click="toggleFullscreen()">
           <template v-if="fullscreen">
             <IconClose />
@@ -75,7 +75,7 @@
             type="button"
             class="btn btn-primary mt-4"
             @click="updateSource">
-            Oppdatér
+            {{ $t('update') }}
           </button>
         </div>
       </div>
@@ -417,7 +417,7 @@ export default {
       // Only autosave if there are changes
       if (this.lastEdit > this.lastAutosavedAt) {
         this.lastAutosavedAt = getTimestamp()
-        this.autosaveStatus = 'autolagrer...'
+        this.autosaveStatus = this.$t('autosaving')
         setTimeout(() => {
           this.autosaveStatus = ''
         }, AUTOSAVE_STATUS_TEXT_DURATION)
@@ -466,7 +466,7 @@ export default {
 
           case 'datasource':
             if (block.data.wrapper || block.data.template) {
-              this.$alerts.alertError('OBS!', 'Datakilden har et gammelt format. Flytt malkode og `wrapper` til datakildens eget felt. Wrapperkode og malkode finner du i konsollen OBS! Wrapper og mal nulles ut ved lagring av dette skjemaet!')
+              this.$alerts.alertError('OBS!', this.$t('old-datasource-wrapper'))
               if (block.data.wrapper) {
                 console.error('Datasource/Datakilde-wrapper\r\n\r\n', block.data.wrapper)
               }
@@ -540,7 +540,7 @@ export default {
     },
 
     restoreAutosave (a) {
-      alerts.alertConfirm('OBS!', 'Du er i ferd med å erstatte innholdet med data fra en autolagret versjon. Er du sikker på at du vil fortsette?', data => {
+      alerts.alertConfirm('OBS!', this.$t('replace-with-autosave'), data => {
         if (data) {
           this.blocks = a.content
           this.showAutosaves = false
@@ -890,7 +890,7 @@ export default {
           copyBlock,
           ...this.blocks.slice(idx + 1)
         ]
-        this.$toast.success({ message: 'Blokken ble duplisert' })
+        this.$toast.success({ message: this.$t('block-duplicated') })
       }
     },
 
@@ -1271,3 +1271,38 @@ select.form-control {
 }
 
 </style>
+
+<i18n>
+  {
+    "en": {
+      "autosaved-versions": "Auto saved versions",
+      "restore-this-version": "Restore this version",
+      "click-plus-to-add-block": "Click \"+\" to add a content block",
+      "close-source-view": "Close source view",
+      "open-source-view": "Show source view",
+      "close-fullscreen": "Close fullscreen mode",
+      "open-fullscreen": "Show fullscreen mode",
+      "update": "Update",
+      "autosaving": "autosaving...",
+      "old-datasource-wrapper": "Old datasource wrapper! Check console for source",
+      "replace-with-autosave": "You are replacing your current content with an autosaved version. Are you sure you want to proceed?",
+      "block-duplicated": "Block duplicated",
+      "show-autosaved-versions": "Show auto saved versions"
+    },
+    "no": {
+      "autosaved-versions": "Autolagrede versjoner",
+      "restore-this-version": "Gjenopprett denne versjonen",
+      "click-plus-to-add-block": "Trykk på \"+\" under for å legge til en innholdsblokk",
+      "close-source-view": "Lukk kildekodevisning",
+      "open-source-view": "Vis kildekode",
+      "close-fullscreen": "Lukk fullskjermsmodus",
+      "open-fullscreen": "Vis fullskjermsmodus",
+      "update": "Oppdatér",
+      "autosaving": "autolagrer...",
+      "old-datasource-wrapper": "Datakilden har et gammelt format. Flytt malkode og `wrapper` til datakildens eget felt. Wrapperkode og malkode finner du i konsollen OBS! Wrapper og mal nulles ut ved lagring av dette skjemaet!",
+      "replace-with-autosave": "Du er i ferd med å erstatte innholdet med data fra en autolagret versjon. Er du sikker på at du vil fortsette?",
+      "block-duplicated": "Blokken ble duplisert",
+      "show-autosaved-versions": "Vis autolagrede versjoner"
+    }
+  }
+</i18n>

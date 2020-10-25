@@ -54,7 +54,7 @@
                 <ButtonSecondary
                   :narrow="false"
                   @click.native.prevent="clearFiles">
-                  Fjern filer
+                  {{ $t('remove-files') }}
                 </ButtonSecondary>
               </div>
             </div>
@@ -62,9 +62,9 @@
               v-if="!files.length"
               class="droparea">
               <div class="text-center">
-                Slipp filene dine her for å laste opp eller<br>
+                {{ $t('drop-files-to-upload') }}<br>
                 <span class="file-selector-button">
-                  Velg filer!
+                  {{ $t('pick-files') }}
                   <label for="image"></label>
                   <input
                     id="image"
@@ -616,3 +616,18 @@ table {
   }
 }
 </style>
+
+<i18n>
+  {
+    "en": {
+      "remove-files": "Remove files",
+      "drop-files-to-upload": "Drop files here to upload or",
+      "pick-files": "Pick files"
+    },
+    "no": {
+      "remove-files": "Fjern filer",
+      "drop-files-to-upload": "Slipp filene dine her for å laste opp eller",
+      "pick-files": "Velg filer"
+    }
+  }
+</i18n>
