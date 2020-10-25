@@ -277,10 +277,10 @@ export default {
     },
 
     availableBlocks () {
-      let availableBlocks = STANDARD_BLOCKS
+      let availableBlocks = STANDARD_BLOCKS[this.$i18n.locale]
 
       if (this.extraBlocks.length) {
-        availableBlocks = availableBlocks + STANDARD_BLOCKS
+        availableBlocks = availableBlocks + STANDARD_BLOCKS[this.$i18n.locale]
       }
 
       if (this.visibleBlocks.length) {
