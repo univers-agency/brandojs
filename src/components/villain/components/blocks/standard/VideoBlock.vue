@@ -61,15 +61,15 @@
           I.e. <strong>https://www.youtube.com/watch?v=jlbunmCbTBA</strong>
         </div>
         <div>
+          <KInput
+            v-model="url"
+            name="url"
+            :label="$t('paste-link')"
+            placeholder="https://www.youtube.com/watch?v=jlbunmCbTBA"
+            @input="parseUrl" />
+
           <template
             v-if="block.data.remote_id">
-            <KInput
-              v-model="url"
-              name="url"
-              :label="$t('paste-link')"
-              placeholder="https://www.youtube.com/watch?v=jlbunmCbTBA"
-              @input="parseUrl" />
-
             <KInput
               v-model="block.data.remote_id"
               name="data[remote_id]"
