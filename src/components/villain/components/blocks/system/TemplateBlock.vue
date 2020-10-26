@@ -265,7 +265,8 @@ export default {
     },
 
     replaceLogic (srcCode) {
-      let replacedLogicCode = srcCode.replace(/(\{% for (\w+) in [a-zA-Z0-9.?|"-]+ %\})(.*?)(\{% endfor %\})/gs, this.replaceForLogic)
+      let replacedLogicCode = srcCode.replace(/(\{% for (\w+) in [a-zA-Z0-9.?|"-]+ %\})(.*?)(\{% endfor %\})/gs, this.replaceEmpty)
+      replacedLogicCode = replacedLogicCode.replace(/(\{% assign .*? %\})/gs, this.replaceEmpty)
       replacedLogicCode = replacedLogicCode.replace(/\{% comment %\}((.|\n)*?)\{% endcomment %\}/gs, this.replaceCommentLogic)
       replacedLogicCode = replacedLogicCode.replace(/(\{% if [a-zA-Z0-9.?|_"-]+ (==|!=) [a-zA-Z0-9.?|_"-]+ %\}(.|\n)*?\{% endif %\})/sg, '')
       replacedLogicCode = replacedLogicCode.replace(/(\{% if [a-zA-Z0-9.?|_"-]+ %\}(.|\n)*?\{% endif %\})/sg, '')
@@ -276,8 +277,7 @@ export default {
       return `<span v-popover="''" class="villain-entry-comment"><span v-pre>${comment}</span></span>`
     },
 
-    replaceForLogic (exp, f) {
-      // return '<span v-popover="\'Loop\'" class="villain-entry-var"><span v-pre>[ loop ]</span></span>'
+    replaceEmpty (exp, f) {
       return ''
     },
 
