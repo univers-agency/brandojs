@@ -10,15 +10,15 @@
           rules="required"
           name="page[title]"
           type="text"
-          label="Tittel"
-          placeholder="Tittel" />
+          :label="$t('title')"
+          :placeholder="$t('title')" />
         <KInputSelect
           v-model="page.language"
           rules="required"
           :options="identity.languages"
           optionValueKey="id"
           name="page[language]"
-          label="Språk" />
+          :label="$t('language')" />
         <section class="row">
           <div class="half">
             <KInput
@@ -26,8 +26,8 @@
               rules="required"
               name="page[parentKey]"
               type="text"
-              label="Hovednøkkel"
-              placeholder="Hovednøkkel" />
+              :label="$t('parentKey')"
+              :placeholder="$t('parentKey')" />
           </div>
           <div class="half">
             <KInput
@@ -35,8 +35,8 @@
               rules="required"
               name="page[key]"
               type="text"
-              label="Nøkkel"
-              placeholder="Nøkkel" />
+              :label="$t('key')"
+              :placeholder="$t('key')" />
           </div>
         </section>
       </div>
@@ -48,15 +48,15 @@
           :options="parents"
           name="page[pageId]"
           optionValueKey="value"
-          label="Tilhørende side" />
+          :label="$t('pageId')" />
         <KInputTextarea
           v-model="page.wrapper"
           :monospace="true"
           :rows="10"
           name="page[wrapper]"
           type="text"
-          label="HTML wrapper (avansert)"
-          help-text="Tilgjengelige variabler: ${CONTENT}, ${PARENT_KEY}, ${KEY}, ${LANGUAGE}"></KInputTextarea>
+          :label="$t('wrapper')"
+          :help-text="$t('wrapperHelp')"></KInputTextarea>
       </div>
     </section>
     <Villain
@@ -65,7 +65,7 @@
       :template-mode="templateMode()"
       :templates="$app.templates"
       name="page[data]"
-      label="Innhold" />
+      :label="$t('content')" />
   </KForm>
 </template>
 
@@ -144,6 +144,27 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<i18n>
+  {
+    "en": {
+      "title": "Title",
+      "language": "Language",
+      "parentKey": "Parent key",
+      "key": "Key",
+      "pageId": "Parent page",
+      "wrapper": "HTML wrapper (advanced)",
+      "wrapperHelp": "Available variables: {{ content }}, {{ parent_key }}, {{ key }}, {{ language }}",
+      "data": "Content"
+    },
+    "no": {
+      "title": "Tittel",
+      "language": "Språk",
+      "parentKey": "Hovednøkkel",
+      "key": "Nøkkel",
+      "pageId": "Tilhørende side",
+      "wrapper": "HTML wrapper (avansert)",
+      "wrapperHelp": "Tilgjengelige variabler: {{ content }}, {{ parent_key }}, {{ key }}, {{ language }}",
+      "data": "Innhold"
+    }
+  }
+</i18n>

@@ -2,7 +2,7 @@
   <article v-if="pageFragment">
     <ContentHeader>
       <template v-slot:title>
-        Endre innholdsseksjon
+        {{ $t('section.edit') }}
       </template>
     </ContentHeader>
     <PageSectionForm
@@ -75,7 +75,7 @@ export default {
           }
         })
 
-        this.$toast.success({ message: 'Seksjon oppdatert' })
+        this.$toast.success({ message: this.$t('section.updated') })
         this.$router.push({ name: 'pages' })
       } catch (err) {
         this.$utils.showError(err)
@@ -118,3 +118,15 @@ export default {
   }
 }
 </script>
+<i18n>
+{
+  "no": {
+    "section.edit": "Endre innholdsseksjon",
+    "section.updated": "Seksjon oppdatert"
+  },
+  "en": {
+    "section.edit": "Edit section",
+    "section.updated": "Section updated"
+  }
+}
+</i18n>
