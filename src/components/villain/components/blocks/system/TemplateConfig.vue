@@ -5,7 +5,6 @@
         right
         @click="showConfig = true">
         {{ $t('template-config') }}
-        Maloppsett
       </ButtonTiny>
       <KModal
         v-if="showConfig"
@@ -260,7 +259,7 @@ export default {
 <i18n>
   {
     "en": {
-      "key": "value",
+      "template-config": "Module config",
       "block-variables": "Block variables",
       "fetch-original-variables": "Fetch original variables",
       "refered-blocks": "Refered blocks",

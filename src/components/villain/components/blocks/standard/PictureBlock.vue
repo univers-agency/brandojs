@@ -513,12 +513,11 @@ export default {
 <i18n>
   {
     "en": {
-      "configure": "Configure gallery block",
-      "help": "To remove an image from the gallery, first click the image, then click the trashcan icon.<br><br>To caption images, click \"Configure gallery block\", then \"Edit captions\"<br><br>To sort, you can drag and drop the images in your prefered sequence",
+      "configure": "Configure image block",
       "grid": "Grid",
       "list": "List",
-      "upload-images": "Upload images",
-      "edit-captions": "Edit captions",
+      "upload-images": "Upload image",
+      "edit-captions": "Edit caption",
       "alt-text-help": "Image description for accessibility",
       "captions": "Captions",
       "drop-to-upload": "Drop to upload!",
@@ -547,11 +546,10 @@ export default {
       "max-one-image": "You can max upload ONE image to the image block."
     },
     "no": {
-      "configure": "Konfigurér galleriblokk",
-      "help": "For å slette et bilde i bildekarusellen, klikker du på bildet, deretter klikker du på søplekasse-ikonet<br><br>For å gi bildene bildetekst, klikker du på \"Konfigurér galleriblokk\" og deretter \"Endre bildetekster\"<br><br>For å sortere bildene kan du dra og slippe de i ønsket rekkefølge.",
+      "configure": "Konfigurér bildeblokk",
       "grid": "Grid",
       "list": "List",
-      "upload-images": "Last opp bilder",
+      "upload-images": "Last opp bilde",
       "edit-captions": "Endre bildetekster",
       "alt-text-help": "Beskrivelse av bildet for universell utforming",
       "captions": "Bildetekster",
