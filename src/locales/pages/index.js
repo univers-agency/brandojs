@@ -25,6 +25,10 @@ export default {
       cssClasses: {
         label: 'Extra CSS classes'
       },
+      metaTitle: {
+        label: 'META title',
+        helpText: 'Title (for search engines) — overrides main title'
+      },
       metaDescription: {
         label: 'META description',
         helpText: 'Short description (for search engines)'
@@ -104,6 +108,10 @@ export default {
       },
       cssClasses: {
         label: 'Ekstra CSS klasser'
+      },
+      metaTitle: {
+        label: 'META tittel',
+        helpText: 'Tittel (for søkemotorer) — overstyrer hovedtittel'
       },
       metaDescription: {
         label: 'META beskrivelse',

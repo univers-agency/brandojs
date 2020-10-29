@@ -11,16 +11,9 @@ fragment identity on Identity {
   zipcode
   city
   country
-  description
   titlePrefix
   title
   titlePostfix
-
-  image {
-    thumb: url(size: "original")
-    xlarge: url(size: "xlarge")
-    focal
-  }
 
   logo {
     thumb: url(size: "original")
@@ -45,8 +38,6 @@ fragment identity on Identity {
     key
     value
   }
-
-  url
 
   languages {
     id

@@ -22,6 +22,12 @@ export default {
               }
             },
             {
+              text: 'SEO',
+              to: {
+                name: 'config-seo'
+              }
+            },
+            {
               text: 'Globale variabler',
               to: {
                 name: 'config-globals'
@@ -94,7 +100,13 @@ export default {
               }
             },
             {
-              text: 'Globals',
+              text: 'SEO',
+              to: {
+                name: 'config-seo'
+              }
+            },
+            {
+              text: 'Global variables',
               to: {
                 name: 'config-globals'
               }

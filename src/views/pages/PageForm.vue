@@ -76,9 +76,16 @@
             :placeholder="$t('fields.cssClasses.label')"
             :label="$t('fields.cssClasses.label')" />
 
+          <KInput
+            v-model="page.metaTitle"
+            name="page[metaTitle]"
+            type="text"
+            :help-text="$t('fields.metaTitle.helpText')"
+            :label="$t('fields.metaTitle.label')" />
+
           <KInputTextarea
             v-model="page.metaDescription"
-            :rows="5"
+            :rows="4"
             name="page[metaDescription]"
             type="text"
             :help-text="$t('fields.metaDescription.helpText')"

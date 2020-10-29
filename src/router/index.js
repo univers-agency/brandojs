@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import ProfileView from '../views/users/ProfileView'
 import UserListView from '../views/users/UserListView'
 import IdentityView from '../views/config/IdentityView'
+import SEOView from '../views/config/SEOView'
 import GlobalsView from '../views/config/GlobalsView'
 
 import FilesView from '../views/files/FilesView'
@@ -56,6 +57,11 @@ const routes = [
     path: '/config/identity',
     name: 'config-identity',
     component: IdentityView
+  },
+  {
+    path: '/config/seo',
+    name: 'config-seo',
+    component: SEOView
   },
   {
     path: '/config/globals',

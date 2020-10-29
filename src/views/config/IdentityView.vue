@@ -105,13 +105,6 @@
           </div>
         </div>
 
-        <KInput
-          v-model="identity.description"
-          rules="required"
-          name="identity[description]"
-          :placeholder="$t('fields.description.placeholder')"
-          :label="$t('fields.description.label')" />
-
         <div class="row">
           <div class="third">
             <KInput
@@ -139,26 +132,13 @@
         <div class="row">
           <div class="half">
             <KInputImage
-              v-model="identity.image"
-              name="identity[image]"
-              preview-key="xlarge"
-              :label="$t('fields.image.label')" />
-          </div>
-          <div class="half">
-            <KInputImage
               v-model="identity.logo"
+              small
               name="identity[logo]"
               preview-key="xlarge"
               :label="$t('fields.logo.label')" />
           </div>
         </div>
-
-        <KInput
-          v-model="identity.url"
-          rules="required"
-          name="identity[url]"
-          :placeholder="$t('fields.url.placeholder')"
-          :label="$t('fields.url.label')" />
 
         <KInputTable
           v-model="identity.links"
@@ -248,7 +228,6 @@
 <script>
 import gql from 'graphql-tag'
 import GET_IDENTITY from '../../gql/identity/IDENTITY_QUERY.graphql'
-import IDENTITY_FRAGMENT from '../../gql/identity/IDENTITY_FRAGMENT.graphql'
 
 export default {
   data () {
@@ -271,45 +250,9 @@ export default {
   },
 
   methods: {
-    addlink () {
-      this.identity.links.push({
-        name: this.newlink.name,
-        url: this.newlink.url
-      })
-      this.newlink.name = ''
-      this.newlink.url = ''
-    },
-
-    deletelink (link) {
-      const l = this.identity.links.find(l => l.id === link.id)
-      const idx = this.identity.links.indexOf(l)
-      this.identity.links = [
-        ...this.identity.links.slice(0, idx),
-        ...this.identity.links.slice(idx + 1)
-      ]
-    },
-
-    addmeta () {
-      this.identity.metas.push({
-        key: this.newmeta.key,
-        value: this.newmeta.value
-      })
-      this.newmeta.key = ''
-      this.newmeta.value = ''
-    },
-
-    deletemeta (meta) {
-      const l = this.identity.metas.find(l => l.id === meta.id)
-      const idx = this.identity.metas.indexOf(l)
-      this.identity.metas = [
-        ...this.identity.metas.slice(0, idx),
-        ...this.identity.metas.slice(idx + 1)
-      ]
-    },
-
     async save () {
       const params = this.$utils.stripParams(this.identity, ['__typename', 'id', 'languages'])
-      this.$utils.validateImageParams(params, ['logo', 'image'])
+      this.$utils.validateImageParams(params, ['logo'])
 
       params.links.map(item => (delete item.__typename))
       params.metas.map(item => (delete item.__typename))
@@ -321,10 +264,9 @@ export default {
               updateIdentity(
                 identityParams: $identityParams,
               ) {
-                ...identity
+                id
               }
             }
-            ${IDENTITY_FRAGMENT}
           `,
           variables: {
             identityParams: params
@@ -373,13 +315,10 @@ export default {
         "zipcode": {"label": "Zipcode", "placeholder": "0578"},
         "city": {"label": "City", "placeholder": "Oslo"},
         "country": {"label": "Country", "placeholder": "NO"},
-        "description": {"label": "Description", "placeholder": "Description"},
         "titlePrefix": {"label": "Title prefix", "placeholder": "AB | "},
         "title": {"label": "Title (fallback)", "placeholder": "Tittel"},
         "titlePostfix": {"label": "Title postfix", "placeholder": " | AB"},
-        "image": {"label": "Image"},
         "logo": {"label": "Logo"},
-        "url": {"label": "URL", "placeholder": "https://minside.no"},
         "links": {"label": "Links (social media)"},
         "metas": {"label": "META variables"}
       }
@@ -408,13 +347,10 @@ export default {
         "zipcode": {"label": "Postnr", "placeholder": "0578"},
         "city": {"label": "Poststed", "placeholder": "Oslo"},
         "country": {"label": "Land", "placeholder": "NO"},
-        "description": {"label": "Beskrivelse", "placeholder": "Beskrivelse"},
         "titlePrefix": {"label": "Tittel prefiks", "placeholder": "AB | "},
         "title": {"label": "Hovedtittel (fallback)", "placeholder": "Tittel"},
         "titlePostfix": {"label": "Tittel postfiks", "placeholder": " | AB"},
-        "image": {"label": "Bilde"},
         "logo": {"label": "Logo"},
-        "url": {"label": "URL", "placeholder": "https://minside.no"},
         "links": {"label": "Linker (sosiale medier)"},
         "metas": {"label": "META variabler"}
       }
