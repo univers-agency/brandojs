@@ -465,6 +465,11 @@ export default {
             break
 
           case 'datasource':
+            if (block.data.type === 'many') {
+              this.$alerts.alertError('OBS!', this.$t('old-datasource-type'))
+              this.$set(block.data, 'type', 'list')
+              this.needsRefresh = true
+            }
             if (block.data.wrapper || block.data.template) {
               this.$alerts.alertError('OBS!', this.$t('old-datasource-wrapper'))
               if (block.data.wrapper) {
@@ -1285,6 +1290,7 @@ select.form-control {
       "update": "Update",
       "autosaving": "autosaving...",
       "old-datasource-wrapper": "Old datasource wrapper! Check console for source",
+      "old-datasource-type": "Old datasource type specification. Type has been converted from `many` to `list`. Please save the entry to enforce.",
       "replace-with-autosave": "You are replacing your current content with an autosaved version. Are you sure you want to proceed?",
       "block-duplicated": "Block duplicated",
       "show-autosaved-versions": "Show auto saved versions"
@@ -1300,6 +1306,7 @@ select.form-control {
       "update": "Oppdatér",
       "autosaving": "autolagrer...",
       "old-datasource-wrapper": "Datakilden har et gammelt format. Flytt malkode og `wrapper` til datakildens eget felt. Wrapperkode og malkode finner du i konsollen OBS! Wrapper og mal nulles ut ved lagring av dette skjemaet!",
+      "old-datasource-type": "Datakilden har et gammelt format. Type er konvertert fra `many` til `list`, men blir ikke gjeldene før du lagrer denne siden.",
       "replace-with-autosave": "Du er i ferd med å erstatte innholdet med data fra en autolagret versjon. Er du sikker på at du vil fortsette?",
       "block-duplicated": "Blokken ble duplisert",
       "show-autosaved-versions": "Vis autolagrede versjoner"
