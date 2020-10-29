@@ -4,6 +4,7 @@
     :label="label"
     :rules="rules"
     :maxlength="maxlength"
+    :compact="compact"
     :helpText="helpText"
     :value="value">
     <template v-slot>
@@ -33,6 +34,11 @@ export default {
     helpText: {
       type: String,
       default: null
+    },
+
+    compact: {
+      type: Boolean,
+      default: false
     },
 
     label: {
