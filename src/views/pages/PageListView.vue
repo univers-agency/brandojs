@@ -250,7 +250,7 @@ export default {
       this.adminChannel.channel
         .push('page:rerender_all')
         .receive('ok', payload => {
-          this.$toast.success({ message: this.$t('pages.fragments-rerendered') })
+          this.$toast.success({ message: this.$t('pages.pages-rerendered') })
         })
 
       this.adminChannel.channel

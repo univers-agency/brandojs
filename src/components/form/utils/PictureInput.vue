@@ -495,8 +495,6 @@ export default {
       if (this.imageObject) {
         this.drawImage(this.imageObject)
       }
-
-      const newOrientation = this.getOrientation(this.canvasWidth, this.canvasHeight)
     },
 
     resizeCanvas () {

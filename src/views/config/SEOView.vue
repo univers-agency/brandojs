@@ -225,7 +225,7 @@ export default {
       "fields": {
         "fallbackMetaTitle": {"label": "Standard META tittel"},
         "fallbackMetaDescription": {"label": "Standard META beskrivelse"},
-        "fallbackMetaImage": {"label": "Standard META bilde"},
+        "fallbackMetaImage": {"label": "Standard META bilde (1200x630)"},
         "baseUrl": {"label": "HovedURL", "placeholder": "https://minside.no"},
         "robots": {"label": "Robots.txt (avansert)", "placeholder": "Robots.txt"},
         "redirects": {"label": "HTTP videresendinger (avansert)"}

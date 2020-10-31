@@ -86,8 +86,7 @@
 
 import TemplateConfig from './TemplateConfig'
 import IconRefresh from '../../icons/IconRefresh'
-import cloneDeep from 'lodash/cloneDeep'
-import camelCase from 'lodash/camelCase'
+import _ from 'lodash'
 import shortid from 'shortid'
 
 export default {
@@ -330,7 +329,7 @@ export default {
     },
 
     lookupEntryVar (entryVar) {
-      const camelCasedVar = camelCase(entryVar)
+      const camelCasedVar = _.camelCase(entryVar)
       return `%%% entryData.${camelCasedVar} %%%`
       // return `${this.available.entryData[entryVar] || 'mangler entryData'}`
     },
@@ -383,8 +382,8 @@ export default {
       this.$set(this.block.data, 'entries', [
         ...this.block.data.entries, {
           id: shortid.generate(),
-          refs: cloneDeep(foundTemplate.data.refs),
-          vars: cloneDeep(foundTemplate.data.vars)
+          refs: _.cloneDeep(foundTemplate.data.refs),
+          vars: _.cloneDeep(foundTemplate.data.vars)
         }
       ])
     },

@@ -163,14 +163,18 @@
           </template>
           <template #new="{ newEntry }">
             <td>
-              <input
+              <KInput
                 v-model="newEntry.name"
-                type="text">
+                compact
+                :placeholder="$t('link-name')"
+                name="newLink[name]" />
             </td>
             <td>
-              <input
+              <KInput
                 v-model="newEntry.url"
-                type="text">
+                compact
+                :placeholder="$t('link-url')"
+                name="newLink[url]" />
             </td>
           </template>
           <template #edit="{ editEntry }">
@@ -209,14 +213,18 @@
           </template>
           <template #new="{ newEntry }">
             <td>
-              <input
+              <KInput
                 v-model="newEntry.key"
-                type="text">
+                compact
+                :placeholder="$t('meta-key')"
+                name="newLink[key]" />
             </td>
             <td>
-              <input
+              <KInput
                 v-model="newEntry.value"
-                type="text">
+                compact
+                :placeholder="$t('meta-value')"
+                name="newLink[value]" />
             </td>
           </template>
         </KInputTable>
@@ -303,6 +311,10 @@ export default {
       "key": "Key",
       "value": "Value",
       "updated": "Identity updated",
+      "link-name": "Link name",
+      "link-url": "https://address.com",
+      "meta-key": "META key",
+      "meta-value": "Value",
       "fields": {
         "type": {"label": "Type"},
         "name": {"label": "Name"},
@@ -335,6 +347,10 @@ export default {
       "key": "Nøkkel",
       "value": "Verdi",
       "updated": "Identitet oppdatert",
+      "link-name": "Lenkenavn",
+      "link-url": "https://adresse.no",
+      "meta-key": "META nøkkel",
+      "meta-value": "Verdi",
       "fields": {
         "type": {"label": "Type"},
         "name": {"label": "Navn"},

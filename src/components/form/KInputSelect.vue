@@ -70,7 +70,7 @@
             <transition-group name="fadefast">
               <div
                 v-for="(option, index) in filteredOptions"
-                :key="option[optionValueKey]"
+                :key="option[optionValueKey] ? option[optionValueKey] : 'null'"
                 ref="list"
                 :class="optionHighlight(index, option)"
                 class="options-option"
@@ -485,6 +485,9 @@ export default {
       if (this.object) {
         return this.selected === option
       } else {
+        if (option[this.optionValueKey] === null) {
+          return option[this.optionValueKey] === this.innerValue
+        }
         return option[this.optionValueKey].toString() === this.innerValue.toString()
       }
     },

@@ -45,13 +45,13 @@
           v-model="user.password"
           :label="$t('user.password')"
           :placeholder="$t('user.password')"
-          rules="min:6|confirmed:user[password_confirm]"
+          rules="min:6|confirmed:user[passwordConfirm]"
           name="user[password]" />
         <KInputPassword
-          v-model="user.password_confirm"
-          :label="$t('user.password_confirm')"
-          :placeholder="$t('user.password_confirm')"
-          name="user[password_confirm]" />
+          v-model="user.passwordConfirm"
+          :label="$t('user.passwordConfirm')"
+          :placeholder="$t('user.passwordConfirm')"
+          name="user[passwordConfirm]" />
       </div>
       <div class="half">
         <KInputImage
@@ -90,7 +90,7 @@ export default {
   "en": {
     "user.language": "Language",
     "user.password": "Password",
-    "user.password_confirm": "Confirm password",
+    "user.passwordConfirm": "Confirm password",
     "user.avatar": "Avatar",
     "user.avatar.help": "Click to set focal point.",
     "user.email": "Email",
@@ -109,7 +109,7 @@ export default {
   "no": {
     "user.language": "Språk",
     "user.password": "Passord",
-    "user.password_confirm": "Bekreft passord",
+    "user.passwordConfirm": "Bekreft passord",
     "user.avatar": "Profilbilde",
     "user.avatar.help": "Klikk på bildet for å sette fokuspunkt.",
     "user.email": "Epost",

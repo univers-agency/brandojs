@@ -66,8 +66,8 @@
             button-class="btn btn-outline-secondary"
             @click.prevent
             @init="provider.validate($event)"
-            @change="onChange($event) || provider.validate($event)"
-            @remove="onRemove() || provider.validate(null)"
+            @change="onChange(provider, $event)"
+            @remove="onRemove(provider)"
             @error="onError"
             @focalChanged="onFocalChanged" />
           <ButtonSecondary
@@ -112,8 +112,8 @@
               button-class="btn btn-outline-secondary"
               @click.prevent
               @init="provider.validate($event)"
-              @change="onChange($event) || provider.validate($event)"
-              @remove="onRemove() || provider.validate(null)"
+              @change="onChange(provider, $event)"
+              @remove="onRemove(provider)"
               @error="onError"
               @focalChanged="onFocalChanged" />
           </KModal>
@@ -318,10 +318,26 @@ export default {
       this.showErrorModal = false
     },
 
-    onChange (a) {
+    toBase64 (file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => {
+          resolve(reader.result)
+        }
+        reader.onerror = error => {
+          reject(error)
+        }
+      })
+    },
+
+    async onChange (provider, a) {
       /*
       This triggers on the initial load of prefill, as well as when the image changes.
       */
+
+      provider.validate(a)
+
       if (this.value && !this.preCheck) {
         // Just changing the prefill. Set preCheck and return
         this.preCheck = true
@@ -335,9 +351,11 @@ export default {
         if (this.innerValue) {
           this.innerValue.file = this.$refs.pictureInput.file
         } else {
+          // const base64file = await this.toBase64(this.$refs.pictureInput.file)
           this.innerValue = {
             file: this.$refs.pictureInput.file,
             thumb: this.$refs.pictureInput.file,
+            // base64: base64file,
             alt: '',
             title: ''
           }
@@ -350,7 +368,8 @@ export default {
       }
     },
 
-    onRemove (a) {
+    onRemove (provider) {
+      provider.validate(null)
       this.innerValue = null
     },
 

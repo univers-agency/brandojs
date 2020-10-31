@@ -1,4 +1,4 @@
-import debounce from 'lodash.debounce'
+import _ from 'lodash'
 
 export default function ({ schema, prop, key }) {
   return {
@@ -8,6 +8,7 @@ export default function ({ schema, prop, key }) {
         livePreviewReady: false,
         livePreviewWrapper: null,
         livePreviewCacheKey: null,
+        livePreviewPreviousValue: null,
         livePreviewFirstRun: true,
         livePreviewActivated: false
       }
@@ -17,13 +18,15 @@ export default function ({ schema, prop, key }) {
       [prop]: {
         deep: true,
         immediate: true,
-        handler: debounce(function (v) {
+        handler: _.debounce(function (v) {
           if (this.livePreview) {
             if (this.livePreviewReady && this.livePreviewActivated) {
-              this.updateLivePreview(v)
+              const changes = this.changes(v, this.livePreviewPreviousValue)
+              this.updateLivePreview(changes)
+              this.livePreviewPreviousValue = _.cloneDeep(v)
             }
           }
-        }, 500, true)
+        }, 1000, true)
       }
     },
 
@@ -32,7 +35,15 @@ export default function ({ schema, prop, key }) {
     ],
 
     methods: {
+      changes (o1, o2) {
+        const keys = _.union(_.keys(o1), _.keys(o2))
+        return _.filter(keys, key => {
+          return !_.eq(_.toString(o1[key]), _.toString(o2[key]))
+        }).reduce((p, c) => ({ ...p, [c]: o1[c] }), {})
+      },
+
       openLivePreview () {
+        this.livePreviewPreviousValue = _.cloneDeep(this[prop])
         this.adminChannel.channel
           .push('livepreview:initialize', { schema, prop, key, entry: this[prop] })
           .receive('ok', payload => {
@@ -67,7 +78,6 @@ export default function ({ schema, prop, key }) {
         }
 
         // send off entry for rendering
-        // TODO: Maybe diff this against the last sent data and only send the diff?
         this.adminChannel.channel
           .push('livepreview:render', { schema, prop, key, entry, cache_key: this.livePreviewCacheKey })
       }
