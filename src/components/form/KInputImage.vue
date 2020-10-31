@@ -348,10 +348,19 @@ export default {
       if (this.$refs.pictureInput.file) {
         this.preCheck = true
 
+        const base64file = await this.toBase64(this.$refs.pictureInput.file)
+
         if (this.innerValue) {
-          this.innerValue.file = this.$refs.pictureInput.file
+          // replace
+          this.innerValue = {
+            file: this.$refs.pictureInput.file,
+            thumb: this.$refs.pictureInput.file,
+            base64: base64file,
+            alt: '',
+            title: ''
+          }
         } else {
-          const base64file = await this.toBase64(this.$refs.pictureInput.file)
+          // new
           this.innerValue = {
             file: this.$refs.pictureInput.file,
             thumb: this.$refs.pictureInput.file,

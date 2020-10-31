@@ -63,7 +63,7 @@
     </div>
     <button
       v-if="imageSelected && !hideChangeButton"
-      @click.prevent="selectImage">
+      @click.prevent="selectImage(true)">
       {{ strings.change }}
     </button>
     <button
@@ -310,7 +310,7 @@ export default {
       }
 
       if (this.changeOnClick) {
-        this.selectImage()
+        this.selectImage(true)
       }
 
       this.$emit('click')
@@ -468,7 +468,10 @@ export default {
       )
     },
 
-    selectImage () {
+    selectImage (change = false) {
+      if (change) {
+        this.removeImage()
+      }
       this.$refs.fileInput.click()
     },
 
