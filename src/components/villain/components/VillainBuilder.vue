@@ -47,7 +47,20 @@
       <div class="villain-builder-aside-header">
         Maler
       </div>
-
+      <button
+        key="exportTemplatesButton"
+        type="button"
+        class="btn btn-primary btn-block mb-2"
+        @click="exportTemplates">
+        Eksportér
+      </button>
+      <button
+        key="importTemplatesButton"
+        type="button"
+        class="btn btn-primary btn-block mb-2"
+        @click="importTemplates">
+        Importér
+      </button>
       <button
         key="createTemplateButton"
         type="button"
@@ -78,6 +91,14 @@
               class="template-entry"
               :class="isSelected(t) ? 'selected' : ''"
               @click.stop="selectTemplate(t)">
+              <FontAwesomeIcon
+                v-if="selectedTemplatesForExport.includes(t.data.class)"
+                :icon="['fas', 'circle']"
+                @click.stop.prevent="toggleSelectedTemplateForExport(t.data.class)" />
+              <FontAwesomeIcon
+                v-else
+                :icon="['far', 'circle']"
+                @click.stop.prevent="toggleSelectedTemplateForExport(t.data.class)" />
               <template v-if="t.data.svg">
                 <div
                   class="template-svg"
@@ -324,7 +345,8 @@ export default {
       prevVarName: null,
       templates: [],
       templateSequence: [],
-      namespaceOpen: []
+      namespaceOpen: [],
+      selectedTemplatesForExport: []
     }
   },
 
@@ -403,6 +425,41 @@ export default {
   },
 
   methods: {
+    exportTemplates () {
+      const exportJSON = this.selectedTemplatesForExport.map(st => {
+        return this.templates.find(t => t.data.class === st)
+      })
+      navigator.clipboard.writeText(JSON.stringify(exportJSON))
+      this.$toast.success({ message: 'Kopiert til utklippstavlen' })
+    },
+
+    importTemplates () {
+      navigator.clipboard.readText().then(clipText => {
+        const importedTemplates = JSON.parse(clipText)
+        importedTemplates.forEach(t => {
+          if (!t.data?.class) {
+            this.$toast.error({ message: 'Feil i modulformat. Mangler data.class' })
+            return
+          }
+          this.$alerts.alertConfirm('OBS', `Er du sikker på at du vil importere denne modulen?<br><br>${t.data.namespace}: <strong>${t.data.class}</strong>`, async (data) => {
+            if (!data) {
+              return
+            }
+            this.storeTemplate(t)
+            this.templates.push(t)
+          })
+        })
+      })
+    },
+
+    toggleSelectedTemplateForExport (cls) {
+      if (this.selectedTemplatesForExport.includes(cls)) {
+        this.selectedTemplatesForExport = this.selectedTemplatesForExport.filter(t => t !== cls)
+      } else {
+        this.selectedTemplatesForExport.push(cls)
+      }
+    },
+
     getToken () {
       return localStorage.getItem('token')
     },
@@ -796,6 +853,7 @@ export default {
         z-index: 9999;
         background-color: black;
         color: white;
+        position: relative;
 
         &.selected {
           background-color: theme(colors.blue);
@@ -806,6 +864,14 @@ export default {
             width: 100%;
             height: 100%;
           }
+        }
+
+        > svg {
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translate(-25px, -50%);
+          color: black;
         }
 
         .template-class {

@@ -2,7 +2,7 @@ import stripParams from './stripParams'
 
 export default function validateImageParams (params, imageParams) {
   for (let i = 0; i < imageParams.length; i++) {
-    if (!params.hasOwnProperty(imageParams[i])) {
+    if (!Object.prototype.hasOwnProperty.call(params, imageParams[i])) {
       continue
     }
     if (!(params[imageParams[i]] instanceof File) && params[imageParams[i]] !== null) {
