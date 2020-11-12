@@ -26,6 +26,10 @@
       :show-progress="showProgress"
       :progress-status="progressStatus" />
 
+    <LoggedWarnings
+      v-if="me && me.role === 'superuser'"
+      :logged-warnings="loggedWarnings" />
+
     <transition-group
       v-if="users && me"
       appear
@@ -74,7 +78,13 @@ import getCSSVar from './utils/getCSSVar'
 import GET_IDENTITY from './gql/identity/IDENTITY_QUERY.graphql'
 import GET_ME from './gql/users/ME_QUERY.graphql'
 
+import LoggedWarnings from './components/system/LoggedWarnings'
+
 export default {
+  components: {
+    LoggedWarnings
+  },
+
   data () {
     return {
       lobbyPresences: {},
@@ -432,6 +442,19 @@ export default {
     identity: {
       query: GET_IDENTITY,
 
+      skip () {
+        return !this.$root.ready || !this.token
+      }
+    },
+
+    loggedWarnings: {
+      query: gql`
+        query LoggedWarnings {
+          loggedWarnings {
+            msg
+          }
+        }
+      `,
       skip () {
         return !this.$root.ready || !this.token
       }
