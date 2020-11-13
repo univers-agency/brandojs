@@ -5,10 +5,16 @@
       class="logged-warnings-count"
       @click="toggle">
       <FontAwesomeIcon
+        v-if="loggedWarnings.length"
         color="#f00"
         icon="exclamation-circle"
         size="xs" />
-      {{ loggedWarnings.length }}
+      <FontAwesomeIcon
+        v-else
+        color="#75ce75d6"
+        icon="check-circle"
+        size="xs" />
+      {{ loggedWarnings.length ? loggedWarnings.length : ''  }}
     </div>
     <div
       class="logged-warnings-drawer"
@@ -42,6 +48,9 @@ export default {
 
   methods: {
     toggle () {
+      if (!this.loggedWarnings.length && !this.show) {
+        return
+      }
       this.show = !this.show
     }
   }
