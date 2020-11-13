@@ -112,8 +112,6 @@
 </template>
 
 <script>
-// import slug from 'url-slug'
-
 export default {
   props: {
     value: {

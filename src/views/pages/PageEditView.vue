@@ -139,8 +139,10 @@ export default {
             children {
               id
               title
+              status
               key
               language
+              updatedAt
 
               creator {
                 id

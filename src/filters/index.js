@@ -1,24 +1,25 @@
-import moment from 'moment-timezone'
+import { parseISO } from 'date-fns'
+import { format } from 'date-fns-tz'
 
 export function datetime (dateTime) {
   if (dateTime === null) {
     return '<ingen dato/tid>'
   }
-  return moment.tz(dateTime, 'Europe/Oslo').format('DD.MM.YY, HH:mm')
+  return format(parseISO(datetime), 'dd.MM.yy, HH:mm', { timeZone: 'Europe/Oslo' })
 }
 
 export function date (date) {
   if (date === null) {
     return '<ingen dato>'
   }
-  return moment.tz(date, 'Europe/Oslo').format('DD.MM.YY')
+  return format(parseISO(datetime), 'dd.MM.yy', { timeZone: 'Europe/Oslo' })
 }
 
 export function shortDate (date) {
   if (date === null) {
     return '<ingen dato>'
   }
-  return moment.tz(date, 'Europe/Oslo').format('DD.MM.YY')
+  return format(parseISO(datetime), 'dd.MM.yy', { timeZone: 'Europe/Oslo' })
 }
 
 export function formatSize (size) {

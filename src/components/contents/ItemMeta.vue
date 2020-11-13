@@ -22,7 +22,8 @@
 
 <script>
 
-import moment from 'moment-timezone'
+import { parseISO } from 'date-fns'
+import { format } from 'date-fns-tz'
 
 export default {
   props: {
@@ -44,11 +45,17 @@ export default {
 
   methods: {
     getDate (datetime) {
-      return moment.tz(datetime, 'Europe/Oslo').format('DD.MM.YY')
+      if (!datetime) {
+        return '—'
+      }
+      return format(parseISO(datetime), 'dd.MM.yy', { timeZone: 'Europe/Oslo' })
     },
 
     getTime (datetime) {
-      return moment.tz(datetime, 'Europe/Oslo').format('HH:mm')
+      if (!datetime) {
+        return '—'
+      }
+      return format(parseISO(datetime), 'HH:mm', { timeZone: 'Europe/Oslo' })
     }
   }
 }

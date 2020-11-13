@@ -34,6 +34,8 @@ fragment page on Page {
     title
     data
     slug
+
+    updatedAt
   }
 
   properties {

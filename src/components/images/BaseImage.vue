@@ -52,7 +52,7 @@
         <div class="shaded">
           <FocusPoint v-model="img.image.focal">
             <img
-              :src="'/media/' + img.image.path"
+              :src="'/media/' + img.image.path + '?' + timestamp"
               class="img-fluid">
           </FocusPoint>
 
@@ -108,7 +108,7 @@
 <script>
 
 import gql from 'graphql-tag'
-import moment from 'moment-timezone'
+import { format, parseISO } from 'date-fns'
 import FocusPoint from './FocusPoint.vue'
 
 export default {
@@ -145,7 +145,7 @@ export default {
 
   computed: {
     timestamp () {
-      return moment(this.img.updatedAt)
+      return format(parseISO(this.img.updatedAt), 'T')
     }
   },
 

@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import moment from 'moment-timezone'
+import { differenceInSeconds } from 'date-fns'
 
 export default {
   props: {
@@ -64,7 +64,7 @@ export default {
 
     status () {
       if (this.entry.publishAt) {
-        if (moment.utc(this.entry.publishAt).diff(moment.utc()) < 0) {
+        if (differenceInSeconds(this.entry.publishAt, Date.now()) < 0) {
           return this.entry.status
         } else {
           return 'pending'

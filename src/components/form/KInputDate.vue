@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import moment from 'moment-timezone'
+import { format } from 'date-fns-tz'
 import VueFlatpickr from '@jacobmischka/vue-flatpickr'
 
 const LOCALE_NO = {
@@ -153,7 +153,7 @@ export default {
 
     if (!this.innerValue) {
       if (!this.null) {
-        this.innerValue = moment.tz('Europe/Oslo').format('YYYY-MM-DD')
+        this.innerValue = format(Date.now(), 'yyyy-MM-dd', { timeZone: 'Europe/Oslo' })
       }
     }
   }
