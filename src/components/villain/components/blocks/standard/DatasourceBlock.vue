@@ -19,7 +19,7 @@
             <ButtonPrimary
               class="mt-2"
               @click="selectEntries">
-              {{ $t('pick-entries') }}
+              {{ $t((block.data.limit && parseInt(block.data.limit) === 1) ? 'pick-entry' : 'pick-entries') }}
             </ButtonPrimary>
             <template v-if="selectedEntries.length">
               <transition-group
@@ -107,8 +107,12 @@
         @shortkey.native="closeAvailableEntriesModal"
         @ok="closeAvailableEntriesModal">
         <template #header>
-          {{ $t('pick-entries') }}
+          {{ $t((block.data.limit && parseInt(block.data.limit) === 1) ? 'pick-entry' : 'pick-entries') }}
         </template>
+        <ButtonSecondary
+          @click="reset">
+          {{ $t('reset-entries') }}
+        </ButtonSecondary>
         <ContentList
           :selectable="false"
           :tools="false"
@@ -288,12 +292,25 @@ export default {
           return
         }
       }
+
       this.block.data.ids.push(id)
+
+      if (this.block.data.limit) {
+        // close modal when limit is hit
+        if (this.block.data.ids.length === parseInt(this.block.data.limit)) {
+          this.closeAvailableEntriesModal()
+        }
+      }
     },
 
     removeSelectedEntry (id) {
       const newIds = this.block.data.ids.filter(i => i !== id)
       this.$set(this.block.data, 'ids', newIds)
+      this.refreshSelectedEntries()
+    },
+
+    reset () {
+      this.$set(this.block.data, 'ids', [])
       this.refreshSelectedEntries()
     },
 
@@ -345,6 +362,8 @@ export default {
     "en": {
       "datasource": "Datasource",
       "pick-entries": "Select entries",
+      "pick-entry": "Select entry",
+      "reset-entries": "Reset",
       "configure": "Configure datasource",
       "description": "Description",
       "description.placeholder": "Description of datasource",
@@ -363,6 +382,8 @@ export default {
     "no": {
       "datasource": "Datakilde",
       "pick-entries": "Velg oppføringer",
+      "pick-entry": "Velg oppføring",
+      "reset-entries": "Nullstill",
       "configure": "Konfigurér datakilde",
       "description": "Beskrivelse",
       "description.placeholder": "Beskrivelse av datakilden",
