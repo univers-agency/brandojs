@@ -1,4 +1,9 @@
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
+import debounce from 'lodash/debounce'
+import union from 'lodash/union'
+import filter from 'lodash/filter'
+import eq from 'lodash/eq'
+import _toString from 'lodash/toString'
 
 export default function ({ schema, prop, key }) {
   return {
@@ -18,12 +23,12 @@ export default function ({ schema, prop, key }) {
       [prop]: {
         deep: true,
         immediate: true,
-        handler: _.debounce(function (v) {
+        handler: debounce(function (v) {
           if (this.livePreview) {
             if (this.livePreviewReady && this.livePreviewActivated) {
               const changes = this.changes(v, this.livePreviewPreviousValue)
               this.updateLivePreview(changes)
-              this.livePreviewPreviousValue = _.cloneDeep(v)
+              this.livePreviewPreviousValue = cloneDeep(v)
             }
           }
         }, 1000, true)
@@ -36,14 +41,14 @@ export default function ({ schema, prop, key }) {
 
     methods: {
       changes (o1, o2) {
-        const keys = _.union(_.keys(o1), _.keys(o2))
-        return _.filter(keys, key => {
-          return !_.eq(_.toString(o1[key]), _.toString(o2[key]))
+        const keys = union(keys(o1), keys(o2))
+        return filter(keys, key => {
+          return !eq(toString(o1[key]), _toString(o2[key]))
         }).reduce((p, c) => ({ ...p, [c]: o1[c] }), {})
       },
 
       openLivePreview () {
-        this.livePreviewPreviousValue = _.cloneDeep(this[prop])
+        this.livePreviewPreviousValue = cloneDeep(this[prop])
         this.adminChannel.channel
           .push('livepreview:initialize', { schema, prop, key, entry: this[prop] })
           .receive('ok', payload => {

@@ -77,7 +77,7 @@
   </div>
 </template>
 <script>
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 
 export default {
   props: {
@@ -125,9 +125,9 @@ export default {
   methods: {
     setLocalVars (vars = null) {
       if (vars) {
-        this.localVars = _.cloneDeep(vars)
+        this.localVars = cloneDeep(vars)
       } else {
-        this.localVars = _.cloneDeep(this.vars)
+        this.localVars = cloneDeep(this.vars)
       }
     },
 

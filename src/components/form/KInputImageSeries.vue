@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import slug from 'url-slug'
+import slugify from 'slugify'
 
 export default {
   props: {
@@ -177,7 +177,7 @@ export default {
   watch: {
     imageSeriesName (val) {
       this.innerValue.name = val
-      this.innerValue.slug = slug(val)
+      this.innerValue.slug = slugify(val, { lower: true })
     },
 
     files (val) {

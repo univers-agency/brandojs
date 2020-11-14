@@ -149,7 +149,7 @@
 
 <script>
 
-import _ from 'lodash'
+import debounce from 'lodash/debounce'
 
 export default {
   props: {
@@ -301,7 +301,7 @@ export default {
       }
     },
 
-    filterInput: _.debounce(function () {
+    filterInput: debounce(function () {
       // clear out empty keys
       const filters = { ...this.filters }
       Object.keys(filters).forEach(key => (filters[key] === '') && delete filters[key])

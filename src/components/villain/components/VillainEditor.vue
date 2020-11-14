@@ -104,7 +104,7 @@
 <script>
 import Vue from 'vue'
 import autosize from 'autosize'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { format, register } from 'timeago.js'
 import nbNO from 'timeago.js/lib/lang/nb_NO'
 import { VTooltip } from 'v-tooltip'
@@ -257,7 +257,7 @@ export default {
   computed: {
     src: {
       get () {
-        const bx = _.cloneDeep(this.blocks)
+        const bx = cloneDeep(this.blocks)
         return JSON.stringify(bx.map(b => this.stripMeta(b)), null, 2)
       },
 
@@ -362,7 +362,7 @@ export default {
     blocks: {
       handler: function (val, oldVal) {
         this.lastEdit = getTimestamp()
-        const bx = _.cloneDeep(val)
+        const bx = cloneDeep(val)
         if (bx.length) {
           this.blockCount = bx.length
           this.$emit('input', JSON.stringify(bx.map(b => this.stripMeta(b)), null, 2))
@@ -388,7 +388,7 @@ export default {
     } else {
       // check if it needs to be parsed!
       if (typeof (this.json) === 'object') {
-        this.blocks = _.cloneDeep(this.json)
+        this.blocks = cloneDeep(this.json)
       } else {
         this.blocks = JSON.parse(this.json)
       }
@@ -582,7 +582,7 @@ export default {
       if (this.showSource) {
         this.showSource = false
       } else {
-        const bx = _.cloneDeep(this.blocks)
+        const bx = cloneDeep(this.blocks)
         this.updatedSource = JSON.stringify(bx.map(b => this.stripMeta(b)), null, 2)
         this.showSource = true
         autosize(this.$refs.tasource)
@@ -590,7 +590,7 @@ export default {
     },
 
     refresh (animate = true) {
-      const bx = _.cloneDeep(this.blocks)
+      const bx = cloneDeep(this.blocks)
       this.updatedSource = JSON.stringify(bx.map(b => this.stripMeta(b)), null, 2)
       this.blocks = JSON.parse(this.updatedSource)
       this.blocks = this.addUIDs()
@@ -652,7 +652,7 @@ export default {
         }
       } else {
         // a template block
-        block = _.cloneDeep(blockTpl)
+        block = cloneDeep(blockTpl)
       }
 
       // no after, no parent = + at the top OR first one if empty

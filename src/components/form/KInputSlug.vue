@@ -23,7 +23,7 @@
 
 <script>
 
-import slug from 'url-slug'
+import slugify from 'slugify'
 
 export default {
   props: {
@@ -97,7 +97,7 @@ export default {
 
   watch: {
     from (value) {
-      this.innerValue = slug(this.from)
+      this.innerValue = slugify(this.from, { lower: true })
     }
   },
 
