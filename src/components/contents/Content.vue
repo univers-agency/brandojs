@@ -176,6 +176,7 @@ export default {
       @space padding-left md;
       @space padding-right md;
       @space padding-bottom md;
+      min-height: 100vh;
     }
 
     > .progress {

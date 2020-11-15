@@ -27,7 +27,7 @@
       :progress-status="progressStatus" />
 
     <LoggedWarnings
-      v-if="me && me.role === 'superuser'"
+      v-if="me && me.role === 'superuser' && loggedWarnings"
       :logged-warnings="loggedWarnings" />
 
     <transition-group
