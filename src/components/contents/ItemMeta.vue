@@ -72,12 +72,12 @@ export default {
       margin-right: 15px;
 
       .avatar {
-        width: 48px;
-        height: 48px;
+        width: 38px;
+        height: 38px;
 
         img {
           user-select: none;
-          border-radius: 48px;
+          border-radius: 38px;
         }
       }
     }
@@ -92,12 +92,12 @@ export default {
 
       .name {
         font-weight: normal;
-        font-size: 18px;
+        font-size: 14px;
         user-select: none;
       }
 
       .time {
-        font-size: 14px;
+        font-size: 12px;
         opacity: 0.7;
         user-select: none;
         text-transform: uppercase;

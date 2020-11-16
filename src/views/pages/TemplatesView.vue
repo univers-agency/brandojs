@@ -1,86 +1,752 @@
 <template>
-  <div class="villain-component">
-    <ContentHeader>
-      <template v-slot:title>
-        Innholdsmoduler
-      </template>
-      <template v-slot:subtitle>
-        Konfigurasjon
-      </template>
-      <template v-slot:help>
-        <p>
-          Opprettelse og oppsett av moduler for innholdssider
-        </p>
-      </template>
-    </ContentHeader>
-    <VillainEditor
-      ref="villain"
-      :builder-mode="true"
-      :extra-headers="{'authorization': `Bearer ${token}`}"
-      @input="$emit('input', $event)" />
+  <div
+    v-if="template"
+    class="villain-component">
+    <div class="villain-builder-wrapper">
+      <div class="villain-builder-editor-wrapper">
+        <codemirror
+          ref="cmEditor"
+          v-model="template.code"
+          :options="codeOptions" />
+      </div>
+
+      <KModal
+        v-if="showCreateRef"
+        ref="createRefModal"
+        v-shortkey="['esc', 'enter']"
+        wide
+        ok-text="OK"
+        @shortkey.native="closeCreateRefModal"
+        @ok="closeCreateRefModal">
+        <template #header>
+          Create ref
+        </template>
+        <KInput
+          v-model="refName"
+          name="newRef[name]"
+          label="Ref name"
+          help-text="i.e. `image`" />
+
+        <div
+          v-show="refName"
+          class="villain-builder-block-picker">
+          <div
+
+            class="villain-builder-block-picker-available">
+            <div
+              v-for="b in availableBlocks"
+              :key="b.name"
+              class="villain-editor-plus-available-block"
+              @mouseover="setHover(b.name)"
+              @click="addBlock(b)">
+              <div>
+                <i
+                  :class="b.icon"
+                  class="fa fa-fw" />
+              </div>
+            </div>
+          </div>
+          <div
+            class="villain-builder-block-picker-header">
+            &rarr; {{ hoveredBlock }}
+          </div>
+        </div>
+      </KModal>
+
+      <KModal
+        v-if="showRef"
+        ref="refModal"
+        v-shortkey="['esc', 'enter']"
+        wide
+        ok-text="OK"
+        @shortkey.native="closeRefModal"
+        @ok="closeRefModal">
+        <template #header>
+          Edit ref — {{ refName }}
+        </template>
+        <codemirror
+          ref="refEditor"
+          :options="refOptions" />
+      </KModal>
+
+      <KModal
+        v-if="showVar"
+        ref="varModal"
+        v-shortkey="['esc', 'enter']"
+        wide
+        ok-text="OK"
+        @shortkey.native="closeVarModal"
+        @ok="closeVarModal">
+        <template #header>
+          Edit var — {{ varName }}
+        </template>
+
+        <codemirror
+          ref="varEditor"
+          :options="refOptions" />
+      </KModal>
+
+      <KModal
+        v-if="showWrapper"
+        ref="wrapperModal"
+        v-shortkey="['esc', 'enter']"
+        wide
+        ok-text="OK"
+        @shortkey.native="closeWrapperModal"
+        @ok="closeWrapperModal">
+        <template #header>
+          Edit wrapper
+        </template>
+        <codemirror
+          ref="wrapperEditor"
+          v-model="template.wrapper"
+          :options="codeOptions" />
+      </KModal>
+
+      <KModal
+        v-if="showSVG"
+        ref="SVGModal"
+        v-shortkey="['esc', 'enter']"
+        wide
+        ok-text="OK"
+        @shortkey.native="closeSVGModal"
+        @ok="closeSVGModal">
+        <template #header>
+          Edit SVG
+        </template>
+        <codemirror
+          ref="svgEditor"
+          v-model="template.svg"
+          :options="codeOptions" />
+      </KModal>
+
+      <div class="villain-builder-sidebar">
+        <div class="inner">
+          <div class="form">
+            <ButtonSecondary
+              v-shortkey="['meta', 's']"
+              style="margin-bottom: 40px;"
+              @shortkey="saveTemplate"
+              @click="saveTemplate">
+              Save
+            </ButtonSecondary>
+
+            <KInput
+              v-model="template.name"
+              name="template[name]"
+              label="Name" />
+
+            <KInput
+              v-model="template.namespace"
+              name="template[namespace]"
+              label="Namespace" />
+
+            <KInput
+              v-model="template.helpText"
+              name="template[helpText]"
+              label="Help Text" />
+
+            <KInput
+              v-model="template.class"
+              name="template[class]"
+              label="Class" />
+
+            <KInputCheckbox
+              v-model="template.multi"
+              name="template[multi]"
+              label="Multi" />
+
+            <div class="button-group">
+              <ButtonSecondary
+                full-width
+                @click="showWrapper = true">
+                Wrapper <FontAwesomeIcon
+                  v-if="template.wrapper"
+                  size="xs"
+                  icon="check-circle" />
+              </ButtonSecondary>
+              <ButtonSecondary
+                full-width
+                @click="showSVG = true">
+                SVG <FontAwesomeIcon
+                  v-if="template.svg"
+                  size="xs"
+                  icon="check-circle" />
+              </ButtonSecondary>
+            </div>
+          </div>
+          <div class="refs">
+            <h2>
+              <div class="header-spread">
+                REFs <span class="circle small">{{ template.refs.length }}</span>
+              </div>
+              <CircleButton
+                @click.native.stop.prevent="showCreateRef = true">
+                <FontAwesomeIcon icon="plus" />
+              </CircleButton>
+            </h2>
+            <ul>
+              <li
+                v-for="ref in template.refs"
+                :key="ref.name"
+                class="text-mono padded">
+                <span @click="selectRef(ref)">{{ ref.data.type }} - %{<strong>{{ ref.name }}</strong>}</span>
+                <ButtonTiny @click="delRef(ref)">
+                  Delete
+                </ButtonTiny>
+              </li>
+            </ul>
+          </div>
+
+          <div class="vars">
+            <h2>
+              <div class="header-spread">
+                VARs <span class="circle small">{{ Object.keys(template.vars).length || "0" }}</span>
+              </div>
+              <CircleButton @click.native.stop.prevent="createVar()">
+                <FontAwesomeIcon icon="plus" />
+              </CircleButton>
+            </h2>
+            <ul>
+              <li
+                v-for="(val, variable) in template.vars"
+                :key="variable"
+                class="text-mono padded">
+                <div
+                  @click="selectVar(variable)">
+                  <span v-html="'{{ '" /><strong>{{ variable }}</strong> <span v-html="' }}'" />
+                </div>
+                <ButtonTiny @click="delVar(variable)">
+                  Slett
+                </ButtonTiny>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import VillainEditor from '../../components/villain/components/VillainEditor'
+
 import gql from 'graphql-tag'
+import CodeMirror from 'codemirror'
+import '@128technology/codemirror-liquid-mode/liquid.css'
+import { codemirror } from 'vue-codemirror'
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/addon/mode/overlay'
+import 'codemirror/mode/twig/twig.js'
+import 'codemirror/mode/javascript/javascript.js'
+import 'codemirror/mode/htmlmixed/htmlmixed.js'
+
+import GET_TEMPLATE from '../../gql/pages/TEMPLATE_QUERY.graphql'
+import STANDARD_BLOCKS from '../../components/villain/config/standardBlocks'
+
+CodeMirror.defineMode('htmltwig', function (config, parserConfig) {
+  return CodeMirror.overlayMode(CodeMirror.getMode(config, parserConfig.backdrop || 'text/html'), CodeMirror.getMode(config, 'twig'))
+})
 
 export default {
   components: {
-    VillainEditor
+    codemirror
+  },
+
+  props: {
+    templateId: {
+      required: true
+    }
   },
 
   data () {
     return {
-      innerValue: null
+      codeOptions: {
+        tabSize: 4,
+        mode: 'htmltwig',
+        lineNumbers: true,
+        line: true
+      },
+      refOptions: {
+        tabSize: 4,
+        mode: 'javascript',
+        lineNumbers: true,
+        line: true
+      },
+      newRef: {
+        name: null,
+        type: null
+      },
+      hoveredBlock: 'Velg blokk',
+      showBlockPicker: false,
+      showNamer: false,
+      showWrapper: false,
+      showSVG: false,
+      showCreateRef: false,
+      showRef: false,
+      showVar: false,
+      showTemplateAttrs: false,
+      codeMirror: null,
+      refMirror: null,
+      varMirror: null,
+      refName: '',
+      varName: '',
+      currentRef: null,
+      currentVar: null,
+      prevRefName: null,
+      prevVarName: null,
+      templates: [],
+      templateSequence: [],
+      namespaceOpen: [],
+      selectedTemplatesForExport: []
     }
   },
 
-  watch: {
-    value (value) {
-      this.innerValue = value
+  computed: {
+    availableBlocks () {
+      return STANDARD_BLOCKS[this.$i18n.locale]
     }
   },
 
-  created () {
-    this.innerValue = this.value
+  methods: {
+    toggleSelectedTemplateForExport (cls) {
+      if (this.selectedTemplatesForExport.includes(cls)) {
+        this.selectedTemplatesForExport = this.selectedTemplatesForExport.filter(t => t !== cls)
+      } else {
+        this.selectedTemplatesForExport.push(cls)
+      }
+    },
+
+    getToken () {
+      return localStorage.getItem('token')
+    },
+
+    isSelected (t) {
+      return t === this.template
+    },
+
+    dropSvg (e) {
+      if (e.dataTransfer.files.length > 1) {
+        this.$alerts.alertError('Feil', 'Slipp kun én fil her.')
+        return
+      }
+
+      const f = e.dataTransfer.files[0]
+
+      if (f.type !== 'image/svg+xml') {
+        this.$alerts.alertError('Feil', 'Kun SVG-fil tillatt')
+        return
+      }
+
+      const reader = new FileReader()
+
+      reader.onload = event => {
+        this.template.svg = event.target.result
+      }
+
+      reader.readAsText(f)
+    },
+
+    createVar () {
+      this.$alerts.alertPrompt('Variable key', ({ data }) => {
+        if (data) {
+          if (!Object.prototype.hasOwnProperty.call(this.template, 'vars')) {
+            this.template = {
+              ...this.template,
+              vars: {}
+            }
+          }
+          const v = {
+            type: 'text',
+            value: 'Default value',
+            label: 'Field name'
+          }
+
+          this.currentVar = v
+          this.currentVarName = data
+
+          this.template = {
+            ...this.template,
+            vars: {
+              ...this.template.vars,
+              [data]: v
+            }
+          }
+        }
+      })
+    },
+
+    setHover (name) {
+      this.hoveredBlock = name
+    },
+
+    async closeRefModal () {
+      this.saveRef()
+      await this.$refs.refModal.close()
+      this.showRef = false
+    },
+
+    async closeCreateRefModal () {
+      await this.$refs.createRefModal.close()
+      this.showCreateRef = false
+    },
+
+    async closeVarModal () {
+      this.saveVar()
+      await this.$refs.varModal.close()
+      this.showVar = false
+    },
+
+    async closeWrapperModal () {
+      await this.$refs.wrapperModal.close()
+      this.showWrapper = false
+    },
+
+    async closeSVGModal () {
+      await this.$refs.SVGModal.close()
+      this.showSVG = false
+    },
+
+    saveRef () {
+      // get this ref
+      const newRef = JSON.parse(this.$refs.refEditor.codemirror.getValue())
+      // find ref to replace
+      const oldRef = this.template.refs.find(r => r.name === this.prevRefName)
+      if (oldRef) {
+        const idx = this.template.refs.indexOf(oldRef)
+        if (idx >= 0) {
+          this.template.refs = [
+            ...this.template.refs.slice(0, idx),
+            newRef,
+            ...this.template.refs.slice(idx + 1)
+          ]
+          this.resetRef()
+        }
+      }
+    },
+
+    delRef (ref) {
+      const idx = this.template.refs.indexOf(ref)
+      if (idx >= 0) {
+        this.template.refs = [
+          ...this.template.refs.slice(0, idx),
+          ...this.template.refs.slice(idx + 1)
+        ]
+        this.resetRef()
+      }
+    },
+
+    delVar (v) {
+      this.$delete(this.template.vars, v)
+    },
+
+    saveVar () {
+      // get this ref
+      const newVar = JSON.parse(this.$refs.varEditor.codemirror.getValue())
+      // find ref to replace
+      const oldVar = this.template.vars[this.currentVarName]
+      if (oldVar) {
+        this.template = {
+          ...this.template,
+          vars: {
+            ...this.template.vars,
+            [this.currentVarName]: newVar
+          }
+        }
+        this.resetVar()
+      } else {
+        console.error('==> VillainBuilder/saveVar — var not found', this.currentVarName, this.template.vars)
+      }
+    },
+
+    resetVar () {
+      this.currentVar = {}
+      this.currentVarName = ''
+      this.prevVarName = null
+      this.$refs.varEditor.codemirror.setValue('')
+    },
+
+    resetRef () {
+      this.currentRef = {}
+      this.prevRefName = null
+    },
+
+    addBlock (b) {
+      const ref = {
+        name: this.refName,
+        data: { type: b.component.toLowerCase(), data: b.dataTemplate },
+        description: ''
+      }
+
+      this.template.refs.push(ref)
+      this.closeCreateRefModal()
+    },
+
+    selectTemplate (t) {
+      this.resetRef()
+      this.template = t
+      this.codeMirror.setValue(this.template.code)
+      this.codeMirror.refresh()
+    },
+
+    selectRef (r) {
+      this.showRef = true
+
+      this.$nextTick(() => {
+        this.currentRef = { ...r }
+        this.prevRefName = this.currentRef.name
+
+        this.$refs.refEditor.codemirror.setValue(JSON.stringify(this.currentRef, null, 4))
+        this.$refs.refEditor.codemirror.refresh()
+      })
+    },
+
+    selectVar (v) {
+      this.showVar = true
+
+      this.$nextTick(() => {
+        this.currentVar = v
+        this.prevVarName = this.currentVar
+        this.currentVarName = this.currentVar
+
+        this.$refs.varEditor.codemirror.setValue(JSON.stringify(this.template.vars[this.currentVar], null, 4))
+        this.$refs.varEditor.codemirror.refresh()
+      })
+    },
+
+    async saveTemplate () {
+      const templateParams = {
+        ...this.template,
+        vars: JSON.stringify(this.template.vars),
+        refs: JSON.stringify(this.template.refs)
+      }
+
+      delete templateParams.id
+      delete templateParams.__typename
+
+      try {
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation UpdateTemplate($templateId: ID!, $templateParams: TemplateParams!) {
+              updateTemplate(templateId: $templateId, templateParams: $templateParams) {
+                id
+              }
+            }
+          `,
+          variables: {
+            templateId: this.template.id,
+            templateParams
+          },
+
+          update: (store, { data: { updateTemplate } }) => {
+            this.$router.push({ name: 'templates' })
+          }
+        })
+
+        this.$toast.success({ message: this.$t('templates.updated') })
+      } catch (err) {
+        this.$utils.showError(err)
+      }
+    }
   },
 
   apollo: {
-    token: gql`
-      query getToken {
-        token @client
+    template: {
+      query: GET_TEMPLATE,
+      variables () {
+        return {
+          templateId: this.templateId
+        }
+      },
+
+      result ({ data: { template } }) {
+        setTimeout(() => {
+          console.log(template)
+          this.$refs.cmEditor.codemirror.setSize('100%', '100%')
+        }, 500)
+      },
+
+      fetchPolicy: 'no-cache',
+      skip () {
+        return !this.templateId
       }
-    `
+    }
   }
 }
 </script>
 
-<style lang="postcss">
-.villain-builder {
-  aside .villain-builder-aside-header {
-    font-weight: 500;
-    text-align: left;
+<style lang="postcss" scoped>
+>>> .CodeMirror {
+  height: auto;
+  font-size: 15px;
+}
+
+.villain-component {
+  @space padding-top 50px;
+  @space! padding-right 20px;
+}
+
+.mb-2 {
+  margin-bottom: 15px;
+}
+
+.form {
+  button {
+    width: 100%;
+  }
+}
+
+.villain-builder-wrapper {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+
+  .text-mono {
+    font-family: "SF Mono", "Menlo", "Monaco", "Inconsolata", "Fira Mono", "Droid Sans Mono", "Source Code Pro", monospace;
   }
 
-  .villain-builder-content-aside {
-    li.text-mono {
-      @fontsize sm;
+  .villain-builder-editor-wrapper {
+    flex-grow: 1;
+    min-width: 0;
+    height: 100%;
+  }
+
+  .villain-builder-sidebar {
+    padding-left: 20px;
+    border-left: 1px solid;
+    width: 350px;
+    min-width: 0;
+
+    .inner {
+      @space padding 0.5rem;
+
+      .refs, .vars {
+        h2 {
+          font-size: 16px;
+          display: flex;
+          width: 100%;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 1px solid #00000011;
+          padding-bottom: 10px;
+          padding-top: 5px;
+
+          > div {
+            display: flex;
+            align-items: center;
+
+            span {
+              margin-left: 10px;
+            }
+          }
+        }
+      }
     }
   }
 
-  .villain-builder-block-attributes,
-  .villain-builder-block-picker-namer {
-    .form-control {
-      @fontsize sm;
-      padding-top: 9px;
-      padding-bottom: 12px;
-      padding-left: 15px;
-      padding-right: 15px;
-      width: 100%;
-      background-color: theme(colors.input);
-      border: 0;
+  ul {
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      cursor: pointer;
+      list-style-type: none;
     }
   }
+
+  .padded {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .villain-builder-block-attributes {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    margin-right: 1rem;
+
+    label {
+      font-size: 80%;
+      margin-bottom: 0;
+      margin-right: 1rem;
+    }
+    input {
+      font-size: 80%;
+      width: 135px;
+      margin-right: 1rem;
+
+      &:nth-of-type(3) {
+        width: 80px;
+      }
+
+      &:nth-of-type(4) {
+        width: 100%;
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+.button-group {
+  @space margin-bottom 40px;
+  display: flex;
+
+  .btn {
+    + .btn {
+      margin-left: -1px;
+    }
+  }
+}
+
+.villain-builder-block-picker {
+  .villain-builder-block-picker-available {
+    display: flex;
+    align-items: center;
+  }
+
+  .villain-builder-block-picker-header {
+    align-self: center;
+    font-size: 80%;
+    margin-top: 25px;
+  }
+
+  .villain-editor-plus-available-block {
+    cursor: pointer;
+    border: 1px solid;
+    padding: 8px 7px 4px;
+    border-radius: 50%;
+    margin-right: 5px;
+  }
+}
+
+.villain-builder-editor-wrapper {
+  .villain-builder-editor {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+}
+
+.villain-builder-refs {
+  .villain-builder-ref {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+}
+
+.btn-negative {
+  @color fg peach;
+  border: 1px solid theme(colors.peach);
+  border: 1px solid #0047FF;
+  margin-top: 15px;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+  padding: 15px;
 }
 </style>

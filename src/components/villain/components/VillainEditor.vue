@@ -1,11 +1,5 @@
 <template>
   <div
-    v-if="builderMode"
-    class="villain-builder">
-    <VillainBuilder />
-  </div>
-  <div
-    v-else
     :class="fullscreen ? 'villain-fullscreen': ''"
     class="villain-editor">
     <div class="villain-editor-backdrop" />

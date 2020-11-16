@@ -72,7 +72,7 @@
             :visible-children="visibleChildren">
           </ChildrenButton>
         </div>
-        <div class="col-4 justify-end">
+        <div class="col-4">
           <ItemMeta
             :entry="entry"
             :user="entry.creator" />

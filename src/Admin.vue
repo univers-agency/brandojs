@@ -1104,6 +1104,13 @@ export default {
     border-radius: 60px;
   }
 
+  &.small {
+    width: 25px;
+    height: 25px;
+    border-radius: 25px;
+    font-size: 10px;
+  }
+
   span {
     color: theme(colors.dark);
   }

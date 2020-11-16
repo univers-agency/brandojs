@@ -9,6 +9,8 @@ import GlobalsView from '../views/config/GlobalsView'
 import FilesView from '../views/files/FilesView'
 
 import TemplatesView from '../views/pages/TemplatesView'
+import TemplatesListView from '../views/pages/TemplatesListView'
+
 import PageListView from '../views/pages/PageListView'
 import PageCreateView from '../views/pages/PageCreateView'
 import PageEditView from '../views/pages/PageEditView'
@@ -175,7 +177,20 @@ const routes = [
   {
     path: '/pages/templates',
     name: 'templates',
-    component: TemplatesView
+    component: TemplatesListView
+  },
+
+  {
+    path: '/pages/templates/:templateId',
+    name: 'templates-edit',
+    component: TemplatesView,
+    props: (route) => {
+      const templateId = Number.parseInt(route.params.templateId, 10)
+      if (Number.isNaN(templateId)) {
+        return 0
+      }
+      return { templateId }
+    }
   },
 
   {

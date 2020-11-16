@@ -1,0 +1,18 @@
+fragment template on Template {
+  id
+
+  name
+  namespace
+  helpText
+  class
+  code
+  refs
+  vars
+  svg
+  multi
+  wrapper
+
+  insertedAt
+  updatedAt
+  deletedAt
+}
