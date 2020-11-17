@@ -72,8 +72,8 @@ export default {
       margin-right: 15px;
 
       .avatar {
-        width: 38px;
-        height: 38px;
+        width: 40px;
+        height: 40px;
 
         img {
           user-select: none;
@@ -92,12 +92,12 @@ export default {
 
       .name {
         font-weight: normal;
-        font-size: 14px;
+        font-size: 16px;
         user-select: none;
       }
 
       .time {
-        font-size: 12px;
+        font-size: 14px;
         opacity: 0.7;
         user-select: none;
         text-transform: uppercase;
