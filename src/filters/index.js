@@ -8,11 +8,11 @@ export function datetime (dateTime) {
   return format(parseISO(datetime), 'dd.MM.yy, HH:mm', { timeZone: 'Europe/Oslo' })
 }
 
-export function date (date) {
-  if (date === null) {
+export function date (d) {
+  if (d === null) {
     return '<ingen dato>'
   }
-  return format(parseISO(datetime), 'dd.MM.yy', { timeZone: 'Europe/Oslo' })
+  return format(parseISO(d), 'dd.MM.yy', { timeZone: 'Europe/Oslo' })
 }
 
 export function shortDate (date) {
