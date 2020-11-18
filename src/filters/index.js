@@ -5,7 +5,7 @@ export function datetime (dateTime) {
   if (dateTime === null) {
     return '<ingen dato/tid>'
   }
-  return format(parseISO(datetime), 'dd.MM.yy, HH:mm', { timeZone: 'Europe/Oslo' })
+  return format(parseISO(dateTime), 'dd.MM.yy, HH:mm', { timeZone: 'Europe/Oslo' })
 }
 
 export function date (d) {
