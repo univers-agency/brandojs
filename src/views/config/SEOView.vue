@@ -38,6 +38,13 @@
               name="seo[baseUrl]"
               :placeholder="$t('fields.baseUrl.placeholder')"
               :label="$t('fields.baseUrl.label')" />
+
+            <ButtonSecondary
+              :disabled="!sitemapEnabled"
+              style="margin-bottom: 40px"
+              @click="generateSitemap">
+              {{ $t('generate-sitemap') }}
+            </ButtonSecondary>
           </div>
 
           <div class="half">
@@ -51,6 +58,7 @@
         </div>
 
         <KInputTextarea
+          v-if="$can('view', {section: 'robots', '__typename': 'SEO' })"
           v-model="seo.robots"
           :rows="10"
           monospace
@@ -59,6 +67,7 @@
           :label="$t('fields.robots.label')" />
 
         <KInputTable
+          v-if="$can('view', {section: 'redirects', '__typename': 'SEO' })"
           v-model="seo.redirects"
           :new-entry-template="{ from: '/example/:slug', to: '/new/:slug', code: '302' }"
           :edit-rows="true"
@@ -142,23 +151,42 @@ import GET_SEO from '../../gql/seo/SEO_QUERY.graphql'
 export default {
   data () {
     return {
-      loading: 0
+      loading: 0,
+      sitemapEnabled: false
     }
   },
 
   async created () {
     this.loading++
+    this.checkSitemap()
     this.loading--
   },
 
+  inject: [
+    'adminChannel'
+  ],
+
   methods: {
+    checkSitemap () {
+      this.adminChannel.channel
+        .push('sitemap:exists')
+        .receive('ok', result => {
+          this.sitemapEnabled = result.sitemap
+        })
+    },
+
+    generateSitemap () {
+      this.adminChannel.channel
+        .push('sitemap:generate')
+        .receive('ok', () => {
+          this.$toast.success({ message: this.$t('sitemap-generated') })
+        })
+    },
+
     async save () {
       const params = this.$utils.stripParams(this.seo, ['__typename', 'id'])
       this.$utils.validateImageParams(params, ['fallbackMetaImage'])
-
       params.redirects.map(item => (delete item.__typename))
-
-      console.log(params)
 
       try {
         await this.$apollo.mutate({
@@ -204,6 +232,8 @@ export default {
       "to": "To",
       "code": "Status code",
       "updated": "SEO updated",
+      "generate-sitemap": "Generate sitemap",
+      "sitemap-generated": "Sitemap generated",
       "fields": {
         "fallbackMetaTitle": {"label": "Fallback META title"},
         "fallbackMetaDescription": {"label": "Fallback META description"},
@@ -222,6 +252,8 @@ export default {
       "to": "Til",
       "code": "Statuskode",
       "updated": "SEO oppdatert",
+      "generate-sitemap": "Generer sitemap",
+      "sitemap-generated": "Sitemap generert",
       "fields": {
         "fallbackMetaTitle": {"label": "Standard META tittel"},
         "fallbackMetaDescription": {"label": "Standard META beskrivelse"},
