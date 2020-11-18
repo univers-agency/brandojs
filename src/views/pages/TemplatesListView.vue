@@ -11,8 +11,14 @@
               <li>
                 <button
                   type="button"
-                  @click="createTemplate">
+                  @click="createBlankTemplate">
                   {{ $t('templates.new') }}
+                </button>
+              </li>
+              <li>
+                <button
+                  @click="showImportTemplates = true">
+                  {{ $t('templates.import-templates') }}
                 </button>
               </li>
             </template>
@@ -20,6 +26,22 @@
         </div>
       </template>
     </ContentHeader>
+
+    <KModal
+      v-if="showImportTemplates"
+      ref="importModal"
+      v-shortkey="['esc', 'enter']"
+      ok-text="OK"
+      @shortkey.native="showImportTemplates = false"
+      @ok="importTemplates">
+      <template #header>
+        {{ $t('templates.import-templates') }}
+      </template>
+      <KInputTextarea
+        v-model="importTemplatesJSON"
+        label="JSON"
+        name="templates[import]" />
+    </KModal>
 
     <div class="row">
       <div class="half">
@@ -40,10 +62,6 @@
             {{ $t('templates.export-templates') }}
           </button>
           <button
-            @click="importTemplates(entries, clearSelection)">
-            {{ $t('templates.import-templates') }}
-          </button>
-          <button
             @click="deleteEntries(entries, clearSelection)">
             {{ $t('templates.delete-templates') }}
           </button>
@@ -56,7 +74,9 @@
           </div>
         </div>
         <div class="col-2">
-          <div v-html="entry.svg" />
+          <div
+            class="svg-wrapper"
+            v-html="entry.svg" />
         </div>
         <div class="col-10 title mono">
           <router-link
@@ -104,6 +124,8 @@ import locale from '../../locales/templates'
 export default {
   data () {
     return {
+      showImportTemplates: false,
+      importTemplatesJSON: '',
       visibleChildren: [],
       queryVars: {
         filter: null,
@@ -120,32 +142,50 @@ export default {
       const exportJSON = entries.map(st => {
         return this.templates.find(t => t.id === st)
       })
+
       navigator.clipboard.writeText(JSON.stringify(exportJSON))
-      this.$toast.success({ message: 'Kopiert til utklippstavlen' })
+      this.$toast.success({ message: 'Copied to clipboard' })
       clearSelection()
     },
 
-    importTemplates () {
-      navigator.clipboard.readText().then(clipText => {
-        const importedTemplates = JSON.parse(clipText)
-        importedTemplates.forEach(t => {
-          if (!t.data?.class) {
-            this.$toast.error({ message: 'Feil i modulformat. Mangler data.class' })
+    async importTemplates () {
+      if (this.importTemplatesJSON === '') {
+        await this.$refs.importModal.close()
+        this.showImportTemplates = false
+        return
+      }
+
+      const importedTemplates = JSON.parse(this.importTemplatesJSON)
+
+      importedTemplates.forEach(t => {
+        if (!t.class) {
+          this.$toast.error({ message: 'Error in template format. No data.class found' })
+          return
+        }
+
+        delete t.id
+        delete t.insertedAt
+        delete t.updatedAt
+        delete t.deletedAt
+        delete t.__typename
+
+        t.refs = JSON.stringify(t.refs)
+        t.vars = JSON.stringify(t.vars)
+
+        this.$alerts.alertConfirm('OBS', `Are you sure you want to import this template?<br><br>${t.namespace}: <strong>${t.class}</strong>`, async (data) => {
+          if (!data) {
             return
           }
-          this.$alerts.alertConfirm('OBS', `Er du sikker på at du vil importere denne modulen?<br><br>${t.data.namespace}: <strong>${t.data.class}</strong>`, async (data) => {
-            if (!data) {
-              return
-            }
-            this.storeTemplate(t)
-            this.templates.push(t)
-          })
+          this.createTemplate(t, false)
         })
       })
+
+      await this.$refs.importModal.close()
+      this.showImportTemplates = false
     },
 
-    async createTemplate () {
-      const templateParams = {
+    createBlankTemplate () {
+      const params = {
         name: 'New module',
         namespace: 'general',
         class: 'module',
@@ -154,6 +194,12 @@ export default {
         refs: '[]',
         vars: '{}'
       }
+
+      this.createTemplate(params)
+    },
+
+    async createTemplate (params, gotoTemplate = true) {
+      const templateParams = params
 
       try {
         await this.$apollo.mutate({
@@ -169,9 +215,10 @@ export default {
           },
 
           update: (store, { data: { createTemplate } }) => {
-            console.log(createTemplate)
             this.$apollo.queries.templates.refresh()
-            this.$router.push({ name: 'templates-edit', params: { templateId: createTemplate.id } })
+            if (gotoTemplate) {
+              this.$router.push({ name: 'templates-edit', params: { templateId: createTemplate.id } })
+            }
           }
         })
 
@@ -301,6 +348,13 @@ export default {
 
     .badge {
       margin-top: 5px;
+    }
+  }
+
+  >>> .svg-wrapper {
+    svg {
+      width: 100%;
+      height: auto;
     }
   }
 </style>
