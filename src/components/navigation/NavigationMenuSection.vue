@@ -39,7 +39,6 @@ export default {
 
       h3 {
         @fontsize nav.section;
-        font-family: Maison Neue, monospace;
         font-style: normal;
         font-weight: normal;
         color: rgba(0, 0, 0, 0.7);
