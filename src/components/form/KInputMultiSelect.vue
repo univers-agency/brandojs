@@ -20,6 +20,7 @@
         v-if="open"
         ref="modal"
         v-shortkey="['esc']"
+        :ok-text="$t('close')"
         @shortkey.native="toggle"
         @ok="toggle()">
         <template #header>
@@ -142,14 +143,12 @@
       </div>
       <div
         class="multiselect">
-        <div>
-          {{ selected.length }} {{ $t('selected') }}
-          <button
-            class="button-edit"
-            @click.self.prevent.stop="toggleFromButton">
-            {{ open ? $t('close') : $t('edit') }}
-          </button>
-        </div>
+        <span>{{ selected.length }} {{ $t('selected') }}</span>
+        <button
+          class="button-edit"
+          @click.self.prevent.stop="toggleFromButton">
+          {{ open ? $t('close') : $t('edit') }}
+        </button>
       </div>
     </template>
   </KFieldBase>
@@ -294,6 +293,9 @@ export default {
       if (!oldVal.length && newVal.length) {
         // options have been initialized
         this.initialize()
+      } else {
+        // options changed -- recheck selected
+        this.selectFromValue()
       }
     }
   },
@@ -309,13 +311,16 @@ export default {
     },
 
     selectFromValue () {
-      this.selected = this.value.map(v => {
-        if (typeof v === 'object') {
-          return v
-        } else {
-          return this.options.find(o => o[this.optionValueKey].toString() === v.toString())
-        }
-      })
+      this.selected = this.value
+        .map(v => {
+          if (typeof v === 'object') {
+            return v
+          } else {
+            return this.options
+              .find(o => o[this.optionValueKey].toString() === v.toString())
+          }
+        })
+        .filter(o => o !== undefined)
     },
 
     emitSelected () {
@@ -393,7 +398,7 @@ export default {
     },
 
     selectOption (option) {
-      if (this.selected.includes(option)) {
+      if (this.isSelected(option)) {
         this.selected = this.selected.filter(s => s !== option)
       } else {
         if (!this.multiple) {
@@ -596,7 +601,7 @@ export default {
 <i18n>
   {
     "en": {
-"back-to-list": "Back to list",
+      "back-to-list": "Back to list",
       "search": "Search...",
       "remove": "Remove",
       "found-similar-objects": "Found similar objects",
