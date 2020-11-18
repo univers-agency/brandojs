@@ -2,16 +2,16 @@
   <router-link
     v-if="to"
     class="button-secondary"
-    :class="{ narrow, fullWidth }"
-    :to="to">
+    :class="{ narrow, fullWidth, disabled }"
+    :to="disabled ? '' : to">
     <slot></slot>
   </router-link>
   <button
     v-else
     type="button"
     class="button-secondary"
-    :class="{ narrow, fullWidth }"
-    @click.prevent="$emit('click')">
+    :class="{ narrow, fullWidth, disabled }"
+    @click.prevent="disabled ? null : $emit('click')">
     <slot></slot>
   </button>
 </template>
@@ -24,6 +24,11 @@ export default {
     },
 
     narrow: {
+      type: Boolean,
+      default: false
+    },
+
+    disabled: {
       type: Boolean,
       default: false
     },
@@ -65,6 +70,10 @@ export default {
     &.narrow {
       min-width: auto;
       padding: 15px 18px 16px;
+    }
+
+    &.disabled {
+      color: #aaa;
     }
 
     &:hover {
