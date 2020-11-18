@@ -177,7 +177,7 @@ export default {
   watch: {
     imageSeriesName (val) {
       this.innerValue.name = val
-      this.innerValue.slug = slugify(val, { lower: true })
+      this.innerValue.slug = slugify(val, { lower: true, strict: true })
     },
 
     files (val) {

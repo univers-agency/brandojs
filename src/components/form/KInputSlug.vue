@@ -97,7 +97,7 @@ export default {
 
   watch: {
     from (value) {
-      this.innerValue = slugify(this.from, { lower: true })
+      this.innerValue = slugify(this.from, { lower: true, strict: true })
     }
   },
 
