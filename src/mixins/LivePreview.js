@@ -1,6 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 import debounce from 'lodash/debounce'
 import union from 'lodash/union'
+import keys from 'lodash/keys'
 import filter from 'lodash/filter'
 import eq from 'lodash/eq'
 import _toString from 'lodash/toString'
@@ -41,8 +42,8 @@ export default function ({ schema, prop, key }) {
 
     methods: {
       changes (o1, o2) {
-        const keys = union(keys(o1), keys(o2))
-        return filter(keys, key => {
+        const ks = union(keys(o1), keys(o2))
+        return filter(ks, key => {
           return !eq(toString(o1[key]), _toString(o2[key]))
         }).reduce((p, c) => ({ ...p, [c]: o1[c] }), {})
       },
