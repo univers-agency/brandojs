@@ -34,6 +34,7 @@
       :entries="pages"
       :sortable="true"
       :status="true"
+      :soft-delete="true"
       :filter-keys="['title']"
       @updateQuery="queryVars = $event"
       @sort="sortPages">
