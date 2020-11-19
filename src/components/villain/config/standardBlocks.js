@@ -338,6 +338,7 @@ export default {
         picture_class: '',
         srcset: '',
         media_queries: '',
+        lightbox: false,
         series_slug: 'post'
       }
     },
