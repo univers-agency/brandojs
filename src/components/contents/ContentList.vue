@@ -11,6 +11,7 @@
         class="status">
         <StatusLine
           :all="true"
+          :deleted="softDelete"
           :val="$parent.queryVars.status"
           @statusUpdate="changeStatus" />
       </div>
@@ -33,13 +34,7 @@
             @input="filterInput()" />
         </div>
       </div>
-      <div
-        v-if="softDelete && shouldStatus"
-        class="trash"
-        :class="{ trashSelected: trashActive }"
-        @click="toggleTrash">
-        <FontAwesomeIcon icon="trash" />
-      </div>
+
       <div
         v-if="false"
         class="order">
@@ -266,15 +261,6 @@ export default {
   },
 
   methods: {
-    toggleTrash () {
-      this.trashActive = !this.trashActive
-      if (this.trashActive) {
-        this.changeStatus('deleted')
-      } else {
-        this.changeStatus('published')
-      }
-    },
-
     changeStatus (status) {
       const queryVars = { ...this.$parent.queryVars, status }
       this.$emit('updateQuery', queryVars)
@@ -403,7 +389,7 @@ export default {
 
     .order, .trash {
       padding: 0 15px;
-      min-height: 52px;
+      min-height: 54px;
       height: 100%;
       display: flex;
       align-items: center;

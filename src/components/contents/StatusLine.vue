@@ -51,6 +51,11 @@ export default {
         disabled: {
           label: this.$t('status-disabled'),
           value: 'disabled'
+        },
+
+        deleted: {
+          label: this.$t('status-deleted'),
+          value: 'deleted'
         }
       }
     }
@@ -119,6 +124,10 @@ export default {
       &.disabled {
         fill: theme(colors.status.disabled);
       }
+
+      &.deleted {
+        fill: #111;
+      }
     }
   }
 </style>
@@ -129,14 +138,16 @@ export default {
     "status-draft": "Draft",
     "status-pending": "Pending",
     "status-published": "Published",
-    "status-disabled": "Disabled"
+    "status-disabled": "Disabled",
+    "status-deleted": "Deleted"
   },
 
   "no": {
     "status-draft": "Utkast",
     "status-pending": "Venter",
     "status-published": "Publisert",
-    "status-disabled": "Deaktivert"
+    "status-disabled": "Deaktivert",
+    "status-deleted": "Slettet"
   }
 }
 </i18n>
