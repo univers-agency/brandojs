@@ -69,6 +69,15 @@
               </dd>
             </div>
           </div>
+
+          <div class="row info">
+            <div class="col-md-6">
+              <ButtonSecondary
+                @click="reRender(img.id)">
+                Gjenskap størrelser
+              </ButtonSecondary>
+            </div>
+          </div>
         </div>
       </div>
     </KModal>
@@ -136,6 +145,7 @@ export default {
 
   data () {
     return {
+      cacheBuster: '',
       img: {},
       selected: false,
       showEdit: false,
@@ -145,7 +155,7 @@ export default {
 
   computed: {
     timestamp () {
-      return format(parseISO(this.img.updatedAt), 'T')
+      return format(parseISO(this.img.updatedAt), 'T') + this.cacheBuster
     }
   },
 
@@ -158,6 +168,15 @@ export default {
   },
 
   methods: {
+    reRender (imgId) {
+      this.adminChannel.channel
+        .push('images:rerender_image', { id: imgId })
+        .receive('ok', payload => {
+          this.$toast.success({ message: 'Størrelser gjenskapt' })
+          this.cacheBuster = this.$utils.guid()
+        })
+    },
+
     mouseOver () {
       this.showOverlay = true
     },
@@ -190,6 +209,7 @@ export default {
       }
       const imageParams = this.$utils.stripParams(this.img, ['__typename', 'id', 'deletedAt'])
       this.$utils.validateImageParams(imageParams, ['image'])
+
       try {
         await this.$apollo.mutate({
           mutation: gql`
