@@ -446,7 +446,8 @@ export default {
               title: '',
               url: data.image.src,
               width: data.image.width,
-              height: data.image.height
+              height: data.image.height,
+              webp: data.image.webp
             }
           ]
         } else {
@@ -472,7 +473,8 @@ export default {
           title: img.title,
           url: img.src,
           width: img.width,
-          height: img.height
+          height: img.height,
+          webp: img.webp
         }
       ])
     }

@@ -339,7 +339,8 @@ export default {
         srcset: '',
         media_queries: '',
         lightbox: false,
-        series_slug: 'post'
+        series_slug: 'post',
+        webp: false
       }
     },
 

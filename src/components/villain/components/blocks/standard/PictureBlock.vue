@@ -358,6 +358,7 @@ export default {
       this.$set(this.block.data, 'credits', '')
       this.$set(this.block.data, 'title', '')
       this.$set(this.block.data, 'link', '')
+      this.$set(this.block.data, 'webp', false)
       this.$set(this.block.data, 'width', 0)
       this.$set(this.block.data, 'height', 0)
     },
@@ -403,6 +404,7 @@ export default {
       this.$set(this.block.data, 'link', '')
       this.$set(this.block.data, 'credits', img.credits)
       this.$set(this.block.data, 'title', img.title)
+      this.$set(this.block.data, 'webp', img.webp)
       this.$set(this.block.data, 'width', img.width || 0)
       this.$set(this.block.data, 'height', img.height || 0)
 
@@ -456,6 +458,7 @@ export default {
           this.$set(this.block.data, 'alt', data.image.alt)
           this.$set(this.block.data, 'link', '')
           this.$set(this.block.data, 'url', data.image.src)
+          this.$set(this.block.data, 'webp', data.image.webp)
           this.$set(this.block.data, 'width', data.image.width || 0)
           this.$set(this.block.data, 'height', data.image.height || 0)
 
