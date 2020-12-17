@@ -28,6 +28,12 @@
                     :name="`vars[${key}]`"
                     :label="v.label" />
                 </template>
+                <template v-if="localVars[key].type === 'string'">
+                  <KInput
+                    v-model="localVars[key].value"
+                    :name="`vars[${key}]`"
+                    :label="v.label" />
+                </template>
                 <template v-else-if="localVars[key].type === 'boolean'">
                   <KInputToggle
                     v-model="localVars[key].value"

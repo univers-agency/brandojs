@@ -235,7 +235,7 @@ export default {
 
     getModules () {
       this.adminChannel.channel
-        .push('datasource:list_modules')
+        .push('datasource:list_modules', {})
         .receive('ok', payload => {
           this.availableModules = payload.available_modules
         })

@@ -113,7 +113,7 @@ export default {
     },
     getParents () {
       this.adminChannel.channel
-        .push('pages:list_parents')
+        .push('pages:list_parents', {})
         .receive('ok', payload => {
           this.parents = payload.parents
           this.loading = 0

@@ -359,7 +359,7 @@ export default {
 
   created () {
     this.adminChannel.channel
-      .push('pages:list_templates')
+      .push('pages:list_templates', {})
       .receive('ok', payload => {
         this.templates = payload.templates
       })

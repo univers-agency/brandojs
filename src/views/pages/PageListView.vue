@@ -249,13 +249,13 @@ export default {
   methods: {
     reprocess () {
       this.adminChannel.channel
-        .push('page:rerender_all')
+        .push('page:rerender_all', {})
         .receive('ok', payload => {
           this.$toast.success({ message: this.$t('pages.pages-rerendered') })
         })
 
       this.adminChannel.channel
-        .push('page_fragment:rerender_all')
+        .push('page_fragment:rerender_all', {})
         .receive('ok', payload => {
           this.$toast.success({ message: this.$t('pages.fragments-rerendered') })
         })

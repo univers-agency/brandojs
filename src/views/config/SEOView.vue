@@ -169,7 +169,7 @@ export default {
   methods: {
     checkSitemap () {
       this.adminChannel.channel
-        .push('sitemap:exists')
+        .push('sitemap:exists', {})
         .receive('ok', result => {
           this.sitemapEnabled = result.sitemap
         })
@@ -177,7 +177,7 @@ export default {
 
     generateSitemap () {
       this.adminChannel.channel
-        .push('sitemap:generate')
+        .push('sitemap:generate', {})
         .receive('ok', () => {
           this.$toast.success({ message: this.$t('sitemap-generated') })
         })

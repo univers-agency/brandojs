@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { differenceInSeconds } from 'date-fns'
+import { differenceInSeconds, parseISO } from 'date-fns'
 
 export default {
   props: {
@@ -64,7 +64,7 @@ export default {
 
     status () {
       if (this.entry.publishAt) {
-        if (differenceInSeconds(this.entry.publishAt, Date.now()) < 0) {
+        if (differenceInSeconds(parseISO(this.entry.publishAt), Date.now()) < 0) {
           return this.entry.status
         } else {
           return 'pending'

@@ -357,7 +357,7 @@ export default {
       })
 
       // request presences
-      this.adminChannel.push('admin:list_presence')
+      this.adminChannel.push('admin:list_presence', {})
     },
 
     storeLobbyPresences (state) {
