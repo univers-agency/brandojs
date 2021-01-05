@@ -24,7 +24,7 @@
     "apollo-link": "^1.2.14",
     "apollo-link-error": "^1.1.13",
     "autosize": "^4.0.2",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "codemirror": "^5.57.0",
     "core-js": "^3.6.5",
     "date-fns": "^2.16.1",
