@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="ready">
     <div
       class="villain-block-wrapper">
       <VillainPlus
@@ -11,7 +11,7 @@
       @enter="enter"
       @leave="leave">
       <div
-        v-for="(b, index) in cBlocks"
+        v-for="(b, index) in innerValue"
         ref="containers"
         :key="b.uid + '-container'"
         :data-index="index"
@@ -35,7 +35,12 @@ export default {
   name: 'BlockContainer',
 
   props: {
-    blocks: {
+    ready: {
+      type: Boolean,
+      default: false
+    },
+
+    value: {
       type: Array,
       default: () => []
     }
@@ -48,19 +53,16 @@ export default {
   },
 
   computed: {
-    cBlocks: {
-      get: function () {
-        return [...this.blocks]
-      },
-      set: function (blocks) {
-        this.$emit('order', blocks)
+    innerValue: {
+      get () { return this.value },
+      set (innerValue) {
+        this.$emit('input', innerValue)
       }
     }
   },
 
   created () {
     console.debug('<BlockContainer /> created')
-
     this.uid = (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase()
   },
 
@@ -72,7 +74,7 @@ export default {
           x: -5
         },
         {
-          duration: 0.45,
+          duration: 0.25,
           opacity: 1,
           x: 0,
           onComplete: () => {
@@ -89,7 +91,7 @@ export default {
         opacity: 0,
         x: -5,
         onComplete: () => {
-          gsap.to(el, { duration: 0.4, height: 0, onComplete: done, ease: 'power3.in' })
+          gsap.to(el, { duration: 0.3, height: 0, onComplete: done, ease: 'power3.in' })
         }
       })
     }

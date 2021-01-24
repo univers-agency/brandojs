@@ -1,10 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep'
 import debounce from 'lodash/debounce'
-import union from 'lodash/union'
-import keys from 'lodash/keys'
-import filter from 'lodash/filter'
-import eq from 'lodash/eq'
-import _toString from 'lodash/toString'
 
 export default function ({ schema, prop, key }) {
   return {
@@ -27,7 +22,7 @@ export default function ({ schema, prop, key }) {
         handler: debounce(function (v) {
           if (this.livePreview) {
             if (this.livePreviewReady && this.livePreviewActivated) {
-              const changes = this.changes(v, this.livePreviewPreviousValue)
+              const changes = this.$utils.diff(v, this.livePreviewPreviousValue)
               this.updateLivePreview(changes)
               this.livePreviewPreviousValue = cloneDeep(v)
             }
@@ -41,13 +36,6 @@ export default function ({ schema, prop, key }) {
     ],
 
     methods: {
-      changes (o1, o2) {
-        const ks = union(keys(o1), keys(o2))
-        return filter(ks, key => {
-          return !eq(toString(o1[key]), _toString(o2[key]))
-        }).reduce((p, c) => ({ ...p, [c]: o1[c] }), {})
-      },
-
       openLivePreview () {
         this.livePreviewPreviousValue = cloneDeep(this[prop])
         this.adminChannel.channel

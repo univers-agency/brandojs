@@ -135,7 +135,6 @@ export default {
 
   methods: {
     onChange (a) {
-      console.log(a)
       this.innerValue = a
     },
 

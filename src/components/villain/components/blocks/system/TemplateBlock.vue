@@ -14,6 +14,17 @@
       v-if="!block.data.multi"
       class="template-entry"
       @click="handleClick">
+      <div
+        v-if="hasImportantVariables"
+        class="villain-template-important-config">
+        <FontAwesomeIcon
+          class="icon"
+          icon="wrench"
+          size="lg"
+          fixed-width
+          @click="$refs[`templateConfig${block.data.id}`].showConfig = true" />
+        Denne blokken har variabler merket som viktige. Du kan endre de ved å klikke på skiftnøkkelen oppe til høyre i blokken
+      </div>
       <component
         :is="buildWrapper({refs: block.data.refs, vars: block.data.vars})"
         @delete="deleteBlock($event)"
@@ -21,6 +32,7 @@
       <div class="entry-toolbar">
         <div class="helpful-actions">
           <TemplateConfig
+            :ref="`templateConfig${block.data.id}`"
             :templateId="block.data.id"
             :refs="block.data.refs"
             :vars="block.data.vars"
@@ -60,6 +72,7 @@
                 {{ $t('delete') }}
               </ButtonTiny>
               <TemplateConfig
+                :ref="`templateConfig${entry.id}`"
                 :templateId="block.data.id"
                 :entryId="entry.id"
                 :refs="entry.refs"
@@ -114,7 +127,8 @@ export default {
     return {
       showConfig: false,
       customClass: '',
-      uid: null
+      uid: null,
+      hasImportantVariables: false
     }
   },
 
@@ -166,6 +180,15 @@ export default {
         vars: this.block.data.vars
       }])
       delete this.block.data.refs
+    }
+
+    this.hasImportantVariables = false
+
+    for (const [key, value] of Object.entries(this.block.data.vars)) {
+      if (value.important) {
+        this.hasImportantVariables = true
+        break
+      }
     }
   },
 
@@ -268,6 +291,7 @@ export default {
       let replacedLogicCode = srcCode.replace(/(\{% for (\w+) in [a-zA-Z0-9.?|"-]+ %\})(.*?)(\{% endfor %\})/gs, this.replaceEmpty)
       replacedLogicCode = replacedLogicCode.replace(/(\{% assign .*? %\})/gs, this.replaceEmpty)
       replacedLogicCode = replacedLogicCode.replace(/\{% comment %\}((.|\n)*?)\{% endcomment %\}/gs, this.replaceCommentLogic)
+      replacedLogicCode = replacedLogicCode.replace(/\{% hide %\}((.|\n)*?)\{% endhide %\}/gs, this.replaceEmpty)
       replacedLogicCode = replacedLogicCode.replace(/(\{% if [a-zA-Z0-9.?|_"-]+ (==|!=) [a-zA-Z0-9.?|_"-]+ %\}(.|\n)*?\{% endif %\})/sg, '')
       replacedLogicCode = replacedLogicCode.replace(/(\{% if [a-zA-Z0-9.?|_"-]+ %\}(.|\n)*?\{% endif %\})/sg, '')
       return replacedLogicCode
@@ -283,7 +307,7 @@ export default {
 
     replaceVars (srcCode) {
       // TODO: when lookbehind is implemented: /(?<!<\/?[^>]*|&[^;]*)(\${.*?})/g
-      const replacedVarsCode = srcCode.replace(/<.*?>|(\{\{.*?\}\})/g, this.replaceVar)
+      const replacedVarsCode = srcCode.replace(/<.*?>|(\{\{.*?\}\})/gs, this.replaceVar)
       return replacedVarsCode
     },
 
@@ -322,17 +346,19 @@ export default {
 
     replaceEntry (exp, entryVar) {
       if (this.available.entryData) {
-        return `<span v-popover="'{{ entry.${entryVar} }}'" class="villain-entry-var">${this.lookupEntryVar(entryVar)}</span>`
+        return `<span v-popover="'{{ entry.${entryVar} }}'" class="villain-entry-var" data-villain-var>${this.lookupEntryVar(entryVar)}</span>`
       } else {
         return '{{ entry.' + entryVar + ' }}'
       }
-      // return `${this.available.entryData[entryVar] || 'mangler entryData'}`
     },
 
     lookupEntryVar (entryVar) {
       const camelCasedVar = camelCase(entryVar)
-      return `%%% entryData.${camelCasedVar} %%%`
-      // return `${this.available.entryData[entryVar] || 'mangler entryData'}`
+      if (this.available.entryData[entryVar]) {
+        return this.available.entryData[entryVar]
+      } else {
+        return `ukjent variabel: entry.${entryVar}`
+      }
     },
 
     updateRefs ({ newRefs, entryId }) {
@@ -546,6 +572,23 @@ export default {
     margin-bottom: 1rem;
     padding: 1rem;
     background-color: #fbf5f2;
+  }
+
+  .villain-template-important-config {
+    background-color: #faffd0;
+    border: 1px solid #eee;
+    padding: 20px;
+    margin-bottom: 14px;
+    font-size: 17px;
+    font-weight: 500;
+
+    svg {
+      border: 1px solid;
+      background-color: white;
+      padding: 4px;
+      border-radius: 7px;
+      margin-right: 7px;
+    }
   }
 
   .entry-toolbar {

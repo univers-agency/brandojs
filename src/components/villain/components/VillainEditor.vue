@@ -77,20 +77,13 @@
     <template
       v-else>
       <BlockContainer
-        v-if="blocks && blocks.length"
-        :blocks="blocks"
-        @add="addBlock($event)"
-        @move="moveBlock($event)"
+        v-model="innerValue"
+        :ready="ready"
+        @add="addBlock"
+        @move="moveBlock"
         @delete="deleteBlock"
         @duplicate="duplicateBlock"
         @order="orderBlocks" />
-      <BlockContainer
-        v-else
-        :blocks="blocks"
-        @add="addBlock($event)"
-        @move="moveBlock($event)"
-        @duplicate="duplicateBlock"
-        @delete="deleteBlock" />
     </template>
   </div>
 </template>
@@ -160,6 +153,11 @@ export default {
     json: {
       type: [String, Array],
       default: '[]'
+    },
+
+    value: {
+      type: [Array],
+      default: () => []
     },
 
     entryData: {
@@ -240,21 +238,37 @@ export default {
       blockCount: 0,
       blocks: [],
       lastAutosavedAt: null,
+      lastValue: null,
       needsRefresh: false,
       showAutosaves: false,
       showSource: false,
       fullscreen: false,
-      availableTemplates: []
+      availableTemplates: [],
+      ready: false
     }
   },
-
   computed: {
+    innerValue: {
+      get () {
+        return this.value
+      },
+      set (innerValue) {
+        this.$emit('input', innerValue)
+      }
+    },
+
     src: {
+      /**
+       * Called when getting source code
+       */
       get () {
         const bx = cloneDeep(this.blocks)
         return JSON.stringify(bx.map(b => this.stripMeta(b)), null, 2)
       },
 
+      /**
+      * Called when updating source code
+      */
       set (v) {
         this.updatedSource = v
       }
@@ -268,6 +282,16 @@ export default {
         return false
       }
       return true
+    },
+
+    allBlocks () {
+      let allBlocks = STANDARD_BLOCKS[this.$i18n.locale]
+
+      if (this.extraBlocks.length) {
+        allBlocks = allBlocks + STANDARD_BLOCKS[this.$i18n.locale]
+      }
+
+      return allBlocks
     },
 
     availableBlocks () {
@@ -305,6 +329,11 @@ export default {
     Object.defineProperty(available, 'blocks', {
       enumerable: true,
       get: () => this.availableBlocks
+    })
+
+    Object.defineProperty(available, 'allBlocks', {
+      enumerable: true,
+      get: () => this.allBlocks
     })
 
     Object.defineProperty(available, 'templates', {
@@ -352,47 +381,16 @@ export default {
     }
   },
 
-  watch: {
-    blocks: {
-      handler: function (val, oldVal) {
-        this.lastEdit = getTimestamp()
-        const bx = cloneDeep(val)
-        if (bx.length) {
-          this.blockCount = bx.length
-          this.$emit('input', JSON.stringify(bx.map(b => this.stripMeta(b)), null, 2))
-        } else {
-          this.$emit('input', null)
-        }
-        return val
-      },
-      deep: true
-    }
-  },
-
   async created () {
-    console.debug('==> VILLAIN EDITOR INITIALIZING')
-
     if (this.templates) {
       this.availableTemplates = await fetchTemplates(this.templates, this.extraHeaders, `${this.server}${this.templatesURL}`)
     }
 
-    // convert data to blocks
-    if (!this.json || this.json === '') {
-      this.blocks = []
-    } else {
-      // check if it needs to be parsed!
-      if (typeof (this.json) === 'object') {
-        this.blocks = cloneDeep(this.json)
-      } else {
-        this.blocks = JSON.parse(this.json)
-      }
-      this.blocks = this.addUIDs()
-      this.blockCount = this.blocks.length
-    }
+    this.innerValue = this.addUIDs()
 
     // validate each block!
-    for (let idx = 0; idx < this.blocks.length; idx++) {
-      const block = this.blocks[idx]
+    for (let idx = 0; idx < this.innerValue.length; idx++) {
+      const block = this.innerValue[idx]
       this.validateBlock(block)
     }
 
@@ -409,15 +407,21 @@ export default {
     // setup autosave interval
     setInterval(() => {
       // Only autosave if there are changes
-      if (this.lastEdit > this.lastAutosavedAt) {
-        this.lastAutosavedAt = getTimestamp()
+      if (!this.lastValue) {
+        this.lastValue = JSON.stringify(this.innerValue)
+      }
+
+      if (JSON.stringify(this.innerValue) !== this.lastValue) {
         this.autosaveStatus = this.$t('autosaving')
         setTimeout(() => {
           this.autosaveStatus = ''
         }, AUTOSAVE_STATUS_TEXT_DURATION)
-        addAutoSave(this.blocks)
+        addAutoSave(this.innerValue)
+        this.lastValue = JSON.stringify(this.innerValue)
       }
     }, AUTOSAVE_INTERVAL)
+
+    this.ready = true
   },
 
   mounted () {
@@ -599,7 +603,7 @@ export default {
     },
 
     addUIDs () {
-      return [...this.blocks].map(b => {
+      return [...this.innerValue].map(b => {
         return { ...b, uid: this.createUID() }
       })
     },
@@ -628,6 +632,7 @@ export default {
     },
 
     addBlock ({ block: blockTpl, after, parent }) {
+      console.log('addBlock', blockTpl, after, parent)
       let block
       // a standard component blueprint
       if (blockTpl.hasOwnProperty('component')) {
@@ -652,14 +657,14 @@ export default {
       // no after, no parent = + at the top OR first one if empty
       if (!after && !parent) {
         // if we have blocks, it's the top + so we add to top
-        if (this.blocks.length) {
-          this.blocks = [
+        if (this.innerValue.length) {
+          this.innerValue = [
             block,
-            ...this.blocks
+            ...this.innerValue
           ]
         } else {
-          this.blocks = [
-            ...this.blocks,
+          this.innerValue = [
+            ...this.innerValue,
             block
           ]
         }
@@ -667,8 +672,8 @@ export default {
       }
 
       if (parent) {
-        // child of a column
-        const mainBlock = this.blocks.find(b => {
+        // child of a column OR container
+        const mainBlock = this.innerValue.find(b => {
           if (b.type === 'columns') {
             for (const key of Object.keys(b.data)) {
               const x = b.data[key]
@@ -676,71 +681,108 @@ export default {
                 return x
               }
             }
+          } else if (b.type === 'container') {
+            if (b.uid === parent) {
+              return b
+            }
           }
         })
+
         let parentBlock = null
         if (mainBlock) {
-          // we have the main block -- add to the correct parent
-          for (const key of Object.keys(mainBlock.data)) {
-            const y = mainBlock.data[key]
-            if (y.uid === parent) {
-              parentBlock = y
+          if (mainBlock.type === 'columns') {
+            // we have the main block -- add to the correct parent
+            for (const key of Object.keys(mainBlock.data)) {
+              const y = mainBlock.data[key]
+              if (y.uid === parent) {
+                parentBlock = y
+              }
             }
-          }
 
-          if (after) {
-            const p = parentBlock.data.find(b => b.uid === after)
-            if (!p) {
-              console.error('--- NO UID FOR "AFTER"-BLOCK')
-            }
-            const idx = parentBlock.data.indexOf(p)
+            if (after) {
+              const p = parentBlock.data.find(b => b.uid === after)
+              if (!p) {
+                console.error('--- NO UID FOR "AFTER"-BLOCK')
+              }
+              const idx = parentBlock.data.indexOf(p)
 
-            if (idx + 1 === parentBlock.data.length) {
-              // index is last, just add to list
+              if (idx + 1 === parentBlock.data.length) {
+                // index is last, just add to list
+                parentBlock.data = [
+                  ...parentBlock.data,
+                  block
+                ]
+                return
+              }
+
+              // we're adding in the midst of things
               parentBlock.data = [
-                ...parentBlock.data,
-                block
+                ...parentBlock.data.slice(0, idx + 1),
+                block,
+                ...parentBlock.data.slice(idx + 1)
               ]
-              return
+            } else {
+              parentBlock.data = [
+                block,
+                ...parentBlock.data
+              ]
             }
-
-            // we're adding in the midst of things
-            parentBlock.data = [
-              ...parentBlock.data.slice(0, idx + 1),
-              block,
-              ...parentBlock.data.slice(idx + 1)
-            ]
           } else {
-            parentBlock.data = [
-              block,
-              ...parentBlock.data
-            ]
+            // container
+            if (after) {
+              const p = mainBlock.data.blocks.find(b => b.uid === after)
+              if (!p) {
+                console.error('--- NO UID FOR "AFTER"-BLOCK')
+              }
+              const idx = mainBlock.data.blocks.indexOf(p)
+
+              if (idx + 1 === mainBlock.data.blocks.length) {
+                // index is last, just add to list
+                mainBlock.data.blocks = [
+                  ...mainBlock.data.blocks,
+                  block
+                ]
+                return
+              }
+
+              // we're adding in the midst of things
+              mainBlock.data.blocks = [
+                ...mainBlock.data.blocks.slice(0, idx + 1),
+                block,
+                ...mainBlock.data.blocks.slice(idx + 1)
+              ]
+            } else {
+              mainBlock.data.blocks = [
+                block,
+                ...mainBlock.data.blocks
+              ]
+            }
           }
         }
         return
       }
 
       if (after) {
-        const p = this.blocks.find(b => b.uid === after)
+        const p = this.innerValue.find(b => b.uid === after)
         if (!p) {
           console.error('--- NO UID FOR "AFTER"-BLOCK')
         }
-        const idx = this.blocks.indexOf(p)
+        const idx = this.innerValue.indexOf(p)
 
-        if (idx + 1 === this.blocks.length) {
+        if (idx + 1 === this.innerValue.length) {
           // index is last, just add to list
-          this.blocks = [
-            ...this.blocks,
+          this.innerValue = [
+            ...this.innerValue,
             block
           ]
           return
         }
 
         // we're adding in the midst of things
-        this.blocks = [
-          ...this.blocks.slice(0, idx + 1),
+        this.innerValue = [
+          ...this.innerValue.slice(0, idx + 1),
           block,
-          ...this.blocks.slice(idx + 1)
+          ...this.innerValue.slice(idx + 1)
         ]
       }
     },
@@ -750,13 +792,13 @@ export default {
 
       if (!after && !parent) {
         // if we have blocks, it's the top + so we add to top
-        if (this.blocks.length) {
-          this.blocks = [
+        if (this.innerValue.length) {
+          this.innerValue = [
             block,
-            ...this.blocks
+            ...this.innerValue
           ]
         } else {
-          this.blocks = [
+          this.innerValue = [
             block
           ]
         }
@@ -767,7 +809,7 @@ export default {
       */
       if (parent) {
         // child of a column
-        const mainBlock = this.blocks.find(b => {
+        const mainBlock = this.innerValue.find(b => {
           if (b.type === 'columns') {
             for (const key of Object.keys(b.data)) {
               const x = b.data[key]
@@ -824,38 +866,38 @@ export default {
       ** Block is moved after another block, but not to a columns object
       */
       if (after) {
-        const p = this.blocks.find(b => b.uid === after)
+        const p = this.innerValue.find(b => b.uid === after)
         if (!p) {
-          if (this.blocks.length) {
+          if (this.innerValue.length) {
             console.error('--- NO UID FOR "AFTER"-BLOCK')
-            this.blocks = [
-              ...this.blocks,
+            this.innerValue = [
+              ...this.innerValue,
               block
             ]
             return
           } else {
-            this.blocks = [
+            this.innerValue = [
               block
             ]
             return
           }
         }
-        const parentIdx = this.blocks.indexOf(p)
+        const parentIdx = this.innerValue.indexOf(p)
 
-        if (parentIdx + 1 === this.blocks.length) {
+        if (parentIdx + 1 === this.innerValue.length) {
           // index is last, just add to list
-          this.blocks = [
-            ...this.blocks,
+          this.innerValue = [
+            ...this.innerValue,
             block
           ]
           return
         }
 
         // we're adding in the midst of things
-        this.blocks = [
-          ...this.blocks.slice(0, parentIdx + 1),
+        this.innerValue = [
+          ...this.innerValue.slice(0, parentIdx + 1),
           block,
-          ...this.blocks.slice(parentIdx + 1)
+          ...this.innerValue.slice(parentIdx + 1)
         ]
       }
     },
@@ -865,7 +907,7 @@ export default {
       const copyBlock = this.$utils.clone(srcBlock)
       copyBlock.uid = this.createUID()
 
-      const block = this.blocks.find(b => {
+      const block = this.innerValue.find(b => {
         if (b.type === 'columns') {
           for (const col of b.data) {
             for (const colBlock of col.data) {
@@ -882,19 +924,19 @@ export default {
       })
 
       if (block) {
-        const idx = this.blocks.indexOf(block)
-        this.blocks = [
-          ...this.blocks.slice(0, idx),
+        const idx = this.innerValue.indexOf(block)
+        this.innerValue = [
+          ...this.innerValue.slice(0, idx),
           block,
           copyBlock,
-          ...this.blocks.slice(idx + 1)
+          ...this.innerValue.slice(idx + 1)
         ]
         this.$toast.success({ message: this.$t('block-duplicated') })
       }
     },
 
     deleteBlock ({ uid, ref }) {
-      const block = this.blocks.find(b => {
+      const block = this.innerValue.find(b => {
         if (b.type === 'columns') {
           for (const col of b.data) {
             for (const colBlock of col.data) {
@@ -912,14 +954,14 @@ export default {
       })
       if (block) {
         if (ref) {
-          const idx = this.blocks.indexOf(block)
+          const idx = this.innerValue.indexOf(block)
           // a TemplateBlock that wants to get rid of a ref!
           const foundRef = block.data.refs.find(r => r.name === ref)
           const refIdx = block.data.refs.indexOf(foundRef)
 
           if (refIdx > -1) {
-            this.blocks = [
-              ...this.blocks.slice(0, idx),
+            this.innerValue = [
+              ...this.innerValue.slice(0, idx),
               {
                 ...block,
                 data: {
@@ -931,23 +973,23 @@ export default {
                   ]
                 }
               },
-              ...this.blocks.slice(idx + 1)
+              ...this.innerValue.slice(idx + 1)
             ]
           } else {
             console.error('deleteBlock: ref not found...', ref)
           }
         } else {
-          const idx = this.blocks.indexOf(block)
-          this.blocks = [
-            ...this.blocks.slice(0, idx),
-            ...this.blocks.slice(idx + 1)
+          const idx = this.innerValue.indexOf(block)
+          this.innerValue = [
+            ...this.innerValue.slice(0, idx),
+            ...this.innerValue.slice(idx + 1)
           ]
         }
       }
     },
 
     orderBlocks (blocks) {
-      this.blocks = [...blocks]
+      this.innerValue = [...blocks]
     }
   }
 

@@ -68,6 +68,10 @@ export default {
     Block
   },
 
+  inject: [
+    'available'
+  ],
+
   props: {
     block: {
       type: Object,
@@ -87,10 +91,6 @@ export default {
       uid: null
     }
   },
-
-  inject: [
-    'available'
-  ],
 
   computed: {
     fontSize () {

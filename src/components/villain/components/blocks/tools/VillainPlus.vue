@@ -156,6 +156,12 @@ export default {
     IconDropdown
   },
 
+  inject: [
+    'available',
+    'vTemplateMode',
+    'state'
+  ],
+
   props: {
     parent: {
       type: String,
@@ -195,12 +201,6 @@ export default {
       return other
     }
   },
-
-  inject: [
-    'available',
-    'vTemplateMode',
-    'state'
-  ],
 
   created () {
     console.debug('<VillainPlus /> created')

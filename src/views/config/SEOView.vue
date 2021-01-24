@@ -207,7 +207,6 @@ export default {
         this.$toast.success({ message: this.$t('updated') })
         this.$router.push({ name: 'dashboard' })
       } catch (err) {
-        console.log(err)
         this.$utils.showError(err)
       }
     }

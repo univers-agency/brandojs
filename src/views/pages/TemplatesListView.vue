@@ -189,7 +189,7 @@ export default {
         name: 'New module',
         namespace: 'general',
         class: 'module',
-        code: '<article data-v="module">\n\t<div class="inner">\n\t\t/* */\n\t</div>\n</article>',
+        code: '<article b-tpl="module">\n\t<div class="inner">\n\t\t/* */\n\t</div>\n</article>',
         helpText: 'Help text',
         refs: '[]',
         vars: '{}'

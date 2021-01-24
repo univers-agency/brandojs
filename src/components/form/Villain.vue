@@ -15,7 +15,6 @@
           :templates="templates"
           :template-mode="templateMode"
           :max-blocks="maxBlocks"
-          :json="innerValue"
           :entry-data="entryData"
           :show-templates="showTemplates"
           :visible-blocks="visibleBlocks"
@@ -121,13 +120,14 @@ export default {
   },
 
   created () {
-    this.innerValue = this.value
-  },
-
-  methods: {
-    input (e) {
-      this.innerValue = e
-      this.$emit('input', e)
+    console.debug('==> Villain created')
+    if (this.value === null) {
+      this.innerValue = []
+    }
+    else if (typeof (this.value) === 'object') {
+      this.innerValue = this.value
+    } else {
+      this.innerValue = JSON.parse(this.value)
     }
   },
 

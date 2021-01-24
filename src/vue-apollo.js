@@ -135,14 +135,14 @@ export function createProvider (options = {}) {
               Vue.prototype.$alerts.alertError('Feil', networkError.error)
             } else {
               Vue.prototype.$alerts.alertError('Ukjent feil', err.message)
-              console.log(err)
+              console.error(err)
             }
         }
       } else {
         Vue.prototype.$alerts.alertError('Feil', graphQLErrors.map(e => e.message).join('<br>'))
       }
       // eslint-disable-next-line no-console
-      console.log('%cB/GQLError', 'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;', graphQLErrors)
+      console.error('%cB/GQLError', 'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;', graphQLErrors)
     }
   })
 
@@ -155,7 +155,7 @@ export async function onLogin (apolloClient, token) {
     setTimeout(() => { apolloClient.resetStore() }, 0)
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.log('%cError on cache reset (login)', 'color: orange;', e.message)
+    console.error('%cError on cache reset (login)', 'color: orange;', e.message)
   }
 }
 
@@ -168,6 +168,6 @@ export async function onLogout (apolloClient) {
     }, 0)
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.log('%cError on cache reset (logout)', 'color: orange;', e.message)
+    console.error('%cError on cache reset (logout)', 'color: orange;', e.message)
   }
 }

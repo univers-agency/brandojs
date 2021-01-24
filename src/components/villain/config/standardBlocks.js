@@ -163,7 +163,8 @@ export default {
       icon: 'fa-table',
       component: 'Datatable',
       dataTemplate: {
-        rows: []
+        rows: [],
+        class: ''
       }
     },
 
@@ -206,6 +207,17 @@ export default {
       icon: 'fa-columns',
       component: 'Columns',
       dataTemplate: []
+    },
+
+    {
+      name: 'Container',
+      icon: 'fa-square',
+      component: 'Container',
+      dataTemplate: {
+        class: '',
+        availableColors: [{ name: 'White', class: 'white', color: '#fff' }],
+        blocks: []
+      }
     },
 
     {
@@ -401,7 +413,8 @@ export default {
       icon: 'fa-table',
       component: 'Datatable',
       dataTemplate: {
-        rows: []
+        rows: [],
+        class: ''
       }
     },
 
@@ -444,6 +457,16 @@ export default {
       icon: 'fa-columns',
       component: 'Columns',
       dataTemplate: []
+    },
+
+    {
+      name: 'Seksjon',
+      icon: 'fa-square',
+      component: 'Container',
+      dataTemplate: {
+        class: '',
+        blocks: []
+      }
     },
 
     {

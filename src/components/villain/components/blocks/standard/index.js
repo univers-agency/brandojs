@@ -1,6 +1,7 @@
 import BlockquoteBlock from './BlockquoteBlock'
 import ColumnsBlock from './ColumnsBlock'
 import CommentBlock from './CommentBlock'
+import ContainerBlock from './ContainerBlock'
 import DatasourceBlock from './DatasourceBlock'
 import DatatableBlock from './DatatableBlock'
 import DividerBlock from './DividerBlock'
@@ -23,6 +24,7 @@ export default {
   BlockquoteBlock,
   ColumnsBlock,
   CommentBlock,
+  ContainerBlock,
   DatasourceBlock,
   DatatableBlock,
   DividerBlock,

@@ -242,6 +242,7 @@ import 'codemirror/mode/htmlmixed/htmlmixed.js'
 
 import GET_TEMPLATE from '../../gql/pages/TEMPLATE_QUERY.graphql'
 import STANDARD_BLOCKS from '../../components/villain/config/standardBlocks'
+import STANDARD_VARS from '../../components/villain/config/standardVars'
 
 CodeMirror.defineMode('htmltwig', function (config, parserConfig) {
   return CodeMirror.overlayMode(CodeMirror.getMode(config, parserConfig.backdrop || 'text/html'), CodeMirror.getMode(config, 'twig'))
@@ -262,12 +263,14 @@ export default {
     return {
       codeOptions: {
         tabSize: 4,
+        indentUnit: 4,
         mode: 'htmltwig',
         lineNumbers: true,
         line: true
       },
       refOptions: {
         tabSize: 4,
+        indentUnit: 4,
         mode: 'javascript',
         lineNumbers: true,
         line: true
@@ -347,6 +350,7 @@ export default {
     },
 
     createVar () {
+      // TODO: Prompt for variable TYPE!
       this.$alerts.alertPrompt('Variable key', ({ data }) => {
         if (data) {
           if (!Object.prototype.hasOwnProperty.call(this.template, 'vars')) {
@@ -560,7 +564,6 @@ export default {
 
       result ({ data: { template } }) {
         setTimeout(() => {
-          console.log(template)
           this.$refs.cmEditor.codemirror.setSize('100%', '100%')
         }, 500)
       },

@@ -342,7 +342,6 @@ export default {
     },
 
     stripItems (items) {
-      console.log('stripItems', items)
       return items.map(i => {
         delete i.__typename
         if (i.items.length) {
@@ -385,7 +384,6 @@ export default {
     },
 
     saveItem (menuId) {
-      console.log('menuId', menuId)
       this.showEditMenuItemModal = 0
       const menu = this.menus.find(m => parseInt(m.id) === parseInt(menuId))
 

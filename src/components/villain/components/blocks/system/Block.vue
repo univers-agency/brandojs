@@ -53,12 +53,12 @@
             fixed-width />
         </div>
         <div
-          v-else-if="hasConfigSlot && block.type === 'template'"
+          v-else-if="block.type === 'template'"
           class="villain-block-action villain-config"
-          @click="openConfig">
+          @click="$parent.$refs[`templateConfig${block.data.id}`].showConfig = true">
           <FontAwesomeIcon
             v-popover.left="$t('template.config')"
-            icon="file"
+            icon="wrench"
             size="xs"
             fixed-width />
         </div>
@@ -124,7 +124,7 @@
 
     <template v-if="!locked">
       <VillainPlus
-        v-if="block.type !== 'columns'"
+        v-if="block.type !== 'columns' || block.type !== 'container'"
         :after="block.uid"
         :parent="parent"
         @add="$emit('add', $event)"
@@ -181,7 +181,7 @@ export default {
 
   computed: {
     blockDescription () {
-      const foundBlock = this.available.blocks.find(b => {
+      const foundBlock = this.available.allBlocks.find(b => {
         return b.component.toLowerCase() === this.block.type
       })
       if (foundBlock) {
@@ -240,7 +240,6 @@ export default {
   },
 
   methods: {
-
     helpBlock () {
       this.showHelp = true
     },

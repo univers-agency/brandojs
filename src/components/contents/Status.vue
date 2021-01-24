@@ -3,41 +3,41 @@
     <svg
       v-if="entry.publishAt"
       v-popover="$t('publish-at') + publishTime"
-      width="11"
-      height="11"
-      viewBox="0 0 11 11"
+      width="15"
+      height="15"
+      viewBox="0 0 15 15"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">
       <circle
         :class="status"
-        cx="5.5"
-        cy="5.5"
-        r="5.5" />
+        cx="7.5"
+        cy="7.5"
+        r="7.5" />
       <line
-        x1="5.5"
-        y1="1"
-        x2="5.5"
-        y2="6"
+        x1="7.5"
+        y1="3"
+        x2="7.5"
+        y2="7"
         stroke="white" />
       <line
-        x1="6"
-        y1="5.5"
+        x1="3.5"
+        y1="7.5"
         x2="8"
-        y2="5.5"
+        y2="7.5"
         stroke="white" />
     </svg>
 
     <svg
       v-else
       xmlns="http://www.w3.org/2000/svg"
-      width="11"
-      height="11"
-      viewBox="0 0 11 11">
+      width="15"
+      height="15"
+      viewBox="0 0 15 15">
       <circle
         :class="status"
-        r="5.5"
-        cy="5.5"
-        cx="5.5" />
+        r="7.5"
+        cy="7.5"
+        cx="7.5" />
     </svg>
     <slot></slot>
   </div>
@@ -45,6 +45,7 @@
 
 <script>
 import { differenceInSeconds, parseISO } from 'date-fns'
+import { format } from 'date-fns-tz'
 
 export default {
   props: {
@@ -56,8 +57,8 @@ export default {
 
   computed: {
     publishTime () {
-      if (this.publishAt) {
-        return this.entry.publishAt
+      if (this.entry.publishAt) {
+        return format(parseISO(this.entry.publishAt), 'dd.MM.yy @ hh:mm (z)', { timeZone: 'Europe/Oslo' })
       }
       return null
     },

@@ -39,7 +39,6 @@ export default {
       const menuItemParams = this.$utils.stripParams({
         ...this.menuItem, menuId: this.menuId
       }, ['__typename', 'id'])
-      console.log(menuItemParams)
 
       try {
         await this.$apollo.mutate({

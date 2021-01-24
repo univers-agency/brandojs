@@ -40,6 +40,9 @@
                     :name="`vars[${key}]`"
                     :label="v.label" />
                 </template>
+                <template v-else-if="localVars[key].type === 'table'">
+                  TABLE!
+                </template>
               </div>
             </div>
 
@@ -86,6 +89,10 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 export default {
+
+  inject: [
+    'available'
+  ],
   props: {
     entryId: {
       type: String,
@@ -119,10 +126,6 @@ export default {
       return this.refs.filter(r => r.deleted)
     }
   },
-
-  inject: [
-    'available'
-  ],
 
   mounted () {
     this.setLocalVars()
