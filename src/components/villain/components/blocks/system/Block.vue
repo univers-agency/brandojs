@@ -434,7 +434,7 @@ export default {
     }
   }
 
-  &.villain-hover {
+  &.villain-hover, &[data-type="container"] {
     border: 1px solid theme(colors.villain.main);
 
     > .villain-block-actions > * {

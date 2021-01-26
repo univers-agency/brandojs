@@ -270,3 +270,8 @@ export default {
   }
 }
 </script>
+<style lang="postcss" scoped>
+  .mr-2 {
+    @space margin-right 5px;
+  }
+</style>

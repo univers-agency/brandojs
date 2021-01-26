@@ -73,10 +73,23 @@
             v-if="namespacedTemplates"
             ref="templates"
             class="villain-editor-plus-available-templates">
-            <div
-              class="datasource-block"
-              @click="addDatasource">
-              {{ $t('add-datasource') }}
+            <div class="hardcoded-blocks">
+              <div
+                v-popover="$t('add-container')"
+                class="datasource-block"
+                @click="addContainer">
+                <FontAwesomeIcon
+                  icon="square"
+                  size="lg" />
+              </div>
+              <div
+                v-popover="$t('add-datasource')"
+                class="datasource-block"
+                @click="addDatasource">
+                <FontAwesomeIcon
+                  icon="database"
+                  size="lg" />
+              </div>
             </div>
 
             <div
@@ -285,6 +298,14 @@ export default {
       this.$emit('add', { block: block, after: this.after, parent: this.parent })
     },
 
+    addContainer () {
+      const ds = this.available.blocks.find(b => b.component === 'Container')
+      const block = { ...ds, uid: createUID() }
+      this.active = false
+      this.showingTemplates = false
+      this.$emit('add', { block: block, after: this.after, parent: this.parent })
+    },
+
     addTemplate (tp) {
       const block = { ...tp, uid: createUID() }
       this.active = false
@@ -349,13 +370,18 @@ export default {
     }
   }
 
+.hardcoded-blocks {
+  display: flex;
+}
+
 .datasource-block {
-  text-transform: uppercase;
-  font-family: Mono;
-  font-size: 11px;
-  text-align: right;
-  padding-bottom: 11px;
+  width: 50%;
+  padding: 11px;
+  margin-bottom: 11px;
   cursor: pointer;
+  &:hover {
+    background-color: #efefef;
+  }
 }
 
 .villain-editor-plus-available-templates {
@@ -568,11 +594,13 @@ export default {
   {
     "en": {
       "move-block-here": "Move block here",
-      "add-datasource": "+ Datasource (advanced)"
+      "add-datasource": "+ Datasource (advanced)",
+      "add-container": "+ Container"
     },
     "no": {
       "move-block-here": "Flytt blokken hit",
-      "add-datasource": "+ Datakilde (avansert)"
+      "add-datasource": "+ Datakilde (avansert)",
+      "add-container": "+ Seksjon"
     }
   }
 </i18n>

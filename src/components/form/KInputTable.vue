@@ -219,7 +219,7 @@ export default {
     storeOrder (sortable) {
       this.sortedArray = sortable.toArray()
 
-      var arr = this.innerValue.sort((a, b) => {
+      const arr = this.innerValue.sort((a, b) => {
         return this.sortedArray.indexOf(a.id) - this.sortedArray.indexOf(b.id)
       })
 
@@ -272,6 +272,7 @@ export default {
     margin-bottom: 4px;
 
     label {
+      @fontsize form.label;
       font-weight: 500;
     }
   }

@@ -188,6 +188,7 @@ export default {
       }
       .villain-block-datatable-item-value {
         padding-left: 2rem;
+        text-align: left;
       }
     }
   }
@@ -223,6 +224,10 @@ export default {
       max-width: 250px;
       margin-bottom: 25px;
     }
+  }
+
+  .helpful-actions {
+    justify-content: center;
   }
 
 </style>

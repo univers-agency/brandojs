@@ -190,6 +190,9 @@ export default {
         break
       }
     }
+
+    // check if any refs are missing
+
   },
 
   updated () {
@@ -275,7 +278,7 @@ export default {
       this.$delete(this.block.data.entries, this.block.data.entries.indexOf(entry))
     },
 
-    replaceContent ({ refs, vars }) {
+    replaceContent (entry) {
       const srcCode = this.getSourceCode()
       // throw out logic(?)
       const srcWithReplacedLogic = this.replaceLogic(srcCode)
@@ -283,7 +286,7 @@ export default {
       const srcWithReplacedVars = this.replaceVars(srcWithReplacedLogic)
       const srcWithReplacedEntry = this.replaceEntries(srcWithReplacedVars)
       // replace all refs
-      const srcWithReplacedVarsRefs = this.replaceRefs(srcWithReplacedEntry, refs)
+      const srcWithReplacedVarsRefs = this.replaceRefs(srcWithReplacedEntry, entry)
       return srcWithReplacedVarsRefs
     },
 
@@ -372,21 +375,22 @@ export default {
       }
     },
 
-    replaceRefs (srcCode, refs) {
+    replaceRefs (srcCode, entry) {
       const replacedRefsCode = srcCode.replace(/%{(\w+)}/g, (exp, refName) => {
-        return this.replaceRef(exp, refName, refs)
+        return this.replaceRef(exp, refName, entry)
       })
 
       return replacedRefsCode
     },
 
-    replaceRef (exp, refName, refs) {
-      let ref = this.findRef(refName, refs)
+    replaceRef (exp, refName, entry) {
+      let ref = this.findRef(refName, entry.refs)
 
       if (!ref) {
         // ref not found —— the template might have been updated.
         const t = this.findTemplate()
         ref = this.findRef(refName, t.data.refs)
+        this.$set(entry, 'refs', [ ...entry.refs, ref ])
       }
 
       if (ref.deleted) {

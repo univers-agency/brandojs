@@ -1,7 +1,7 @@
-import clone from './clone'
+import cloneDeep from 'lodash/cloneDeep'
 
 export default function stripParams (params, toStrip) {
-  const val = clone(params)
+  const val = cloneDeep(params)
   for (let i = 0; i < toStrip.length; i++) {
     delete val[toStrip[i]]
   }

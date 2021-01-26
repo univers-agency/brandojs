@@ -1,19 +1,23 @@
+import clone from 'lodash/cloneDeep'
 import diff from './diff'
 import pick from './pick'
 import showError from './showError'
 import validateFileParams from './validateFileParams'
 import validateImageParams from './validateImageParams'
 import validateImageSeriesParams from './validateImageSeriesParams'
-import serializeProperties from './serializeProperties'
+import serializeParams from './serializeParams'
 import stripParams from './stripParams'
 import stripImageSeriesParams from './stripImageSeriesParams'
-import stripTypename from './stripTypename'
-import clone from './clone'
+import removeTypename from './removeTypename'
+import stripTypenames from './stripTypenames'
 import guid from './guid'
 import wait from './wait'
 import humanFilesize from './humanFilesize'
 import jaroDistance from './jaroDistance'
 import mapMultiSelect from './mapMultiSelect'
+import mapMultiSelects from './mapMultiSelects'
+
+console.log(clone)
 
 export const utils = {
   pick,
@@ -25,11 +29,13 @@ export const utils = {
   showError,
   humanFilesize,
   mapMultiSelect,
+  mapMultiSelects,
   validateFileParams,
   validateImageParams,
   validateImageSeriesParams,
-  serializeProperties,
+  serializeParams,
   stripParams,
   stripImageSeriesParams,
-  stripTypename
+  removeTypename,
+  stripTypenames
 }

@@ -52,6 +52,7 @@ export default {
   methods: {
     async save () {
       const pageFragmentParams = this.$utils.stripParams(this.page, ['__typename', 'id'])
+      this.$utils.serializeParams(pageFragmentParams, ['data'])
 
       try {
         await this.$apollo.mutate({

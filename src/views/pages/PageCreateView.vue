@@ -50,7 +50,7 @@ export default {
       pageParams = { ...pageParams, properties: properties }
 
       this.$utils.validateImageParams(pageParams, ['metaImage'])
-      this.$utils.serializeProperties(pageParams, ['data'])
+      this.$utils.serializeParams(pageParams, ['data'])
 
       try {
         await this.$apollo.mutate({

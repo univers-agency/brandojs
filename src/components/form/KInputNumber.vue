@@ -11,7 +11,7 @@
       <input
         :id="id"
         ref="input"
-        v-model="innerValue"
+        v-model.number="innerValue"
         :class="{ monospace, invert }"
         :placeholder="placeholder"
         :maxlength="maxlength"

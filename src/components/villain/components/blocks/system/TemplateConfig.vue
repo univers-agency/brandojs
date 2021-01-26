@@ -66,10 +66,18 @@
                 {{ ref.name }} — {{ $t('replace-with-ref') }}
               </button>
             </div>
+            <!--
+            <button
+              class="btn-secondary"
+              type="button"
+              @click.prevent="fetchMissingRefs">
+              {{ $t('fetch-missing-refs') }}
+            </button>
+            -->
           </div>
         </div>
         <div class="panes mt-2">
-          <div>
+          <div v-if="deletedBlocks.length">
             <h4>{{ $t('deleted-blocks') }} [{{ deletedBlocks.length }}]</h4>
             <button
               v-for="(b, idx) in deletedBlocks"
@@ -271,6 +279,7 @@ export default {
       "template-config": "Module config",
       "block-variables": "Block variables",
       "fetch-original-variables": "Fetch original variables",
+      "fetch-missing-refs": "Fetch missing refs",
       "refered-blocks": "Refered blocks",
       "replace-with-ref": "Replace with ref",
       "deleted-blocks": "Deleted blocks",
@@ -280,6 +289,7 @@ export default {
       "template-config": "Maloppsett",
       "block-variables": "Blokkvariabler",
       "fetch-original-variables": "Hent orginale variabler",
+      "fetch-missing-refs": "Hent manglende blokker",
       "refered-blocks": "Refererte blokker",
       "replace-with-ref": "Erstatt med referanseblokk",
       "deleted-blocks": "Slettede blokker",

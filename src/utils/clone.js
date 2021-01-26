@@ -3,9 +3,9 @@ export default function clone (obj) {
     return obj
   }
 
-  var temp = obj.constructor()
+  const temp = obj.constructor()
 
-  for (var key in obj) {
+  for (const key in obj) {
     temp[key] = clone(obj[key])
   }
 

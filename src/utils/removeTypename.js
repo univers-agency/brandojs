@@ -1,8 +1,13 @@
+/**
+ * DEPRECATE THIS SOME TIME.
+ * @param {*} value
+ */
 export default function removeTypename (value) {
   if (value === null || value === undefined) {
     return value
   } else if (Array.isArray(value)) {
-    return value.map(v => removeTypename(v))
+    value = value.map(v => removeTypename(v))
+    return value
   } else if (typeof value === 'object') {
     const newObj = {}
     Object.entries(value).forEach(([key, v]) => {
@@ -10,7 +15,8 @@ export default function removeTypename (value) {
         newObj[key] = removeTypename(v)
       }
     })
-    return newObj
+    value = newObj
+    return value
   }
   return value
 }
