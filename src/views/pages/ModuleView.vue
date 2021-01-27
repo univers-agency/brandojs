@@ -1,12 +1,12 @@
 <template>
   <div
-    v-if="template"
+    v-if="module"
     class="villain-component">
     <div class="villain-builder-wrapper">
       <div class="villain-builder-editor-wrapper">
         <codemirror
           ref="cmEditor"
-          v-model="template.code"
+          v-model="module.code"
           :options="codeOptions" />
       </div>
 
@@ -99,7 +99,7 @@
         </template>
         <codemirror
           ref="wrapperEditor"
-          v-model="template.wrapper"
+          v-model="module.wrapper"
           :options="codeOptions" />
       </KModal>
 
@@ -116,7 +116,7 @@
         </template>
         <codemirror
           ref="svgEditor"
-          v-model="template.svg"
+          v-model="module.svg"
           :options="codeOptions" />
       </KModal>
 
@@ -126,34 +126,34 @@
             <ButtonSecondary
               v-shortkey="['meta', 's']"
               style="margin-bottom: 40px;"
-              @shortkey="saveTemplate"
-              @click="saveTemplate">
+              @shortkey="saveModule"
+              @click="saveModule">
               Save
             </ButtonSecondary>
 
             <KInput
-              v-model="template.name"
-              name="template[name]"
+              v-model="module.name"
+              name="module[name]"
               label="Name" />
 
             <KInput
-              v-model="template.namespace"
-              name="template[namespace]"
+              v-model="module.namespace"
+              name="module[namespace]"
               label="Namespace" />
 
             <KInput
-              v-model="template.helpText"
-              name="template[helpText]"
+              v-model="module.helpText"
+              name="module[helpText]"
               label="Help Text" />
 
             <KInput
-              v-model="template.class"
-              name="template[class]"
+              v-model="module.class"
+              name="module[class]"
               label="Class" />
 
             <KInputCheckbox
-              v-model="template.multi"
-              name="template[multi]"
+              v-model="module.multi"
+              name="module[multi]"
               label="Multi" />
 
             <div class="button-group">
@@ -161,7 +161,7 @@
                 full-width
                 @click="showWrapper = true">
                 Wrapper <FontAwesomeIcon
-                  v-if="template.wrapper"
+                  v-if="module.wrapper"
                   size="xs"
                   icon="check-circle" />
               </ButtonSecondary>
@@ -169,7 +169,7 @@
                 full-width
                 @click="showSVG = true">
                 SVG <FontAwesomeIcon
-                  v-if="template.svg"
+                  v-if="module.svg"
                   size="xs"
                   icon="check-circle" />
               </ButtonSecondary>
@@ -178,7 +178,7 @@
           <div class="refs">
             <h2>
               <div class="header-spread">
-                REFs <span class="circle small">{{ template.refs.length }}</span>
+                REFs <span class="circle small">{{ module.refs.length }}</span>
               </div>
               <CircleButton
                 @click.native.stop.prevent="showCreateRef = true">
@@ -187,7 +187,7 @@
             </h2>
             <ul>
               <li
-                v-for="ref in template.refs"
+                v-for="ref in module.refs"
                 :key="ref.name"
                 class="text-mono padded">
                 <span @click="selectRef(ref)">{{ ref.data.type }} - %{<strong>{{ ref.name }}</strong>}</span>
@@ -201,7 +201,7 @@
           <div class="vars">
             <h2>
               <div class="header-spread">
-                VARs <span class="circle small">{{ Object.keys(template.vars).length || "0" }}</span>
+                VARs <span class="circle small">{{ Object.keys(module.vars).length || "0" }}</span>
               </div>
               <CircleButton @click.native.stop.prevent="createVar()">
                 <FontAwesomeIcon icon="plus" />
@@ -209,7 +209,7 @@
             </h2>
             <ul>
               <li
-                v-for="(val, variable) in template.vars"
+                v-for="(val, variable) in module.vars"
                 :key="variable"
                 class="text-mono padded">
                 <div
@@ -240,7 +240,7 @@ import 'codemirror/mode/twig/twig.js'
 import 'codemirror/mode/javascript/javascript.js'
 import 'codemirror/mode/htmlmixed/htmlmixed.js'
 
-import GET_TEMPLATE from '../../gql/pages/TEMPLATE_QUERY.graphql'
+import GET_MODULE from '../../gql/pages/MODULE_QUERY.graphql'
 import STANDARD_BLOCKS from '../../components/villain/config/standardBlocks'
 import STANDARD_VARS from '../../components/villain/config/standardVars'
 
@@ -254,7 +254,7 @@ export default {
   },
 
   props: {
-    templateId: {
+    moduleId: {
       required: true
     }
   },
@@ -287,7 +287,7 @@ export default {
       showCreateRef: false,
       showRef: false,
       showVar: false,
-      showTemplateAttrs: false,
+      showModuleAttrs: false,
       codeMirror: null,
       refMirror: null,
       varMirror: null,
@@ -297,10 +297,10 @@ export default {
       currentVar: null,
       prevRefName: null,
       prevVarName: null,
-      templates: [],
-      templateSequence: [],
+      modules: [],
+      moduleSequence: [],
       namespaceOpen: [],
-      selectedTemplatesForExport: []
+      selectedModulesForExport: []
     }
   },
 
@@ -311,11 +311,11 @@ export default {
   },
 
   methods: {
-    toggleSelectedTemplateForExport (cls) {
-      if (this.selectedTemplatesForExport.includes(cls)) {
-        this.selectedTemplatesForExport = this.selectedTemplatesForExport.filter(t => t !== cls)
+    toggleSelectedModuleForExport (cls) {
+      if (this.selectedModulesForExport.includes(cls)) {
+        this.selectedModulesForExport = this.selectedModulesForExport.filter(t => t !== cls)
       } else {
-        this.selectedTemplatesForExport.push(cls)
+        this.selectedModulesForExport.push(cls)
       }
     },
 
@@ -324,7 +324,7 @@ export default {
     },
 
     isSelected (t) {
-      return t === this.template
+      return t === this.module
     },
 
     dropSvg (e) {
@@ -343,7 +343,7 @@ export default {
       const reader = new FileReader()
 
       reader.onload = event => {
-        this.template.svg = event.target.result
+        this.module.svg = event.target.result
       }
 
       reader.readAsText(f)
@@ -353,9 +353,9 @@ export default {
       // TODO: Prompt for variable TYPE!
       this.$alerts.alertPrompt('Variable key', ({ data }) => {
         if (data) {
-          if (!Object.prototype.hasOwnProperty.call(this.template, 'vars')) {
-            this.template = {
-              ...this.template,
+          if (!Object.prototype.hasOwnProperty.call(this.module, 'vars')) {
+            this.module = {
+              ...this.module,
               vars: {}
             }
           }
@@ -368,10 +368,10 @@ export default {
           this.currentVar = v
           this.currentVarName = data
 
-          this.template = {
-            ...this.template,
+          this.module = {
+            ...this.module,
             vars: {
-              ...this.template.vars,
+              ...this.module.vars,
               [data]: v
             }
           }
@@ -414,14 +414,14 @@ export default {
       // get this ref
       const newRef = JSON.parse(this.$refs.refEditor.codemirror.getValue())
       // find ref to replace
-      const oldRef = this.template.refs.find(r => r.name === this.prevRefName)
+      const oldRef = this.module.refs.find(r => r.name === this.prevRefName)
       if (oldRef) {
-        const idx = this.template.refs.indexOf(oldRef)
+        const idx = this.module.refs.indexOf(oldRef)
         if (idx >= 0) {
-          this.template.refs = [
-            ...this.template.refs.slice(0, idx),
+          this.module.refs = [
+            ...this.module.refs.slice(0, idx),
             newRef,
-            ...this.template.refs.slice(idx + 1)
+            ...this.module.refs.slice(idx + 1)
           ]
           this.resetRef()
         }
@@ -429,36 +429,36 @@ export default {
     },
 
     delRef (ref) {
-      const idx = this.template.refs.indexOf(ref)
+      const idx = this.module.refs.indexOf(ref)
       if (idx >= 0) {
-        this.template.refs = [
-          ...this.template.refs.slice(0, idx),
-          ...this.template.refs.slice(idx + 1)
+        this.module.refs = [
+          ...this.module.refs.slice(0, idx),
+          ...this.module.refs.slice(idx + 1)
         ]
         this.resetRef()
       }
     },
 
     delVar (v) {
-      this.$delete(this.template.vars, v)
+      this.$delete(this.module.vars, v)
     },
 
     saveVar () {
       // get this ref
       const newVar = JSON.parse(this.$refs.varEditor.codemirror.getValue())
       // find ref to replace
-      const oldVar = this.template.vars[this.currentVarName]
+      const oldVar = this.module.vars[this.currentVarName]
       if (oldVar) {
-        this.template = {
-          ...this.template,
+        this.module = {
+          ...this.module,
           vars: {
-            ...this.template.vars,
+            ...this.module.vars,
             [this.currentVarName]: newVar
           }
         }
         this.resetVar()
       } else {
-        console.error('==> VillainBuilder/saveVar — var not found', this.currentVarName, this.template.vars)
+        console.error('==> Villain/builder/saveVar — var not found', this.currentVarName, this.module.vars)
       }
     },
 
@@ -481,14 +481,14 @@ export default {
         description: ''
       }
 
-      this.template.refs.push(ref)
+      this.module.refs.push(ref)
       this.closeCreateRefModal()
     },
 
-    selectTemplate (t) {
+    selectModule (t) {
       this.resetRef()
-      this.template = t
-      this.codeMirror.setValue(this.template.code)
+      this.module = t
+      this.codeMirror.setValue(this.module.code)
       this.codeMirror.refresh()
     },
 
@@ -512,41 +512,41 @@ export default {
         this.prevVarName = this.currentVar
         this.currentVarName = this.currentVar
 
-        this.$refs.varEditor.codemirror.setValue(JSON.stringify(this.template.vars[this.currentVar], null, 4))
+        this.$refs.varEditor.codemirror.setValue(JSON.stringify(this.module.vars[this.currentVar], null, 4))
         this.$refs.varEditor.codemirror.refresh()
       })
     },
 
-    async saveTemplate () {
-      const templateParams = {
-        ...this.template,
-        vars: JSON.stringify(this.template.vars),
-        refs: JSON.stringify(this.template.refs)
+    async saveModule () {
+      const moduleParams = {
+        ...this.module,
+        vars: JSON.stringify(this.module.vars),
+        refs: JSON.stringify(this.module.refs)
       }
 
-      delete templateParams.id
-      delete templateParams.__typename
+      delete moduleParams.id
+      delete moduleParams.__typename
 
       try {
         await this.$apollo.mutate({
           mutation: gql`
-            mutation UpdateTemplate($templateId: ID!, $templateParams: TemplateParams!) {
-              updateTemplate(templateId: $templateId, templateParams: $templateParams) {
+            mutation UpdateModule($moduleId: ID!, $moduleParams: ModuleParams!) {
+              updateModule(moduleId: $moduleId, moduleParams: $moduleParams) {
                 id
               }
             }
           `,
           variables: {
-            templateId: this.template.id,
-            templateParams
+            moduleId: this.module.id,
+            moduleParams
           },
 
-          update: (store, { data: { updateTemplate } }) => {
-            this.$router.push({ name: 'templates' })
+          update: (store, { data: { updateModule } }) => {
+            this.$router.push({ name: 'modules' })
           }
         })
 
-        this.$toast.success({ message: this.$t('templates.updated') })
+        this.$toast.success({ message: this.$t('modules.updated') })
       } catch (err) {
         this.$utils.showError(err)
       }
@@ -554,15 +554,15 @@ export default {
   },
 
   apollo: {
-    template: {
-      query: GET_TEMPLATE,
+    module: {
+      query: GET_MODULE,
       variables () {
         return {
-          templateId: this.templateId
+          moduleId: this.moduleId
         }
       },
 
-      result ({ data: { template } }) {
+      result ({ data: { module } }) {
         setTimeout(() => {
           this.$refs.cmEditor.codemirror.setSize('100%', '100%')
         }, 500)
@@ -570,7 +570,7 @@ export default {
 
       fetchPolicy: 'no-cache',
       skip () {
-        return !this.templateId
+        return !this.moduleId
       }
     }
   }

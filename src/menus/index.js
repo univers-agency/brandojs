@@ -36,7 +36,7 @@ export default {
             {
               text: 'Innholdsmoduler',
               to: {
-                name: 'templates'
+                name: 'modules'
               }
             }
           ]
@@ -114,7 +114,7 @@ export default {
             {
               text: 'Content modules',
               to: {
-                name: 'templates'
+                name: 'modules'
               }
             }
           ]

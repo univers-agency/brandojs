@@ -7,22 +7,22 @@
     @move="$emit('move', $event)"
     @duplicate="$emit('duplicate', $event)"
     @delete="$emit('delete', $event)">
-    <div class="villain-template-description">
+    <div class="villain-module-description">
       {{ getBlockName }}{{ block.data.multi ? ' — Multi' : '' }}
     </div>
     <div
       v-if="!block.data.multi"
-      class="template-entry"
+      class="module-entry"
       @click="handleClick">
       <div
         v-if="hasImportantVariables"
-        class="villain-template-important-config">
+        class="villain-module-important-config">
         <FontAwesomeIcon
           class="icon"
           icon="wrench"
           size="lg"
           fixed-width
-          @click="$refs[`templateConfig${block.data.id}`].showConfig = true" />
+          @click="$refs[`moduleConfig${block.data.id}`].showConfig = true" />
         Denne blokken har variabler merket som viktige. Du kan endre de ved å klikke på skiftnøkkelen oppe til høyre i blokken
       </div>
       <component
@@ -31,9 +31,9 @@
         @update="updateBlock($event)" />
       <div class="entry-toolbar">
         <div class="helpful-actions">
-          <TemplateConfig
-            :ref="`templateConfig${block.data.id}`"
-            :templateId="block.data.id"
+          <ModuleConfig
+            :ref="`moduleConfig${block.data.id}`"
+            :moduleId="block.data.id"
             :refs="block.data.refs"
             :vars="block.data.vars"
             @updateVars="updateVars"
@@ -45,7 +45,7 @@
       <transition-group
         v-if="block.data.entries"
         v-sortable="{
-          handle: '.template-entry',
+          handle: '.module-entry',
           animation: 0,
           store: {
             get: getOrder,
@@ -58,7 +58,7 @@
           v-for="entry in block.data.entries"
           :key="entry.id"
           :data-id="entry.id"
-          class="template-entry"
+          class="module-entry"
           @click="handleClick">
           <component
             :is="buildWrapper(entry)"
@@ -71,9 +71,9 @@
                 @click="deleteEntry(entry)">
                 {{ $t('delete') }}
               </ButtonTiny>
-              <TemplateConfig
-                :ref="`templateConfig${entry.id}`"
-                :templateId="block.data.id"
+              <ModuleConfig
+                :ref="`moduleConfig${entry.id}`"
+                :moduleId="block.data.id"
                 :entryId="entry.id"
                 :refs="entry.refs"
                 :vars="entry.vars"
@@ -97,18 +97,18 @@
 
 <script>
 
-import TemplateConfig from './TemplateConfig'
+import ModuleConfig from './ModuleConfig'
 import IconRefresh from '../../icons/IconRefresh'
 import cloneDeep from 'lodash/cloneDeep'
 import camelCase from 'lodash/camelCase'
 import shortid from 'shortid'
 
 export default {
-  name: 'TemplateBlock',
+  name: 'ModuleBlock',
 
   components: {
     IconRefresh,
-    TemplateConfig
+    ModuleConfig
   },
 
   props: {
@@ -143,18 +143,18 @@ export default {
         return this.block.data.name
       }
 
-      let foundTemplate
+      let foundModule
       const id = this.block.data.id
 
       if (id) {
-        foundTemplate = this.available.templates.find(t => t.data.id === id)
+        foundModule = this.available.modules.find(t => t.data.id === id)
       }
 
-      if (!foundTemplate) {
+      if (!foundModule) {
         return '?'
       }
 
-      return foundTemplate.data.name
+      return foundModule.data.name
     },
 
     /**
@@ -167,7 +167,7 @@ export default {
   },
 
   created () {
-    console.debug('<TemplateBlock /> created')
+    console.debug('<ModuleBlock /> created')
     this.deleteProps()
 
     // if this is a multi but refs is not an array of arrays
@@ -196,7 +196,7 @@ export default {
   },
 
   updated () {
-    console.debug('<TemplateBlock /> updated')
+    console.debug('<ModuleBlock /> updated')
   },
 
   methods: {
@@ -216,7 +216,7 @@ export default {
     },
 
     handleClick (e) {
-      if (e.target.matches('[data-type="template"] *')) {
+      if (e.target.matches('[data-type="module"] *')) {
         e.preventDefault()
       }
     },
@@ -239,12 +239,6 @@ export default {
         name: 'BuildWrapper',
         delimiters: ['%%%', '%%%'],
         template,
-        created () {
-          console.debug('<BuildWrapper /> created!')
-        },
-        updated () {
-          console.debug('<BuildWrapper /> updated')
-        },
         data () {
           return data
         },
@@ -266,11 +260,11 @@ export default {
       }
     },
 
-    findTemplate () {
+    findModule () {
       const id = this.block.data.id
 
       if (id) {
-        return this.available.templates.find(t => t.data.id === id)
+        return this.available.modules.find(t => t.data.id === id)
       }
     },
 
@@ -387,10 +381,12 @@ export default {
       let ref = this.findRef(refName, entry.refs)
 
       if (!ref) {
-        // ref not found —— the template might have been updated.
-        const t = this.findTemplate()
+        // ref not found —— the module might have been updated.
+        const t = this.findModule()
         ref = this.findRef(refName, t.data.refs)
-        this.$set(entry, 'refs', [ ...entry.refs, ref ])
+        const newRefs = [ ...entry.refs, ref ]
+        this.$set(entry, 'refs', newRefs)
+        this.$set(this.block.data, 'refs', newRefs)
       }
 
       if (ref.deleted) {
@@ -409,12 +405,12 @@ export default {
     },
 
     addMultiEntry () {
-      const foundTemplate = this.available.templates.find(t => t.data.id === this.block.data.id)
+      const foundModule = this.available.modules.find(t => t.data.id === this.block.data.id)
       this.$set(this.block.data, 'entries', [
         ...this.block.data.entries, {
           id: shortid.generate(),
-          refs: cloneDeep(foundTemplate.data.refs),
-          vars: cloneDeep(foundTemplate.data.vars)
+          refs: cloneDeep(foundModule.data.refs),
+          vars: cloneDeep(foundModule.data.vars)
         }
       ])
     },
@@ -456,23 +452,23 @@ export default {
     },
 
     getSourceCode () {
-      let foundTemplate
+      let foundModule
       const id = this.block.data.id
 
       if (!id) {
-        foundTemplate = this.available.templates.find(t => t.data.class === this.block.data.class)
+        foundModule = this.available.modules.find(t => t.data.class === this.block.data.class)
       } else {
-        foundTemplate = this.available.templates.find(t => t.data.id === id)
+        foundModule = this.available.modules.find(t => t.data.id === id)
       }
 
-      if (!foundTemplate) {
-        console.error('==> missing template', this.block.data)
-        return '<div>!! template not found !!</div>'
+      if (!foundModule) {
+        console.error('==> missing module', this.block.data)
+        return '<div>!! module not found !!</div>'
       }
 
-      this.$set(this.block.data, 'id', foundTemplate.data.id)
+      this.$set(this.block.data, 'id', foundModule.data.id)
       this.deleteProps()
-      return foundTemplate.data.code
+      return foundModule.data.code
     },
 
     findVar (varName) {
@@ -505,7 +501,7 @@ export default {
     },
 
     buildSlots (refs, copyMissing = true) {
-      let template = ''
+      let module = ''
       if (copyMissing) {
         this.copyMissingRefs(refs)
       }
@@ -515,7 +511,7 @@ export default {
         if (ref.deleted) {
           continue
         }
-        template += `
+        module += `
           <div slot="${ref.name}">
             <component
               is="${ref.data.type}Block"
@@ -526,32 +522,32 @@ export default {
           </div>
         `
       }
-      return template
+      return module
     },
 
     copyMissingRefs (refs) {
-      let foundTemplate
+      let foundModule
       const id = this.block.data.id
 
       if (!id) {
-        foundTemplate = this.available.templates.find(t => t.data.class === this.block.data.class)
+        foundModule = this.available.modules.find(t => t.data.class === this.block.data.class)
       } else {
-        foundTemplate = this.available.templates.find(t => parseInt(t.data.id) === parseInt(id))
+        foundModule = this.available.modules.find(t => parseInt(t.data.id) === parseInt(id))
       }
 
-      if (!foundTemplate) {
-        console.error('VILLAIN: template not found')
+      if (!foundModule) {
+        console.error('VILLAIN: module not found')
         return
       }
 
-      const templateSourceRefs = foundTemplate.data.refs
+      const moduleSourceRefs = foundModule.data.refs
       const blockRefs = refs
 
-      for (let i = 0; i < templateSourceRefs.length; i++) {
-        if (!blockRefs.find(b => b.name === templateSourceRefs[i].name)) {
+      for (let i = 0; i < moduleSourceRefs.length; i++) {
+        if (!blockRefs.find(b => b.name === moduleSourceRefs[i].name)) {
           refs = [
             ...refs,
-            templateSourceRefs[i]
+            moduleSourceRefs[i]
           ]
         }
       }
@@ -565,7 +561,7 @@ export default {
 </script>
 <style lang="postcss" scoped>
 
-  .template-entry {
+  .module-entry {
     .multi .sort-container & {
       &:first-of-type {
         margin-top: 0;
@@ -578,7 +574,7 @@ export default {
     background-color: #fbf5f2;
   }
 
-  .villain-template-important-config {
+  .villain-module-important-config {
     background-color: #faffd0;
     border: 1px solid #eee;
     padding: 20px;

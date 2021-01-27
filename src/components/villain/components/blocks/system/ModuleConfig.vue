@@ -1,10 +1,10 @@
 <template>
-  <div class="template-config">
+  <div class="module-config">
     <div class="action-wrapper">
       <ButtonTiny
         right
         @click="showConfig = true">
-        {{ $t('template-config') }}
+        {{ $t('module-config') }}
       </ButtonTiny>
       <KModal
         v-if="showConfig"
@@ -12,7 +12,7 @@
         ok-text="OK"
         @ok="closeConfig">
         <template #header>
-          {{ $t('template-config') }}
+          {{ $t('module-config') }}
         </template>
         <div class="panes">
           <div>
@@ -66,14 +66,6 @@
                 {{ ref.name }} — {{ $t('replace-with-ref') }}
               </button>
             </div>
-            <!--
-            <button
-              class="btn-secondary"
-              type="button"
-              @click.prevent="fetchMissingRefs">
-              {{ $t('fetch-missing-refs') }}
-            </button>
-            -->
           </div>
         </div>
         <div class="panes mt-2">
@@ -108,7 +100,7 @@ export default {
       default: null
     },
 
-    templateId: {
+    moduleId: {
       type: [Number, String],
       required: true
     },
@@ -153,15 +145,15 @@ export default {
     },
 
     refetchVars () {
-      const foundTemplate = this.available.templates.find(t => parseInt(t.data.id) === parseInt(this.templateId))
-      const newVars = foundTemplate.data.vars
+      const foundModule = this.available.modules.find(t => parseInt(t.data.id) === parseInt(this.moduleId))
+      const newVars = foundModule.data.vars
       this.$emit('updateVars', { newVars: newVars, entryId: this.entryId })
       this.setLocalVars(newVars)
     },
 
     replaceRefWithSource (ref) {
-      const foundTemplate = this.available.templates.find(t => t.data.id === this.templateId)
-      const foundRef = foundTemplate.data.refs.find(r => r.name === ref.name)
+      const foundModule = this.available.modules.find(t => t.data.id === this.moduleId)
+      const foundRef = foundModule.data.refs.find(r => r.name === ref.name)
 
       // replace our ref with foundRef
       const refIdx = this.refs.indexOf(ref)
@@ -276,7 +268,7 @@ export default {
 <i18n>
   {
     "en": {
-      "template-config": "Module config",
+      "module-config": "Module config",
       "block-variables": "Block variables",
       "fetch-original-variables": "Fetch original variables",
       "fetch-missing-refs": "Fetch missing refs",
@@ -286,7 +278,7 @@ export default {
       "restore": "Restore"
     },
     "no": {
-      "template-config": "Maloppsett",
+      "module-config": "Maloppsett",
       "block-variables": "Blokkvariabler",
       "fetch-original-variables": "Hent orginale variabler",
       "fetch-missing-refs": "Hent manglende blokker",

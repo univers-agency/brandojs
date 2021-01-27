@@ -17,8 +17,6 @@ import jaroDistance from './jaroDistance'
 import mapMultiSelect from './mapMultiSelect'
 import mapMultiSelects from './mapMultiSelects'
 
-console.log(clone)
-
 export const utils = {
   pick,
   clone,

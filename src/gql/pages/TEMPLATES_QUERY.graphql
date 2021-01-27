@@ -1,6 +1,0 @@
-#import "./TEMPLATE_FRAGMENT.graphql"
-query Templates ($order: Order, $limit: Int, $offset: Int, $filter: TemplateFilter) {
-  templates (order: $order, limit: $limit, offset: $offset, filter: $filter) {
-    ...template
-  }
-}

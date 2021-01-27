@@ -97,7 +97,6 @@ import nbNO from 'timeago.js/lib/lang/nb_NO'
 import { VTooltip } from 'v-tooltip'
 import shortid from 'shortid'
 
-import VillainBuilder from './VillainBuilder'
 import standardComponents from './blocks/standard'
 import systemComponents from './blocks/system'
 import toolsComponents from './blocks/tools'
@@ -106,7 +105,6 @@ import IconClose from './icons/IconClose'
 import IconFullscreen from './icons/IconFullscreen'
 import IconSource from './icons/IconSource'
 import STANDARD_BLOCKS from '../config/standardBlocks.js'
-import fetchTemplates from '../utils/fetchTemplates.js'
 import { alerts } from '../../../utils/alerts'
 import { addAutoSave, getAutoSaves } from '../utils/autoSave.js'
 import getTimestamp from '../utils/getTimestamp.js'
@@ -135,7 +133,6 @@ export default {
   name: 'VillainEditor',
 
   components: {
-    VillainBuilder,
     IconAutosave,
     IconClose,
     IconFullscreen,
@@ -145,11 +142,6 @@ export default {
   directives: { popover: VTooltip },
 
   props: {
-    builderMode: {
-      type: Boolean,
-      default: false
-    },
-
     json: {
       type: [String, Array],
       default: '[]'
@@ -170,7 +162,7 @@ export default {
       default: 0
     },
 
-    templateMode: {
+    moduleMode: {
       type: Boolean,
       default: false
     },
@@ -190,14 +182,14 @@ export default {
       default: '/admin/api/villain/browse/'
     },
 
-    templatesURL: {
+    modulesURL: {
       type: String,
-      default: '/admin/api/villain/templates/'
+      default: '/admin/api/villain/modules/'
     },
 
-    templateSequenceURL: {
+    moduleSequenceURL: {
       type: String,
-      default: '/admin/api/villain/templates/sequence/'
+      default: '/admin/api/villain/modules/sequence/'
     },
 
     imageSeries: {
@@ -215,7 +207,7 @@ export default {
       default: () => []
     },
 
-    showTemplates: {
+    showModules: {
       type: Boolean,
       default: true
     },
@@ -225,9 +217,9 @@ export default {
       default: () => []
     },
 
-    templates: {
+    modules: {
       type: String,
-      default: null
+      default: 'all'
     }
   },
 
@@ -243,7 +235,7 @@ export default {
       showAutosaves: false,
       showSource: false,
       fullscreen: false,
-      availableTemplates: [],
+      availableModules: [],
       ready: false
     }
   },
@@ -310,6 +302,10 @@ export default {
     }
   },
 
+  inject: [
+    'adminChannel'
+  ],
+
   provide () {
     const state = {}
     const available = {}
@@ -321,9 +317,9 @@ export default {
       get: () => this.showPlus
     })
 
-    Object.defineProperty(state, 'showTemplates', {
+    Object.defineProperty(state, 'showModules', {
       enumerable: true,
-      get: () => this.showTemplates
+      get: () => this.showModules
     })
 
     Object.defineProperty(available, 'blocks', {
@@ -336,9 +332,9 @@ export default {
       get: () => this.allBlocks
     })
 
-    Object.defineProperty(available, 'templates', {
+    Object.defineProperty(available, 'modules', {
       enumerable: true,
-      get: () => this.availableTemplates
+      get: () => this.availableModules
     })
 
     Object.defineProperty(available, 'entryData', {
@@ -362,17 +358,9 @@ export default {
       enumerable: true,
       get: () => `${this.server}${this.browseURL}`
     })
-    Object.defineProperty(urls, 'templates', {
-      enumerable: true,
-      get: () => `${this.server}${this.templatesURL}`
-    })
-    Object.defineProperty(urls, 'templateSequence', {
-      enumerable: true,
-      get: () => `${this.server}${this.templateSequenceURL}`
-    })
 
     return {
-      vTemplateMode: this.templateMode,
+      vModuleMode: this.moduleMode,
       available,
       headers,
       urls,
@@ -382,8 +370,8 @@ export default {
   },
 
   async created () {
-    if (this.templates) {
-      this.availableTemplates = await fetchTemplates(this.templates, this.extraHeaders, `${this.server}${this.templatesURL}`)
+    if (this.modules) {
+      this.availableModules = await this.fetchModules(this.modules)
     }
 
     this.innerValue = this.addUIDs()
@@ -429,6 +417,15 @@ export default {
   },
 
   methods: {
+    async fetchModules (namespace = 'all') {
+      return new Promise((resolve, reject) => {
+        this.adminChannel.channel
+          .push('villain:list_modules', { namespace })
+          .receive('ok', payload => { resolve(payload.modules) })
+      })
+
+    },
+
     validateBlock (block) {
       const bpBlock = this.availableBlocks.find(b => b.component.toLowerCase() === block.type)
       if (bpBlock) {
@@ -468,14 +465,17 @@ export default {
               this.$set(block.data, 'type', 'list')
               this.needsRefresh = true
             }
+            /**
+             * Check for old format using `template`
+             */
             if (block.data.wrapper || block.data.template) {
               this.$alerts.alertError('OBS!', this.$t('old-datasource-wrapper'))
               if (block.data.wrapper) {
                 console.error('Datasource/Datakilde-wrapper\r\n\r\n', block.data.wrapper)
               }
               if (block.data.template) {
-                // find template
-                const t = this.availableTemplates.find(t => parseInt(t.data.id) === parseInt(block.data.template))
+                // find module
+                const t = this.availableModules.find(t => parseInt(t.data.id) === parseInt(block.data.template))
 
                 if (t) {
                   console.error('Datasource/Malkode\r\n\r\n', t.data.code)
@@ -508,7 +508,7 @@ export default {
           }
         }
       } else {
-        if (block.type === 'template') {
+        if (block.type === 'module') {
           if (!block.data.hasOwnProperty('multi')) {
             this.$set(block.data, 'multi', false)
           }
@@ -524,7 +524,7 @@ export default {
               const entry = block.data.entries[idx]
 
               if (!entry.hasOwnProperty('id')) {
-                console.log('==> entry in TemplateBlock is lacking an `id`')
+                console.log('==> entry in ModuleBlock is lacking an `id`')
                 this.$set(entry, 'id', shortid.generate())
               }
 
@@ -575,8 +575,8 @@ export default {
       }
     },
 
-    async updateTemplates () {
-      this.availableTemplates = await fetchTemplates(this.templates, this.extraHeaders, `${this.server}${this.templatesURL}`)
+    async updateModules () {
+      this.availableModules = await this.fetchModules(this.modules)
     },
 
     updateSource () {
@@ -658,7 +658,7 @@ export default {
           }
         }
       } else {
-        // a template block
+        // a module block
         block = cloneDeep(blockTpl)
       }
 
@@ -1016,7 +1016,7 @@ export default {
       if (block) {
         if (ref) {
           const idx = this.innerValue.indexOf(block)
-          // a TemplateBlock that wants to get rid of a ref!
+          // a ModuleBlock that wants to get rid of a ref!
           const foundRef = block.data.refs.find(r => r.name === ref)
           const refIdx = block.data.refs.indexOf(foundRef)
 
@@ -1201,8 +1201,8 @@ export default {
     z-index: 999999;
   }
 
-  /* decrease spacing inside templates */
-  [data-type="template"] .villain-block-wrapper {
+  /* decrease spacing inside modules */
+  [data-type="module"] .villain-block-wrapper {
     margin: 0 0 15px 0;
   }
 

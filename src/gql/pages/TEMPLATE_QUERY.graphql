@@ -1,6 +1,0 @@
-#import "./TEMPLATE_FRAGMENT.graphql"
-query Template ($templateId: ID!) {
-  template (templateId: $templateId) {
-    ...template
-  }
-}

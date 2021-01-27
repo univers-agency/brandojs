@@ -9,96 +9,98 @@
         </label>
       </div>
 
-      <table
-        class="kinput-table"
-        :style="fixedLayout ? 'table-layout: fixed' : ''">
-        <slot name="head"></slot>
-        <transition-group
-          v-sortable="{
-            dragoverBubble: true,
-            disabled: !sortable,
-            handle: '.sequence-handle',
-            animation: 250,
-            easing: 'cubic-bezier(1, 0, 0, 1)',
-            store: {
-              get: getOrder,
-              set: storeOrder
-            }
-          }"
-          appear
-          tag="tbody"
-          :css="false"
-          class="sort-container">
-          <tr
-            v-for="entry in innerValue"
-            :key="entry[idKey]"
-            :data-id="entry[idKey]">
-            <td
-              v-if="sortable"
-              style="width: 50px; vertical-align: middle">
-              <SequenceHandle class="sequence-handle" />
-            </td>
-            <slot
-              v-if="entry !== editEntry"
-              name="row"
-              v-bind:entry="entry"></slot>
-            <slot
-              v-else-if="editRows"
-              name="edit"
-              v-bind:editEntry="newEditEntry"
-              v-bind:callback="() => {editDone(entry)}"></slot>
+      <div class="kinput-table-wrapper">
+        <table
+          class="kinput-table"
+          :style="fixedLayout ? 'table-layout: fixed' : ''">
+          <slot name="head"></slot>
+          <transition-group
+            v-sortable="{
+              dragoverBubble: true,
+              disabled: !sortable,
+              handle: '.sequence-handle',
+              animation: 250,
+              easing: 'cubic-bezier(1, 0, 0, 1)',
+              store: {
+                get: getOrder,
+                set: storeOrder
+              }
+            }"
+            appear
+            tag="tbody"
+            :css="false"
+            class="sort-container">
+            <tr
+              v-for="entry in innerValue"
+              :key="entry[idKey]"
+              :data-id="entry[idKey]">
+              <td
+                v-if="sortable"
+                style="width: 50px; vertical-align: middle">
+                <SequenceHandle class="sequence-handle" />
+              </td>
+              <slot
+                v-if="entry !== editEntry"
+                name="row"
+                v-bind:entry="entry"></slot>
+              <slot
+                v-else-if="editRows"
+                name="edit"
+                v-bind:editEntry="newEditEntry"
+                v-bind:callback="() => {editDone(entry)}"></slot>
 
-            <td
-              v-if="deleteRows || editRows"
-              class="action fit">
-              <div class="button-wrapper">
+              <td
+                v-if="deleteRows || editRows"
+                class="action fit">
+                <div class="button-wrapper">
+                  <CircleButton
+                    v-if="entry !== editEntry && editRows"
+                    class="edit"
+                    @click.native.stop.prevent="edit(entry)">
+                    <FontAwesomeIcon
+                      icon="pencil-alt"
+                      size="xs" />
+                  </CircleButton>
+                  <CircleButton
+                    v-else-if="editRows"
+                    class="edit"
+                    @click.native.stop.prevent="editDone(entry)">
+                    <FontAwesomeIcon
+                      icon="check"
+                      size="xs" />
+                  </CircleButton>
+                  <CircleButton
+                    class="delete"
+                    @click.native.stop.prevent="del(entry)">
+                    <FontAwesomeIcon
+                      icon="minus"
+                      size="xs" />
+                  </CircleButton>
+                </div>
+              </td>
+            </tr>
+            <tr
+              v-if="addRows"
+              ref="addRow"
+              key="addrow"
+              class="input-row">
+              <td v-if="sortable" />
+              <slot
+                name="new"
+                v-bind:newEntry="newEntry"></slot>
+              <td class="action fit">
                 <CircleButton
-                  v-if="entry !== editEntry && editRows"
-                  class="edit"
-                  @click.native.stop.prevent="edit(entry)">
+                  class="add"
+                  @click.native.stop.prevent="add(newEntry)">
                   <FontAwesomeIcon
-                    icon="pencil-alt"
+                    icon="plus"
                     size="xs" />
                 </CircleButton>
-                <CircleButton
-                  v-else-if="editRows"
-                  class="edit"
-                  @click.native.stop.prevent="editDone(entry)">
-                  <FontAwesomeIcon
-                    icon="check"
-                    size="xs" />
-                </CircleButton>
-                <CircleButton
-                  class="delete"
-                  @click.native.stop.prevent="del(entry)">
-                  <FontAwesomeIcon
-                    icon="minus"
-                    size="xs" />
-                </CircleButton>
-              </div>
-            </td>
-          </tr>
-          <tr
-            v-if="addRows"
-            ref="addRow"
-            key="addrow"
-            class="input-row">
-            <td v-if="sortable" />
-            <slot
-              name="new"
-              v-bind:newEntry="newEntry"></slot>
-            <td class="action fit">
-              <CircleButton
-                class="add"
-                @click.native.stop.prevent="add(newEntry)">
-                <FontAwesomeIcon
-                  icon="plus"
-                  size="xs" />
-              </CircleButton>
-            </td>
-          </tr>
-        </transition-group>
-      </table>
+              </td>
+            </tr>
+          </transition-group>
+        </table>
+      </div>
 
       <div
         v-if="helpText"
@@ -277,11 +279,16 @@ export default {
     }
   }
 
+  .kinput-table-wrapper {
+    border: 1px solid theme(colors.dark);
+    padding: 15px;
+  }
+
   .kinput-table {
     width: 100%;
 
     tr {
-      border-bottom: 1px solid #ccc;
+      border-bottom: 1px solid theme(colors.dark);
 
       td {
         vertical-align: top;
@@ -306,7 +313,7 @@ export default {
         }
 
         >>> &.monospace {
-          @font mono base(0.8);
+          @font mono base(0.75);
         }
       }
 
@@ -322,12 +329,18 @@ export default {
       }
 
       &.input-row {
+        border-bottom: none;
+
         td {
           padding-right: 15px;
 
           &:last-of-type {
             padding-right: 0;
           }
+        }
+
+        >>> td {
+          padding-top: 15px;
         }
       }
     }

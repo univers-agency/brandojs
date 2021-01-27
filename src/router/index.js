@@ -8,8 +8,8 @@ import GlobalsView from '../views/config/GlobalsView'
 
 import FilesView from '../views/files/FilesView'
 
-import TemplatesView from '../views/pages/TemplatesView'
-import TemplatesListView from '../views/pages/TemplatesListView'
+import ModuleView from '../views/pages/ModuleView'
+import ModuleListView from '../views/pages/ModuleListView'
 
 import PageListView from '../views/pages/PageListView'
 import PageCreateView from '../views/pages/PageCreateView'
@@ -175,21 +175,21 @@ const routes = [
   },
 
   {
-    path: '/pages/templates',
-    name: 'templates',
-    component: TemplatesListView
+    path: '/pages/modules',
+    name: 'modules',
+    component: ModuleListView
   },
 
   {
-    path: '/pages/templates/:templateId',
-    name: 'templates-edit',
-    component: TemplatesView,
+    path: '/pages/modules/:moduleId',
+    name: 'modules-edit',
+    component: ModuleView,
     props: (route) => {
-      const templateId = Number.parseInt(route.params.templateId, 10)
-      if (Number.isNaN(templateId)) {
+      const moduleId = Number.parseInt(route.params.moduleId, 10)
+      if (Number.isNaN(moduleId)) {
         return 0
       }
-      return { templateId }
+      return { moduleId }
     }
   },
 

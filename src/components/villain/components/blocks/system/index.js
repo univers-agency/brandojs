@@ -1,11 +1,11 @@
 import Block from './Block'
 import BlockConfig from './BlockConfig'
 import BlockContainer from './BlockContainer'
-import TemplateBlock from './TemplateBlock'
+import ModuleBlock from './ModuleBlock'
 
 export default {
   Block,
   BlockConfig,
   BlockContainer,
-  TemplateBlock
+  ModuleBlock
 }

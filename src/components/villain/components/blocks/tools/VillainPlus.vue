@@ -39,7 +39,7 @@
             {{ hoveredBlock }}
           </div>
           <div
-            v-if="!vTemplateMode"
+            v-if="!vModuleMode"
             ref="blocks"
             class="villain-editor-plus-available-blocks">
             <div
@@ -56,10 +56,10 @@
             </div>
 
             <div
-              v-if="state.showTemplates"
+              v-if="state.showModules"
               class="villain-editor-plus-available-block"
               @mouseover="setHover('moduler')"
-              @click="revealTemplates">
+              @click="revealModules">
               <div>
                 <i class="fa fa-fw fa-window-restore" />
               </div>
@@ -67,12 +67,12 @@
           </div>
         </VueSlideUpDown>
         <VueSlideUpDown
-          :active="showingTemplates"
+          :active="showingModules"
           :duration="350">
           <div
-            v-if="namespacedTemplates"
-            ref="templates"
-            class="villain-editor-plus-available-templates">
+            v-if="namespacedModules"
+            ref="modules"
+            class="villain-editor-plus-available-modules">
             <div class="hardcoded-blocks">
               <div
                 v-popover="$t('add-container')"
@@ -93,12 +93,12 @@
             </div>
 
             <div
-              v-for="(tpls, key) in nonGeneralNamespacedTemplates"
+              v-for="(tpls, key) in nonGeneralNamespacedModules"
               :key="key"
-              class="villain-editor-plus-available-templates-group"
+              class="villain-editor-plus-available-modules-group"
               @click="namespaceOpen === key ? namespaceOpen = null : namespaceOpen = key">
               <div
-                class="villain-editor-plus-available-templates-namespace">
+                class="villain-editor-plus-available-modules-namespace">
                 <IconDropdown :open="namespaceOpen === key" /><strong>{{ key.toUpperCase() }}</strong>
               </div>
               <VueSlideUpDown
@@ -107,36 +107,36 @@
                 <div
                   v-for="(tp, idx) in tpls"
                   :key="'key-' + idx"
-                  class="villain-editor-plus-available-template"
+                  class="villain-editor-plus-available-modules"
                   @click="addTemplate(tp)">
-                  <div class="villain-editor-plus-available-template-svg">
+                  <div class="villain-editor-plus-available-modules-svg">
                     <div
                       v-if="tp.data.svg"
                       v-html="tp.data.svg" />
                   </div>
-                  <div class="villain-editor-plus-available-template-content">
-                    <div class="villain-editor-plus-available-templates-title">{{ tp.data.name }}</div>
-                    <div class="villain-editor-plus-available-templates-help">{{ tp.data.help_text }}</div>
+                  <div class="villain-editor-plus-available-modules-content left-margin">
+                    <div class="villain-editor-plus-available-modules-title">{{ tp.data.name }}</div>
+                    <div class="villain-editor-plus-available-modules-help">{{ tp.data.help_text }}</div>
                   </div>
                 </div>
               </VueSlideUpDown>
             </div>
 
             <div
-              v-for="(tp, idx) in namespacedTemplates.general"
+              v-for="(tp, idx) in namespacedModules.general"
               :key="'general-' + idx"
-              class="villain-editor-plus-available-template"
+              class="villain-editor-plus-available-modules"
               @click="addTemplate(tp)">
               <div
-                class="villain-editor-plus-available-template-svg"
+                class="villain-editor-plus-available-modules-svg"
                 :class="tp.data.svg ? '' : 'empty'">
                 <div
                   v-if="tp.data.svg"
                   v-html="tp.data.svg" />
               </div>
-              <div class="villain-editor-plus-available-template-content">
-                <div class="villain-editor-plus-available-templates-title">{{ tp.data.name }}</div>
-                <div class="villain-editor-plus-available-templates-help">{{ tp.data.help_text }}</div>
+              <div class="villain-editor-plus-available-modules-content">
+                <div class="villain-editor-plus-available-modules-title">{{ tp.data.name }}</div>
+                <div class="villain-editor-plus-available-modules-help">{{ tp.data.help_text }}</div>
               </div>
             </div>
           </div>
@@ -171,7 +171,7 @@ export default {
 
   inject: [
     'available',
-    'vTemplateMode',
+    'vModuleMode',
     'state'
   ],
 
@@ -192,25 +192,25 @@ export default {
       active: false,
       draggingOver: false,
       namespaceOpen: null,
-      showingTemplates: false,
+      showingModules: false,
       hoveredBlock: 'Velg blokktype'
     }
   },
 
   computed: {
-    namespacedTemplates () {
-      if (!this.available.templates.length) {
+    namespacedModules () {
+      if (!this.available.modules.length) {
         return null
       }
-      return this.available.templates.reduce((objectsByKeyValue, obj) => {
+      return this.available.modules.reduce((objectsByKeyValue, obj) => {
         const value = obj.data.namespace
         objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj)
         return objectsByKeyValue
       }, {})
     },
 
-    nonGeneralNamespacedTemplates () {
-      const { general, ...other } = this.namespacedTemplates
+    nonGeneralNamespacedModules () {
+      const { general, ...other } = this.namespacedModules
       return other
     }
   },
@@ -235,14 +235,14 @@ export default {
       this.hoveredBlock = name
     },
 
-    revealTemplates () {
-      this.showingTemplates = !this.showingTemplates
-      if (this.showingTemplates) {
+    revealModules () {
+      this.showingModules = !this.showingModules
+      if (this.showingModules) {
         setTimeout(() => {
-          if (this.$refs.templates) {
-            const elTop = this.$refs.templates.getBoundingClientRect().top
+          if (this.$refs.modules) {
+            const elTop = this.$refs.modules.getBoundingClientRect().top
             const docBot = document.body.scrollTop + window.innerHeight
-            const elHeight = this.$refs.templates.clientHeight
+            const elHeight = this.$refs.modules.clientHeight
             const elBot = elTop + elHeight
 
             if (elBot > docBot) {
@@ -276,11 +276,11 @@ export default {
           }
         }, 250)
       } else {
-        this.showingTemplates = false
+        this.showingModules = false
       }
 
-      if (this.vTemplateMode) {
-        this.revealTemplates()
+      if (this.vModuleMode) {
+        this.revealModules()
       }
     },
 
@@ -294,7 +294,7 @@ export default {
       const ds = this.available.blocks.find(b => b.component === 'Datasource')
       const block = { ...ds, uid: createUID() }
       this.active = false
-      this.showingTemplates = false
+      this.showingModules = false
       this.$emit('add', { block: block, after: this.after, parent: this.parent })
     },
 
@@ -302,14 +302,14 @@ export default {
       const ds = this.available.blocks.find(b => b.component === 'Container')
       const block = { ...ds, uid: createUID() }
       this.active = false
-      this.showingTemplates = false
+      this.showingModules = false
       this.$emit('add', { block: block, after: this.after, parent: this.parent })
     },
 
     addTemplate (tp) {
       const block = { ...tp, uid: createUID() }
       this.active = false
-      this.showingTemplates = false
+      this.showingModules = false
       this.$emit('add', { block: block, after: this.after, parent: this.parent })
     },
 
@@ -384,7 +384,7 @@ export default {
   }
 }
 
-.villain-editor-plus-available-templates {
+.villain-editor-plus-available-modules {
   background-color: theme(colors.villain.blockBackground);
   padding: 1rem;
   max-width: 500px;
@@ -392,18 +392,18 @@ export default {
   margin-top: 5px;
   font-size: 18px;
 
-  .villain-editor-plus-available-templates-group {
+  .villain-editor-plus-available-modules-group {
     background-color: theme(colors.peach);
   }
 
-  .villain-editor-plus-available-template {
+  .villain-editor-plus-available-module {
     cursor: pointer;
     padding: 1rem 1rem 1rem 1rem;
     text-align: left;
     display: flex;
     align-items: center;
 
-    .villain-editor-plus-available-template-svg {
+    .villain-editor-plus-available-module-svg {
       width: 120px;
       margin-right: 20px;
       background-color: theme(colors.peach);
@@ -415,7 +415,7 @@ export default {
       }
     }
 
-    .villain-editor-plus-available-template-content {
+    .villain-editor-plus-available-module-content {
       display: flex;
       flex-direction: column;
     }
@@ -426,17 +426,17 @@ export default {
     }
   }
 
-  .villain-editor-plus-available-templates-title {
+  .villain-editor-plus-available-modules-title {
     font-weight: 500;
     margin-bottom: 6px;
     font-size: 19px;
   }
 
-  .villain-editor-plus-available-templates-help {
+  .villain-editor-plus-available-modules-help {
     font-size: 14px;
   }
 
-  .villain-editor-plus-available-templates-namespace {
+  .villain-editor-plus-available-modules-namespace {
     cursor: pointer;
 
     padding: 1rem;
@@ -562,6 +562,14 @@ export default {
       border: 0;
       text-decoration: none;
     }
+  }
+}
+
+.villain-editor-plus-available-modules-content {
+  text-align: left;
+
+  &.left-margin {
+    margin-left: 60px;
   }
 }
 

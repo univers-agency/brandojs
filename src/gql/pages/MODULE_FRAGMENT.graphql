@@ -1,6 +1,5 @@
-fragment template on Template {
+fragment module on Module {
   id
-
   name
   namespace
   helpText
@@ -11,7 +10,6 @@ fragment template on Template {
   svg
   multi
   wrapper
-
   insertedAt
   updatedAt
   deletedAt

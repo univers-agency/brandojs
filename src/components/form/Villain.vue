@@ -12,11 +12,11 @@
         <VillainEditor
           ref="villain"
           v-model="innerValue"
-          :templates="templates"
-          :template-mode="templateMode"
+          :modules="modules"
+          :module-mode="moduleMode"
           :max-blocks="maxBlocks"
           :entry-data="entryData"
-          :show-templates="showTemplates"
+          :show-modules="showModules"
           :visible-blocks="visibleBlocks"
           :extra-headers="{'authorization': `Bearer ${token}`}" />
       </template>
@@ -80,17 +80,17 @@ export default {
       required: true
     },
 
-    showTemplates: {
+    showModules: {
       type: Boolean,
       default: true
     },
 
-    templateMode: {
+    moduleMode: {
       type: Boolean,
       default: false
     },
 
-    templates: {
+    modules: {
       type: String,
       default: 'all'
     },

@@ -43,7 +43,7 @@
             fixed-width />
         </div>
         <div
-          v-if="hasConfigSlot && block.type !== 'template'"
+          v-if="hasConfigSlot && block.type !== 'module'"
           class="villain-block-action villain-config"
           @click="openConfig">
           <FontAwesomeIcon
@@ -53,11 +53,11 @@
             fixed-width />
         </div>
         <div
-          v-else-if="block.type === 'template'"
+          v-else-if="block.type === 'module'"
           class="villain-block-action villain-config"
-          @click="$parent.$refs[`templateConfig${block.data.id}`].showConfig = true">
+          @click="$parent.$refs[`moduleConfig${block.data.id}`].showConfig = true">
           <FontAwesomeIcon
-            v-popover.left="$t('template.config')"
+            v-popover.left="$t('module.config')"
             icon="wrench"
             size="xs"
             fixed-width />
@@ -338,7 +338,7 @@ export default {
     "block.helpText": "Help text",
     "block.deleteConfirm": "Are you sure you want to delete this block?",
     "block.duplicateConfirm": "Are you sure you want to duplicate this block?",
-    "template.config": "Configure template"
+    "module.config": "Configure module"
   },
   "no": {
     "close": "Lukk",
@@ -352,7 +352,7 @@ export default {
     "block.helpText": "Hjelpetekst",
     "block.deleteConfirm": "Er du sikker på at du vil slette denne blokken?",
     "block.duplicateConfirm": "Er du sikker på at du vil duplisere denne blokken?",
-    "template.config": "Endre malens oppsettsvalg"
+    "module.config": "Endre modulens oppsettsvalg"
   }
 }
 </i18n>
@@ -363,7 +363,7 @@ export default {
   position: relative;
 
   &.multi {
-    > [data-type="template"] {
+    > [data-type="module"] {
       background-color: transparent;
     }
   }
@@ -449,11 +449,11 @@ export default {
       opacity: 1;
     }
 
-    .template-entry > .entry-toolbar > .helpful-actions {
+    .module-entry > .entry-toolbar > .helpful-actions {
       opacity: 1;
     }
 
-    > .villain-template-description, > .villain-block-description {
+    > .villain-module-description, > .villain-block-description {
       transition: opacity 300ms ease;
       opacity: 1;
     }
@@ -517,7 +517,7 @@ export default {
     }
   }
 
-  .villain-template-description, .villain-block-description {
+  .villain-module-description, .villain-block-description {
     @font mono;
     color: #000;
     font-size: 10px;
