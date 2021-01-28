@@ -464,7 +464,8 @@ export default {
       icon: 'fa-square',
       component: 'Container',
       dataTemplate: {
-        class: '',
+        class: 'standard',
+        description: '',
         blocks: []
       }
     },

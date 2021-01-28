@@ -7,6 +7,7 @@
       @move="$emit('move', $event)"
       @duplicate="$emit('duplicate', $event)"
       @delete="$emit('delete', $event)">
+      <template #description> <span :style="{ color, marginLeft: '5px' }">⬤</span> {{ block.data.description }}</template>
       <section :b-section="block.data.class">
         <div v-if="block.data.blocks.length">
           <div class="villain-block-container">
@@ -55,7 +56,17 @@
     <BlockConfig
       ref="config">
       <template #default>
-        Konfig!
+        <KInput
+          v-model="block.data.description"
+          name="data[description]"
+          :label="$t('description')" />
+        <KInputRadios
+          v-model="block.data.class"
+          :options="availableClasses"
+          optionValueKey="value"
+          optionLabelKey="label"
+          name="data[class]"
+          :label="$t('class')" />
       </template>
     </BlockConfig>
   </div>
@@ -92,11 +103,20 @@ export default {
     }
   },
 
+  computed: {
+    color () {
+      const section = this.availableClasses.find(c => c.value === this.block.data.class)
+      return section.color
+    }
+  },
+
   created () {
     console.debug('<ContainerBlock /> created')
     if (!this.block.data.class) {
       this.showConfig = true
     }
+
+    this.availableClasses = this.$app.sections || [{ label: 'Standard', value: 'standard', color: '#000' }]
   },
 
   methods: {
@@ -106,3 +126,15 @@ export default {
   }
 }
 </script>
+<i18n>
+  {
+    "en": {
+      "class": "Section class",
+      "description": "Section description"
+    },
+    "no": {
+      "class": "Seksjonstype",
+      "description": "Seksjonsbeskrivelse"
+    }
+  }
+</i18n>

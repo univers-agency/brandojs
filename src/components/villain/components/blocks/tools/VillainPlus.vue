@@ -107,7 +107,7 @@
                 <div
                   v-for="(tp, idx) in tpls"
                   :key="'key-' + idx"
-                  class="villain-editor-plus-available-modules"
+                  class="villain-editor-plus-available-module"
                   @click="addTemplate(tp)">
                   <div class="villain-editor-plus-available-modules-svg">
                     <div
@@ -125,7 +125,7 @@
             <div
               v-for="(tp, idx) in namespacedModules.general"
               :key="'general-' + idx"
-              class="villain-editor-plus-available-modules"
+              class="villain-editor-plus-available-module"
               @click="addTemplate(tp)">
               <div
                 class="villain-editor-plus-available-modules-svg"
@@ -372,12 +372,14 @@ export default {
 
 .hardcoded-blocks {
   display: flex;
+  background-color: #fcfaf9;
+  padding-top: 10px;
+  padding-bottom: 8px;
 }
 
 .datasource-block {
   width: 50%;
   padding: 11px;
-  margin-bottom: 11px;
   cursor: pointer;
   &:hover {
     background-color: #efefef;
@@ -403,6 +405,11 @@ export default {
     display: flex;
     align-items: center;
 
+    &:hover {
+      color: #fff;
+      background-color: theme(colors.villain.main) !important;
+    }
+
     .villain-editor-plus-available-module-svg {
       width: 120px;
       margin-right: 20px;
@@ -418,11 +425,6 @@ export default {
     .villain-editor-plus-available-module-content {
       display: flex;
       flex-direction: column;
-    }
-
-    &:hover {
-      color: #fff;
-      background-color: theme(colors.villain.main) !important;
     }
   }
 

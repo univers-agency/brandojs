@@ -309,8 +309,8 @@
       v-model="page.data"
       rules="required"
       :entry-data="page"
-      :template-mode="templateMode()"
-      :templates="$app.templates"
+      :module-mode="moduleMode()"
+      :modules="$app.modules"
       :label="$t('fields.data.label')"
       name="page[data]" />
   </KForm>
@@ -370,11 +370,11 @@ export default {
   },
 
   methods: {
-    templateMode () {
-      if (typeof this.$app.templateMode === 'function') {
-        return this.$app.templateMode(this.page)
+    moduleMode () {
+      if (typeof this.$app.moduleMode === 'function') {
+        return this.$app.moduleMode(this.page)
       }
-      return this.$app.templateMode
+      return this.$app.moduleMode
     }
   },
 
