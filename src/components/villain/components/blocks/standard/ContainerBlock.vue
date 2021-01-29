@@ -49,7 +49,7 @@
       <div class="helpful-actions">
         <ButtonTiny
           @click="$refs.config.openConfig()">
-          Konfigurér seksjon
+          Seksjonoppsett
         </ButtonTiny>
       </div>
     </Block>
@@ -112,9 +112,6 @@ export default {
 
   created () {
     console.debug('<ContainerBlock /> created')
-    if (!this.block.data.class) {
-      this.showConfig = true
-    }
 
     this.availableClasses = this.$app.sections || [{ label: 'Standard', value: 'standard', color: '#000' }]
   },

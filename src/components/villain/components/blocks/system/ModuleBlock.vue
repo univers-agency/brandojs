@@ -7,24 +7,12 @@
     @move="$emit('move', $event)"
     @duplicate="$emit('duplicate', $event)"
     @delete="$emit('delete', $event)">
-    <div class="villain-module-description">
-      {{ getBlockName }}{{ block.data.multi ? ' — Multi' : '' }}
-    </div>
+    <template #description>{{ getBlockName }}{{ block.data.multi ? ' — Multi' : '' }}</template>
+    <ModuleImportantVariables v-model="block.data.vars" />
     <div
       v-if="!block.data.multi"
       class="module-entry"
       @click="handleClick">
-      <div
-        v-if="hasImportantVariables"
-        class="villain-module-important-config">
-        <FontAwesomeIcon
-          class="icon"
-          icon="wrench"
-          size="lg"
-          fixed-width
-          @click="$refs[`moduleConfig${block.data.id}`].showConfig = true" />
-        Denne blokken har variabler merket som viktige. Du kan endre de ved å klikke på skiftnøkkelen oppe til høyre i blokken
-      </div>
       <component
         :is="buildWrapper({refs: block.data.refs, vars: block.data.vars})"
         @delete="deleteBlock($event)"
@@ -98,6 +86,7 @@
 <script>
 
 import ModuleConfig from './ModuleConfig'
+import ModuleImportantVariables from './ModuleImportantVariables'
 import IconRefresh from '../../icons/IconRefresh'
 import cloneDeep from 'lodash/cloneDeep'
 import camelCase from 'lodash/camelCase'
@@ -108,7 +97,8 @@ export default {
 
   components: {
     IconRefresh,
-    ModuleConfig
+    ModuleConfig,
+    ModuleImportantVariables
   },
 
   props: {
@@ -277,10 +267,10 @@ export default {
       // throw out logic(?)
       const srcWithReplacedLogic = this.replaceLogic(srcCode)
       // replace all variables
-      const srcWithReplacedVars = this.replaceVars(srcWithReplacedLogic)
-      const srcWithReplacedEntry = this.replaceEntries(srcWithReplacedVars)
+      const srcWithReplacedEntry = this.replaceEntries(srcWithReplacedLogic)
+      const srcWithReplacedVars = this.replaceVars(srcWithReplacedEntry, entry)
       // replace all refs
-      const srcWithReplacedVarsRefs = this.replaceRefs(srcWithReplacedEntry, entry)
+      const srcWithReplacedVarsRefs = this.replaceRefs(srcWithReplacedVars, entry)
       return srcWithReplacedVarsRefs
     },
 
@@ -302,20 +292,14 @@ export default {
       return ''
     },
 
-    replaceVars (srcCode) {
+    replaceVars (srcCode, entry) {
       // TODO: when lookbehind is implemented: /(?<!<\/?[^>]*|&[^;]*)(\${.*?})/g
-      const replacedVarsCode = srcCode.replace(/<.*?>|(\{\{.*?\}\})/gs, this.replaceVar)
+      const replacedVarsCode = srcCode.replace(/<.*?>|\{\{\s?(.*?)\s?\}\}/gs, (exp, varName) => this.replaceVar(exp, varName, entry))
       return replacedVarsCode
     },
 
-    replaceVar (exp, varName) {
+    replaceVar (exp, varName, entry) {
       if (varName) {
-        const ret = this.findVar(varName)
-
-        if (ret) {
-          return ret
-        }
-
         return `<span v-popover="'Skiftes automatisk ut med en verdi når objektet lagres'" class="villain-entry-var"><span v-pre>${varName}</span></span>`
       }
 
@@ -334,18 +318,15 @@ export default {
     },
 
     replaceEntries (srcCode) {
-      if (this.available.entryData !== {}) {
-        const replacedEntriesCode = srcCode.replace(/\{\{ entry.(\w+) \}}/g, this.replaceEntry)
-        return replacedEntriesCode
-      }
-      return srcCode
+      const replacedEntriesCode = srcCode.replace(/\{\{ entry.(\w+) \}}/g, this.replaceEntry)
+      return replacedEntriesCode
     },
 
     replaceEntry (exp, entryVar) {
       if (this.available.entryData) {
         return `<span v-popover="'{{ entry.${entryVar} }}'" class="villain-entry-var" data-villain-var>${this.lookupEntryVar(entryVar)}</span>`
       } else {
-        return '{{ entry.' + entryVar + ' }}'
+        return `<span v-popover="'Skiftes automatisk ut med en verdi når objektet lagres'" class="villain-entry-var"><span v-pre>entry.${entryVar}</span></span>`
       }
     },
 
@@ -471,13 +452,14 @@ export default {
       return foundModule.data.code
     },
 
-    findVar (varName) {
-      if (!this.block.data.vars) {
+    findVar (varName, entry) {
+      console.error('==> findVar')
+      if (!entry.vars) {
         return null
       }
 
-      if (Object.prototype.hasOwnProperty.call(this.block.data.vars, varName)) {
-        return this.block.data.vars[varName].value
+      if (Object.prototype.hasOwnProperty.call(entry.vars, varName)) {
+        return entry.vars[varName].value
       }
 
       return null
@@ -562,16 +544,16 @@ export default {
 <style lang="postcss" scoped>
 
   .module-entry {
+    margin-bottom: 8px;
+    padding: 8px;
+    background-color: #fbf5f2;
+
     .multi .sort-container & {
       &:first-of-type {
         margin-top: 0;
       }
       margin-top: 1rem;
     }
-
-    margin-bottom: 1rem;
-    padding: 1rem;
-    background-color: #fbf5f2;
   }
 
   .villain-module-important-config {

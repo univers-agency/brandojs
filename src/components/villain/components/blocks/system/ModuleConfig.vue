@@ -278,7 +278,7 @@ export default {
       "restore": "Restore"
     },
     "no": {
-      "module-config": "Maloppsett",
+      "module-config": "Moduloppsett",
       "block-variables": "Blokkvariabler",
       "fetch-original-variables": "Hent orginale variabler",
       "fetch-missing-refs": "Hent manglende blokker",

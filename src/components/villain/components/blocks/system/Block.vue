@@ -8,7 +8,7 @@
       :data-type="block.type"
       class="villain-block">
       <div class="villain-block-description">
-        {{ blockDescription }}<slot name="description"></slot>{{ refDescription }}
+        <span class="block-type">{{ blockDescription }}</span> &rarr; <slot name="description"></slot>{{ refDescription }}
       </div>
       <slot></slot>
       <div class="villain-block-actions">
@@ -187,7 +187,7 @@ export default {
       if (foundBlock) {
         return foundBlock.name
       }
-      return ''
+      return 'Modul'
     },
 
     hasConfigSlot () {
@@ -377,7 +377,7 @@ export default {
 
 .villain-block {
   background-color: theme(colors.villain.blockBackground);
-  padding: 1.75rem 1rem 1rem 1rem;
+  padding: 34px 10px 8px;
   min-height: 105px;
   position: relative;
   border: 1px solid theme(colors.villain.blockBorder);
@@ -389,8 +389,12 @@ export default {
     box-shadow: none;
   }
 
+  .villain-module-important-variables {
+    margin-top: 8px;
+  }
+
   .helpful-actions {
-    margin-top: 1rem;
+    margin-top: 8px;
     opacity: 0;
     transition: opacity 300ms ease;
     display: flex;
@@ -453,6 +457,14 @@ export default {
       opacity: 1;
     }
 
+    > .villain-module-description, > .villain-block-description {
+      transition: opacity 300ms ease;
+      opacity: 1;
+    }
+  }
+
+  &[data-type="module"] {
+    border-radius: 10px;
     > .villain-module-description, > .villain-block-description {
       transition: opacity 300ms ease;
       opacity: 1;
@@ -522,7 +534,7 @@ export default {
     color: #000;
     font-size: 10px;
     border-radius: 0;
-    padding: 8px 1rem;
+    padding: 8px 8px;
     font-weight: normal;
     display: inline-block;
     position: absolute;
@@ -532,8 +544,12 @@ export default {
     transition: opacity 300ms ease;
     text-transform: uppercase;
 
-    &:before {
-      content: '→';
+    .block-type {
+      display: inline-block;
+      margin-right: 3px;
+      border: 1px solid theme(colors.dark);
+      border-radius: 10px;
+      padding: 2px 6px 1px;
     }
   }
 
@@ -548,8 +564,8 @@ export default {
 
   .villain-block-actions {
     position: absolute;
-    right: 0;
-    top: -2px;
+    right: 2px;
+    top: 2px;
 
     display: flex;
     flex-direction: row-reverse;
