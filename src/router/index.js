@@ -4,6 +4,7 @@ import ProfileView from '../views/users/ProfileView'
 import UserListView from '../views/users/UserListView'
 import IdentityView from '../views/config/IdentityView'
 import SEOView from '../views/config/SEOView'
+import CacheView from '../views/config/CacheView'
 import GlobalsView from '../views/config/GlobalsView'
 
 import FilesView from '../views/files/FilesView'
@@ -69,6 +70,11 @@ const routes = [
     path: '/config/globals',
     name: 'config-globals',
     component: GlobalsView
+  },
+  {
+    path: '/config/cache',
+    name: 'config-cache',
+    component: CacheView
   },
   {
     path: '/files',

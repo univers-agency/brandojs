@@ -34,6 +34,12 @@ export default {
               }
             },
             {
+              text: 'Hurtigbuffere',
+              to: {
+                name: 'config-cache'
+              }
+            },
+            {
               text: 'Innholdsmoduler',
               to: {
                 name: 'modules'
@@ -109,6 +115,12 @@ export default {
               text: 'Global variables',
               to: {
                 name: 'config-globals'
+              }
+            },
+            {
+              text: 'Cache',
+              to: {
+                name: 'config-cache'
               }
             },
             {

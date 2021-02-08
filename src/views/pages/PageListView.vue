@@ -53,17 +53,17 @@
           </div>
         </div>
         <div class="col-7 title">
-          <router-link
-            :to="{ name: 'pages-edit', params: { pageId: entry.id } }"
-            class="link name-link">
-            {{ entry.title }}
-          </router-link><br>
           <FontAwesomeIcon
             v-if="entry.isHomepage"
             class="mr-1"
             size="xs"
-            icon="home" />
-          <div class="badge">{{ entry.key }}</div>
+            icon="home" /><router-link
+            :to="{ name: 'pages-edit', params: { pageId: entry.id } }"
+            class="link name-link">
+            {{ entry.title }}
+          </router-link><br>
+
+          <div class="badge"><FontAwesomeIcon icon="globe-americas" size="sm" /> {{ entry.key }}</div>
         </div>
         <div class="col-2 justify-end">
           <ChildrenButton
@@ -136,7 +136,7 @@
                   <span>{{ section.language }}</span>
                 </div>
               </div>
-              <div class="col-6 subtitle">
+              <div class="col-7 subtitle">
                 <div class="arrow">↳</div>
                 <div class="flex-v">
                   <router-link
@@ -144,15 +144,14 @@
                     {{ section.title || $t('pages.no-title') }}
                   </router-link>
                   <div class="keys">
-                    <div class="badge">{{ section.parentKey }}</div>
-                    <div class="badge">{{ section.key }}</div>
+                    <div class="badge">{{ section.parentKey }}</div> <span class="text-muted">&rarr;</span> <div class="badge">{{ section.key }}</div>
                   </div>
                 </div>
               </div>
-              <div class="col-3 justify-end">
+              <div class="col-2 justify-end">
                 <div class="badge">{{ $t('pages.section') }}</div>
               </div>
-              <div class="col-4 justify-end">
+              <div class="col-4">
                 <ItemMeta
                   :entry="section"
                   :user="section.creator" />
@@ -191,16 +190,16 @@
                   <span>{{ subPage.language }}</span>
                 </div>
               </div>
-              <div class="col-6 title flex-v">
+              <div class="col-7 title flex-v">
                 <router-link :to="{ name: 'pages-edit', params: { pageId: subPage.id } }">
                   {{ subPage.title }}
                 </router-link>
-                <div class="badge">{{ subPage.key }}</div>
+                <div class="badge"><FontAwesomeIcon icon="globe-americas" size="sm" /> {{ subPage.key }}</div>
               </div>
-              <div class="col-3 justify-end">
+              <div class="col-2 justify-end">
                 <div class="badge">{{ $t('pages.subpage') }}</div>
               </div>
-              <div class="col-4 justify-end">
+              <div class="col-4">
                 <ItemMeta
                   :entry="subPage"
                   :user="subPage.creator" />
@@ -449,12 +448,16 @@ export default {
 
   .subtitle {
     @fontsize base(0.8);
-    font-family: theme(typography.families.mono);
     display: flex;
     flex-direction: row;
+  }
 
-    .badge {
-      margin-top: 5px;
-    }
+  >>> .badge {
+    margin-top: 5px;
+    text-transform: none !important;
+  }
+
+  .text-muted {
+    opacity: 0.3;
   }
 </style>

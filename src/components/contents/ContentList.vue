@@ -478,8 +478,20 @@ export default {
     }
 
     &[data-level="2"] {
+      margin-bottom: 10px;
+
       .list-row {
-        background-color: theme(colors.peach);
+        background-color: #f3f3f3 !important;
+
+        border-radius: 0px;
+
+        &:first-of-type {
+          border-radius: 20px 20px 0px 0px;
+        }
+
+        &:last-of-type {
+          border-radius: 0px 0px 20px 20px;
+        }
       }
       .list-tools {
         display: none;
@@ -529,13 +541,16 @@ export default {
       @row;
       font-weight: 500;
       padding-bottom: 10px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     }
 
     .list-row {
-      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
       background-color: white;
       user-select: none;
+      border-radius: 20px;
+
+      &:nth-of-type(even) {
+        background-color: #fafafa;
+      }
 
       .center {
         display: flex;
@@ -555,8 +570,8 @@ export default {
 
       .main-content {
         @row;
-        @space padding-top xs;
-        @space padding-bottom xs;
+        @space padding-top 10px;
+        @space padding-bottom 10px;
         align-items: center;
         min-height: 50px;
 

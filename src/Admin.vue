@@ -647,7 +647,6 @@ export default {
   html {
     line-height: 1.35;
     height: 100%;
-    letter-spacing: -0.02em;
     font-feature-settings: "kern" 1, "liga" 1;
     font-kerning: normal;
   }
@@ -1133,6 +1132,7 @@ export default {
   padding: 5px 6px 4px;
   line-height: 1;
   border: 1px solid theme(colors.grayLight);
+  border-radius: 15px;
   user-select: none;
 
   & + .badge {
