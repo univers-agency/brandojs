@@ -11,12 +11,13 @@
       :key="pageId"
       :page="page"
       :save="save" />
-
     <div
       v-if="pageWithChildren && pageWithChildren.children.length"
       class="subpages">
       <h2>{{ $t('pages.subpages') }}</h2>
       <ContentList
+        :status="true"
+        :soft-delete="true"
         :entries="pageWithChildren.children">
         <template v-slot:row="{ entry }">
           <div class="col-1">
@@ -28,7 +29,7 @@
             <router-link :to="{ name: 'pages-edit', params: { pageId: entry.id } }">
               {{ entry.title }}
             </router-link><br>
-            <div class="badge">{{ entry.key }}</div>
+            <div class="badge"><FontAwesomeIcon icon="globe-americas" size="sm" /> {{ entry.uri }}</div>
           </div>
           <div class="col-4">
             <ItemMeta
@@ -75,7 +76,6 @@ export default {
           'insertedAt',
           'updatedAt',
           'children',
-          'slug',
           'creator',
           'fragments',
           'parent'
@@ -141,7 +141,7 @@ export default {
               id
               title
               status
-              key
+              uri
               language
               updatedAt
 
@@ -177,5 +177,14 @@ export default {
 <style lang="postcss" scoped>
   .subpages {
     @space margin-top lg;
+
+    >>> .list-tools {
+      display: none;
+    }
+  }
+
+  >>> .badge {
+    margin-top: 5px;
+    text-transform: none !important;
   }
 </style>

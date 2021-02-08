@@ -52,13 +52,13 @@
         </template>
 
         <KInput
-          v-model="page.key"
+          v-model="page.uri"
           monospace
           rules="required"
-          name="page[key]"
+          name="page[uri]"
           type="text"
-          :label="$t('fields.key.label')"
-          :placeholder="$t('fields.key.label')" />
+          :label="$t('fields.uri.label')"
+          :placeholder="$t('fields.uri.label')" />
       </div>
       <div class="half">
         <fieldset>
@@ -386,10 +386,25 @@ export default {
             id
             language
             title
-            key
+            uri
           }
         }
-      `
+      `,
+
+      update ({ parents }) {
+        if (this.page) {
+          if (this.page.parentId) {
+            if (!this.page.uri) {
+              const parent = parents.find(p => parseInt(p.id) === parseInt(this.page.parentId))
+              if (parent) {
+                this.$set(this.page, 'uri', parent.uri + '/path')
+              }
+            }
+          }
+        }
+
+        return parents
+      }
     },
 
     identity: {

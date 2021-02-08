@@ -29,6 +29,7 @@
         <h2>{{ $t('pages.index') }}</h2>
       </div>
     </div>
+
     <ContentList
       v-if="pages"
       :entries="pages"
@@ -48,9 +49,7 @@
       </template>
       <template v-slot:row="{ entry }">
         <div class="col-1">
-          <div class="circle">
-            <span>{{ entry.language }}</span>
-          </div>
+          <CircleFlag :language="entry.language" />
         </div>
         <div class="col-7 title">
           <FontAwesomeIcon
@@ -62,8 +61,7 @@
             class="link name-link">
             {{ entry.title }}
           </router-link><br>
-
-          <div class="badge"><FontAwesomeIcon icon="globe-americas" size="sm" /> {{ entry.key }}</div>
+          <div class="badge"><FontAwesomeIcon icon="globe-americas" size="sm" /> {{ entry.uri }}</div>
         </div>
         <div class="col-2 justify-end">
           <ChildrenButton
@@ -82,14 +80,20 @@
           <CircleDropdown>
             <li>
               <router-link
+                :to="{ name: 'pages-edit', params: { pageId: entry.id } }">
+                {{ $t('pages.edit-page') }}
+              </router-link>
+            </li>
+            <li>
+              <router-link
                 :to="{ name: 'sections-new', params: { pageId: entry.id } }">
                 {{ $t('pages.new-section') }}
               </router-link>
             </li>
             <li>
               <router-link
-                :to="{ name: 'pages-edit', params: { pageId: entry.id } }">
-                {{ $t('pages.edit-page') }}
+                :to="{ name: 'pages-new', params: { pageId: entry.id } }">
+                {{ $t('pages.new-subpage') }}
               </router-link>
             </li>
 
@@ -132,9 +136,7 @@
             @move="moveSections">
             <template v-slot:row="{ entry: section }">
               <div class="col-1">
-                <div class="circle">
-                  <span>{{ section.language }}</span>
-                </div>
+                <CircleFlag :language="section.language" />
               </div>
               <div class="col-7 subtitle">
                 <div class="arrow">↳</div>
@@ -186,15 +188,13 @@
             <template v-slot:row="{ entry: subPage }">
               <div class="col-1"></div>
               <div class="col-1">
-                <div class="circle">
-                  <span>{{ subPage.language }}</span>
-                </div>
+                <CircleFlag :language="subPage.language" />
               </div>
               <div class="col-7 title flex-v">
                 <router-link :to="{ name: 'pages-edit', params: { pageId: subPage.id } }">
                   {{ subPage.title }}
                 </router-link>
-                <div class="badge"><FontAwesomeIcon icon="globe-americas" size="sm" /> {{ subPage.key }}</div>
+                <div class="badge"><FontAwesomeIcon icon="globe-americas" size="sm" /> {{ subPage.uri }}</div>
               </div>
               <div class="col-2 justify-end">
                 <div class="badge">{{ $t('pages.subpage') }}</div>

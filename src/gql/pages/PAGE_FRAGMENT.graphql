@@ -1,9 +1,8 @@
 fragment page on Page {
   id
   status
-  key
+  uri
   title
-  slug
   template
   language
   data
@@ -29,11 +28,10 @@ fragment page on Page {
   parentId
   parent {
     id
-    key
+    uri
     language
     title
     data
-    slug
 
     updatedAt
   }
@@ -48,9 +46,8 @@ fragment page on Page {
 
   children {
     id
-    key
+    uri
     title
-    slug
     language
     data
 

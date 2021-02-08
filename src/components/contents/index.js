@@ -4,6 +4,7 @@ import ContentHeader from './ContentHeader'
 import ContentList from './ContentList'
 import Content from './Content'
 import CircleFilled from './CircleFilled'
+import CircleFlag from './CircleFlag'
 import DetailField from './DetailField'
 import KModal from './KModal'
 import Status from './Status'
@@ -16,6 +17,7 @@ export {
   ContentList,
   Content,
   CircleFilled,
+  CircleFlag,
   DetailField,
   KModal,
   Status,

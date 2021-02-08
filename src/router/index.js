@@ -200,9 +200,16 @@ const routes = [
   },
 
   {
-    path: '/pages/new',
+    path: '/pages/:pageId?/new',
     name: 'pages-new',
-    component: PageCreateView
+    component: PageCreateView,
+    props: (route) => {
+      const pageId = Number.parseInt(route.params.pageId, 10)
+      if (Number.isNaN(pageId)) {
+        return 0
+      }
+      return { pageId }
+    }
   },
 
   {

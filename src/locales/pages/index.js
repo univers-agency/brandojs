@@ -16,8 +16,10 @@ export default {
       template: {
         label: 'Template'
       },
-      key: {
-        label: 'Key'
+      uri: {
+        label: 'URI',
+        placeholder: 'uri/goes/here',
+        helpText: 'Path for routing'
       },
       isHomepage: {
         label: 'Homepage'
@@ -60,6 +62,7 @@ export default {
     'pages.new': 'New page',
     'pages.reprocess': 'Reprocess pages/sections',
     'pages.new-section': 'New section',
+    'pages.new-subpage': 'New subpage',
     'pages.section': 'Section',
     'pages.sequence-updated': 'Sequence updated',
     'pages.delete-page': 'Delete page',
@@ -100,8 +103,10 @@ export default {
       template: {
         label: 'Sidemal'
       },
-      key: {
-        label: 'Nøkkel'
+      uri: {
+        label: 'Lenkemål',
+        placeholder: 'min/link',
+        helpText: 'Lenkemål'
       },
       isHomepage: {
         label: 'Nettstedets hovedside'
@@ -145,6 +150,7 @@ export default {
     'pages.delete-section': 'Slett seksjon',
     'pages.edit-page': 'Rediger side',
     'pages.new-section': 'Ny seksjon',
+    'pages.new-subpage': 'Ny underside',
     'pages.section': 'Seksjon',
     'pages.sequence-updated': 'Rekkefølge oppdatert',
     'pages.are-you-sure-you-want-to-delete-this-section': 'Er du sikker på at du vil slette denne seksjonen?',

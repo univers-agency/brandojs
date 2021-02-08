@@ -22,13 +22,20 @@ export default {
     PageForm
   },
 
+  props: {
+    pageId: {
+      type: Number,
+      required: false,
+      default: null
+    }
+  },
+
   data () {
     return {
       page: {
         parentId: null,
-        key: '',
+        uri: null,
         title: '',
-        slug: '',
         data: null,
         template: 'default.html',
         status: 'published',
@@ -37,6 +44,10 @@ export default {
         properties: []
       }
     }
+  },
+
+  created () {
+    this.page.parentId = this.pageId
   },
 
   methods: {
