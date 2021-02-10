@@ -220,10 +220,10 @@ export default {
   },
 
   mounted () {
-    this.$refs.plusLink.addEventListener('dragenter', this.dragEnter)
-    this.$refs.plusLink.addEventListener('dragover', this.dragOver)
-    this.$refs.plusLink.addEventListener('dragleave', this.dragLeave)
-    this.$refs.plusLink.addEventListener('drop', this.onDrop)
+    this.$refs.plus.addEventListener('dragenter', this.dragEnter)
+    this.$refs.plus.addEventListener('dragover', this.dragOver)
+    this.$refs.plus.addEventListener('dragleave', this.dragLeave)
+    this.$refs.plus.addEventListener('drop', this.onDrop)
   },
 
   methods: {
