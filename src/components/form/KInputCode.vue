@@ -119,15 +119,13 @@ export default {
 
     innerValue: {
       get () { return this.value },
-      set (innerValue) { this.$emit('input', innerValue) }
+      set (innerValue) {
+        this.$emit('input', innerValue)
+      }
     }
   },
 
   created () {
-    if (this.value) {
-      this.innerValue = this.value
-    }
-
     this.$nextTick(() => {
       this.bindEditor()
     })
@@ -167,6 +165,11 @@ export default {
 
     focus () {
       this.$refs.txt.focus()
+    },
+
+    refreshEditor (val) {
+      console.log('==> refreshEditor', val)
+      this.codeMirror.setValue(val || '')
     }
   }
 }

@@ -492,8 +492,8 @@ export default {
           case 'container':
             if (block.data.blocks && block.data.blocks.length) {
               for (let idx = 0; idx < block.data.blocks.length; idx++) {
-                const containerBlock = block.data.blocks[idx].data
-                this.validateBlock(containerBlock)
+                const containedBlock = block.data.blocks[idx]
+                this.validateBlock(containedBlock)
               }
             }
             break

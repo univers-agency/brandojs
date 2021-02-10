@@ -62,11 +62,17 @@
           :label="$t('description')" />
         <KInputRadios
           v-model="block.data.class"
-          :options="availableClasses"
+          :options="availableSections"
           optionValueKey="value"
           optionLabelKey="label"
           name="data[class]"
           :label="$t('class')" />
+
+        <KInputCode
+          ref="wrapper"
+          v-model="block.data.wrapper"
+          name="data[wrapper]"
+          :label="$t('wrapper')" />
       </template>
     </BlockConfig>
   </div>
@@ -105,15 +111,28 @@ export default {
 
   computed: {
     color () {
-      const section = this.availableClasses.find(c => c.value === this.block.data.class)
+      const section = this.availableSections.find(c => c.value === this.block.data.class)
       return section.color
+    }
+  },
+
+  watch: {
+    'block.data.class' (val) {
+      console.log('1. block.data.class CHANGED to', val)
+      const section = this.availableSections.find(c => c.value === this.block.data.class)
+      this.$set(this.block.data, 'wrapper', section.wrapper)
+      console.log('2. set block.data.wrapper to', section.wrapper)
+      this.$nextTick(() => {
+        console.log('3. refreshing editor')
+        this.$refs.wrapper.refreshEditor(section.wrapper)
+      })
     }
   },
 
   created () {
     console.debug('<ContainerBlock /> created')
 
-    this.availableClasses = this.$app.sections || [{ label: 'Standard', value: 'standard', color: '#000' }]
+    this.availableSections = this.$app.sections || [{ label: 'Standard', value: 'standard', color: '#000' }]
   },
 
   methods: {

@@ -214,9 +214,10 @@ export default {
       icon: 'fa-square',
       component: 'Container',
       dataTemplate: {
-        class: '',
-        availableColors: [{ name: 'White', class: 'white', color: '#fff' }],
-        blocks: []
+        class: 'standard',
+        description: '',
+        blocks: [],
+        wrapper: ''
       }
     },
 
@@ -466,7 +467,8 @@ export default {
       dataTemplate: {
         class: 'standard',
         description: '',
-        blocks: []
+        blocks: [],
+        wrapper: ''
       }
     },
 
