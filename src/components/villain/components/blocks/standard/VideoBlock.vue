@@ -12,9 +12,9 @@
       @delete="$emit('delete', $event)">
       <div class="villain-block-video">
         <template
-          v-if="html && block.data.source !== 'file'"
-          ref="preview">
+          v-if="html && block.data.source !== 'file'">
           <div
+            ref="preview"
             class="villain-block-video-content"
             v-html="html" />
           <div class="helpful-actions">
@@ -116,6 +116,8 @@ export default {
     Block
   },
 
+  inject: ['available'],
+
   props: {
     block: {
       type: Object,
@@ -160,8 +162,6 @@ export default {
     }
   },
 
-  inject: ['available'],
-
   created () {
     console.debug('<VideoBlock /> created')
 
@@ -170,11 +170,13 @@ export default {
         .replace('{{protocol}}', window.location.protocol)
         .replace('{{remote_id}}', this.block.data.remote_id)
 
-      setTimeout(() => {
-        const rect = this.$refs.preview.getBoundingClientRect()
-        this.$set(this.block.data, 'width', Math.round(rect.width))
-        this.$set(this.block.data, 'height', Math.round(rect.height))
-      }, 3500)
+      this.$nextTick(() => {
+        setTimeout(() => {
+          const rect = this.$refs.preview.getBoundingClientRect()
+          this.$set(this.block.data, 'width', Math.round(rect.width))
+          this.$set(this.block.data, 'height', Math.round(rect.height))
+        }, 3500)
+      })
     }
   },
 
