@@ -280,19 +280,27 @@ export default {
       const handle = this.$refs.handle
       const hCR = handle.getBoundingClientRect()
 
-      this.dragEl = block.cloneNode(true)
-      this.dragEl.classList.add('villain-drag-element')
+      this.dragEl = document.createElement('div')
+      this.dragEl.style.position = 'absolute'
+      this.dragEl.style.opacity = '0.6'
+      this.dragEl.style.width = '500px'
+      this.dragEl.style.height = '75px'
+      this.dragEl.style.pointerEvents = 'none'
+      this.dragEl.style.backgroundColor = 'gray'
+      this.dragEl.style.border = '1px solid #000'
 
       this.dragEl.style.top = `${block.offsetTop}px`
       this.dragEl.style.left = `${block.offsetLeft}px`
 
-      block.parentNode.appendChild(this.dragEl)
+      document.body.appendChild(this.dragEl)
+
+      const jsonData = JSON.stringify(data, null, 2)
 
       ev.dataTransfer.dropEffect = 'move'
-      ev.dataTransfer.setDragImage(this.dragEl, hCR.left, 1)
-      ev.dataTransfer.setData('application/villain', JSON.stringify(data, null, 2))
+      ev.dataTransfer.setDragImage(this.dragEl, 0, 0)
+      ev.dataTransfer.setData('application/villain', jsonData)
 
-      this.$refs.content.classList.add('villain-dragging-block')
+      block.classList.add('villain-dragging-block')
     },
 
     onDragEnd (ev) {
@@ -416,25 +424,26 @@ export default {
     opacity: .5;
 
     .st-block-addition {
-      display:none;
+      display: none;
     }
   }
 
   &.villain-dragging-block {
-    background:#f6f7f9;
+    background: #f6f7f9;
+    max-height: 75px;
 
     & > * {
-      opacity:0;
+      opacity: 0 !important;
     }
 
     &.st-block-addition {
-      opacity:1;
+      opacity: 1;
     }
   }
 
   &.villain-drag-over {
     &.st-block-addition {
-      opacity:0;
+      opacity: 0;
     }
   }
 
