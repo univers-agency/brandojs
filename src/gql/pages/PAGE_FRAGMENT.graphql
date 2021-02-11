@@ -69,6 +69,54 @@ fragment page on Page {
 
     insertedAt
     updatedAt
+
+    children {
+      id
+      uri
+      title
+      language
+      data
+
+      properties {
+        id
+        label
+        key
+        type
+        data
+      }
+
+      creator {
+        id
+        name
+        avatar {
+          thumb: url(size: "xlarge")
+        }
+      }
+
+      insertedAt
+      updatedAt
+    }
+
+    fragments {
+      id
+      title
+      key
+      parentKey
+      language
+      pageId
+      data
+
+      creator {
+        id
+        name
+        avatar {
+          thumb: url(size: "xlarge")
+        }
+      }
+
+      insertedAt
+      updatedAt
+    }
   }
 
   fragments {

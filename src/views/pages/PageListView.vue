@@ -136,17 +136,20 @@
             @move="moveSections">
             <template v-slot:row="{ entry: section }">
               <div class="col-1">
+                <div class="arrow">↳</div>
+              </div>
+              <div class="col-1">
                 <CircleFlag :language="section.language" />
               </div>
-              <div class="col-7 subtitle">
-                <div class="arrow">↳</div>
+              <div class="col-6 subtitle">
+
                 <div class="flex-v">
                   <router-link
                     :to="{ name: 'sections-edit', params: { sectionId: section.id } }">
                     {{ section.title || $t('pages.no-title') }}
                   </router-link>
                   <div class="keys">
-                    <div class="badge">{{ section.parentKey }}</div> <span class="text-muted">&rarr;</span> <div class="badge">{{ section.key }}</div>
+                    <div class="badge"><FontAwesomeIcon icon="key" size="sm" /> {{ section.parentKey }}/<strong>{{ section.key }}</strong></div>
                   </div>
                 </div>
               </div>
@@ -186,18 +189,27 @@
             :level="2"
             :entries="entry.children">
             <template v-slot:row="{ entry: subPage }">
-              <div class="col-1"></div>
+              <div class="col-1">
+              </div>
+              <div class="col-1">
+                <div class="arrow">↳</div>
+              </div>
               <div class="col-1">
                 <CircleFlag :language="subPage.language" />
               </div>
-              <div class="col-7 title flex-v">
+              <div class="col-6 title flex-v">
                 <router-link :to="{ name: 'pages-edit', params: { pageId: subPage.id } }">
                   {{ subPage.title }}
                 </router-link>
                 <div class="badge"><FontAwesomeIcon icon="globe-americas" size="sm" /> {{ subPage.uri }}</div>
               </div>
               <div class="col-2 justify-end">
-                <div class="badge">{{ $t('pages.subpage') }}</div>
+                <ChildrenButton
+                  v-show="(subPage.fragments ? subPage.fragments.length : 0) + (subPage.children ? subPage.children.length : 0)"
+                  :id="subPage.id"
+                  :length="(subPage.fragments ? subPage.fragments.length : 0) + (subPage.children ? subPage.children.length : 0)"
+                  :visible-children="visibleChildrenSubPages">
+                </ChildrenButton>
               </div>
               <div class="col-4">
                 <ItemMeta
@@ -215,8 +227,61 @@
                   <li>
                     <button @click="deleteEntry(subPage.id)">{{ $t('pages.delete-subpage') }}</button>
                   </li>
+                  <li>
+                    <router-link
+                      :to="{ name: 'pages-new', params: { pageId: subPage.id } }">
+                      {{ $t('pages.new-subpage') }}
+                    </router-link>
+                  </li>
                 </CircleDropdown>
               </div>
+            </template>
+            <template v-slot:children="{ entry: subPage }">
+              <template v-if="visibleChildrenSubPages.includes(subPage.id)">
+
+                <ContentList
+                  v-if="subPage.children.length"
+                  :level="2"
+                  :entries="subPage.children">
+                  <template v-slot:row="{ entry: subSubPage }">
+                    <div class="col-1">
+                    </div>
+                    <div class="col-1">
+                    </div>
+                    <div class="col-1">
+                      <div class="arrow">↳</div>
+                    </div>
+                    <div class="col-1">
+                      <CircleFlag :language="subSubPage.language" />
+                    </div>
+                    <div class="col-7 title flex-v">
+                      <router-link :to="{ name: 'pages-edit', params: { pageId: subSubPage.id } }">
+                        {{ subSubPage.title }}
+                      </router-link>
+                      <div class="badge"><FontAwesomeIcon icon="globe-americas" size="sm" /> {{ subSubPage.uri }}</div>
+                    </div>
+                    <div class="col-4">
+                      <ItemMeta
+                        :entry="subSubPage"
+                        :user="subSubPage.creator" />
+                    </div>
+                    <div class="col-1">
+                      <CircleDropdown>
+                        <li>
+                          <router-link
+                            :to="{ name: 'pages-edit', params: { pageId: subSubPage.id } }">
+                            {{ $t('pages.edit-subpage') }}
+                          </router-link>
+                        </li>
+                        <li>
+                          <button @click="deleteEntry(subSubPage.id)">{{ $t('pages.delete-subpage') }}</button>
+                        </li>
+                      </CircleDropdown>
+                    </div>
+                  </template>
+                </ContentList>
+
+              </template>
             </template>
           </ContentList>
         </template>
@@ -234,8 +299,9 @@ export default {
   data () {
     return {
       visibleChildren: [],
+      visibleChildrenSubPages: [],
       queryVars: {
-        filter: null,
+        filter: {parents: true},
         offset: 0,
         limit: 50,
         status: 'all'
@@ -444,6 +510,7 @@ export default {
   .arrow {
     margin-right: 15px;
     opacity: 0.3;
+    text-align: center;
   }
 
   .subtitle {

@@ -29,7 +29,7 @@
           name="page[parentId]"
           :label="$t('fields.parentId.label')">
           <template v-slot:label="{ option }">
-            [{{ option.language.toUpperCase() }}] {{ option.title }}
+            <template v-if="option.parentId">{{ findParent(option.parentId) }} &rarr; </template><template v-else>[{{ option.language.toUpperCase() }}] </template>{{ option.title }}
           </template>
         </KInputSelect>
 
@@ -370,6 +370,14 @@ export default {
   },
 
   methods: {
+    findParent (id) {
+      const parent = this.parents.find(p => parseInt(p.id) === parseInt(id))
+      if (parent) {
+        return `[${parent.language.toUpperCase()}] ${parent.title}`
+      }
+      return ''
+    },
+
     moduleMode () {
       if (typeof this.$app.moduleMode === 'function') {
         return this.$app.moduleMode(this.page)
@@ -387,6 +395,7 @@ export default {
             language
             title
             uri
+            parentId
           }
         }
       `,
