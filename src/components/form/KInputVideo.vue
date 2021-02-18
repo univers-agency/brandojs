@@ -6,8 +6,8 @@
     :maxlength="maxlength"
     :helpText="helpText"
     :compact="compact"
-    :value="value">
-    <template v-slot>
+    :value="innerValue">
+    <template v-slot="{ provider }">
       <input
         :id="id"
         ref="input"
@@ -17,7 +17,8 @@
         :placeholder="placeholder"
         :maxlength="maxlength"
         :name="name"
-        :disabled="disabled">
+        :disabled="disabled"
+        @input="onChange(provider, $event)">
     </template>
     <template v-slot:outsideValidator>
       <KModal
@@ -183,6 +184,16 @@ export default {
     }
   },
 
+  watch: {
+    innerValue (value) {
+      this.$emit('input', value)
+    },
+
+    value (value) {
+      this.innerValue = value
+    }
+  },
+
   created () {
     if (this.value) {
       this.innerValue = this.value
@@ -196,6 +207,10 @@ export default {
   },
 
   methods: {
+    onChange (provider, event) {
+      provider.validate(event)
+    },
+
     toggleFromButton () {
       this.toggle()
     },
@@ -253,14 +268,16 @@ export default {
             this.thumbnailUrl = result.thumbnail_url
             this.messages.push(`Dimensjoner er ${this.width}x${this.height}`)
 
-            this.$emit('input', {
+            const input = {
               url: this.url,
               width: this.width,
               height: this.height,
               source: this.source,
               remoteId: this.remoteId,
               thumbnailUrl: this.thumbnailUrl
-            })
+            }
+
+            this.$emit('input', input)
           })
       }
     }
