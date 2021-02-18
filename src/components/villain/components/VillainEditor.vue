@@ -236,7 +236,8 @@ export default {
       showSource: false,
       fullscreen: false,
       availableModules: [],
-      ready: false
+      ready: false,
+      src: '[]'
     }
   },
   computed: {
@@ -246,23 +247,6 @@ export default {
       },
       set (innerValue) {
         this.$emit('input', innerValue)
-      }
-    },
-
-    src: {
-      /**
-       * Called when getting source code
-       */
-      get () {
-        const bx = cloneDeep(this.blocks)
-        return JSON.stringify(bx.map(b => this.stripMeta(b)), null, 2)
-      },
-
-      /**
-      * Called when updating source code
-      */
-      set (v) {
-        this.updatedSource = v
       }
     },
 
@@ -554,7 +538,7 @@ export default {
     restoreAutosave (a) {
       alerts.alertConfirm('OBS!', this.$t('replace-with-autosave'), data => {
         if (data) {
-          this.blocks = a.content
+          this.innerValue = a.content
           this.showAutosaves = false
         }
       })
@@ -580,8 +564,7 @@ export default {
     },
 
     updateSource () {
-      this.blocks = JSON.parse(this.updatedSource)
-      this.blocks = this.addUIDs()
+      this.innerValue = JSON.parse(this.src)
       this.toggleSource()
     },
 
@@ -589,18 +572,15 @@ export default {
       if (this.showSource) {
         this.showSource = false
       } else {
-        const bx = cloneDeep(this.blocks)
-        this.updatedSource = JSON.stringify(bx.map(b => this.stripMeta(b)), null, 2)
+        this.src = JSON.stringify(this.innerValue, null, 2)
         this.showSource = true
         autosize(this.$refs.tasource)
       }
     },
 
     refresh (animate = true) {
-      const bx = cloneDeep(this.blocks)
-      this.updatedSource = JSON.stringify(bx.map(b => this.stripMeta(b)), null, 2)
-      this.blocks = JSON.parse(this.updatedSource)
-      this.blocks = this.addUIDs()
+      const bx = cloneDeep(this.innerValue)
+      this.innerValue = bx
 
       if (animate) {
         this.animateIn(0.5)
