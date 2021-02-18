@@ -1,7 +1,7 @@
 <template>
   <div>
     <svg
-      v-if="entry.publishAt"
+      v-if="isWaiting"
       v-popover="$t('publish-at') + publishTime"
       width="15"
       height="15"
@@ -55,17 +55,31 @@ export default {
     }
   },
 
+  data () {
+    return {
+      now: null
+    }
+  },
+
   computed: {
     publishTime () {
       if (this.entry.publishAt) {
-        return format(parseISO(this.entry.publishAt), 'dd.MM.yy @ hh:mm (z)', { timeZone: 'Europe/Oslo' })
+        return format(parseISO(this.entry.publishAt), 'dd.MM.yy @ HH:mm (z)', { timeZone: 'Europe/Oslo' })
       }
       return null
     },
 
+    isWaiting () {
+      if (!this.entry.publishAt) {
+        return false
+      }
+
+      return (differenceInSeconds(parseISO(this.entry.publishAt), this.now) > 0)
+    },
+
     status () {
       if (this.entry.publishAt) {
-        if (differenceInSeconds(parseISO(this.entry.publishAt), Date.now()) < 0) {
+        if (differenceInSeconds(parseISO(this.entry.publishAt), this.now) < 0) {
           return this.entry.status
         } else {
           return 'pending'
@@ -73,6 +87,21 @@ export default {
       }
 
       return this.entry.status
+    }
+  },
+
+  created () {
+    this.getNow()
+    setInterval(this.getNow, 5000)
+  },
+
+  destroyed () {
+    clearInterval(this.getNow)
+  },
+
+  methods: {
+    getNow () {
+      this.now = Date.now()
     }
   }
 }
