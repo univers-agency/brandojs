@@ -279,7 +279,7 @@ export default {
         this.showingModules = false
       }
 
-      if (this.vModuleMode) {
+      if (this.vModuleMode && this.active) {
         this.revealModules()
       }
     },
