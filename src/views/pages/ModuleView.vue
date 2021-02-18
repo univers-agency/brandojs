@@ -392,6 +392,7 @@ export default {
     async closeCreateRefModal () {
       await this.$refs.createRefModal.close()
       this.showCreateRef = false
+      this.refName = ''
     },
 
     async closeVarModal () {
