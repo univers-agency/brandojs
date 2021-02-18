@@ -397,6 +397,10 @@ export default {
     box-shadow: none;
   }
 
+  textarea {
+    background-color: transparent;
+  }
+
   .villain-module-important-variables {
     margin-top: 8px;
   }
