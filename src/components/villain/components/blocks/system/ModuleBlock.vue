@@ -182,7 +182,6 @@ export default {
     }
 
     // check if any refs are missing
-
   },
 
   updated () {
@@ -216,7 +215,9 @@ export default {
       const builtSlots = this.buildSlots(entry.refs)
 
       const template = `
-        <component :is="buildCmp()" :entry-data="entryData">
+        <component
+          :is="buildCmp()"
+          :entry-data="entryData">
           ${replacedContent}
           ${builtSlots}
         </component>
@@ -224,6 +225,27 @@ export default {
 
       const data = this.buildData(entry.refs)
       const entryData = this.available.entryData
+
+      const replaceMediaBlock = ({ mref, newBlock }) => {
+
+        if (entry.id) {
+          // a MULTI --
+        } else {
+          const oldMediaRef = this.findRef('media', entry.refs)
+          const newRef = { ...oldMediaRef, data: newBlock }
+
+          const idx = entry.refs.indexOf(oldMediaRef)
+
+          const newRefs = [
+            ...entry.refs.slice(0, idx),
+            newRef,
+            ...entry.refs.slice(idx + 1)
+          ]
+
+          this.$set(entry, 'refs', newRefs)
+          this.$set(this.block.data, 'refs', newRefs)
+        }
+      }
 
       return {
         name: 'BuildWrapper',
@@ -235,9 +257,15 @@ export default {
         methods: {
           buildCmp () {
             return {
+              name: 'BuiltComponent',
               data () {
                 return {
                   entryData: entryData
+                }
+              },
+              methods: {
+                replace (payload) {
+                  replaceMediaBlock(payload)
                 }
               },
               delimiters: ['%%%%', '%%%%'],
@@ -500,6 +528,7 @@ export default {
               data-description="${ref.description || ''}"
               data-ref="${ref.name}"
               :block="refs.${ref.name}"
+              :mref="'${ref.name}'"
               @delete="$emit('delete', {event: $event, ref: '${ref.name}'})" />
           </div>
         `

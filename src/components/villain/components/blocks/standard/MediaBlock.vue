@@ -36,10 +36,19 @@ export default {
     Block
   },
 
+  inject: [
+    'available'
+  ],
+
   props: {
     block: {
       type: Object,
       default: () => {}
+    },
+
+    mref: {
+      type: String,
+      default: null
     },
 
     parent: {
@@ -47,10 +56,6 @@ export default {
       default: null
     }
   },
-
-  inject: [
-    'available'
-  ],
 
   data () {
     return {
@@ -76,8 +81,18 @@ export default {
     selectComponent ({ component, dataTemplate }) {
       const foundBlock = this.available.blocks.find(b => b.component === component)
       if (foundBlock) {
-        this.$set(this.block, 'type', foundBlock.component.toLowerCase())
-        this.$set(this.block, 'data', { ...foundBlock.dataTemplate, ...dataTemplate })
+        const newBlock = {
+          type: foundBlock.component.toLowerCase(),
+          data: { ...foundBlock.dataTemplate, ...dataTemplate }
+        }
+        if (this.$parent.$options.name === 'BuiltComponent') {
+          // in a ModuleBlock
+          this.$parent.replace({ mref: this.mref, newBlock })
+        } else {
+          // a freestanding MediaBlock
+          this.$set(this.block, 'type', foundBlock.component.toLowerCase())
+          this.$set(this.block, 'data', { ...foundBlock.dataTemplate, ...dataTemplate })
+        }
       }
     }
   }
