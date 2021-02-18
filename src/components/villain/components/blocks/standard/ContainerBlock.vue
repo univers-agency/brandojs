@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div
+    class="villain-container-block"
+    :data-class="block.data.class">
     <Block
       :block="block"
       :parent="null"
@@ -118,12 +120,9 @@ export default {
 
   watch: {
     'block.data.class' (val) {
-      console.log('1. block.data.class CHANGED to', val)
       const section = this.availableSections.find(c => c.value === this.block.data.class)
       this.$set(this.block.data, 'wrapper', section.wrapper)
-      console.log('2. set block.data.wrapper to', section.wrapper)
       this.$nextTick(() => {
-        console.log('3. refreshing editor')
         this.$refs.wrapper.refreshEditor(section.wrapper)
       })
     }
