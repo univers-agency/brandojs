@@ -44,6 +44,10 @@ export default {
       },
       data: {
         label: 'Contents'
+      },
+      publishAt: {
+        label: 'Publish at',
+        helpText: 'Leave blank if you wish to publish immidiately'
       }
     },
     'pages.label': 'Label',
@@ -131,6 +135,10 @@ export default {
       },
       data: {
         label: 'Innhold'
+      },
+      publishAt: {
+        label: 'Publiseringstidspunkt',
+        helpText: 'La feltet være blankt om du ønsker å publisere umiddelbart'
       }
     },
     'pages.label': 'Merkelapp',

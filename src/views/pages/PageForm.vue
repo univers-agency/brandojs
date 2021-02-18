@@ -68,6 +68,14 @@
             name="config[isHomepage]"
             :label="$t('fields.isHomepage.label')" />
 
+          <KInputDatetime
+            v-if="advancedConfig"
+            v-model="page.publishAt"
+            name="page[publishAt]"
+            :null="true"
+            :label="$t('fields.publishAt.label')"
+            :help-text="$t('fields.publishAt.helpText')" />
+
           <KInput
             v-if="advancedConfig"
             v-model="page.cssClasses"
