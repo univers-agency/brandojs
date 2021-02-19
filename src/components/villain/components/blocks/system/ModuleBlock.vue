@@ -231,10 +231,11 @@ export default {
         if (entry.id) {
           // a MULTI --
         } else {
-          const oldMediaRef = this.findRef('media', entry.refs)
+          const oldMediaRef = this.findRef(mref, entry.refs)
           const newRef = { ...oldMediaRef, data: newBlock }
 
           const idx = entry.refs.indexOf(oldMediaRef)
+
 
           const newRefs = [
             ...entry.refs.slice(0, idx),
