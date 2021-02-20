@@ -227,24 +227,24 @@ export default {
       const entryData = this.available.entryData
 
       const replaceMediaBlock = ({ mref, newBlock }) => {
-
         if (entry.id) {
-          // a MULTI --
+          // a MULTI
+          //!TODO: Handle replacing media blocks inside multi tpls
         } else {
           const oldMediaRef = this.findRef(mref, entry.refs)
           const newRef = { ...oldMediaRef, data: newBlock }
-
           const idx = entry.refs.indexOf(oldMediaRef)
 
+          if (idx > -1) {
+            const newRefs = [
+              ...entry.refs.slice(0, idx),
+              newRef,
+              ...entry.refs.slice(idx + 1)
+            ]
 
-          const newRefs = [
-            ...entry.refs.slice(0, idx),
-            newRef,
-            ...entry.refs.slice(idx + 1)
-          ]
-
-          this.$set(entry, 'refs', newRefs)
-          this.$set(this.block.data, 'refs', newRefs)
+            this.$set(entry, 'refs', newRefs)
+            this.$set(this.block.data, 'refs', newRefs)
+          }
         }
       }
 

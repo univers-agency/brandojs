@@ -34,16 +34,60 @@
           </template>
         </ValidationObserver>
       </form>
-      <template v-if="livePreview">
-        <div class="live-preview-icon">
-          <ButtonSmall
-            @click="$parent.openLivePreview">
-            <FontAwesomeIcon
-              icon="eye" />
-            Live preview
-          </ButtonSmall>
+      <div class="mixins">
+        <template v-if="hasRevisions">
+          <div class="mixin">
+            <ButtonSmall
+              @click="openRevisions">
+              <FontAwesomeIcon
+                icon="code-branch" />
+              {{ $t('revisions') }}
+            </ButtonSmall>
+          </div>
+        </template>
+        <template v-if="hasLivePreview">
+          <div class="mixin">
+            <ButtonSmall
+              @click="$parent.openLivePreview">
+              <FontAwesomeIcon
+                icon="eye" />
+              Live preview
+            </ButtonSmall>
+          </div>
+        </template>
+      </div>
+      <div
+        class="revisions-drawer"
+        :class="{open: showRevisions}">
+        <div class="inner">
+          <div class="revisions-header">
+            <h2>{{ $t('revisions') }}</h2>
+            <button
+              class="rev-button"
+              @click="showRevisions = false">
+              {{ $t('close') }}
+            </button>
+          </div>
+          <table class="revisions-table">
+            <tr
+              v-for="revision in $parent.revisions"
+              :key="`${revision.entryName}_${revision.entryId}_${revision.revision}`"
+              :class="{ active: $parent.activeRevision === revision }"
+              class="revisions-line">
+              <td class="fit">#{{ revision.revision }}</td>
+              <td class="date fit">{{ revision.insertedAt | datetime }}</td>
+              <td class="user">{{ revision.creator.name }}</td>
+              <td class="activate fit">
+                <button
+                  class="rev-button"
+                  @click="$parent.selectRevision(revision)">
+                  {{ $t('select') }}
+                </button>
+              </td>
+            </tr>
+          </table>
         </div>
-      </template>
+      </div>
     </div>
   </transition>
 </template>
@@ -53,6 +97,10 @@
 import { gsap } from 'gsap'
 
 export default {
+
+  inject: [
+    'adminChannel'
+  ],
   props: {
     save: {
       type: Boolean,
@@ -79,7 +127,9 @@ export default {
   data () {
     return {
       loading: false,
-      livePreview: false
+      hasLivePreview: false,
+      hasRevisions: false,
+      showRevisions: false
     }
   },
 
@@ -91,7 +141,11 @@ export default {
       }
     })
     if (this.$parent.hasOwnProperty('livePreview')) {
-      this.livePreview = true
+      this.hasLivePreview = true
+    }
+
+    if (this.$parent.hasOwnProperty('revisions')) {
+      this.hasRevisions = true
     }
   },
 
@@ -104,6 +158,10 @@ export default {
         return
       }
       this.$emit('save', this.setLoader)
+    },
+
+    openRevisions () {
+      this.showRevisions = !this.showRevisions
     },
 
     setLoader (status) {
@@ -123,6 +181,93 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+  .revisions-drawer {
+    height: 100vh;
+    width: 650px;
+    position: fixed;
+    right: 0;
+    transform: translateX(100%);
+    top: 0;
+    background-color: #052753;
+    color: azure;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    transition: transform 0.6s cubic-bezier(0.5, 0, 0.75, 0);
+
+    &.open {
+      transform: translateX(0%);
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .inner {
+      @space padding 15px;
+    }
+
+    .revisions-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+
+      h2 {
+        @fontsize 35px;
+        @space margin-bottom 15px;
+      }
+    }
+
+    .revisions-table {
+      width: 100%;
+
+      .revisions-line {
+        &.active {
+          td {
+            background-color: azure;
+            color: #052753;
+
+            button {
+              color: #052753;
+              border-color: #052753;
+            }
+          }
+        }
+
+        td {
+          @font mono;
+          white-space: pre-line;
+          border: 1px solid azure;
+          padding: 5px 10px;
+          font-size: 16px;
+          transition: color 250ms ease, background-color 250ms ease;
+
+          &.fit {
+            white-space: pre;
+          }
+
+          &.active {
+            width: 30px;
+            text-align: center;
+          }
+
+          &.activate {
+            @font main;
+          }
+        }
+      }
+    }
+  }
+
+  .rev-button {
+    color: azure;
+    border: 1px solid azure;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: color 450ms ease, background-color 450ms ease;
+
+    &:hover {
+      background-color: azure;
+      color: #052753;
+    }
+  }
+
   .form-wrapper {
     display: flex;
   }
@@ -145,11 +290,21 @@ export default {
     }
   }
 
-  .live-preview-icon {
+  .mixins {
     @space right container;
     position: absolute;
     opacity: 1;
     cursor: pointer;
+
+    >>> .small {
+      margin-bottom: 8px;
+      border-radius: 20px;
+      font-size: 13px;
+
+      svg {
+        @space margin-right 7px;
+      }
+    }
   }
 
   .buttons {
@@ -171,14 +326,22 @@ export default {
     "save": "Save",
     "back": "Back to index",
     "error-form": "Form error",
-    "errors-in-schema": "Please correct fields with errors"
+    "errors-in-schema": "Please correct fields with errors",
+    "revisions": "Revisions",
+    "select": "Select",
+    "active": "Active",
+    "close": "Close"
   },
   "no": {
     "add": "Legg til",
     "save": "Lagre",
     "back": "Tilbake til oversikten",
     "error-form": "Feil i skjema",
-    "errors-in-schema": "Vennligst se over og rett feil i rødt"
+    "errors-in-schema": "Vennligst se over og rett feil i rødt",
+    "revisions": "Versjoner",
+    "select": "Velg",
+    "active": "Aktiv",
+    "close": "Lukk"
   }
 }
 </i18n>

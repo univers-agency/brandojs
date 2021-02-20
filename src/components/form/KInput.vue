@@ -97,6 +97,12 @@ export default {
     }
   },
 
+  watch: {
+    value (v) {
+      this.innerValue = v
+    }
+  },
+
   created () {
     if (this.value) {
       this.innerValue = this.value

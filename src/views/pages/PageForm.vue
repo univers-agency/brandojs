@@ -327,6 +327,7 @@
 <script>
 import gql from 'graphql-tag'
 import LivePreview from '../../mixins/LivePreview'
+import Revisions from '../../mixins/Revisions'
 import locale from '../../locales/pages'
 
 export default {
@@ -335,6 +336,11 @@ export default {
       schema: 'Brando.Pages.Page',
       prop: 'page',
       key: 'data'
+    }),
+    Revisions({
+      schema: 'Brando.Pages.Page',
+      prop: 'page',
+      key: 'id'
     })
   ],
 

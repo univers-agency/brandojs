@@ -286,6 +286,12 @@ export default {
         // options has been initialized
         this.initialize()
       }
+    },
+
+    value (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.initialize()
+      }
     }
   },
 

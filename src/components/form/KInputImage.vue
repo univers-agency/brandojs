@@ -264,22 +264,26 @@ export default {
     },
 
     value (value) {
-      this.innerValue = value
+      this.initialize()
     }
   },
 
   mounted () {
-    this.innerValue = this.value
-    this.setPrefill()
-
-    this.$nextTick(() => {
-      if (this.$refs.provider) {
-        this.$refs.provider.validate(this.value)
-      }
-    })
+    this.initialize()
   },
 
   methods: {
+    initialize () {
+      this.innerValue = this.value
+      this.setPrefill()
+
+      this.$nextTick(() => {
+        if (this.$refs.provider) {
+          this.$refs.provider.validate(this.value)
+        }
+      })
+    },
+
     initialValidation (provider) {
       provider.validate(this.value)
     },
@@ -378,8 +382,8 @@ export default {
     },
 
     onRemove (provider) {
-      provider.validate(null)
       this.innerValue = null
+      this.setPrefill()
     },
 
     onFocalChanged (f) {

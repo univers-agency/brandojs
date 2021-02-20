@@ -168,7 +168,6 @@ export default {
     },
 
     refreshEditor (val) {
-      console.log('==> refreshEditor', val)
       this.codeMirror.setValue(val || '')
     }
   }

@@ -282,11 +282,9 @@ export default {
 
   watch: {
     value (newVal, oldVal) {
-      if (newVal === oldVal) {
-        return
+      if (newVal !== oldVal) {
+        this.initialize()
       }
-      this.selectFromValue()
-      this.displayData()
     },
 
     options (newVal, oldVal) {

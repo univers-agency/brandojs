@@ -63,6 +63,9 @@ export default {
 
   data () {
     return {
+      queryVars: {
+        matches: { id: this.pageId }
+      }
     }
   },
 
@@ -122,9 +125,7 @@ export default {
       query: GET_PAGE,
       fetchPolicy: 'no-cache',
       variables () {
-        return {
-          pageId: this.pageId
-        }
+        return this.queryVars
       },
 
       skip () {
@@ -134,8 +135,8 @@ export default {
 
     pageWithChildren: {
       query: gql`
-        query Page ($pageId: ID!) {
-          pageWithChildren: page (pageId: $pageId) {
+        query Page ($matches: PageMatches) {
+          pageWithChildren: page (matches: $matches) {
             id
             children {
               id
@@ -159,7 +160,7 @@ export default {
       fetchPolicy: 'no-cache',
       variables () {
         return {
-          pageId: this.pageId
+          matches: { id: this.pageId }
         }
       },
 
