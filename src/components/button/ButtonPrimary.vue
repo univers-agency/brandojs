@@ -5,80 +5,27 @@
     :to="to">
     <template v-if="loading">
       <svg
-        preserveAspectRatio="xMidYMid meet"
-        viewBox="0 0 120 30"
+        id="L9"
+        version="1.1"
         xmlns="http://www.w3.org/2000/svg"
-        fill="#FCF5F3">
-        <circle
-          cx="15"
-          cy="15"
-          r="15">
-          <animate
-            attributeName="r"
-            from="15"
-            to="15"
-            begin="0s"
-            dur="0.8s"
-            values="15;9;15"
-            calcMode="linear"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        x="0px"
+        y="0px"
+        viewBox="0 0 100 100"
+        enable-background="new 0 0 0 0"
+        xml:space="preserve">
+        <path
+          fill="#fff"
+          d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
+          <animateTransform
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            dur="1s"
+            from="0 50 50"
+            to="360 50 50"
             repeatCount="indefinite" />
-          <animate
-            attributeName="fill-opacity"
-            from="1"
-            to="1"
-            begin="0s"
-            dur="0.8s"
-            values="1;.5;1"
-            calcMode="linear"
-            repeatCount="indefinite" />
-        </circle>
-        <circle
-          cx="60"
-          cy="15"
-          r="9"
-          fill-opacity="0.3">
-          <animate
-            attributeName="r"
-            from="9"
-            to="9"
-            begin="0s"
-            dur="0.8s"
-            values="9;15;9"
-            calcMode="linear"
-            repeatCount="indefinite" />
-          <animate
-            attributeName="fill-opacity"
-            from="0.5"
-            to="0.5"
-            begin="0s"
-            dur="0.8s"
-            values=".5;1;.5"
-            calcMode="linear"
-            repeatCount="indefinite" />
-        </circle>
-        <circle
-          cx="105"
-          cy="15"
-          r="15">
-          <animate
-            attributeName="r"
-            from="15"
-            to="15"
-            begin="0s"
-            dur="0.8s"
-            values="15;9;15"
-            calcMode="linear"
-            repeatCount="indefinite" />
-          <animate
-            attributeName="fill-opacity"
-            from="1"
-            to="1"
-            begin="0s"
-            dur="0.8s"
-            values="1;.5;1"
-            calcMode="linear"
-            repeatCount="indefinite" />
-        </circle>
+        </path>
       </svg>
     </template>
     <template v-else>
@@ -89,83 +36,30 @@
     v-else
     type="button"
     :class="{ dark, loading }"
-    @click.prevent="$emit('click')">
+    @click.prevent="handleClick">
     <template v-if="loading">
       <svg
-        preserveAspectRatio="xMidYMid meet"
-        viewBox="0 0 120 30"
+        id="L9"
+        version="1.1"
         xmlns="http://www.w3.org/2000/svg"
-        fill="#FCF5F3">
-        <circle
-          cx="15"
-          cy="15"
-          r="15">
-          <animate
-            attributeName="r"
-            from="15"
-            to="15"
-            begin="0s"
-            dur="0.8s"
-            values="15;9;15"
-            calcMode="linear"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        x="0px"
+        y="0px"
+        viewBox="0 0 100 100"
+        enable-background="new 0 0 0 0"
+        xml:space="preserve">
+        <path
+          fill="#fff"
+          d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
+          <animateTransform
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            dur="1s"
+            from="0 50 50"
+            to="360 50 50"
             repeatCount="indefinite" />
-          <animate
-            attributeName="fill-opacity"
-            from="1"
-            to="1"
-            begin="0s"
-            dur="0.8s"
-            values="1;.5;1"
-            calcMode="linear"
-            repeatCount="indefinite" />
-        </circle>
-        <circle
-          cx="60"
-          cy="15"
-          r="9"
-          fill-opacity="0.3">
-          <animate
-            attributeName="r"
-            from="9"
-            to="9"
-            begin="0s"
-            dur="0.8s"
-            values="9;15;9"
-            calcMode="linear"
-            repeatCount="indefinite" />
-          <animate
-            attributeName="fill-opacity"
-            from="0.5"
-            to="0.5"
-            begin="0s"
-            dur="0.8s"
-            values=".5;1;.5"
-            calcMode="linear"
-            repeatCount="indefinite" />
-        </circle>
-        <circle
-          cx="105"
-          cy="15"
-          r="15">
-          <animate
-            attributeName="r"
-            from="15"
-            to="15"
-            begin="0s"
-            dur="0.8s"
-            values="15;9;15"
-            calcMode="linear"
-            repeatCount="indefinite" />
-          <animate
-            attributeName="fill-opacity"
-            from="1"
-            to="1"
-            begin="0s"
-            dur="0.8s"
-            values="1;.5;1"
-            calcMode="linear"
-            repeatCount="indefinite" />
-        </circle>
+        </path>
       </svg>
     </template>
     <template v-else>
@@ -189,6 +83,15 @@ export default {
     dark: {
       type: Boolean,
       default: false
+    }
+  },
+
+  methods: {
+    handleClick (e) {
+      e.preventDefault()
+      if (!this.loading) {
+        this.$emit('click')
+      }
     }
   }
 }
@@ -235,9 +138,9 @@ export default {
       border: 1px solid theme(colors.gray);
 
       svg {
-        width: 35%;
         margin: 0 auto;
-        margin-top: -5px;
+        margin-top: -8px;
+        height: 60px;
       }
     }
 
