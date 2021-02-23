@@ -16,6 +16,11 @@ import humanFilesize from './humanFilesize'
 import jaroDistance from './jaroDistance'
 import mapMultiSelect from './mapMultiSelect'
 import mapMultiSelects from './mapMultiSelects'
+import si from 'shortid'
+
+function shortid () {
+  return si.generate()
+}
 
 export const utils = {
   pick,
@@ -23,6 +28,7 @@ export const utils = {
   diff,
   guid,
   wait,
+  shortid,
   jaroDistance,
   showError,
   humanFilesize,
