@@ -304,7 +304,7 @@ export default {
         }
 
         &.action {
-          width: 45px;
+          width: 95px;
           text-align: right;
         }
 
