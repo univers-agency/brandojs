@@ -1,3 +1,4 @@
+#import "../images/IMAGE_TYPE_FRAGMENT.graphql"
 fragment page on Page {
   id
   status
@@ -11,10 +12,9 @@ fragment page on Page {
 
   metaTitle
   metaDescription
+
   metaImage {
-    focal
-    thumb: url(size: "thumb")
-    original: url(size: "original")
+    ...imageType
   }
 
   creator {

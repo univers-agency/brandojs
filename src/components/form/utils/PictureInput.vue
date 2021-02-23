@@ -469,9 +469,9 @@ export default {
     },
 
     selectImage (change = false) {
-      if (change) {
-        this.removeImage()
-      }
+      // if (change) {
+      //   this.removeImage()
+      // }
       this.$refs.fileInput.click()
     },
 

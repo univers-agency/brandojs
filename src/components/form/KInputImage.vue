@@ -116,6 +116,12 @@
               @remove="onRemove(provider)"
               @error="onError"
               @focalChanged="onFocalChanged" />
+            <ButtonSecondary
+              v-if="edit && innerValue"
+              class="btn-edit"
+              @click="showEditModal = true">
+              Endre bildedata
+            </ButtonSecondary>
           </KModal>
 
           <div
@@ -273,7 +279,7 @@ export default {
   },
 
   methods: {
-    initialize () {
+    initialize (from) {
       this.innerValue = this.value
       this.setPrefill()
 
@@ -339,7 +345,6 @@ export default {
       /*
       This triggers on the initial load of prefill, as well as when the image changes.
       */
-
       provider.validate(a)
 
       if (this.value && !this.preCheck) {
@@ -354,24 +359,14 @@ export default {
 
         const base64file = await this.toBase64(this.$refs.pictureInput.file)
 
-        if (this.innerValue) {
-          // replace
-          this.innerValue = {
-            file: this.$refs.pictureInput.file,
-            thumb: this.$refs.pictureInput.file,
-            base64: base64file,
-            alt: '',
-            title: ''
-          }
-        } else {
-          // new
-          this.innerValue = {
-            file: this.$refs.pictureInput.file,
-            thumb: this.$refs.pictureInput.file,
-            base64: base64file,
-            alt: '',
-            title: ''
-          }
+        this.innerValue = {
+          file: this.$refs.pictureInput.file,
+          thumb: this.$refs.pictureInput.file,
+          original: this.$refs.pictureInput.file,
+          xlarge: this.$refs.pictureInput.file,
+          base64: base64file,
+          alt: '',
+          title: ''
         }
 
         if (this.small && this.innerValue) {
@@ -383,6 +378,7 @@ export default {
 
     onRemove (provider) {
       this.innerValue = null
+      provider.validate(this.innerValue)
       this.setPrefill()
     },
 

@@ -119,7 +119,7 @@ export default {
     }
 
     label {
-      display: flex;
+      display: inline-block;
 
       span {
         display: inline-flex;
