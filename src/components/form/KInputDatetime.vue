@@ -5,12 +5,19 @@
     :rules="rules"
     :helpText="helpText"
     :value="value">
-    <VueFlatpickr
-      :id="id"
-      v-model="innerValue"
-      :placeholder="placeholder"
-      :options="dateTimeOptions"
-      class="flatpickr" />
+    <div class="wrapper">
+      <VueFlatpickr
+        :id="id"
+        v-model="innerValue"
+        :placeholder="placeholder"
+        :options="dateTimeOptions"
+        class="flatpickr" />
+      <button
+        class="button-clear"
+        @click.self.prevent.stop="clear">
+        {{ $t('clear') }}
+      </button>
+    </div>
   </KFieldBase>
 </template>
 
@@ -162,11 +169,36 @@ export default {
         this.innerValue = formatISO(Date.now())
       }
     }
+  },
+
+  methods: {
+    clear () {
+      this.innerValue = null
+    }
   }
 }
 </script>
 
 <style lang="postcss">
+
+  .wrapper {
+    position: relative;
+  }
+
+  .button-clear {
+    @fontsize sm/1;
+    position: absolute;
+    top: 7px;
+    right: 15px;
+    border: 1px solid theme(colors.dark);
+    padding: 8px 12px 10px;
+    transition: all 0.25s ease;
+
+    &:hover {
+      background-color: theme(colors.dark);
+      color: theme(colors.input);
+    }
+  }
   .flatpickr-day.selected {
     background-color: theme(colors.blue);
     border-color: theme(colors.blue);
@@ -198,3 +230,13 @@ export default {
     }
   }
 </style>
+<i18n>
+  {
+    "en": {
+      "clear": "Clear"
+    },
+    "no": {
+      "clear": "Slett"
+    }
+  }
+</i18n>

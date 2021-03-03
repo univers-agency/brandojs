@@ -70,7 +70,8 @@ export default {
   },
 
   methods: {
-    async save () {
+    async save (setLoader, revision = 0) {
+      setLoader(true)
       let pageParams = this.$utils.stripParams(
         this.page, [
           '__typename',
@@ -97,10 +98,11 @@ export default {
       try {
         await this.$apollo.mutate({
           mutation: gql`
-            mutation UpdatePage($pageId: ID!, $pageParams: PageParams) {
+            mutation UpdatePage($pageId: ID!, $pageParams: PageParams, $revision: ID) {
               updatePage(
                 pageId: $pageId,
-                pageParams: $pageParams
+                pageParams: $pageParams,
+                revision: $revision
               ) {
                 id
               }
@@ -108,13 +110,17 @@ export default {
           `,
           variables: {
             pageParams,
-            pageId: this.page.id
+            pageId: this.page.id,
+            revision: revision
           }
         })
 
+        setLoader(false)
         this.$toast.success({ message: this.$t('pages.updated') })
-        this.$router.push({ name: 'pages' })
+
+        if (revision === 0) { this.$router.push({ name: 'pages' }) }
       } catch (err) {
+        setLoader(false)
         this.$utils.showError(err)
       }
     }

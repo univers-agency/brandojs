@@ -29,7 +29,8 @@ export default {
       user: {
         language: 'no',
         config: {
-          resetPasswordOnFirstLogin: true
+          resetPasswordOnFirstLogin: true,
+          showMutationNotifications: true
         }
       }
     }

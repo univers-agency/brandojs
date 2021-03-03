@@ -65,6 +65,11 @@
           v-model="user.config.resetPasswordOnFirstLogin"
           name="user[config][resetPassword]"
           :label="$t('user.mustResetPassword')" />
+
+        <KInputToggle
+          v-model="user.config.showMutationNotifications"
+          name="user[config][showMutationNotifications]"
+          :label="$t('user.showMutationNotifications')" />
       </div>
     </section>
   </KForm>
@@ -98,6 +103,7 @@ export default {
     "user.name": "Name",
     "user.name.help": "name also used as entry author",
     "user.role": "Role",
+    "user.showMutationNotifications": "Show notifications for create/update/delete actions",
     "profile.title": "Your User Profile",
     "profile.helpText": "Administrate user info",
     "user.mustResetPassword": "User must reset password on first login",
@@ -117,6 +123,7 @@ export default {
     "user.name": "Navn",
     "user.name.help": "navnet brukes også som artikkelforfatter",
     "user.role": "Rolle",
+    "user.showMutationNotifications": "Vis notifikasjoner for oppretting/oppdatering/sletting av objekter",
     "user.mustResetPassword": "Bruker må sette nytt passord ved første innlogging",
     "user.title": "Din brukerprofil",
     "user.helpText": "Administrasjon av brukerinfo",

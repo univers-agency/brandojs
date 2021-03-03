@@ -6,6 +6,7 @@ import IdentityView from '../views/config/IdentityView'
 import SEOView from '../views/config/SEOView'
 import CacheView from '../views/config/CacheView'
 import GlobalsView from '../views/config/GlobalsView'
+import PublisherView from '../views/config/PublisherView'
 
 import FilesView from '../views/files/FilesView'
 
@@ -65,6 +66,11 @@ const routes = [
     path: '/config/seo',
     name: 'config-seo',
     component: SEOView
+  },
+  {
+    path: '/config/publisher',
+    name: 'config-publisher',
+    component: PublisherView
   },
   {
     path: '/config/globals',

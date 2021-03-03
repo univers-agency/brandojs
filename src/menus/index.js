@@ -34,6 +34,12 @@ export default {
               }
             },
             {
+              text: 'Planlagt publisering',
+              to: {
+                name: 'config-publisher'
+              }
+            },
+            {
               text: 'Hurtigbuffere',
               to: {
                 name: 'config-cache'
@@ -115,6 +121,12 @@ export default {
               text: 'Global variables',
               to: {
                 name: 'config-globals'
+              }
+            },
+            {
+              text: 'Planned publishing',
+              to: {
+                name: 'config-publisher'
               }
             },
             {

@@ -7,7 +7,8 @@
  *   mixins: [
  *     Revisions({
  *       schema: 'Brando.Pages.Page',
- *       id: project.id
+ *       prop: 'page',
+ *       key: 'id
  *     })
  *   ],
  *
@@ -21,6 +22,12 @@ export default function ({ schema, prop, key }) {
     inject: [
       'adminChannel'
     ],
+
+    computed: {
+      hasId () {
+        return this[prop][key]
+      }
+    },
 
     data () {
       return {
@@ -39,6 +46,39 @@ export default function ({ schema, prop, key }) {
         this.activeRevision = revision
         this.$parent.queryVars = { ...this.$parent.queryVars, revision: revision.revision }
         this.$parent.$apollo.queries[this.revisionMeta.prop].refresh()
+      },
+
+      activateRevision (revision) {
+        this.adminChannel.channel
+          .push('revision:activate', { schema: this.revisionMeta.schema, id: this[prop][key], revision: revision.revision })
+          .receive('ok', payload => {
+            this.selectRevision(revision)
+            this.$apollo.queries.revisions.refresh()
+          })
+      },
+
+      schedulePublishing (revision, publishAt) {
+        this.adminChannel.channel
+          .push('revision:schedule', { schema: this.revisionMeta.schema, id: this[prop][key], revision: revision.revision, publish_at: publishAt })
+          .receive('ok', payload => {
+            this.$apollo.queries.revisions.refresh()
+          })
+      },
+
+      deleteRevision (revision) {
+        this.adminChannel.channel
+          .push('revision:delete', { schema: this.revisionMeta.schema, id: this[prop][key], revision: revision.revision })
+          .receive('ok', payload => {
+            this.$apollo.queries.revisions.refresh()
+          })
+      },
+
+      purgeRevisions () {
+        this.adminChannel.channel
+          .push('revisions:purge_inactive', { schema: this.revisionMeta.schema, id: this[prop][key] })
+          .receive('ok', payload => {
+            this.$apollo.queries.revisions.refresh()
+          })
       }
     },
 
@@ -50,6 +90,11 @@ export default function ({ schema, prop, key }) {
           return {
             filter: { entry_type: schema, entry_id: this[prop][key] }
           }
+        },
+
+        update ({ revisions }) {
+          this.activeRevision = revisions.find(r => r.active)
+          return revisions
         },
 
         skip () {

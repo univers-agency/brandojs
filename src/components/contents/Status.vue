@@ -80,7 +80,7 @@ export default {
     status () {
       if (this.entry.publishAt) {
         if (differenceInSeconds(parseISO(this.entry.publishAt), this.now) < 0) {
-          return this.entry.status
+          return 'published'
         } else {
           return 'pending'
         }

@@ -18,6 +18,7 @@ fragment user on User {
 
   config {
     showOnboarding
+    showMutationNotifications
     resetPasswordOnFirstLogin
   }
 

@@ -132,16 +132,17 @@ export default {
             left: -30px;
             opacity: 0;
             transition: all 0.5s ease;
-            margin-top: 15px;
+            margin-top: 13px;
           }
 
           &:hover {
             &:before {
-              opacity: 1;
+              opacity: 0.5;
             }
           }
 
           a {
+            @fontsize 20px;
             display: block;
             font-weight: 200;
 

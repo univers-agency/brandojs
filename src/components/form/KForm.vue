@@ -20,8 +20,8 @@
                   v-if="save"
                   v-shortkey="['meta', 's']"
                   :loading="loading"
-                  @shortkey.native="validate"
-                  @click="validate">
+                  @shortkey.native="validate()"
+                  @click="validate()">
                   {{ $t('save') }} (⌘S)
                 </ButtonPrimary>
                 <ButtonSecondary
@@ -35,7 +35,7 @@
         </ValidationObserver>
       </form>
       <div class="mixins">
-        <template v-if="hasRevisions">
+        <template v-if="hasRevisions && $parent.hasId">
           <div class="mixin">
             <ButtonSmall
               @click="openRevisions">
@@ -68,21 +68,75 @@
               {{ $t('close') }}
             </button>
           </div>
+          <div class="revisions-info">
+            <p>{{ $t('revisions-help') }}</p>
+            <p>
+              {{ $t('revision-store-help') }}
+            </p>
+            <ButtonSecondary @click="storeRevision($parent.activeRevision)">
+              {{ $t('save-version') }}
+            </ButtonSecondary>
+
+            <ButtonSecondary @click="$parent.purgeRevisions()">
+              {{ $t('purge-versions') }}
+            </ButtonSecondary>
+          </div>
           <table class="revisions-table">
             <tr
               v-for="revision in $parent.revisions"
               :key="`${revision.entryName}_${revision.entryId}_${revision.revision}`"
               :class="{ active: $parent.activeRevision === revision }"
-              class="revisions-line">
+              class="revisions-line"
+              @click="$parent.selectRevision(revision)">
               <td class="fit">#{{ revision.revision }}</td>
+              <td class="fit">
+                <FontAwesomeIcon
+                  v-if="revision.active"
+                  icon="star"
+                  size="sm" />
+              </td>
               <td class="date fit">{{ revision.insertedAt | datetime }}</td>
               <td class="user">{{ revision.creator.name }}</td>
               <td class="activate fit">
-                <button
-                  class="rev-button"
-                  @click="$parent.selectRevision(revision)">
-                  {{ $t('select') }}
-                </button>
+                <CircleDropdown>
+                  <li v-if="!revision.active">
+                    <button
+                      type="button"
+                      @click="$parent.activateRevision(revision)">
+                      {{ $t('activate-revision') }}
+                    </button>
+                  </li>
+                  <li v-if="!revision.active">
+                    <button
+                      type="button"
+                      @click="$parent.deleteRevision(revision)">
+                      {{ $t('delete-revision') }}
+                    </button>
+                  </li>
+                  <li v-if="!revision.active">
+                    <button
+                      type="button"
+                      @click="openPublishModal(revision)">
+                      {{ $t('schedule-revision') }}
+                    </button>
+                    <KModal
+                      v-if="showPublishModal && revision === modalRevision"
+                      :ref="`publishModal${revision.revision}`"
+                      v-shortkey="['esc', 'enter']"
+                      ok-text="Lukk"
+                      @shortkey.native="schedulePublishing(revision)"
+                      @ok="schedulePublishing(revision)">
+                      <template #header>
+                        {{ $t('schedule-revision') }}
+                      </template>
+                      <KInputDatetime
+                        v-model="publishAt"
+                        name="publishAt"
+                        :label="$t('publishAt-label')"
+                        :help-text="$t('publishAt-helpText')" />
+                    </KModal>
+                  </li>
+                </CircleDropdown>
               </td>
             </tr>
           </table>
@@ -129,7 +183,10 @@ export default {
       loading: false,
       hasLivePreview: false,
       hasRevisions: false,
-      showRevisions: false
+      showRevisions: false,
+      showPublishModal: false,
+      publishAt: null,
+      modalRevision: null
     }
   },
 
@@ -150,14 +207,33 @@ export default {
   },
 
   methods: {
-    async validate () {
+    async validate (revision = 0) {
       const isValid = await this.$refs.observer.validate()
       if (!isValid) {
         this.$alerts.alertError(this.$t('error-form'), this.$t('errors-in-schema'))
         this.loading = false
         return
       }
-      this.$emit('save', this.setLoader)
+      this.$emit('save', this.setLoader, revision)
+    },
+
+    openPublishModal (revision) {
+      this.modalRevision = revision
+      this.showPublishModal = true
+    },
+
+    async schedulePublishing (revision) {
+      this.$parent.schedulePublishing(revision, this.publishAt)
+      await this.$refs[`publishModal${revision.revision}`][0].close()
+      this.showPublishModal = false
+      this.publishAt = null
+      this.modalRevision = null
+    },
+
+    async storeRevision (revision) {
+      await this.$parent.$parent.save(this.setLoader, revision.revision)
+      await this.$parent.$apollo.queries.revisions.refetch()
+      this.$parent.activeRevision = this.$parent.revisions[0]
     },
 
     openRevisions () {
@@ -214,10 +290,32 @@ export default {
       }
     }
 
+    .revisions-info {
+      @space padding-y 20px;
+
+      p {
+        @space margin-bottom 15px;
+
+        &:last-of-type {
+          @space! margin-bottom 15px;
+        }
+      }
+
+      button.button-secondary {
+        color: azure;
+        border-color: azure;
+
+        &:hover {
+          color: #052753;
+        }
+      }
+    }
+
     .revisions-table {
       width: 100%;
 
       .revisions-line {
+        cursor: pointer;
         &.active {
           td {
             background-color: azure;
@@ -324,24 +422,42 @@ export default {
   "en": {
     "add": "Add",
     "save": "Save",
+    "save-version": "Save version without activating",
     "back": "Back to index",
     "error-form": "Form error",
     "errors-in-schema": "Please correct fields with errors",
     "revisions": "Revisions",
     "select": "Select",
     "active": "Active",
-    "close": "Close"
+    "close": "Close",
+    "activate-revision": "Activate version",
+    "delete-revision": "Delete version",
+    "purge-versions": "Purge inactive versions",
+    "revisions-help": "This is a list of this entry's revisions. Click a row to preview.",
+    "revision-store-help": "You may also store a new version of the entry without activating it. This might be useful for scheduling content publishing.",
+    "schedule-revision": "Schedule publication",
+    "publishAt-label": "Publish at",
+    "publishAt-helpText": "Entry is set to this version at this time"
   },
   "no": {
     "add": "Legg til",
     "save": "Lagre",
+    "save-version": "Lagre ny versjon uten å aktivere",
     "back": "Tilbake til oversikten",
     "error-form": "Feil i skjema",
     "errors-in-schema": "Vennligst se over og rett feil i rødt",
     "revisions": "Versjoner",
     "select": "Velg",
     "active": "Aktiv",
-    "close": "Lukk"
+    "close": "Lukk",
+    "activate-revision": "Aktivér versjon",
+    "delete-revision": "Slett versjon",
+    "purge-versions": "Kast inaktive versjoner",
+    "revisions-help": "Dette er en liste over tidligere versjoner av det aktive objektet. Klikk på en rad for å se.",
+    "revision-store-help": "Du kan også lagre en ny versjon av objektet uten å aktivere. Dette kan være nyttig for å teste ut endringer uten at de går live, for senere å aktivere versjonen.",
+    "schedule-revision": "Planlegg publisering",
+    "publishAt-label": "Publiseringstidspunkt",
+    "publishAt-helpText": "Objektet skiftes til denne versjonen til dette tidspunktet"
   }
 }
 </i18n>

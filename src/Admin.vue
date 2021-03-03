@@ -85,6 +85,29 @@ export default {
     LoggedWarnings
   },
 
+  provide () {
+    const userChannel = {}
+    const adminChannel = {}
+    const shared = {}
+
+    Object.defineProperty(userChannel, 'channel', {
+      enumerable: true,
+      get: () => this.userChannel
+    })
+
+    Object.defineProperty(adminChannel, 'channel', {
+      enumerable: true,
+      get: () => this.adminChannel
+    })
+
+    Object.defineProperty(shared, 'me', {
+      enumberable: true,
+      get: () => this.me
+    })
+
+    return { userChannel, adminChannel, shared }
+  },
+
   data () {
     return {
       lobbyPresences: {},
@@ -149,29 +172,6 @@ export default {
         this.fullScreen = false
       }
     }
-  },
-
-  provide () {
-    const userChannel = {}
-    const adminChannel = {}
-    const shared = {}
-
-    Object.defineProperty(userChannel, 'channel', {
-      enumerable: true,
-      get: () => this.userChannel
-    })
-
-    Object.defineProperty(adminChannel, 'channel', {
-      enumerable: true,
-      get: () => this.adminChannel
-    })
-
-    Object.defineProperty(shared, 'me', {
-      enumberable: true,
-      get: () => this.me
-    })
-
-    return { userChannel, adminChannel, shared }
   },
 
   created () {
@@ -358,6 +358,20 @@ export default {
 
       // request presences
       this.adminChannel.push('admin:list_presence', {})
+
+      this.adminChannel.on('notifications:mutation', payload => {
+        if (this.me.config.showMutationNotifications) {
+        this.$toast.show({
+          title: payload.user.name,
+          message: `${payload.action} [${payload.identifier.type}#<strong>${payload.identifier.id}</strong>] &raquo; "${payload.identifier.title}"`,
+          theme: 'mutations',
+          displayMode: 2,
+          position: 'bottomRight',
+          close: false,
+          progressBar: false
+        })
+        }
+      })
     },
 
     storeLobbyPresences (state) {
@@ -1494,6 +1508,35 @@ export default {
 .iziToast {
   font-family: theme(typography.families.main);
   border-radius: 0;
+
+  &.iziToast-theme-mutations {
+    @color bg dark;
+    border-radius: 15px;
+    padding: 0;
+    min-height: 0;
+
+    > .iziToast-body {
+      padding: 0;
+      min-height: 25px;
+      margin: 0 0 0 12px;
+
+      .iziToast-texts {
+        margin: 6px 0 0 0;
+      }
+
+      .iziToast-title {
+        @color fg peach;
+        margin-right: 7px !important;
+        font-size: 11px;
+      }
+
+      .iziToast-message {
+        @color fg peachDarker;
+        font-size: 9px;
+        font-family: 'Mono';
+      }
+    }
+  }
 
   &:after {
     box-shadow: none;

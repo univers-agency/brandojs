@@ -1,8 +1,7 @@
 module.exports = {
   root: true,
   extends: [
-    'plugin:vue/essential',
-    '@vue/standard'
+    'plugin:vue/recommended'
   ],
   // add your custom rules here
   rules: {
@@ -37,8 +36,8 @@ module.exports = {
     'vue/order-in-components': 1,
     'vue/this-in-template': 1
   },
-
+  parser: 'vue-eslint-parser',
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: '@babel/eslint-parser'
   }
 }
