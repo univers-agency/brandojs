@@ -10,8 +10,8 @@
   "main": "src/index.js",
   "dependencies": {
     "@128technology/codemirror-liquid-mode": "^1.0.2",
-    "@casl/ability": "^4.1.6",
     "@casl/vue": "^1.1.1",
+    "@casl/ability": "^5.2.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-brands-svg-icons": "^5.15.2",
     "@fortawesome/free-regular-svg-icons": "^5.15.2",
@@ -65,7 +65,7 @@
     "@babel/eslint-parser": "^7.13.8",
     "@intlify/vue-i18n-loader": "^1.0.0",
     "@kazupon/vue-i18n-loader": "^0.5.0",
-    "@univers-agency/europacss": "^0.3.0",
+    "@univers-agency/europacss": "^0.5.0",
     "@vue/cli-plugin-babel": "~4.5.10",
     "@vue/cli-plugin-eslint": "^4.5.10",
     "@vue/cli-plugin-router": "^4.5.10",
@@ -79,7 +79,7 @@
     "graphql-tag": "^2.11.0",
     "vue-cli-plugin-apollo": "^0.22.2",
     "vue-cli-plugin-fontawesome": "^0.3.1",
-    "vue-cli-plugin-i18n": "^1.0.1",
+    "vue-cli-plugin-i18n": "^2.0.0",
     "vue-template-compiler": "^2.6.12"
   }
 }

@@ -1,4 +1,5 @@
-import { Ability } from '@casl/ability'
+import { PureAbility } from '@casl/ability'
 import subjectTypeFromGraphql from './subjectTypeFromGraphql'
+import conditionsMatcher from './conditionsMatcher'
 
-export default new Ability([], { subjectName: subjectTypeFromGraphql })
+export default new PureAbility([], { detectSubjectType: subjectTypeFromGraphql, conditionsMatcher })

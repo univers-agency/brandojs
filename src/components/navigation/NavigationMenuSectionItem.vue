@@ -40,7 +40,6 @@
 import { gsap } from 'gsap'
 
 export default {
-
   props: {
     item: {
       type: Object,
