@@ -115,8 +115,12 @@
                       v-html="tp.data.svg" />
                   </div>
                   <div class="villain-editor-plus-available-modules-content left-margin">
-                    <div class="villain-editor-plus-available-modules-title">{{ tp.data.name }}</div>
-                    <div class="villain-editor-plus-available-modules-help">{{ tp.data.help_text }}</div>
+                    <div class="villain-editor-plus-available-modules-title">
+                      {{ tp.data.name }}
+                    </div>
+                    <div class="villain-editor-plus-available-modules-help">
+                      {{ tp.data.help_text }}
+                    </div>
                   </div>
                 </div>
               </VueSlideUpDown>
@@ -135,8 +139,12 @@
                   v-html="tp.data.svg" />
               </div>
               <div class="villain-editor-plus-available-modules-content">
-                <div class="villain-editor-plus-available-modules-title">{{ tp.data.name }}</div>
-                <div class="villain-editor-plus-available-modules-help">{{ tp.data.help_text }}</div>
+                <div class="villain-editor-plus-available-modules-title">
+                  {{ tp.data.name }}
+                </div>
+                <div class="villain-editor-plus-available-modules-help">
+                  {{ tp.data.help_text }}
+                </div>
               </div>
             </div>
           </div>

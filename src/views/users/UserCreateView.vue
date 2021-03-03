@@ -1,10 +1,10 @@
 <template>
   <article v-if="user">
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         {{ $t('user.title') }}
       </template>
-      <template v-slot:subtitle>
+      <template #subtitle>
         {{ $t('user.subtitle') }}
       </template>
     </ContentHeader>

@@ -99,6 +99,10 @@ export default {
     ModalImageUpload
   },
 
+  inject: [
+    'adminChannel'
+  ],
+
   props: {
     imageSeries: {
       required: true,
@@ -170,10 +174,6 @@ export default {
       return this.imageSeries.images
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   methods: {
     getOrder (sortable) {

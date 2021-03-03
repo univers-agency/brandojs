@@ -120,8 +120,12 @@
           v-if="showImages && listStyle"
           class="villain-image-library">
           <div class="col-12 mb-3">
-            <ButtonSecondary @click="listStyle = false">{{ $t('show-thumbnails') }}</ButtonSecondary>
-            <ButtonSecondary @click="showImages = false">{{ $t('hide-image-list') }}</ButtonSecondary>
+            <ButtonSecondary @click="listStyle = false">
+              {{ $t('show-thumbnails') }}
+            </ButtonSecondary>
+            <ButtonSecondary @click="showImages = false">
+              {{ $t('hide-image-list') }}
+            </ButtonSecondary>
           </div>
           <table
             class="table villain-image-table">
@@ -156,8 +160,12 @@
           v-else-if="showImages && !listStyle"
           class="villain-image-library">
           <div class="col-12 mb-3">
-            <ButtonSecondary @click="listStyle = true">{{ $t('show-image-list') }}</ButtonSecondary>
-            <ButtonSecondary @click="showImages = false">{{ $t('hide-image-list') }}</ButtonSecondary>
+            <ButtonSecondary @click="listStyle = true">
+              {{ $t('show-image-list') }}
+            </ButtonSecondary>
+            <ButtonSecondary @click="showImages = false">
+              {{ $t('hide-image-list') }}
+            </ButtonSecondary>
           </div>
           <div
             v-for="i in images"
@@ -278,6 +286,12 @@ export default {
     Drop
   },
 
+  inject: [
+    'urls',
+    'headers',
+    'available'
+  ],
+
   props: {
     block: {
       type: Object,
@@ -330,12 +344,6 @@ export default {
       }
     }
   },
-
-  inject: [
-    'urls',
-    'headers',
-    'available'
-  ],
 
   created () {
     console.debug('<PictureBlock /> created')

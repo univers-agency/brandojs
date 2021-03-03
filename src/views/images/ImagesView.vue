@@ -1,13 +1,13 @@
 <template>
   <article class="images">
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         Bildebibliotek
       </template>
-      <template v-slot:subtitle>
+      <template #subtitle>
         Administrasjon
       </template>
-      <template v-slot:help>
+      <template #help>
         <p>
           Administrasjon av nettsidens bilder, bildeserier og bildekategorier.
         </p>
@@ -16,7 +16,7 @@
     <template v-if="imageCategories && imageCategories.length">
       <ContentList
         :entries="imageCategories">
-        <template v-slot:row="{ entry }">
+        <template #row="{ entry }">
           <div class="col-11">
             <router-link
               :to="{ name: 'image-category-detail', params: { imageCategoryId: entry.id } }">

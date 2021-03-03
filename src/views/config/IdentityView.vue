@@ -1,13 +1,13 @@
 <template>
   <div>
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         {{ $t('title') }}
       </template>
-      <template v-slot:subtitle>
+      <template #subtitle>
         {{ $t('subtitle') }}
       </template>
-      <template v-slot:help>
+      <template #help>
         <p>{{ $t('help') }}</p>
       </template>
     </ContentHeader>
@@ -16,7 +16,7 @@
       :back="{ name: 'dashboard' }"
       :back-text="$t('back-to-dashboard')"
       @save="save">
-      <template v-slot>
+      <template #default>
         <KInputRadios
           v-model="identity.type"
           rules="required"

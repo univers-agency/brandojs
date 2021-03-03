@@ -1,12 +1,12 @@
 <template>
   <article>
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         Filbibliotek
       </template>
-      <template v-slot:subtitle>
+      <template #subtitle>
       </template>
-      <template v-slot:help>
+      <template #help>
       </template>
     </ContentHeader>
     <slot></slot>

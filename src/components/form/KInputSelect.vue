@@ -4,9 +4,9 @@
     :label="label"
     :rules="rules"
     :compact="compact"
-    :helpText="helpText"
+    :help-text="helpText"
     :value="value">
-    <template v-slot>
+    <template #default>
       <input
         :id="id"
         ref="input"
@@ -16,7 +16,7 @@
         :disabled="disabled"
         type="hidden">
     </template>
-    <template v-slot:outsideValidator>
+    <template #outsideValidator>
       <KModal
         v-if="open"
         ref="modalList"
@@ -77,7 +77,7 @@
                 @click="selectOption(option)">
                 <slot
                   name="label"
-                  v-bind:option="option">
+                  :option="option">
                   {{ option[optionLabelKey] }}
                 </slot>
               </div>
@@ -110,8 +110,8 @@
 
           <slot
             name="create"
-            v-bind:checkDupe="checkDupe"
-            v-bind:selectOption="selectCreatedOption"></slot>
+            :checkDupe="checkDupe"
+            :selectOption="selectCreatedOption"></slot>
         </div>
       </KModal>
       <div
@@ -119,7 +119,7 @@
         <div>
           <slot
             name="selected"
-            v-bind:entry="selected">
+            :entry="selected">
             <span>{{ selected ? selected[optionLabelKey] : $t('empty-selection') }}</span>
           </slot>
         </div>
@@ -167,7 +167,8 @@ export default {
     },
 
     rules: {
-      type: String
+      type: String,
+      default: null
     },
 
     label: {

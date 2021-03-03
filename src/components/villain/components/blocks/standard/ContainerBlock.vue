@@ -9,7 +9,9 @@
       @move="$emit('move', $event)"
       @duplicate="$emit('duplicate', $event)"
       @delete="$emit('delete', $event)">
-      <template #description> <span :style="{ color, marginLeft: '5px' }">⬤</span> {{ block.data.description }}</template>
+      <template #description>
+        <span :style="{ color, marginLeft: '5px' }">⬤</span> {{ block.data.description }}
+      </template>
       <section :b-section="block.data.class">
         <div v-if="block.data.blocks.length">
           <div class="villain-block-container">
@@ -65,8 +67,8 @@
         <KInputRadios
           v-model="block.data.class"
           :options="availableSections"
-          optionValueKey="value"
-          optionLabelKey="label"
+          option-value-key="value"
+          option-label-key="label"
           name="data[class]"
           :label="$t('class')" />
 

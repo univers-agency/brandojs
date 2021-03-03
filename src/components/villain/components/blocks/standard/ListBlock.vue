@@ -77,7 +77,7 @@
           id-key="key"
           :delete-rows="true"
           :add-rows="false">
-          <template v-slot:row="{ entry }">
+          <template #row="{ entry }">
             <td>
               <KInput
                 v-if="advanced"

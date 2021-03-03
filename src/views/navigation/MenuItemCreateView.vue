@@ -1,12 +1,12 @@
 <template>
   <article>
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         Nytt menypunkt
       </template>
     </ContentHeader>
     <MenuItemForm
-      :menuItem="menuItem"
+      :menu-item="menuItem"
       :save="save" />
   </article>
 </template>

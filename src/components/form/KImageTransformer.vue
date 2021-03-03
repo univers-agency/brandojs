@@ -9,11 +9,11 @@ Then value is set to the transformed result
     :name="name"
     :label="label"
     :rules="rules"
-    :helpText="helpText"
+    :help-text="helpText"
     :value="value">
-    <template v-slot>
+    <template #default>
     </template>
-    <template v-slot:outsideValidator>
+    <template #outsideValidator>
       <div v-if="innerValue">
         <div
           v-if="innerValue.length"
@@ -26,7 +26,7 @@ Then value is set to the transformed result
             <div class="entries__entry__content">
               <slot
                 name="row"
-                v-bind:entry="entry">
+                :entry="entry">
                 {{ entry.id }}
               </slot>
             </div>
@@ -78,6 +78,10 @@ Then value is set to the transformed result
 
 <script>
 export default {
+
+  inject: [
+    'adminChannel'
+  ],
   props: {
     value: {
       type: Array,
@@ -110,7 +114,8 @@ export default {
     },
 
     rules: {
-      type: String
+      type: String,
+      default: null
     },
 
     label: {
@@ -138,10 +143,6 @@ export default {
       editObject: null
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   computed: {
     id () {

@@ -5,9 +5,9 @@
     :rules="rules"
     :compact="compact"
     :maxlength="maxlength"
-    :helpText="helpText"
+    :help-text="helpText"
     :value="value">
-    <template v-slot>
+    <template #default>
       <div class="wrap">
         <input
           :id="id"

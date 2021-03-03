@@ -1,15 +1,23 @@
 <template>
   <article>
     <ContentHeader>
-      <template v-slot:title>{{ $t('pages.title') }}</template>
-      <template v-slot:subtitle>{{ $t('pages.subtitle') }}</template>
-      <template v-slot:help>
+      <template #title>
+        {{ $t('pages.title') }}
+      </template>
+      <template #subtitle>
+        {{ $t('pages.subtitle') }}
+      </template>
+      <template #help>
         <div>
           <Dropdown>
-            <template v-slot:default>{{ $t('pages.actions') }}</template>
-            <template v-slot:content>
+            <template #default>
+              {{ $t('pages.actions') }}
+            </template>
+            <template #content>
               <li>
-                <router-link :to="{ name: 'pages-new' }">{{ $t('pages.new') }}</router-link>
+                <router-link :to="{ name: 'pages-new' }">
+                  {{ $t('pages.new') }}
+                </router-link>
               </li>
               <li>
                 <button
@@ -47,7 +55,7 @@
           </button>
         </li>
       </template>
-      <template v-slot:row="{ entry }">
+      <template #row="{ entry }">
         <div class="col-1">
           <CircleFlag :language="entry.language" />
         </div>
@@ -57,11 +65,15 @@
             class="mr-1"
             size="xs"
             icon="home" /><router-link
-            :to="{ name: 'pages-edit', params: { pageId: entry.id } }"
-            class="link name-link">
-            {{ entry.title }}
-          </router-link><br>
-          <div class="badge"><FontAwesomeIcon icon="globe-americas" size="sm" /> {{ entry.uri }}</div>
+              :to="{ name: 'pages-edit', params: { pageId: entry.id } }"
+              class="link name-link">
+              {{ entry.title }}
+            </router-link><br>
+          <div class="badge">
+            <FontAwesomeIcon
+              icon="globe-americas"
+              size="sm" /> {{ entry.uri }}
+          </div>
         </div>
         <div class="col-2 justify-end">
           <ChildrenButton
@@ -123,7 +135,7 @@
           </CircleDropdown>
         </div>
       </template>
-      <template v-slot:children="{ entry }">
+      <template #children="{ entry }">
         <template v-if="visibleChildren.includes(entry.id)">
           <ContentList
             v-if="entry.fragments.length"
@@ -134,27 +146,34 @@
             sequence-handle="section-sequence-handle"
             @sort="sortSections($event, entry.id)"
             @move="moveSections">
-            <template v-slot:row="{ entry: section }">
+            <template #row="{ entry: section }">
               <div class="col-1">
-                <div class="arrow">↳</div>
+                <div class="arrow">
+                  ↳
+                </div>
               </div>
               <div class="col-1">
                 <CircleFlag :language="section.language" />
               </div>
               <div class="col-6 subtitle">
-
                 <div class="flex-v">
                   <router-link
                     :to="{ name: 'sections-edit', params: { sectionId: section.id } }">
                     {{ section.title || $t('pages.no-title') }}
                   </router-link>
                   <div class="keys">
-                    <div class="badge"><FontAwesomeIcon icon="key" size="sm" /> {{ section.parentKey }}/<strong>{{ section.key }}</strong></div>
+                    <div class="badge">
+                      <FontAwesomeIcon
+                        icon="key"
+                        size="sm" /> {{ section.parentKey }}/<strong>{{ section.key }}</strong>
+                    </div>
                   </div>
                 </div>
               </div>
               <div class="col-2 justify-end">
-                <div class="badge">{{ $t('pages.section') }}</div>
+                <div class="badge">
+                  {{ $t('pages.section') }}
+                </div>
               </div>
               <div class="col-4">
                 <ItemMeta
@@ -178,7 +197,9 @@
                   </li>
 
                   <li>
-                    <button @click="deleteSection(section)">{{ $t('pages.delete-section') }}</button>
+                    <button @click="deleteSection(section)">
+                      {{ $t('pages.delete-section') }}
+                    </button>
                   </li>
                 </CircleDropdown>
               </div>
@@ -188,11 +209,13 @@
             v-if="entry.children.length"
             :level="2"
             :entries="entry.children">
-            <template v-slot:row="{ entry: subPage }">
+            <template #row="{ entry: subPage }">
               <div class="col-1">
               </div>
               <div class="col-1">
-                <div class="arrow">↳</div>
+                <div class="arrow">
+                  ↳
+                </div>
               </div>
               <div class="col-1">
                 <CircleFlag :language="subPage.language" />
@@ -201,7 +224,11 @@
                 <router-link :to="{ name: 'pages-edit', params: { pageId: subPage.id } }">
                   {{ subPage.title }}
                 </router-link>
-                <div class="badge"><FontAwesomeIcon icon="globe-americas" size="sm" /> {{ subPage.uri }}</div>
+                <div class="badge">
+                  <FontAwesomeIcon
+                    icon="globe-americas"
+                    size="sm" /> {{ subPage.uri }}
+                </div>
               </div>
               <div class="col-2 justify-end">
                 <ChildrenButton
@@ -225,7 +252,9 @@
                     </router-link>
                   </li>
                   <li>
-                    <button @click="deleteEntry(subPage.id)">{{ $t('pages.delete-subpage') }}</button>
+                    <button @click="deleteEntry(subPage.id)">
+                      {{ $t('pages.delete-subpage') }}
+                    </button>
                   </li>
                   <li>
                     <router-link
@@ -236,20 +265,21 @@
                 </CircleDropdown>
               </div>
             </template>
-            <template v-slot:children="{ entry: subPage }">
+            <template #children="{ entry: subPage }">
               <template v-if="visibleChildrenSubPages.includes(subPage.id)">
-
                 <ContentList
                   v-if="subPage.children.length"
                   :level="2"
                   :entries="subPage.children">
-                  <template v-slot:row="{ entry: subSubPage }">
+                  <template #row="{ entry: subSubPage }">
                     <div class="col-1">
                     </div>
                     <div class="col-1">
                     </div>
                     <div class="col-1">
-                      <div class="arrow">↳</div>
+                      <div class="arrow">
+                        ↳
+                      </div>
                     </div>
                     <div class="col-1">
                       <CircleFlag :language="subSubPage.language" />
@@ -258,7 +288,11 @@
                       <router-link :to="{ name: 'pages-edit', params: { pageId: subSubPage.id } }">
                         {{ subSubPage.title }}
                       </router-link>
-                      <div class="badge"><FontAwesomeIcon icon="globe-americas" size="sm" /> {{ subSubPage.uri }}</div>
+                      <div class="badge">
+                        <FontAwesomeIcon
+                          icon="globe-americas"
+                          size="sm" /> {{ subSubPage.uri }}
+                      </div>
                     </div>
                     <div class="col-4">
                       <ItemMeta
@@ -274,13 +308,14 @@
                           </router-link>
                         </li>
                         <li>
-                          <button @click="deleteEntry(subSubPage.id)">{{ $t('pages.delete-subpage') }}</button>
+                          <button @click="deleteEntry(subSubPage.id)">
+                            {{ $t('pages.delete-subpage') }}
+                          </button>
                         </li>
                       </CircleDropdown>
                     </div>
                   </template>
                 </ContentList>
-
               </template>
             </template>
           </ContentList>
@@ -296,6 +331,8 @@ import GET_PAGES from '../../gql/pages/PAGES_QUERY.graphql'
 import locale from '../../locales/pages'
 
 export default {
+
+  inject: ['adminChannel'],
   data () {
     return {
       visibleChildren: [],
@@ -308,8 +345,6 @@ export default {
       }
     }
   },
-
-  inject: ['adminChannel'],
 
   methods: {
     reprocess () {

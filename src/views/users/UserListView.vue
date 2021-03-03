@@ -22,12 +22,14 @@
       :selectable="false"
       :tools="false"
       :entries="users">
-      <template v-slot:header>
+      <template #header>
         <div class="col-2"></div>
-        <div class="col-13">Info</div>
+        <div class="col-13">
+          Info
+        </div>
         <div class="col-1"></div>
       </template>
-      <template v-slot:row="{ entry }">
+      <template #row="{ entry }">
         <div class="col-2">
           <div class="thumb">
             <img :src="entry.avatar ? entry.avatar.thumb : '/images/admin/avatar.png'" />

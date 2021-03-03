@@ -1,10 +1,10 @@
 <template>
   <article v-if="user">
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         Brukere
       </template>
-      <template v-slot:subtitle>
+      <template #subtitle>
         Nytt passord
       </template>
     </ContentHeader>

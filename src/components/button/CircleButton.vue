@@ -19,7 +19,8 @@
 export default {
   props: {
     to: {
-      type: [Object, Boolean]
+      type: [Object, Boolean],
+      default: null
     },
     position: {
       type: String,

@@ -9,7 +9,7 @@
       :rules="rules">
       <template v-if="compact">
         <div class="compact">
-          <slot v-bind:provider="$refs.provider"></slot>
+          <slot :provider="$refs.provider"></slot>
           <div
             v-if="label"
             class="label-wrapper">
@@ -39,7 +39,7 @@
             —{{ errors[0] }}
           </span>
         </div>
-        <slot v-bind:provider="$refs.provider"></slot>
+        <slot :provider="$refs.provider"></slot>
       </template>
     </ValidationProvider>
     <slot name="outsideValidator"></slot>
@@ -74,7 +74,8 @@ export default {
     },
 
     label: {
-      type: String
+      type: String,
+      default: null
     },
 
     maxlength: {

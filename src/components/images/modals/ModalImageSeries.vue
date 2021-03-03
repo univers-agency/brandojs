@@ -29,6 +29,10 @@ export default {
     ImageSeries
   },
 
+  inject: [
+    'adminChannel'
+  ],
+
   props: {
     showModal: {
       type: Boolean,
@@ -58,10 +62,6 @@ export default {
     console.debug('created <ModalImageSeries />')
     this.getData()
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   methods: {
     async getData () {

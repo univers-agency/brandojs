@@ -60,7 +60,7 @@
           :sortable="true"
           :delete-rows="true"
           :add-rows="false">
-          <template v-slot:row="{ entry }">
+          <template #row="{ entry }">
             <td>
               <div class="mt-2 mb-2">
                 <KInput

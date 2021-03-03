@@ -125,6 +125,10 @@ export default {
     FocusPoint
   },
 
+  inject: [
+    'adminChannel'
+  ],
+
   props: {
     image: {
       required: true,
@@ -158,10 +162,6 @@ export default {
       return format(parseISO(this.img.updatedAt), 'T') + this.cacheBuster
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   created () {
     this.img = this.$utils.clone(this.image)

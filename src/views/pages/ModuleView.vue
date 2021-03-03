@@ -255,6 +255,7 @@ export default {
 
   props: {
     moduleId: {
+      type: Number,
       required: true
     }
   },

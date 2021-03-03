@@ -3,7 +3,7 @@
     v-if="menuId"
     :key="menuId">
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         Endre meny
       </template>
     </ContentHeader>

@@ -3,7 +3,7 @@
     v-if="pageId"
     :key="pageId">
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         {{ $t('pages.edit-page') }}
       </template>
     </ContentHeader>
@@ -19,7 +19,7 @@
         :status="true"
         :soft-delete="true"
         :entries="pageWithChildren.children">
-        <template v-slot:row="{ entry }">
+        <template #row="{ entry }">
           <div class="col-1">
             <div class="circle">
               <span>{{ entry.language }}</span>
@@ -29,7 +29,11 @@
             <router-link :to="{ name: 'pages-edit', params: { pageId: entry.id } }">
               {{ entry.title }}
             </router-link><br>
-            <div class="badge"><FontAwesomeIcon icon="globe-americas" size="sm" /> {{ entry.uri }}</div>
+            <div class="badge">
+              <FontAwesomeIcon
+                icon="globe-americas"
+                size="sm" /> {{ entry.uri }}
+            </div>
           </div>
           <div class="col-4">
             <ItemMeta

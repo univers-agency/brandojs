@@ -31,6 +31,8 @@ export default {
     Block
   },
 
+  inject: ['available'],
+
   props: {
     block: {
       type: Object,
@@ -48,8 +50,6 @@ export default {
       codeMirror: null
     }
   },
-
-  inject: ['available'],
 
   created () {
     console.debug('<HtmlBlock /> created')

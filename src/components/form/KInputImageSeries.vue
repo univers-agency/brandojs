@@ -4,9 +4,9 @@
     :label="label"
     :rules="rules"
     :value="value">
-    <template v-slot>
+    <template #default>
     </template>
-    <template v-slot:outsideValidator>
+    <template #outsideValidator>
       <div v-if="innerValue && innerValue.id">
         <ImageSelection
           :selected-images="selectedImages"
@@ -97,6 +97,10 @@
 import slugify from 'slugify'
 
 export default {
+
+  inject: [
+    'adminChannel'
+  ],
   props: {
     value: {
       type: Object,
@@ -134,7 +138,8 @@ export default {
     },
 
     rules: {
-      type: String
+      type: String,
+      default: null
     },
 
     label: {
@@ -156,10 +161,6 @@ export default {
       selectedImages: []
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   computed: {
     id () {

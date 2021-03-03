@@ -1,13 +1,13 @@
 <template>
   <div>
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         {{ $t('title') }}
       </template>
-      <template v-slot:subtitle>
+      <template #subtitle>
         {{ $t('subtitle') }}
       </template>
-      <template v-slot:help>
+      <template #help>
         <p>{{ $t('help') }}</p>
       </template>
     </ContentHeader>
@@ -16,7 +16,7 @@
       :back="{ name: 'dashboard' }"
       :back-text="$t('back-to-dashboard')"
       @save="save">
-      <template v-slot>
+      <template #default>
         <div class="row">
           <div class="sized">
             <KInput
@@ -149,6 +149,10 @@ import gql from 'graphql-tag'
 import GET_SEO from '../../gql/seo/SEO_QUERY.graphql'
 
 export default {
+
+  inject: [
+    'adminChannel'
+  ],
   data () {
     return {
       loading: 0,
@@ -161,10 +165,6 @@ export default {
     this.checkSitemap()
     this.loading--
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   methods: {
     checkSitemap () {

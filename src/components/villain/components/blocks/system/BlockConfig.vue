@@ -13,7 +13,7 @@
       ref="config"
       class="villain-block-config">
       <div class="villain-block-config-content">
-        <slot v-bind:cfg="innerValue" />
+        <slot :cfg="innerValue" />
       </div>
     </div>
   </KModal>
@@ -21,7 +21,12 @@
 
 <script>
 export default {
-  props: ['value'],
+  props: {
+    value: {
+      type: Object,
+      default: () => {}
+    }
+  },
 
   data () {
     return {

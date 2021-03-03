@@ -53,8 +53,8 @@
           <CircleDropdown :inverted="true">
             <slot
               name="selected"
-              v-bind:clearSelection="clearSelection"
-              v-bind:entries="selectedRows">
+              :clearSelection="clearSelection"
+              :entries="selectedRows">
             </slot>
           </CircleDropdown>
         </div>
@@ -117,13 +117,13 @@
           </template>
           <slot
             name="row"
-            v-bind:entry="entry"></slot>
+            :entry="entry"></slot>
         </div>
         <div class="children">
           <slot
             name="children"
-            v-bind:entry="entry"
-            v-bind:children="childProperty ? entry[childProperty]: []"></slot>
+            :entry="entry"
+            :children="childProperty ? entry[childProperty]: []"></slot>
         </div>
       </div>
     </transition-group>

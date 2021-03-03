@@ -30,7 +30,7 @@
           v-model="menu.language"
           rules="required"
           :options="identity.languages"
-          optionValueKey="id"
+          option-value-key="id"
           name="menu[language]"
           label="Språk" />
       </div>
@@ -42,6 +42,10 @@
 import gql from 'graphql-tag'
 
 export default {
+
+  inject: [
+    'adminChannel'
+  ],
   props: {
     menu: {
       type: Object,
@@ -58,10 +62,6 @@ export default {
     return {
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   apollo: {
     identity: {

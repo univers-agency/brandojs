@@ -16,7 +16,7 @@
           v-model="page.language"
           rules="required"
           :options="identity.languages"
-          optionValueKey="id"
+          option-value-key="id"
           name="page[language]"
           :label="$t('language')" />
         <section class="row">
@@ -47,7 +47,7 @@
           rules="required"
           :options="parents"
           name="page[pageId]"
-          optionValueKey="value"
+          option-value-key="value"
           :label="$t('pageId')" />
         <KInputTextarea
           v-model="page.wrapper"
@@ -74,6 +74,10 @@
 import gql from 'graphql-tag'
 
 export default {
+
+  inject: [
+    'adminChannel'
+  ],
   props: {
     page: {
       type: Object,
@@ -95,10 +99,6 @@ export default {
       }
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   created () {
     this.getParents()

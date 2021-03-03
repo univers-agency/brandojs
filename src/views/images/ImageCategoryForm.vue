@@ -36,6 +36,10 @@ export default {
     ImageConfigForm
   },
 
+  inject: [
+    'adminChannel'
+  ],
+
   props: {
     imageCategory: {
       type: Object,
@@ -52,10 +56,6 @@ export default {
     return {
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   created () {
   }

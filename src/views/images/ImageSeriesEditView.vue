@@ -1,7 +1,7 @@
 <template>
   <article>
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         Endre bildeserie
       </template>
     </ContentHeader>

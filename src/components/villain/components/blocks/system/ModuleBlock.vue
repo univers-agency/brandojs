@@ -7,7 +7,9 @@
     @move="$emit('move', $event)"
     @duplicate="$emit('duplicate', $event)"
     @delete="$emit('delete', $event)">
-    <template #description>{{ getBlockName }}{{ block.data.multi ? ' — Multi' : '' }}</template>
+    <template #description>
+      {{ getBlockName }}{{ block.data.multi ? ' — Multi' : '' }}
+    </template>
     <ModuleImportantVariables v-model="block.data.vars" />
     <div
       v-if="!block.data.multi"
@@ -21,7 +23,7 @@
         <div class="helpful-actions">
           <ModuleConfig
             :ref="`moduleConfig${block.data.id}`"
-            :moduleId="block.data.id"
+            :module-id="block.data.id"
             :refs="block.data.refs"
             :vars="block.data.vars"
             @updateVars="updateVars"
@@ -61,8 +63,8 @@
               </ButtonTiny>
               <ModuleConfig
                 :ref="`moduleConfig${entry.id}`"
-                :moduleId="block.data.id"
-                :entryId="entry.id"
+                :module-id="block.data.id"
+                :entry-id="entry.id"
                 :refs="entry.refs"
                 :vars="entry.vars"
                 @updateVars="updateVars"
@@ -101,6 +103,11 @@ export default {
     ModuleImportantVariables
   },
 
+  inject: [
+    'available',
+    'refresh'
+  ],
+
   props: {
     block: {
       type: Object,
@@ -121,11 +128,6 @@ export default {
       hasImportantVariables: false
     }
   },
-
-  inject: [
-    'available',
-    'refresh'
-  ],
 
   computed: {
     getBlockName () {

@@ -62,6 +62,8 @@ export default {
     Block
   },
 
+  inject: ['available'],
+
   props: {
     block: {
       type: Object,
@@ -73,8 +75,6 @@ export default {
       default: null
     }
   },
-
-  inject: ['available'],
 
   data () {
     return {

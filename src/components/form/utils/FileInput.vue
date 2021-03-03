@@ -79,7 +79,8 @@ export default {
     },
 
     currentFile: {
-      type: [Object, File]
+      type: [Object, File],
+      default: null
     },
 
     buttonClass: {

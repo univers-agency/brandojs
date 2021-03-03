@@ -2,9 +2,9 @@
   <KFieldBase
     :name="name"
     :rules="rules"
-    :helpText="helpText"
+    :help-text="helpText"
     :value="value">
-    <template v-slot>
+    <template #default>
       <div class="check-wrapper">
         <div
           class="form-check">

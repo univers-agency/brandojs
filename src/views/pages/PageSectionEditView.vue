@@ -1,7 +1,7 @@
 <template>
   <article v-if="pageFragment">
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         {{ $t('section.edit') }}
       </template>
     </ContentHeader>
@@ -21,6 +21,10 @@ export default {
     PageSectionForm
   },
 
+  inject: [
+    'adminChannel'
+  ],
+
   props: {
     sectionId: {
       type: [Number],
@@ -33,10 +37,6 @@ export default {
       loading: 0
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   methods: {
     async save () {

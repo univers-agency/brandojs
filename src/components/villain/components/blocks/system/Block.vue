@@ -140,6 +140,10 @@
 
 <script>
 export default {
+
+  inject: [
+    'available'
+  ],
   props: {
     block: {
       type: Object,
@@ -212,10 +216,6 @@ export default {
       this.showHelp = v
     }
   },
-
-  inject: [
-    'available'
-  ],
 
   mounted () {
     this.$refs.content.addEventListener('mouseover', this.onMouseOver)

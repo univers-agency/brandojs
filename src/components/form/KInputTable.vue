@@ -42,12 +42,12 @@
               <slot
                 v-if="entry !== editEntry"
                 name="row"
-                v-bind:entry="entry"></slot>
+                :entry="entry"></slot>
               <slot
                 v-else-if="editRows"
                 name="edit"
-                v-bind:editEntry="newEditEntry"
-                v-bind:callback="() => {editDone(entry)}"></slot>
+                :editEntry="newEditEntry"
+                :callback="() => {editDone(entry)}"></slot>
 
               <td
                 v-if="deleteRows || editRows"
@@ -87,7 +87,7 @@
               <td v-if="sortable" />
               <slot
                 name="new"
-                v-bind:newEntry="newEntry"></slot>
+                :newEntry="newEntry"></slot>
               <td class="action fit">
                 <CircleButton
                   class="add"

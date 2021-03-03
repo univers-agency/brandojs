@@ -3,9 +3,9 @@
     :name="name"
     :label="label"
     :rules="rules"
-    :helpText="helpText"
+    :help-text="helpText"
     :value="value">
-    <template v-slot>
+    <template #default>
       <div
         v-if="options.length"
         class="radios-wrapper">

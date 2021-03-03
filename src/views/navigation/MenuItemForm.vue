@@ -40,6 +40,10 @@
 
 <script>
 export default {
+
+  inject: [
+    'adminChannel'
+  ],
   props: {
     menuItem: {
       type: Object,
@@ -54,11 +58,7 @@ export default {
 
   data () {
     return {}
-  },
-
-  inject: [
-    'adminChannel'
-  ]
+  }
 }
 </script>
 

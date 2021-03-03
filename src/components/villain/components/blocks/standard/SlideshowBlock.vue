@@ -29,12 +29,10 @@
             <div
               v-if="toggledImageUrl === i.url"
               class="villain-block-slideshow-image-overlay">
-              <template>
-                <FontAwesomeIcon
-                  icon="trash"
-                  size="4x"
-                  @click="del(i)" />
-              </template>
+              <FontAwesomeIcon
+                icon="trash"
+                size="4x"
+                @click="del(i)" />
             </div>
             <img
               :src="i.url"
@@ -97,7 +95,7 @@
             :sortable="false"
             :delete-rows="false"
             :add-rows="false">
-            <template v-slot:row="{ entry }">
+            <template #row="{ entry }">
               <div class="panes">
                 <div>
                   <td>
@@ -122,7 +120,7 @@
                 </div>
               </div>
             </template>
-            <template v-slot:new="">
+            <template #new="">
             </template>
           </KInputTable>
         </div>
@@ -245,6 +243,13 @@ export default {
     Drop
   },
 
+  inject: [
+    'urls',
+    'headers',
+    'available',
+    'refresh'
+  ],
+
   props: {
     block: {
       type: Object,
@@ -287,13 +292,6 @@ export default {
       return `${this.urls.base}upload`
     }
   },
-
-  inject: [
-    'urls',
-    'headers',
-    'available',
-    'refresh'
-  ],
 
   created () {
     console.debug('<SlideshowBlock /> created')

@@ -4,9 +4,9 @@
     :label="label"
     :rules="rules"
     :maxlength="maxlength"
-    :helpText="helpText"
+    :help-text="helpText"
     :value="value">
-    <template v-slot>
+    <template #default>
       <div class="rich-wrapper">
         <EditorMenuBar
           v-slot="{ commands, isActive, focused }"
@@ -59,15 +59,13 @@
               <template #header>
                 {{ $t('edit-link') }}
               </template>
-              <template>
-                <KInput
-                  ref="linkInput"
-                  v-model="linkUrl"
-                  name="link[url]"
-                  label="URL"
-                  :help-text="$t('help-text')"
-                  placeholder="https://link.no" />
-              </template>
+              <KInput
+                ref="linkInput"
+                v-model="linkUrl"
+                name="link[url]"
+                label="URL"
+                :help-text="$t('help-text')"
+                placeholder="https://link.no" />
             </KModal>
 
             <KModal
@@ -80,15 +78,13 @@
               <template #header>
                 {{ $t('edit-action-button') }}
               </template>
-              <template>
-                <KInput
-                  ref="actionButtonInput"
-                  v-model="actionButtonUrl"
-                  name="actionButton[url]"
-                  label="URL"
-                  :help-text="$t('help-text')"
-                  placeholder="https://link.no" />
-              </template>
+              <KInput
+                ref="actionButtonInput"
+                v-model="actionButtonUrl"
+                name="actionButton[url]"
+                label="URL"
+                :help-text="$t('help-text')"
+                placeholder="https://link.no" />
             </KModal>
 
             <template v-else>

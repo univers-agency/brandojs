@@ -13,7 +13,9 @@
       <button
         class="btn btn-outline-secondary"
         @click.prevent="deleteImages">
-        Slett <div class="circle"><span>{{ selectedImages.length }}</span></div><template v-if="selectedImages.length === 1">
+        Slett <div class="circle">
+          <span>{{ selectedImages.length }}</span>
+        </div><template v-if="selectedImages.length === 1">
           valgt bilde
         </template><template v-else>
           valgte bilder
@@ -30,6 +32,10 @@ import gql from 'graphql-tag'
 export default {
   components: {},
 
+  inject: [
+    'adminChannel'
+  ],
+
   props: {
     selectedImages: {
       type: Array,
@@ -37,10 +43,6 @@ export default {
       default: () => []
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   data () {
     return {

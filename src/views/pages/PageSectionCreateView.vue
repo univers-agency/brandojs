@@ -1,7 +1,7 @@
 <template>
   <article>
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         {{ $t('section.new') }}
       </template>
     </ContentHeader>
@@ -20,6 +20,10 @@ export default {
   components: {
     PageSectionForm
   },
+
+  inject: [
+    'adminChannel'
+  ],
 
   props: {
     pageId: {
@@ -40,10 +44,6 @@ export default {
       }
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   created () {
     this.page.pageId = this.pageId

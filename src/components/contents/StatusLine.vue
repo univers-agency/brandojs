@@ -26,7 +26,8 @@
 export default {
   props: {
     val: {
-      type: String
+      type: String,
+      required: true
     }
   },
 

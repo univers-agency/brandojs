@@ -77,7 +77,8 @@ export default {
     },
 
     to: {
-      type: [Object, Boolean]
+      type: [Object, Boolean],
+      default: null
     },
 
     dark: {

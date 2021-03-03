@@ -12,8 +12,8 @@ module.exports = {
     // vuejs screws up this anyways
     'no-use-before-define': 0,
     // allow debugger during development
-    'standard/no-callback-literal': 0,
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    'standard/no-callback-literal': 0,
     'vue/no-v-html': 0,
     'vue/html-end-tags': 1,
     'vue/html-self-closing': 0,
@@ -32,6 +32,7 @@ module.exports = {
         allowFirstLine: false
       }
     }],
+    'vue/no-mutating-props': 0,
     'vue/attributes-order': 1,
     'vue/order-in-components': 1,
     'vue/this-in-template': 1

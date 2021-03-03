@@ -3,11 +3,11 @@
     :name="name"
     :label="label"
     :rules="rules"
-    :helpText="helpText"
+    :help-text="helpText"
     :value="value">
-    <template v-slot>
+    <template #default>
     </template>
-    <template v-slot:outsideValidator>
+    <template #outsideValidator>
       <div v-if="innerValue && !edit">
         <table
           v-if="innerValue.length"
@@ -18,7 +18,7 @@
             :key="idx">
             <slot
               name="row"
-              v-bind:entry="entry">
+              :entry="entry">
               <td>{{ entry.id }}</td>
             </slot>
             <td class="action">
@@ -43,8 +43,8 @@
         class="inline-form">
         <slot
           name="form"
-          v-bind:entry="editObject"
-          v-bind:closeForm="closeForm">
+          :entry="editObject"
+          :closeForm="closeForm">
         </slot>
       </div>
 
@@ -113,6 +113,10 @@
 
 <script>
 export default {
+
+  inject: [
+    'adminChannel'
+  ],
   props: {
     value: {
       type: Array,
@@ -135,7 +139,8 @@ export default {
     },
 
     rules: {
-      type: String
+      type: String,
+      default: null
     },
 
     label: {
@@ -158,10 +163,6 @@ export default {
       editObject: null
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   computed: {
     id () {

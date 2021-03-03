@@ -1,15 +1,23 @@
 <template>
   <article>
     <ContentHeader>
-      <template v-slot:title>{{ $t('menus.title') }}</template>
-      <template v-slot:subtitle>{{ $t('menus.subtitle') }}</template>
-      <template v-slot:help>
+      <template #title>
+        {{ $t('menus.title') }}
+      </template>
+      <template #subtitle>
+        {{ $t('menus.subtitle') }}
+      </template>
+      <template #help>
         <div>
           <Dropdown>
-            <template v-slot:default>{{ $t('menus.actions') }}</template>
-            <template v-slot:content>
+            <template #default>
+              {{ $t('menus.actions') }}
+            </template>
+            <template #content>
               <li>
-                <router-link :to="{ name: 'navigation-new' }">{{ $t('menus.new') }}</router-link>
+                <router-link :to="{ name: 'navigation-new' }">
+                  {{ $t('menus.new') }}
+                </router-link>
               </li>
             </template>
           </Dropdown>
@@ -42,7 +50,7 @@
           </button>
         </li>
       </template>
-      <template v-slot:row="{ entry }">
+      <template #row="{ entry }">
         <div class="col-1">
           <div class="circle">
             <span>{{ entry.language }}</span>
@@ -54,10 +62,14 @@
             class="link name-link">
             {{ entry.title }}
           </router-link><br>
-          <div class="badge">{{ entry.key }}</div>
+          <div class="badge">
+            {{ entry.key }}
+          </div>
         </div>
         <div class="col-2 justify-end">
-          <div class="badge">{{ $t('menus.menu') }}</div>
+          <div class="badge">
+            {{ $t('menus.menu') }}
+          </div>
         </div>
         <div class="col-4 justify-end">
           <ItemMeta
@@ -100,12 +112,12 @@
             v-shortkey="['esc', 'enter']"
             @shortkey.native="showEditMenuModal = 0">
             <MenuItemForm
-              :menuItem="entry"
+              :menu-item="entry"
               :save="save" />
           </KModal>
         </div>
       </template>
-      <template v-slot:children="{ children, entry: rootMenu }">
+      <template #children="{ children, entry: rootMenu }">
         <ContentList
           v-if="children.length"
           :level="2"
@@ -113,17 +125,19 @@
           :sortable="true"
           :status="true"
           :sort-parent="rootMenu.id"
-          :sortableIntegerIds="false"
+          :sortable-integer-ids="false"
           child-property="items"
           sequence-handle="item-sequence-handle"
           @sort="sortItems($event, rootMenu, rootMenu)">
-          <template v-slot:row="{ entry: item }">
+          <template #row="{ entry: item }">
             <div class="col-1">
               <div class="circle">
               </div>
             </div>
             <div class="col-6 subtitle">
-              <div class="arrow">↳</div>
+              <div class="arrow">
+                ↳
+              </div>
               <div class="flex-v">
                 <div
                   class="clickable"
@@ -131,12 +145,16 @@
                   {{ item.title || 'Ingen tittel' }}
                 </div>
                 <div class="keys">
-                  <div class="badge">{{ item.key }}</div>
+                  <div class="badge">
+                    {{ item.key }}
+                  </div>
                 </div>
               </div>
             </div>
             <div class="col-3 justify-end">
-              <div class="badge">{{ $t('menus.item') }}</div>
+              <div class="badge">
+                {{ $t('menus.item') }}
+              </div>
             </div>
             <div class="col-4 justify-end">
             </div>
@@ -155,7 +173,9 @@
                 </li>
 
                 <li>
-                  <button @click="deleteItem(rootMenu, item)">{{ $t('menus.delete-item') }}</button>
+                  <button @click="deleteItem(rootMenu, item)">
+                    {{ $t('menus.delete-item') }}
+                  </button>
                 </li>
               </CircleDropdown>
               <KModal
@@ -199,25 +219,27 @@
               </KModal>
             </div>
           </template>
-          <template v-slot:children="{ children, entry }">
+          <template #children="{ children: subChildren, entry }">
             <ContentList
-              v-if="children.length"
+              v-if="subChildren.length"
               :level="3"
-              :entries="children"
+              :entries="subChildren"
               :sortable="true"
               :status="true"
               :sort-parent="rootMenu.id"
-              :sortableIntegerIds="false"
+              :sortable-integer-ids="false"
               sequence-handle="item-sequence-handle"
               @sort="sortItems($event, entry, rootMenu)">
-              <template v-slot:row="{ entry: item }">
+              <template #row="{ entry: item }">
                 <div class="col-1">
                 </div>
                 <div class="col-1">
                   <div class="circle"></div>
                 </div>
                 <div class="col-5 subtitle">
-                  <div class="arrow">↳</div>
+                  <div class="arrow">
+                    ↳
+                  </div>
                   <div class="flex-v">
                     <div
                       class="clickable"
@@ -225,12 +247,16 @@
                       {{ item.title || 'Ingen tittel' }}
                     </div>
                     <div class="keys">
-                      <div class="badge">{{ item.key }}</div>
+                      <div class="badge">
+                        {{ item.key }}
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div class="col-3 justify-end">
-                  <div class="badge">{{ $t('menus.item') }}</div>
+                  <div class="badge">
+                    {{ $t('menus.item') }}
+                  </div>
                 </div>
                 <div class="col-4 justify-end">
                 </div>
@@ -243,7 +269,9 @@
                     </li>
 
                     <li>
-                      <button @click="deleteItem(rootMenu, item)">{{ $t('menus.delete-item') }}</button>
+                      <button @click="deleteItem(rootMenu, item)">
+                        {{ $t('menus.delete-item') }}
+                      </button>
                     </li>
                   </CircleDropdown>
                   <KModal
@@ -306,6 +334,8 @@ export default {
     MenuItemForm
   },
 
+  inject: ['adminChannel'],
+
   data () {
     return {
       showEditMenuModal: 0,
@@ -319,8 +349,6 @@ export default {
       }
     }
   },
-
-  inject: ['adminChannel'],
 
   methods: {
     sortMenus (seq) {

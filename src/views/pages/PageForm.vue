@@ -17,7 +17,7 @@
           v-model="page.language"
           rules="required"
           :options="identity.languages"
-          optionValueKey="id"
+          option-value-key="id"
           name="page[language]"
           :label="$t('fields.language.label')" />
 
@@ -28,8 +28,12 @@
           option-label-key="title"
           name="page[parentId]"
           :label="$t('fields.parentId.label')">
-          <template v-slot:label="{ option }">
-            <template v-if="option.parentId">{{ findParent(option.parentId) }} &rarr; </template><template v-else>[{{ option.language.toUpperCase() }}] </template>{{ option.title }}
+          <template #label="{ option }">
+            <template v-if="option.parentId">
+              {{ findParent(option.parentId) }} &rarr;
+            </template><template v-else>
+              [{{ option.language.toUpperCase() }}]
+            </template>{{ option.title }}
           </template>
         </KInputSelect>
 
@@ -46,7 +50,7 @@
             v-model="page.template"
             rules="required"
             :options="templates"
-            optionValueKey="value"
+            option-value-key="value"
             name="page[template]"
             :label="$t('fields.template.label')" />
         </template>
@@ -120,7 +124,7 @@
       class="bordered"
       :name="`page[properties]`"
       :label="$t('fields.properties.label')">
-      <template v-slot:head>
+      <template #head>
         <tr>
           <th>{{ $t('pages.label') }}</th>
           <th>{{ $t('pages.key') }}</th>
@@ -129,7 +133,7 @@
           <th></th>
         </tr>
       </template>
-      <template v-slot:row="{ entry }">
+      <template #row="{ entry }">
         <td class="monospace">
           {{ entry.label }}
         </td>
@@ -167,12 +171,12 @@
         <td class="monospace">
           <KInput
             v-model="editEntry.label"
-            :name="`prop[label]`"          />
+            :name="`prop[label]`" />
         </td>
         <td class="monospace">
           <KInput
             v-model="editEntry.key"
-            :name="`prop[key]`"          />
+            :name="`prop[key]`" />
         </td>
         <td class="monospace">
           <KInputSelect
@@ -219,7 +223,7 @@
       </template>
 
       <template
-        v-slot:new="{ newEntry }">
+        #new="{ newEntry }">
         <td class="monospace">
           <KInput
             v-model="newEntry.label"
@@ -344,6 +348,10 @@ export default {
     })
   ],
 
+  inject: [
+    'adminChannel'
+  ],
+
   props: {
     page: {
       type: Object,
@@ -366,10 +374,6 @@ export default {
       }
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   created () {
     this.adminChannel.channel

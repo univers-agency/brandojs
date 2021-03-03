@@ -4,10 +4,10 @@
     :label="label"
     :rules="rules"
     :maxlength="maxlength"
-    :helpText="helpText"
+    :help-text="helpText"
     :compact="compact"
     :value="innerValue">
-    <template v-slot="{ provider }">
+    <template #default="{ provider }">
       <input
         :id="id"
         ref="input"
@@ -20,7 +20,7 @@
         :disabled="disabled"
         @input="onChange(provider, $event)">
     </template>
-    <template v-slot:outsideValidator>
+    <template #outsideValidator>
       <KModal
         v-if="open"
         ref="modal"
@@ -56,7 +56,9 @@
             class="thumbnail">
             <img :src="thumbnailUrl" />
           </div>
-          <div class="remote-id">{{ remoteId }} ({{ width }}&times;{{ height }})</div>
+          <div class="remote-id">
+            {{ remoteId }} ({{ width }}&times;{{ height }})
+          </div>
         </div>
         <button
           class="button-edit"
@@ -76,6 +78,10 @@ const FILE_REGEX = /(.*)/
 let pid = 0
 
 export default {
+
+  inject: [
+    'adminChannel'
+  ],
   props: {
     disabled: {
       type: Boolean,
@@ -173,10 +179,6 @@ export default {
       }
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   computed: {
     id () {

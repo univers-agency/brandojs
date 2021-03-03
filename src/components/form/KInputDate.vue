@@ -3,7 +3,7 @@
     :name="name"
     :label="label"
     :rules="rules"
-    :helpText="helpText"
+    :help-text="helpText"
     :value="value">
     <VueFlatpickr
       :id="id"
@@ -122,7 +122,8 @@ export default {
     },
 
     value: {
-      type: String
+      type: String,
+      required: true
     }
   },
 

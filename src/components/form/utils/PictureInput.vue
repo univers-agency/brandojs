@@ -9,7 +9,7 @@
     <div
       class="preview-container"
       :style="{ borderRadius: radius + '%'}">
-      <template v-show="!imageSelected && !plain">
+      <div v-show="!imageSelected && !plain">
         <canvas
           ref="grayCanvas"
           class="picture-preview"
@@ -39,7 +39,7 @@
             class="picture-inner-text"
             v-html="strings.tap"></span>
         </div>
-      </template>
+      </div>
       <template v-if="imageSelected">
         <FocusPoint v-model="focus">
           <canvas

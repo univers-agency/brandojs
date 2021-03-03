@@ -39,7 +39,7 @@
       </div>
       <transition
         mode="out-in"
-        v-bind:css="false"
+        :css="false"
         appear
         @beforeAppear="beforeAppearContent"
         @appear="appearContent"

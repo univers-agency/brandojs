@@ -18,7 +18,8 @@
 export default {
   props: {
     length: {
-      type: [Number]
+      type: [Number],
+      default: 0
     },
 
     id: {

@@ -25,6 +25,7 @@ export default {
     },
 
     val: {
+      type: [Number, String, Object, Array],
       required: true
     },
 

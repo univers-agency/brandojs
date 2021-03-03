@@ -141,6 +141,73 @@ export default {
 
   directives: { popover: VTooltip },
 
+  inject: [
+    'adminChannel'
+  ],
+
+  provide () {
+    const state = {}
+    const available = {}
+    const headers = {}
+    const urls = {}
+
+    Object.defineProperty(state, 'showPlus', {
+      enumerable: true,
+      get: () => this.showPlus
+    })
+
+    Object.defineProperty(state, 'showModules', {
+      enumerable: true,
+      get: () => this.showModules
+    })
+
+    Object.defineProperty(available, 'blocks', {
+      enumerable: true,
+      get: () => this.availableBlocks
+    })
+
+    Object.defineProperty(available, 'allBlocks', {
+      enumerable: true,
+      get: () => this.allBlocks
+    })
+
+    Object.defineProperty(available, 'modules', {
+      enumerable: true,
+      get: () => this.availableModules
+    })
+
+    Object.defineProperty(available, 'entryData', {
+      enumerable: true,
+      get: () => this.entryData
+    })
+
+    Object.defineProperty(headers, 'extra', {
+      enumerable: true,
+      get: () => this.extraHeaders
+    })
+
+    /**
+     * URLS
+     */
+    Object.defineProperty(urls, 'base', {
+      enumerable: true,
+      get: () => `${this.server}${this.baseURL}`
+    })
+    Object.defineProperty(urls, 'browse', {
+      enumerable: true,
+      get: () => `${this.server}${this.browseURL}`
+    })
+
+    return {
+      vModuleMode: this.moduleMode,
+      available,
+      headers,
+      urls,
+      state,
+      refresh: this.refresh
+    }
+  },
+
   props: {
     json: {
       type: [String, Array],
@@ -283,73 +350,6 @@ export default {
       }
 
       return availableBlocks
-    }
-  },
-
-  inject: [
-    'adminChannel'
-  ],
-
-  provide () {
-    const state = {}
-    const available = {}
-    const headers = {}
-    const urls = {}
-
-    Object.defineProperty(state, 'showPlus', {
-      enumerable: true,
-      get: () => this.showPlus
-    })
-
-    Object.defineProperty(state, 'showModules', {
-      enumerable: true,
-      get: () => this.showModules
-    })
-
-    Object.defineProperty(available, 'blocks', {
-      enumerable: true,
-      get: () => this.availableBlocks
-    })
-
-    Object.defineProperty(available, 'allBlocks', {
-      enumerable: true,
-      get: () => this.allBlocks
-    })
-
-    Object.defineProperty(available, 'modules', {
-      enumerable: true,
-      get: () => this.availableModules
-    })
-
-    Object.defineProperty(available, 'entryData', {
-      enumerable: true,
-      get: () => this.entryData
-    })
-
-    Object.defineProperty(headers, 'extra', {
-      enumerable: true,
-      get: () => this.extraHeaders
-    })
-
-    /**
-     * URLS
-     */
-    Object.defineProperty(urls, 'base', {
-      enumerable: true,
-      get: () => `${this.server}${this.baseURL}`
-    })
-    Object.defineProperty(urls, 'browse', {
-      enumerable: true,
-      get: () => `${this.server}${this.browseURL}`
-    })
-
-    return {
-      vModuleMode: this.moduleMode,
-      available,
-      headers,
-      urls,
-      state,
-      refresh: this.refresh
     }
   },
 

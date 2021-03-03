@@ -1,13 +1,19 @@
 <template>
   <article>
     <ContentHeader>
-      <template v-slot:title>{{ $t('modules.title') }}</template>
-      <template v-slot:subtitle>{{ $t('modules.subtitle') }}</template>
-      <template v-slot:help>
+      <template #title>
+        {{ $t('modules.title') }}
+      </template>
+      <template #subtitle>
+        {{ $t('modules.subtitle') }}
+      </template>
+      <template #help>
         <div>
           <Dropdown>
-            <template v-slot:default>{{ $t('modules.actions') }}</template>
-            <template v-slot:content>
+            <template #default>
+              {{ $t('modules.actions') }}
+            </template>
+            <template #content>
               <li>
                 <button
                   type="button"
@@ -67,7 +73,7 @@
           </button>
         </li>
       </template>
-      <template v-slot:row="{ entry }">
+      <template #row="{ entry }">
         <div class="col-2 mono">
           <div class="badge">
             {{ entry.namespace }}
@@ -122,6 +128,8 @@ import GET_MODULES from '../../gql/pages/MODULES_QUERY.graphql'
 import locale from '../../locales/modules'
 
 export default {
+
+  inject: ['adminChannel'],
   data () {
     return {
       showImportModules: false,
@@ -134,8 +142,6 @@ export default {
       }
     }
   },
-
-  inject: ['adminChannel'],
 
   methods: {
     exportModules (entries, clearSelection) {

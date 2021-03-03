@@ -3,7 +3,7 @@
     :name="name"
     :label="label"
     :rules="rules"
-    :helpText="helpText"
+    :help-text="helpText"
     :value="value">
     <div class="wrapper">
       <VueFlatpickr
@@ -132,6 +132,7 @@ export default {
     },
 
     value: {
+      required: true,
       type: String
     }
   },

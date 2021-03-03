@@ -34,6 +34,10 @@
 import { imageAPI } from '../../../api/image'
 
 export default {
+
+  inject: [
+    'adminChannel'
+  ],
   props: {
     show: {
       type: Boolean,
@@ -56,10 +60,6 @@ export default {
       imageSeries: {}
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   created () {
     // get imageseries

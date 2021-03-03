@@ -1,10 +1,10 @@
 <template>
   <article v-if="user">
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         {{ $t('profile.title') }}
       </template>
-      <template v-slot:subtitle>
+      <template #subtitle>
         {{ $t('profile.helpText') }}
       </template>
     </ContentHeader>
@@ -16,14 +16,14 @@
           <KInput
             v-model="user.name"
             :label="$t('user.name')"
-            :helpText="$t('user.name.help')"
+            :help-text="$t('user.name.help')"
             rules="required"
             placeholder="Navn Navnesen"
             name="user[name]" />
           <KInputEmail
             v-model="user.email"
             :label="$t('user.email')"
-            :helpText="$t('user.email.help')"
+            :help-text="$t('user.email.help')"
             rules="required|email"
             placeholder="min@epost.no"
             name="user[email]" />
@@ -64,7 +64,7 @@
             v-model="user.avatar"
             preview-key="xlarge"
             :label="$t('user.avatar')"
-            :helpText="$t('user.avatar.help')"
+            :help-text="$t('user.avatar.help')"
             name="user[avatar]" />
         </div>
       </section>

@@ -9,7 +9,9 @@
       @move="$emit('move', $event)"
       @duplicate="$emit('duplicate', $event)"
       @delete="$emit('delete', $event)">
-      <template #description> ({{ block.data.type }})</template>
+      <template #description>
+        ({{ block.data.type }})
+      </template>
       <EditorMenuBar
         v-slot="{ commands, isActive, focused }"
         class="villain-text-editor-menubar"
@@ -64,15 +66,13 @@
             <template #header>
               {{ $t('edit-link') }}
             </template>
-            <template>
-              <KInput
-                ref="linkInput"
-                v-model="linkUrl"
-                name="link[url]"
-                label="URL"
-                :help-text="$t('help-text')"
-                placeholder="https://link.no" />
-            </template>
+            <KInput
+              ref="linkInput"
+              v-model="linkUrl"
+              name="link[url]"
+              label="URL"
+              :help-text="$t('help-text')"
+              placeholder="https://link.no" />
           </KModal>
 
           <KModal
@@ -85,15 +85,13 @@
             <template #header>
               {{ $t('edit-action-button') }}
             </template>
-            <template>
-              <KInput
-                ref="actionButtonInput"
-                v-model="actionButtonUrl"
-                name="actionButton[url]"
-                label="URL"
-                :help-text="$t('help-text')"
-                placeholder="https://link.no" />
-            </template>
+            <KInput
+              ref="actionButtonInput"
+              v-model="actionButtonUrl"
+              name="actionButton[url]"
+              label="URL"
+              :help-text="$t('help-text')"
+              placeholder="https://link.no" />
           </KModal>
 
           <template v-else>
@@ -217,8 +215,8 @@
             { label: $t('body-text'), value: 'paragraph' },
             { label: $t('lede-text'), value: 'lede' }
           ]"
-          optionValueKey="value"
-          optionLabelKey="label"
+          option-value-key="value"
+          option-label-key="label"
           :label="$t('type')" />
       </template>
     </BlockConfig>
@@ -262,6 +260,8 @@ export default {
     EditorMenuBar,
     EditorMenuBubble
   },
+
+  inject: ['available'],
 
   props: {
     block: {
@@ -313,8 +313,6 @@ export default {
       }
     }
   },
-
-  inject: ['available'],
 
   created () {
     console.debug('<TextBlock /> created')

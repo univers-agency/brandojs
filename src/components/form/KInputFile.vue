@@ -3,7 +3,7 @@
     :name="name"
     :label="label + ' (max ' + sizeLimit + 'MB)'"
     :rules="rules"
-    :helpText="helpText"
+    :help-text="helpText"
     :value="innerValue">
     <template #outsideValidator>
       <KModal
@@ -19,11 +19,11 @@
         <div v-html="errorMessage" />
       </KModal>
     </template>
-    <template v-slot="{ provider }">
+    <template #default="{ provider }">
       <FileInput
         :id="id"
         ref="fileInput"
-        :currentFile="innerValue"
+        :current-file="innerValue"
         :name="name"
         :custom-strings="customStrings"
         accept="*"

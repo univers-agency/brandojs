@@ -61,8 +61,8 @@
                 v-model="block.data.module"
                 rules="required"
                 :options="availableModules"
-                optionValueKey="module"
-                optionLabelKey="module"
+                option-value-key="module"
+                option-label-key="module"
                 name="data[module]"
                 :label="$t('module')" />
 
@@ -117,7 +117,7 @@
           :selectable="false"
           :tools="false"
           :entries="availableEntries">
-          <template v-slot:row="{ entry }">
+          <template #row="{ entry }">
             <div
               class="row-wrap"
               :class="{selected: block.data.ids.includes(parseInt(entry.id))}">
@@ -150,6 +150,13 @@ export default {
   components: {
     Block
   },
+
+  inject: [
+    'urls',
+    'headers',
+    'available',
+    'adminChannel'
+  ],
 
   props: {
     block: {
@@ -194,13 +201,6 @@ export default {
       }
     }
   },
-
-  inject: [
-    'urls',
-    'headers',
-    'available',
-    'adminChannel'
-  ],
 
   async created () {
     console.debug('<DatasourceBlock /> created')

@@ -6,7 +6,7 @@
       <form>
         <ValidationObserver
           ref="observer">
-          <template v-slot="{ invalid }">
+          <template #default="{ invalid }">
             <h2
               v-if="subForm"
               :class="{ invalid }">
@@ -88,15 +88,21 @@
               :class="{ active: $parent.activeRevision === revision }"
               class="revisions-line"
               @click="$parent.selectRevision(revision)">
-              <td class="fit">#{{ revision.revision }}</td>
+              <td class="fit">
+                #{{ revision.revision }}
+              </td>
               <td class="fit">
                 <FontAwesomeIcon
                   v-if="revision.active"
                   icon="star"
                   size="sm" />
               </td>
-              <td class="date fit">{{ revision.insertedAt | datetime }}</td>
-              <td class="user">{{ revision.creator.name }}</td>
+              <td class="date fit">
+                {{ revision.insertedAt | datetime }}
+              </td>
+              <td class="user">
+                {{ revision.creator.name }}
+              </td>
               <td class="activate fit">
                 <CircleDropdown>
                   <li v-if="!revision.active">
@@ -167,7 +173,8 @@ export default {
     },
 
     back: {
-      type: [Object, Boolean]
+      type: [Object, Boolean],
+      default: false
     },
 
     backText: {

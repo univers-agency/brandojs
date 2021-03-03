@@ -14,7 +14,7 @@
         color="#75ce75d6"
         icon="check-circle"
         size="xs" />
-      {{ loggedWarnings.length ? loggedWarnings.length : ''  }}
+      {{ loggedWarnings.length ? loggedWarnings.length : '' }}
     </div>
     <div
       class="logged-warnings-drawer"

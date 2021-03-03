@@ -3,7 +3,7 @@
     :name="name"
     :label="label + ' (max ' + sizeLimit + 'MB)'"
     :rules="rules"
-    :helpText="helpText"
+    :help-text="helpText"
     :value="innerValue">
     <template #outsideValidator>
       <KModal
@@ -43,7 +43,7 @@
           placeholder="Beskrivelse av bildet" />
       </KModal>
     </template>
-    <template v-slot="{ provider }">
+    <template #default="{ provider }">
       <div
         v-if="provider"
         class="image-preview-wrapper">

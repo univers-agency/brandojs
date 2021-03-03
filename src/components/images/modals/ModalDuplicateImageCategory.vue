@@ -54,6 +54,10 @@ export default {
     Modal
   },
 
+  inject: [
+    'adminChannel'
+  ],
+
   props: {
     showModal: {
       type: Boolean,
@@ -73,10 +77,6 @@ export default {
       config: null
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   created () {
     this.category = {

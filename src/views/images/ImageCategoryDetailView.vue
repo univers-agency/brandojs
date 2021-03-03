@@ -1,19 +1,19 @@
 <template>
   <article v-if="imageCategory">
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         Bildekategori
       </template>
-      <template v-slot:subtitle>
+      <template #subtitle>
         &laquo;<span class="cap">{{ imageCategory.name }}</span>&raquo;
       </template>
-      <template v-slot:help>
+      <template #help>
         <div>
           <Dropdown>
-            <template v-slot:default>
+            <template #default>
               Handlinger
             </template>
-            <template v-slot:content>
+            <template #content>
               <li>
                 <button
                   @click.prevent="createImageCategory">
@@ -124,16 +124,16 @@ export default {
     ModalDuplicateImageCategory
   },
 
+  inject: [
+    'adminChannel'
+  ],
+
   props: {
     imageCategoryId: {
       required: true,
       type: Number
     }
   },
-
-  inject: [
-    'adminChannel'
-  ],
 
   data () {
     return {

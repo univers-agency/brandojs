@@ -3,9 +3,9 @@
     :name="name"
     :label="label"
     :rules="rules"
-    :helpText="helpText"
+    :help-text="helpText"
     :value="value">
-    <template v-slot>
+    <template #default>
       <input
         :id="id"
         ref="input"
@@ -15,7 +15,7 @@
         :disabled="disabled"
         type="hidden">
     </template>
-    <template v-slot:outsideValidator>
+    <template #outsideValidator>
       <KModal
         v-if="open"
         ref="modal"
@@ -24,7 +24,7 @@
         @shortkey.native="toggle"
         @ok="toggle()">
         <template #header>
-          <span>{{  showCreateEntry ? createEntry : label }}</span>
+          <span>{{ showCreateEntry ? createEntry : label }}</span>
           <div>
             <ButtonSecondary
               v-if="createEntry"
@@ -72,7 +72,7 @@
               @mouseenter.self="pointerSet(index)">
               <slot
                 name="label"
-                v-bind:option="option">
+                :option="option">
                 {{ option[optionLabelKey] }}
               </slot>
             </div>
@@ -85,7 +85,7 @@
                 class="selected-item-row">
                 <slot
                   name="selected"
-                  v-bind:entry="s">
+                  :entry="s">
                   <CircleFilled />
                   <span>{{ s[optionLabelKey] }}</span>
                 </slot>
@@ -123,8 +123,8 @@
 
           <slot
             name="create"
-            v-bind:checkDupe="checkDupe"
-            v-bind:selectOption="selectCreatedOption"></slot>
+            :checkDupe="checkDupe"
+            :selectOption="selectCreatedOption"></slot>
         </div>
       </KModal>
       <div
@@ -135,7 +135,7 @@
           class="selected-item-row">
           <slot
             name="selected"
-            v-bind:entry="s">
+            :entry="s">
             <CircleFilled />
             <span>{{ s[optionLabelKey] }}</span>
           </slot>
@@ -184,7 +184,8 @@ export default {
     },
 
     rules: {
-      type: String
+      type: String,
+      default: null
     },
 
     label: {

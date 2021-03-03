@@ -1,13 +1,13 @@
 <template>
   <div>
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         {{ $t('title') }}
       </template>
-      <template v-slot:subtitle>
+      <template #subtitle>
         {{ $t('subtitle') }}
       </template>
-      <template v-slot:help>
+      <template #help>
         <p>
           {{ $t('help') }}
         </p>
@@ -26,7 +26,11 @@
         v-for="(entry, idx) in value"
         :key="idx">
         <template v-if="entry[0] === 'list'">
-          <td><div class="badge">{{ entry[0] }}</div></td>
+          <td>
+            <div class="badge">
+              {{ entry[0] }}
+            </div>
+          </td>
           <td>
             <FontAwesomeIcon
               icon="map-marker-alt"
@@ -40,7 +44,11 @@
           <td></td>
         </template>
         <template v-else-if="entry[0] === 'single'">
-          <td><div class="badge">{{ entry[0] }}</div></td>
+          <td>
+            <div class="badge">
+              {{ entry[0] }}
+            </div>
+          </td>
           <td>
             <FontAwesomeIcon
               icon="map-marker-alt"

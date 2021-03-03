@@ -7,7 +7,9 @@
       @move="$emit('move', $event)"
       @duplicate="$emit('duplicate', $event)"
       @delete="$emit('delete', $event)">
-      <template #description> (H{{ block.data.level }})</template>
+      <template #description>
+        (H{{ block.data.level }})
+      </template>
       <textarea
         ref="txt"
         v-model="block.data.text"
@@ -38,8 +40,8 @@
             { label: 'H5', value: 5 },
             { label: 'H6', value: 6 }
           ]"
-          optionValueKey="value"
-          optionLabelKey="label"
+          option-value-key="value"
+          option-label-key="label"
           :label="$t('size')" />
 
         <KInput

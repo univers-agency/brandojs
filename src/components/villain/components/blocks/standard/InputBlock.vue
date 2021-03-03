@@ -12,7 +12,7 @@
         v-model="block.data.value"
         :label="block.data.label"
         :placeholder="block.data.placeholder"
-        :helpText="block.data.help_text"
+        :help-text="block.data.help_text"
         name="data[value]" />
     </Block>
     <BlockConfig

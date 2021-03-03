@@ -1,13 +1,13 @@
 <template>
   <div>
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         {{ $t('title') }}
       </template>
-      <template v-slot:subtitle>
+      <template #subtitle>
         {{ $t('subtitle') }}
       </template>
-      <template v-slot:help>
+      <template #help>
         <p>
           {{ $t('help') }}
         </p>
@@ -58,7 +58,7 @@
         :key="category.id"
         :back-text="$t('back-to-dashboard')"
         @save="saveCategory(category)">
-        <template v-slot>
+        <template #default>
           <div class="category">
             <h3>
               {{ category.label }}
@@ -90,7 +90,7 @@
               class="bordered"
               :name="`category[${category.id}][globals]`"
               :label="$t('variables')">
-              <template v-slot:head>
+              <template #head>
                 <tr>
                   <th>{{ $t('label') }}</th>
                   <th>{{ $t('key') }}</th>
@@ -99,7 +99,7 @@
                   <th></th>
                 </tr>
               </template>
-              <template v-slot:row="{ entry }">
+              <template #row="{ entry }">
                 <td class="monospace">
                   {{ entry.label }}
                 </td>
@@ -138,13 +138,13 @@
                   <KInput
                     v-model="editEntry.label"
                     compact
-                    :name="`prop[label]`"          />
+                    :name="`prop[label]`" />
                 </td>
                 <td class="monospace">
                   <KInput
                     v-model="editEntry.key"
                     compact
-                    :name="`prop[key]`"          />
+                    :name="`prop[key]`" />
                 </td>
                 <td class="monospace">
                   <KInputSelect
@@ -196,7 +196,7 @@
               </template>
 
               <template
-                v-slot:new="{ newEntry }">
+                #new="{ newEntry }">
                 <td class="monospace">
                   <KInput
                     v-model="newEntry.label"

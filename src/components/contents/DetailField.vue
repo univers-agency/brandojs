@@ -28,8 +28,8 @@ export default {
       type: String,
       default: '—'
     },
-    label: String,
-    value: [String, Number, Array, Object]
+    label: { type: String, default: null },
+    value: { type: [String, Number, Array, Object], required: true }
   }
 }
 </script>

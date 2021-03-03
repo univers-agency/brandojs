@@ -3,13 +3,13 @@
     v-if="menuItemId"
     :key="menuItemId">
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         Endre menypunkt
       </template>
     </ContentHeader>
     <MenuItemForm
       :key="menuItemId"
-      :menuItem="menuItem"
+      :menu-item="menuItem"
       :save="save" />
   </article>
 </template>

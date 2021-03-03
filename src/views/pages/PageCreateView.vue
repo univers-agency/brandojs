@@ -1,7 +1,7 @@
 <template>
   <article v-if="identity">
     <ContentHeader>
-      <template v-slot:title>
+      <template #title>
         {{ $t('pages.new') }}
       </template>
     </ContentHeader>

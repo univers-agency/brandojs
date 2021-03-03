@@ -149,8 +149,12 @@
           v-else-if="showImages && !listStyle"
           class="villain-image-library">
           <div class="col-12 mb-3">
-            <ButtonSecondary @click="listStyle = true">Vis listevisning</ButtonSecondary>
-            <ButtonSecondary @click="showImages = false">Skjul bildeliste</ButtonSecondary>
+            <ButtonSecondary @click="listStyle = true">
+              Vis listevisning
+            </ButtonSecondary>
+            <ButtonSecondary @click="showImages = false">
+              Skjul bildeliste
+            </ButtonSecondary>
           </div>
           <div
             v-for="i in images"
@@ -263,6 +267,12 @@ export default {
     Drop
   },
 
+  inject: [
+    'urls',
+    'headers',
+    'available'
+  ],
+
   props: {
     block: {
       type: Object,
@@ -316,12 +326,6 @@ export default {
       }
     }
   },
-
-  inject: [
-    'urls',
-    'headers',
-    'available'
-  ],
 
   created () {
     console.debug('<ImageBlock /> created')
