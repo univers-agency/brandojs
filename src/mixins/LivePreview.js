@@ -36,6 +36,19 @@ export default function ({ schema, prop, key }) {
     ],
 
     methods: {
+      sharePreview (revision = null) {
+        let args = { schema, key, prop, id: this[prop].id }
+        if (revision) {
+          args = { ...args, revision: revision.revision }
+        }
+
+        this.adminChannel.channel
+          .push('livepreview:share', args)
+          .receive('ok', ({ preview_url }) => {
+            this.$alerts.alertSuccess('Delt forhåndsvisning', `Her er din delte forhåndsvisnings URL:<br><br><a href="${preview_url}" target="_blank">Klikk her</a><br><br>Lenken er gyldig i 24 timer.`)
+          })
+      },
+
       openLivePreview () {
         this.livePreviewPreviousValue = cloneDeep(this[prop])
         this.adminChannel.channel

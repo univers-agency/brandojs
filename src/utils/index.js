@@ -17,6 +17,7 @@ import jaroDistance from './jaroDistance'
 import mapMultiSelect from './mapMultiSelect'
 import mapMultiSelects from './mapMultiSelects'
 import si from 'shortid'
+import { datetime, date, shortDate } from './datetime'
 
 function shortid () {
   return si.generate()
@@ -41,5 +42,8 @@ export const utils = {
   stripParams,
   stripImageSeriesParams,
   removeTypename,
-  stripTypenames
+  stripTypenames,
+  datetime,
+  date,
+  shortDate
 }

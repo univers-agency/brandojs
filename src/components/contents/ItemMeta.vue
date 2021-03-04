@@ -48,14 +48,14 @@ export default {
       if (!datetime) {
         return '—'
       }
-      return format(parseISO(datetime), 'dd.MM.yy', { timeZone: 'Europe/Oslo' })
+      return format(parseISO(datetime), 'dd.MM.yy', { timeZone: this.$identity.config.timezone })
     },
 
     getTime (datetime) {
       if (!datetime) {
         return '—'
       }
-      return format(parseISO(datetime), 'HH:mm', { timeZone: 'Europe/Oslo' })
+      return format(parseISO(datetime), 'HH:mm', { timeZone: this.$identity.config.timezone })
     }
   }
 }

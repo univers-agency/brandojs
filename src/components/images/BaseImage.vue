@@ -52,7 +52,7 @@
         <div class="shaded">
           <FocusPoint v-model="img.image.focal">
             <img
-              :src="'/media/' + img.image.path + '?' + timestamp"
+              :src="`${$identity.config.mediaUrl}/${img.image.path}?${timestamp}`"
               class="img-fluid">
           </FocusPoint>
 

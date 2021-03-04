@@ -51,7 +51,15 @@
               @click="$parent.openLivePreview">
               <FontAwesomeIcon
                 icon="eye" />
-              Live preview
+              {{ $t('live-preview') }}
+            </ButtonSmall>
+          </div>
+          <div class="mixin">
+            <ButtonSmall
+              @click="$parent.sharePreview(null)">
+              <FontAwesomeIcon
+                icon="share" />
+              {{ $t('share-preview') }}
             </ButtonSmall>
           </div>
         </template>
@@ -98,7 +106,7 @@
                   size="sm" />
               </td>
               <td class="date fit">
-                {{ revision.insertedAt | datetime }}
+                {{ $utils.datetime(revision.insertedAt, $identity.config.timezone) }}
               </td>
               <td class="user">
                 {{ revision.creator.name }}
@@ -141,6 +149,13 @@
                         :label="$t('publishAt-label')"
                         :help-text="$t('publishAt-helpText')" />
                     </KModal>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      @click="$parent.sharePreview(revision)">
+                      {{ $t('share-preview') }}
+                    </button>
                   </li>
                 </CircleDropdown>
               </td>
@@ -397,14 +412,18 @@ export default {
 
   .mixins {
     @space right container;
+    display: flex;
     position: absolute;
     opacity: 1;
     cursor: pointer;
 
     >>> .small {
       margin-bottom: 8px;
-      border-radius: 20px;
+      margin-left: 5px;
+      border-radius: 30px;
       font-size: 13px;
+      text-transform: none;
+      padding: 8px 15px 8px 14px;
 
       svg {
         @space margin-right 7px;
@@ -434,6 +453,8 @@ export default {
     "error-form": "Form error",
     "errors-in-schema": "Please correct fields with errors",
     "revisions": "Revisions",
+    "live-preview": "Live preview",
+    "share-preview": "Share preview",
     "select": "Select",
     "active": "Active",
     "close": "Close",
@@ -454,6 +475,8 @@ export default {
     "error-form": "Feil i skjema",
     "errors-in-schema": "Vennligst se over og rett feil i rødt",
     "revisions": "Versjoner",
+    "live-preview": "Forhåndsvisning",
+    "share-preview": "Del forhåndsvisning",
     "select": "Velg",
     "active": "Aktiv",
     "close": "Lukk",

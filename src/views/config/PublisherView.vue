@@ -85,7 +85,7 @@ export default {
 
   methods: {
     fdt (dt) {
-      return format(parseISO(dt), 'dd.MM.yy @ HH:mm (z)', { timeZone: 'Europe/Oslo' })
+      return format(parseISO(dt), 'dd.MM.yy @ HH:mm (z)', { timeZone: this.$identity.config.timezone })
     },
 
     deleteJob (job) {

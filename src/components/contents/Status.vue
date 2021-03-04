@@ -64,7 +64,7 @@ export default {
   computed: {
     publishTime () {
       if (this.entry.publishAt) {
-        return format(parseISO(this.entry.publishAt), 'dd.MM.yy @ HH:mm (z)', { timeZone: 'Europe/Oslo' })
+        return format(parseISO(this.entry.publishAt), 'dd.MM.yy @ HH:mm (z)', { timeZone: this.$identity.config.timezone })
       }
       return null
     },

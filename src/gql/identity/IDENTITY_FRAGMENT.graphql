@@ -21,6 +21,11 @@ fragment identity on Identity {
     focal
   }
 
+  config {
+    mediaUrl
+    timezone
+  }
+
   links {
     id
     name

@@ -154,7 +154,7 @@ export default {
 
     if (!this.innerValue) {
       if (!this.null) {
-        this.innerValue = format(Date.now(), 'yyyy-MM-dd', { timeZone: 'Europe/Oslo' })
+        this.innerValue = format(Date.now(), 'yyyy-MM-dd', { timeZone: this.$identity.config.timezone })
       }
     }
   }

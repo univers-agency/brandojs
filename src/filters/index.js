@@ -1,27 +1,3 @@
-import { parseISO } from 'date-fns'
-import { format } from 'date-fns-tz'
-
-export function datetime (dateTime) {
-  if (dateTime === null) {
-    return '<ingen dato/tid>'
-  }
-  return format(parseISO(dateTime), 'dd.MM.yy, HH:mm', { timeZone: 'Europe/Oslo' })
-}
-
-export function date (d) {
-  if (d === null) {
-    return '<ingen dato>'
-  }
-  return format(parseISO(d), 'dd.MM.yy', { timeZone: 'Europe/Oslo' })
-}
-
-export function shortDate (date) {
-  if (date === null) {
-    return '<ingen dato>'
-  }
-  return format(parseISO(datetime), 'dd.MM.yy', { timeZone: 'Europe/Oslo' })
-}
-
 export function formatSize (size) {
   if (size > 1024 * 1024 * 1024 * 1024) {
     return (size / 1024 / 1024 / 1024 / 1024).toFixed(2) + ' TB'
