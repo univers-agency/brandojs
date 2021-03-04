@@ -65,6 +65,7 @@
 
 <script>
 
+import Vue from 'vue'
 import gql from 'graphql-tag'
 import { gsap } from 'gsap'
 import { Presence } from 'phoenix'
@@ -445,6 +446,7 @@ export default {
           this.initializeApp(me)
         }
 
+        Vue.prototype.$me = me
         return me
       },
 
@@ -455,6 +457,11 @@ export default {
 
     identity: {
       query: GET_IDENTITY,
+
+      update ({ identity }) {
+        Vue.prototype.$identity = identity
+        return identity
+      },
 
       skip () {
         return !this.$root.ready || !this.token
@@ -1382,6 +1389,10 @@ export default {
 
 .vex.vex-theme-kurtz .vex-dialog-form .vex-dialog-message {
   margin-bottom: 1.5em;
+
+  a {
+    border-bottom: 2px solid blue;
+  }
 }
 
 .vex.vex-theme-kurtz .vex-dialog-form .vex-dialog-input {
