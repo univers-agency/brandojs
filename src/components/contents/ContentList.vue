@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="entries"
+    v-if="actualEntries"
     class="list"
     :data-level="level">
     <div
@@ -85,7 +85,7 @@
       :data-sort-src="sortParent"
       class="sort-container">
       <div
-        v-for="entry in entries"
+        v-for="entry in actualEntries"
         :key="entry[entryKey]"
         :data-id="entry[entryKey]"
         :class="{ selected: isSelected(entry[entryKey]), deleted: entry['deletedAt'] }"
@@ -127,15 +127,22 @@
         </div>
       </div>
     </transition-group>
-    <div v-if="level === 1 && hasMoreListener">
-      <ButtonSecondary
-        class="mt-3"
-        @click="$emit('more')">
-        {{ $t('more') }}
-      </ButtonSecondary>
+    <div
+      v-if="paginationMeta"
+      class="pagination">
+      <div class="pagination-entries">
+        &rarr; {{ paginationMeta.totalEntries }} objekter
+      </div>
+      <button
+        v-for="p in pages"
+        :key="p.number"
+        :class="{ active: p.active }"
+        @click="changePage(p.number)">
+        {{ p.number }}
+      </button>
     </div>
     <div
-      v-if="entries.length === 0"
+      v-if="actualEntries.length === 0"
       class="contentlist-empty">
       <slot name="empty"></slot>
     </div>
@@ -149,7 +156,7 @@ import debounce from 'lodash/debounce'
 export default {
   props: {
     entries: {
-      type: Array,
+      type: [Array, Object],
       required: true
     },
 
@@ -250,17 +257,51 @@ export default {
 
     hasMoreListener () {
       return this.$listeners && this.$listeners.more
+    },
+
+    actualEntries () {
+      if (Array.isArray(this.entries)) {
+        return this.entries
+      }
+      return this.entries.entries
+    },
+
+    paginationMeta () {
+      if (typeof this.entries === 'object') {
+        return this.entries.paginationMeta
+      }
+      return null
+    },
+
+    pages () {
+      if (this.paginationMeta) {
+        const ps = []
+        for (let i = 1; i <= this.paginationMeta.totalPages; i += 1) {
+          ps.push({
+            number: i,
+            active: i === this.paginationMeta.currentPage
+          })
+        }
+        return ps
+      }
+      return []
     }
   },
 
   created () {
     console.debug('<ContentList /> created')
+
     if (this.filterKeys.length) {
       this.filters[this.filterKeys[0]] = ''
     }
   },
 
   methods: {
+    changePage (pageNumber) {
+      const queryVars = { ...this.$parent.queryVars, offset: this.$parent.queryVars.limit * (pageNumber - 1) }
+      this.$emit('updateQuery', queryVars)
+    },
+
     changeStatus (status) {
       const queryVars = { ...this.$parent.queryVars, status }
       this.$emit('updateQuery', queryVars)
@@ -357,7 +398,7 @@ export default {
     },
 
     getOrder () {
-      return this.entries
+      return this.actualEntries
     },
 
     storeOrder (sortable) {
@@ -373,13 +414,49 @@ export default {
 </script>
 
 <style lang="postcss">
+  .pagination {
+    margin-top: 25px;
+
+    .pagination-entries {
+      font-size: 12px;
+      margin-right: 15px;
+      margin-bottom: 5px;
+    }
+
+    button {
+      width: 30px;
+      height: 30px;
+      border: 1px solid theme(colors.dark);
+      border-radius: 50%;
+      font-size: 13px;
+      transition: background-color 200ms ease;
+
+      &.active {
+        @color bg dark;
+        @color fg peach;
+
+        &:hover {
+          @color bg dark;
+        }
+      }
+
+      &:hover {
+        @color bg peach;
+      }
+
+      & + button {
+        margin-left: 5px;
+      }
+    }
+  }
+
   .contentlist-empty {
+    @fontsize h2;
     height: 25vh;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 600px;
-    @fontsize h2;
   }
 
   .list-tools {

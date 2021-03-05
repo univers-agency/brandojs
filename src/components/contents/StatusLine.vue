@@ -46,7 +46,7 @@ export default {
 
         published: {
           label: this.$t('status-published'),
-          value: 'published_all'
+          value: 'published'
         },
 
         disabled: {
