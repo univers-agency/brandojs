@@ -57,7 +57,7 @@ export default {
     font-weight: 400;
     white-space: nowrap;
     color: theme(colors.dark);
-    border: 1px solid theme(colors.dark);
+    border: 1px solid theme(colors.dark) !important;
     background-color: transparent;
     padding: 15px 25px 16px;
     min-width: 205px;

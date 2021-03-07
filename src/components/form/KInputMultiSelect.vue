@@ -402,7 +402,7 @@ export default {
       } else {
         if (!this.multiple) {
           if (this.selected.length) {
-            this.$alerts.alertError('OBS', this.$('max-one'))
+            this.$alerts.alertError('OBS', this.$t('max-one'))
             return
           }
         }

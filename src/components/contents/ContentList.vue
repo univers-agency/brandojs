@@ -11,7 +11,7 @@
         class="status">
         <StatusLine
           :all="true"
-          :deleted="softDelete"
+          :deleted="isSoftDeletable"
           :val="$parent.queryVars.status"
           @statusUpdate="changeStatus" />
       </div>
@@ -175,11 +175,6 @@ export default {
       default: () => {}
     },
 
-    softDelete: {
-      type: Boolean,
-      default: false
-    },
-
     tools: {
       type: Boolean,
       default: true
@@ -247,6 +242,13 @@ export default {
   },
 
   computed: {
+    isSoftDeletable () {
+      if (this.actualEntries.length) {
+        return 'deletedAt' in this.actualEntries[0]
+      }
+      return false
+    },
+
     shouldFilter () {
       return this.$parent?.queryVars?.hasOwnProperty('filter')
     },

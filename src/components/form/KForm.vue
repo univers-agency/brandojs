@@ -3,6 +3,36 @@
     appear
     @enter="enter">
     <div class="form-wrapper">
+      <div class="mixins">
+        <template v-if="hasRevisions && $parent.hasId">
+          <div class="mixin">
+            <ButtonSmall
+              @click="openRevisions">
+              <FontAwesomeIcon
+                icon="code-branch" />
+              {{ $t('revisions') }}
+            </ButtonSmall>
+          </div>
+        </template>
+        <template v-if="hasLivePreview">
+          <div class="mixin">
+            <ButtonSmall
+              @click="$parent.openLivePreview">
+              <FontAwesomeIcon
+                icon="eye" />
+              {{ $t('live-preview') }}
+            </ButtonSmall>
+          </div>
+          <div class="mixin">
+            <ButtonSmall
+              @click="$parent.sharePreview(null)">
+              <FontAwesomeIcon
+                icon="share" />
+              {{ $t('share-preview') }}
+            </ButtonSmall>
+          </div>
+        </template>
+      </div>
       <form>
         <ValidationObserver
           ref="observer">
@@ -34,36 +64,7 @@
           </template>
         </ValidationObserver>
       </form>
-      <div class="mixins">
-        <template v-if="hasRevisions && $parent.hasId">
-          <div class="mixin">
-            <ButtonSmall
-              @click="openRevisions">
-              <FontAwesomeIcon
-                icon="code-branch" />
-              {{ $t('revisions') }}
-            </ButtonSmall>
-          </div>
-        </template>
-        <template v-if="hasLivePreview">
-          <div class="mixin">
-            <ButtonSmall
-              @click="$parent.openLivePreview">
-              <FontAwesomeIcon
-                icon="eye" />
-              {{ $t('live-preview') }}
-            </ButtonSmall>
-          </div>
-          <div class="mixin">
-            <ButtonSmall
-              @click="$parent.sharePreview(null)">
-              <FontAwesomeIcon
-                icon="share" />
-              {{ $t('share-preview') }}
-            </ButtonSmall>
-          </div>
-        </template>
-      </div>
+
       <div
         class="revisions-drawer"
         :class="{open: showRevisions}">
@@ -388,10 +389,6 @@ export default {
     }
   }
 
-  .form-wrapper {
-    display: flex;
-  }
-
   form {
     width: 100%;
   }
@@ -411,9 +408,8 @@ export default {
   }
 
   .mixins {
-    @space right container;
     display: flex;
-    position: absolute;
+    justify-content: flex-end;
     opacity: 1;
     cursor: pointer;
 

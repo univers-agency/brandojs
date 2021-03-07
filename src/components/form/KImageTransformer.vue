@@ -31,11 +31,13 @@ Then value is set to the transformed result
               </slot>
             </div>
             <div class="entries__entry__actions">
-              <ButtonSecondary
-                @click="save(entry)">
+              <ButtonPrimary
+                :loading="loading"
+                @click="save(entry, setLoader)">
                 {{ $t('save') }}
-              </ButtonSecondary>
+              </ButtonPrimary>
               <ButtonSecondary
+                class="ml-xs"
                 @click="removeEntry(entry)">
                 {{ $t('remove') }}
               </ButtonSecondary>
@@ -140,7 +142,8 @@ export default {
       files: [],
       config: {},
       edit: false,
-      editObject: null
+      editObject: null,
+      loading: false
     }
   },
 
@@ -189,6 +192,10 @@ export default {
   },
 
   methods: {
+    setLoader (value) {
+      this.loading = value
+    },
+
     getKey (e) {
       return Math.random().toString(36).substr(2, 10) + Math.random().toString(36).substr(2, 10)
     },
@@ -565,6 +572,7 @@ input[type=file] {
   }
 
   .entries__entry__actions {
+    display: flex;
     background-color: #faefea;
     padding-top: 15px;
     padding-bottom: 15px;

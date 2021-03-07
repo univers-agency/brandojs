@@ -25,7 +25,7 @@ export default {
     },
 
     val: {
-      type: [Number, String, Object, Array],
+      type: [Number, String, Object, Array, Boolean],
       required: true
     },
 

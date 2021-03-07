@@ -1,7 +1,7 @@
 <template>
   <div class="statuses">
     <div
-      v-for="status in statuses"
+      v-for="status in visibleStatuses"
       :key="status.value"
       class="status"
       :class="{ active: val === status.value }"
@@ -28,6 +28,10 @@ export default {
     val: {
       type: String,
       required: true
+    },
+    deleted: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -58,6 +62,17 @@ export default {
           label: this.$t('status-deleted'),
           value: 'deleted'
         }
+      }
+    }
+  },
+
+  computed: {
+    visibleStatuses() {
+      if (this.deleted) {
+        return this.statuses
+      } else {
+        const { deleted, ...rest } = this.statuses
+        return rest
       }
     }
   },

@@ -10,7 +10,7 @@
             </slot>
           </h1>
           <h3>
-            &rarr; <slot name="subtitle">
+            <slot name="subtitle">
             </slot>
           </h3>
         </section>
