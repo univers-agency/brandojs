@@ -6,6 +6,8 @@
     @add="$emit('add', $event)"
     @move="$emit('move', $event)"
     @duplicate="$emit('duplicate', $event)"
+    @hide="$emit('hide', $event)"
+    @show="$emit('show', $event)"
     @delete="$emit('delete', $event)">
     <template #description>
       {{ getBlockName }}{{ block.data.multi ? ' — Multi' : '' }}
@@ -18,6 +20,8 @@
       <component
         :is="buildWrapper({refs: block.data.refs, vars: block.data.vars})"
         @delete="deleteBlock($event)"
+        @hide="hideBlock($event)"
+        @show="showBlock($event)"
         @update="updateBlock($event)" />
       <div class="entry-toolbar">
         <div class="helpful-actions">
@@ -504,7 +508,11 @@ export default {
         if (ref.deleted) {
           continue
         }
-        newRefs[ref.name] = { ...ref.data, locked: true }
+        newRefs[ref.name] = {
+          ...ref.data,
+          hidden: ref.hidden || false,
+          locked: true
+        }
       }
 
       return {
@@ -532,6 +540,8 @@ export default {
               data-ref="${ref.name}"
               :block="refs.${ref.name}"
               :mref="'${ref.name}'"
+              @hide="$emit('hide', {event: $event, ref: '${ref.name}'})"
+              @show="$emit('show', {event: $event, ref: '${ref.name}'})"
               @delete="$emit('delete', {event: $event, ref: '${ref.name}'})" />
           </div>
         `
@@ -565,6 +575,14 @@ export default {
           ]
         }
       }
+    },
+
+    showBlock ({ ref, block }) {
+      this.$emit('show', { ...this.block, ref })
+    },
+
+    hideBlock ({ ref, block }) {
+      this.$emit('hide', { ...this.block, ref })
     },
 
     deleteBlock ({ ref, block }) {

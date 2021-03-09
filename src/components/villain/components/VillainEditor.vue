@@ -82,6 +82,8 @@
         @add="addBlock"
         @move="moveBlock"
         @delete="deleteBlock"
+        @hide="hideBlock"
+        @show="showBlock"
         @duplicate="duplicateBlock"
         @order="orderBlocks" />
     </template>
@@ -959,6 +961,134 @@ export default {
           ...this.innerValue.slice(idx + 1)
         ]
         this.$toast.success({ message: this.$t('block-duplicated') })
+      }
+    },
+
+    showBlock (bl) {
+      const {uid, ref} = bl
+      const block = this.innerValue.find(b => {
+        if (b.type === 'columns') {
+          // look through the columns' blocks and hide if found
+          for (const col of b.data) {
+            for (const colBlock of col.data) {
+              if (colBlock.uid === uid) {
+                this.$set(colBlock, 'hidden', false)
+              }
+            }
+          }
+        } else if (b.type === 'container') {
+          // look through the container's blocks and hide if found
+          for (const containedBlock of b.data.blocks) {
+            if (containedBlock.uid === uid) {
+              if (ref && containedBlock.type === 'module') {
+                // we want a ref inside a module block
+                const foundRef = containedBlock.data.refs.find(r => r.name === ref)
+                this.$set(foundRef, 'hidden', false)
+              } else {
+                this.$set(containedBlock, 'hidden', false)
+              }
+
+            }
+          }
+        }
+        return b.uid === uid
+      })
+
+      if (block) {
+        if (ref) {
+          const idx = this.innerValue.indexOf(block)
+          // a ModuleBlock that wants to hide a ref
+          const foundRef = block.data.refs.find(r => r.name === ref)
+          const refIdx = block.data.refs.indexOf(foundRef)
+
+          this.$set(foundRef, 'hidden', false)
+
+          if (refIdx > -1) {
+            this.innerValue = [
+              ...this.innerValue.slice(0, idx),
+              {
+                ...block,
+                data: {
+                  ...block.data,
+                  refs: [
+                    ...block.data.refs.slice(0, refIdx),
+                    { ...foundRef, hidden: false },
+                    ...block.data.refs.slice(refIdx + 1)
+                  ]
+                }
+              },
+              ...this.innerValue.slice(idx + 1)
+            ]
+          } else {
+            console.error('showBlock: ref not found...', ref)
+          }
+        } else {
+          this.$set(block, 'hidden', false)
+        }
+      }
+    },
+
+    hideBlock (bl) {
+      const {uid, ref} = bl
+      const block = this.innerValue.find(b => {
+        if (b.type === 'columns') {
+          // look through the columns' blocks and hide if found
+          for (const col of b.data) {
+            for (const colBlock of col.data) {
+              if (colBlock.uid === uid) {
+                this.$set(colBlock, 'hidden', true)
+              }
+            }
+          }
+        } else if (b.type === 'container') {
+          // look through the container's blocks and hide if found
+          for (const containedBlock of b.data.blocks) {
+            if (containedBlock.uid === uid) {
+              if (ref && containedBlock.type === 'module') {
+                // we want a ref inside a module block
+                const foundRef = containedBlock.data.refs.find(r => r.name === ref)
+                this.$set(foundRef, 'hidden', true)
+              } else {
+                this.$set(containedBlock, 'hidden', true)
+              }
+
+            }
+          }
+        }
+        return b.uid === uid
+      })
+
+      if (block) {
+        if (ref) {
+          const idx = this.innerValue.indexOf(block)
+          // a ModuleBlock that wants to hide a ref
+          const foundRef = block.data.refs.find(r => r.name === ref)
+          const refIdx = block.data.refs.indexOf(foundRef)
+
+          this.$set(foundRef, 'hidden', true)
+
+          if (refIdx > -1) {
+            this.innerValue = [
+              ...this.innerValue.slice(0, idx),
+              {
+                ...block,
+                data: {
+                  ...block.data,
+                  refs: [
+                    ...block.data.refs.slice(0, refIdx),
+                    { ...foundRef, hidden: true },
+                    ...block.data.refs.slice(refIdx + 1)
+                  ]
+                }
+              },
+              ...this.innerValue.slice(idx + 1)
+            ]
+          } else {
+            console.error('hideBlock: ref not found...', ref)
+          }
+        } else {
+          this.$set(block, 'hidden', true)
+        }
       }
     },
 

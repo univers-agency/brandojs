@@ -5,6 +5,7 @@
     <div
       ref="content"
       :class="hovering ? 'villain-hover' : ''"
+      :data-uid="block.uid"
       :data-type="block.type"
       class="villain-block">
       <div class="villain-block-description">
@@ -257,11 +258,11 @@ export default {
     },
 
     hideBlock () {
-      this.$set(this.block, 'hidden', true)
+      this.$emit('hide', this.block)
     },
 
     showBlock () {
-      this.$delete(this.block, 'hidden')
+      this.$delete('show', this.block)
     },
 
     duplicateBlock () {

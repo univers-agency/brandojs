@@ -23,6 +23,8 @@
           @add="$emit('add', $event)"
           @delete="$emit('delete', $event)"
           @duplicate="$emit('duplicate', $event)"
+          @hide="$emit('hide', $event)"
+          @show="$emit('show', $event)"
           @move="$emit('move', $event)" />
       </div>
     </transition-group>

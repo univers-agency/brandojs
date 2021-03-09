@@ -8,6 +8,8 @@
       @add="$emit('add', $event)"
       @move="$emit('move', $event)"
       @duplicate="$emit('duplicate', $event)"
+      @hide="$emit('hide', $event)"
+      @show="$emit('show', $event)"
       @delete="$emit('delete', $event)">
       <template #description>
         <span :style="{ color, marginLeft: '5px' }">⬤</span> {{ block.data.description }}
@@ -34,6 +36,8 @@
                 :after="b.uid"
                 @add="$emit('add', $event)"
                 @move="$emit('move', $event)"
+                @hide="$emit('hide', $event)"
+                @show="$emit('show', $event)"
                 @delete="$emit('delete', $event)" />
             </div>
           </transition-group>
