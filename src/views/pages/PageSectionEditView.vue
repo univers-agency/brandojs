@@ -52,20 +52,6 @@ export default {
                 pageFragmentParams: $pageFragmentParams,
               ) {
                 id
-                title
-                parentKey
-                pageId
-                key
-                language
-                wrapper
-                data
-                creator {
-                  id
-                  name
-                }
-                insertedAt
-                updatedAt
-                deletedAt
               }
             }
           `,
@@ -87,8 +73,8 @@ export default {
   apollo: {
     pageFragment: {
       query: gql`
-        query PageFragment ($pageFragmentId: ID!) {
-          pageFragment (pageFragmentId: $pageFragmentId) {
+        query PageFragment ($matches: PageFragmentMatches!) {
+          pageFragment (matches: $matches) {
             id
             title
             parentKey
@@ -108,7 +94,7 @@ export default {
       `,
       variables () {
         return {
-          pageFragmentId: this.sectionId
+          matches: { id: this.sectionId }
         }
       },
 

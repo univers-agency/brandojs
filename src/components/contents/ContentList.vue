@@ -85,8 +85,11 @@
       :data-sort-src="sortParent"
       class="sort-container">
       <div
-        v-for="entry in actualEntries"
+        v-for="(entry, idx) in actualEntries"
         :key="entry[entryKey]"
+        data-testid="contentlist-row"
+        :data-testidx="idx"
+        :data-test-level="level"
         :data-id="entry[entryKey]"
         :class="{ selected: isSelected(entry[entryKey]), deleted: entry['deletedAt'] }"
         class="list-row">
@@ -131,7 +134,7 @@
       v-if="paginationMeta"
       class="pagination">
       <div class="pagination-entries">
-        &rarr; {{ paginationMeta.totalEntries }} objekter
+        &rarr; {{ paginationMeta.totalEntries }} {{ $t('entries') }}
       </div>
       <button
         v-for="p in pages"
@@ -669,13 +672,15 @@ export default {
     "search": "Search...",
     "with": "With",
     "selected-perform": "selected, do:",
-    "more": "Load more, if available"
+    "more": "Load more, if available",
+    "entries": "entries"
   },
   "no": {
     "search": "Søk...",
     "with": "Med",
     "selected-perform": "valgte utfør handling:",
-    "more": "Last inn flere, hvis tilgjengelig"
+    "more": "Last inn flere, hvis tilgjengelig",
+    "entries": "objekter"
   }
 }
 </i18n>

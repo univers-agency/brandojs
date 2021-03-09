@@ -93,11 +93,15 @@ export default {
 
   methods: {
     async toggleActive (user, active) {
+      if (user.role === 'superuser') {
+        this.$alerts.alertError(this.$t('error'), this.$t('superuser-cannot-be-deactivated'))
+        return
+      }
       const userParams = { active }
       try {
         await this.$apollo.mutate({
           mutation: gql`
-            mutation UpdateUser($userId: ID!, $userParams: UpdateUserParams) {
+            mutation UpdateUser($userId: ID!, $userParams: UserParams) {
               updateUser(
                 userId: $userId,
                 userParams: $userParams
@@ -113,7 +117,12 @@ export default {
           }
         })
 
-        this.$toast.success({ message: `Bruker ${active ? 'aktivert' : 'deaktivert'}` })
+        if (active) {
+          this.$toast.success({ message: this.$t('user.activated') })
+        } else {
+          this.$toast.success({ message: this.$t('user.deactivated') })
+        }
+
       } catch (err) {
         this.$utils.showError(err)
       }
@@ -131,20 +140,28 @@ export default {
 <i18n>
 {
   "en": {
+    "error": "Error",
+    "superuser-cannot-be-deactivated": "Superuser cannot be deactivated",
     "user.title": "Users",
     "user.subtitle": "Administrate users",
     "user.new": "Create user",
     "user.edit": "Edit user",
     "user.activate": "Activate user",
-    "user.deactivate": "Deactivate user"
+    "user.deactivate": "Deactivate user",
+    "user.activated": "User activated",
+    "user.deactivated": "User deactivated"
   },
   "no": {
+    "error": "Feil",
+    "superuser-cannot-be-deactivated": "Superbruker kan ikke deaktiveres",
     "user.title": "Brukere",
     "user.subtitle": "Administrasjon av brukere.",
     "user.new": "Ny bruker",
     "user.edit": "Rediger bruker",
     "user.activate": "Aktivér bruker",
-    "user.deactivate": "Deaktivér bruker"
+    "user.deactivate": "Deaktivér bruker",
+    "user.activated": "Bruker aktivért",
+    "user.deactivated": "Bruker deaktivért"
   }
 }
 </i18n>

@@ -13,7 +13,6 @@ import VuePhoenixSocket from './utils/socket'
 import PortalVue from 'portal-vue'
 import { ValidationProvider, ValidationObserver, extend, configure } from 'vee-validate'
 import { required, email, max, confirmed, min } from 'vee-validate/dist/rules'
-import VueUploadComponent from 'vue-upload-component'
 import { VTooltip } from 'v-tooltip'
 
 import Admin from './Admin'
@@ -98,7 +97,6 @@ export default {
 
     Vue.component('Admin', Admin)
     Vue.component('Dropzone', Dropzone)
-    Vue.component('FileUpload', VueUploadComponent)
 
     /**
      * Configure VeeValidate

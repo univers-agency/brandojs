@@ -14,6 +14,17 @@
             v-if="previewUrl"
             :src="previewUrl"
             class="img-fluid">
+          <div class="villain-block-picture-caption">
+            <div v-if="block.data.title">
+              <span>{{ $t('title') }}</span>{{ block.data.title }}
+            </div>
+            <div v-if="block.data.alt">
+              <span>{{ $t('alt') }}</span>{{ block.data.alt }}
+            </div>
+            <div v-if="block.data.credits">
+              <span>{{ $t('credits') }}</span>{{ block.data.credits }}
+            </div>
+          </div>
           <div class="helpful-actions">
             <ButtonTiny
               @click="$refs.config.openConfig()">
@@ -197,6 +208,7 @@
                   v-model="block.data.alt"
                   name="data[alt]"
                   :placeholder="$t('alt')"
+                  :help-text="$t('alt-help-text')"
                   :label="$t('alt')" />
 
                 <KInput
@@ -486,6 +498,18 @@ export default {
 }
 </script>
 <style lang="postcss" scoped>
+  .villain-block-picture-caption {
+    font-size: 10px;
+    margin-top: 5px;
+
+    span {
+      font-weight: bold;
+      margin-right: 5px;
+      min-width: 70px;
+      display: inline-block;
+    }
+  }
+
   .img-fluid {
     min-width: auto;
     max-width: 100%;
@@ -543,7 +567,7 @@ export default {
       "hide-image-list": "Hide list view",
       "show-advanced-config": "Show advanced configuration opts",
       "title": "Title",
-      "alt": "Alt. text (description for accessibility)",
+      "alt": "Alt. text",
       "credits": "Credits",
       "link": "Image should link to",
       "url": "Source (advanced)",
@@ -576,7 +600,7 @@ export default {
       "hide-image-list": "Skjul bildeliste",
       "show-advanced-config": "Vis avansert konfigurasjon",
       "title": "Tittel",
-      "alt": "Alt. tekst (beskrivelse for universell utforming)",
+      "alt": "Alt. tekst",
       "credits": "Krediteringer",
       "link": "Bildet linker til",
       "url": "Kilde (avansert)",

@@ -2,14 +2,14 @@
   <article v-if="user">
     <ContentHeader>
       <template #title>
-        Brukere
+        {{ $t('users') }}
       </template>
       <template #subtitle>
-        Nytt passord
+        {{ $t('new-password') }}
       </template>
     </ContentHeader>
     <div class="notice">
-      Vi anbefaler deg å sette ditt eget, sikre passord ved første innlogging.
+      {{ $t('password-notice') }}
     </div>
     <UserPasswordForm
       :user="user"
@@ -64,8 +64,8 @@ export default {
         })
 
         setLoader(false)
-        this.$toast.success({ message: 'Passord oppdatert' })
-        this.$router.push({ name: 'users' })
+        this.$toast.success({ message: this.$t('password-updated') })
+        this.$router.push({ name: 'dashboard' })
       } catch (err) {
         this.$utils.showError(err)
         setLoader(false)
@@ -98,3 +98,20 @@ export default {
     margin-bottom: 2rem;
   }
 </style>
+
+<i18n>
+  {
+    "en": {
+      "users": "Users",
+      "new-password": "New password",
+      "password-updated": "Password updated",
+      "password-notice": "As this is your first time logged in, please set your own secure password"
+    },
+    "no": {
+      "users": "Brukere",
+      "new-password": "Nytt passord",
+      "password-updated": "Passord oppdatert",
+      "password-notice": "Vi anbefaler deg å sette ditt eget, sikre passord ved første innlogging."
+    }
+  }
+</i18n>

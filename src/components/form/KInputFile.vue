@@ -10,7 +10,7 @@
         v-if="showErrorModal"
         ref="errorModal"
         v-shortkey="['esc', 'enter']"
-        ok-text="Lukk"
+        :ok-text="$t('close')"
         @shortkey.native="closeErrorModal"
         @ok="closeErrorModal">
         <template #header>
@@ -148,6 +148,7 @@ export default {
 <i18n>
 {
   "en": {
+    "close": "Close",
     "error": "Error",
     "upload": "Your device does not support file uploads :(",
     "drag": "Click or drop your file her",
@@ -162,6 +163,7 @@ export default {
     "fileTypeError": "Disallowed file type. <br><br>Valid file types for this field are<br><br>&lt;&lt; {accept} &gt;&gt;<br><br>"
   },
   "no": {
+    "close": "Lukk",
     "error": "Feil",
     "upload": "Dingsen du bruker støtter ikke filopplasting :(",
     "drag": "Klikk eller slipp filen ditt her",

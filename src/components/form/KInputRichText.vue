@@ -53,7 +53,7 @@
               v-if="linkMenuIsActive"
               ref="linkModal"
               v-shortkey="['esc']"
-              ok-text="Lukk"
+              :ok-text="$t('close')"
               @shortkey.native="hideLinkMenu"
               @ok="setLinkUrl(commands.link, linkUrl)">
               <template #header>
@@ -72,7 +72,7 @@
               v-if="actionButtonMenuIsActive"
               ref="actionButtonModal"
               v-shortkey="['esc']"
-              ok-text="Lukk"
+              :ok-text="$t('close')"
               @shortkey.native="hideLinkMenu"
               @ok="setActionButtonUrl(commands.action_button, actionButtonUrl)">
               <template #header>
@@ -603,11 +603,13 @@ export default {
 <i18n>
   {
     "en": {
+      "close": "Close",
       "edit-link": "Edit link",
       "edit-action-button": "Edit button link",
       "help-text": "NB! When linking to a local page, you must remember to prefix the url with '/' (i.e /privacy)."
     },
     "no": {
+      "close": "Lukk",
       "edit-link": "Endre link",
       "edit-action-button": "Rediger knappelink",
       "help-text": "OBS! For å linke til en lokal side må du alltid ha med '/' foran (f.eks /personvern)."

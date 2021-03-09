@@ -62,8 +62,9 @@
     <Villain
       v-model="page.data"
       rules="required"
-      :template-mode="templateMode()"
-      :templates="$app.templates"
+      :entry-data="page"
+      :module-mode="moduleMode()"
+      :modules="$app.modules"
       name="page[data]"
       :label="$t('content')" />
   </KForm>
@@ -105,12 +106,13 @@ export default {
   },
 
   methods: {
-    templateMode () {
-      if (typeof this.$app.templateMode === 'function') {
-        return this.$app.templateMode(this.page)
+    moduleMode () {
+      if (typeof this.$app.moduleMode === 'function') {
+        return this.$app.moduleMode(this.page)
       }
-      return this.$app.templateMode
+      return this.$app.moduleMode
     },
+
     getParents () {
       this.adminChannel.channel
         .push('pages:list_parents', {})

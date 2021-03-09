@@ -111,7 +111,7 @@ export default {
           }
         })
 
-        this.$toast.success({ message: 'Profil oppdatert' })
+        this.$toast.success({ message: this.$t('profile.updated') })
       } catch (err) {
         this.$utils.showError(err)
       }
@@ -153,6 +153,7 @@ export default {
     "user.name": "Name",
     "user.name.help": "name also used as entry author",
     "user.role": "Role",
+    "profile.updated": "Profile updated",
     "profile.title": "Your User Profile",
     "profile.helpText": "Administrate user info",
     "role.super": "Super",
@@ -171,6 +172,7 @@ export default {
     "user.name": "Navn",
     "user.name.help": "navnet brukes også som artikkelforfatter",
     "user.role": "Rolle",
+    "profile.updated": "Profil oppdatert",
     "profile.title": "Din brukerprofil",
     "profile.helpText": "Administrasjon av brukerinfo",
     "role.super": "Super",

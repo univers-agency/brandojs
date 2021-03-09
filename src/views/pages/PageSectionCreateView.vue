@@ -37,10 +37,7 @@ export default {
       loading: 0,
       page: {
         pageId: null,
-        key: '',
-        data: '',
         language: null,
-        wrapper: ''
       }
     }
   },
@@ -62,21 +59,6 @@ export default {
                 pageFragmentParams: $pageFragmentParams,
               ) {
                 id
-                title
-                key
-                parentKey
-                language
-                updatedAt
-                pageId
-                data
-
-                creator {
-                  id
-                  name
-                  avatar {
-                    thumb: url(size: "xlarge")
-                  }
-                }
               }
             }
           `,

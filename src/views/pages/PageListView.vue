@@ -22,8 +22,8 @@
               <li>
                 <button
                   type="button"
-                  @click="reprocess">
-                  {{ $t('pages.reprocess') }}
+                  @click="rerender">
+                  {{ $t('pages.rerender') }}
                 </button>
               </li>
             </template>
@@ -119,8 +119,8 @@
             <li>
               <button
                 type="button"
-                @click="reprocessPage(entry)">
-                {{ $t('pages.reprocess-page') }}
+                @click="rerenderPage(entry.id)">
+                {{ $t('pages.rerender-page') }}
               </button>
             </li>
 
@@ -187,11 +187,20 @@
                       {{ $t('pages.edit-section') }}
                     </router-link>
                   </li>
+
                   <li>
                     <button
                       type="button"
                       @click="duplicateSection(section)">
                       {{ $t('pages.duplicate-section') }}
+                    </button>
+                  </li>
+
+                  <li>
+                    <button
+                      type="button"
+                      @click="rerenderSection(section.id)">
+                      {{ $t('pages.rerender-section') }}
                     </button>
                   </li>
 
@@ -346,7 +355,7 @@ export default {
   },
 
   methods: {
-    reprocess () {
+    rerender () {
       this.adminChannel.channel
         .push('page:rerender_all', {})
         .receive('ok', payload => {
@@ -357,6 +366,22 @@ export default {
         .push('page_fragment:rerender_all', {})
         .receive('ok', payload => {
           this.$toast.success({ message: this.$t('pages.fragments-rerendered') })
+        })
+    },
+
+    rerenderPage (id) {
+      this.adminChannel.channel
+        .push('page:rerender', { id })
+        .receive('ok', payload => {
+          this.$toast.success({ message: this.$t('pages.page-rerendered') })
+        })
+    },
+
+    rerenderSection (id) {
+      this.adminChannel.channel
+        .push('page_fragment:rerender', { id })
+        .receive('ok', payload => {
+          this.$toast.success({ message: this.$t('pages.section-rerendered') })
         })
     },
 
@@ -392,14 +417,11 @@ export default {
           `,
           variables: {
             pageId: page.id
-          },
-
-          update: (store, { data: { duplicatePage } }) => {
-            this.$apollo.queries.pages.refresh()
           }
         })
 
         this.$toast.success({ message: this.$t('pages.page-duplicated') })
+        this.$apollo.queries.pages.refresh()
       } catch (err) {
         this.$utils.showError(err)
       }
@@ -449,16 +471,13 @@ export default {
                 `,
                 variables: {
                   pageFragmentId: section.id
-                },
-
-                update: (store, { data: { deletePageFragment } }) => {
-                  this.$apollo.queries.pages.refresh()
                 }
               })
 
               this.$toast.success({
                 message: this.$t('pages.section-deleted')
               })
+              this.$apollo.queries.pages.refresh()
             } catch (err) {
               this.$utils.showError(err)
             }

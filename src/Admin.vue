@@ -362,15 +362,15 @@ export default {
 
       this.adminChannel.on('notifications:mutation', payload => {
         if (this.me.config.showMutationNotifications) {
-        this.$toast.show({
-          title: payload.user.name,
-          message: `${payload.action} [${payload.identifier.type}#<strong>${payload.identifier.id}</strong>] &raquo; "${payload.identifier.title}"`,
-          theme: 'mutations',
-          displayMode: 2,
-          position: 'bottomRight',
-          close: false,
-          progressBar: false
-        })
+          this.$toast.show({
+            title: payload.user.name,
+            message: `${payload.action} [${payload.identifier.type}#<strong>${payload.identifier.id}</strong>] &raquo; "${payload.identifier.title}"`,
+            theme: 'mutations',
+            displayMode: 2,
+            position: 'bottomRight',
+            close: false,
+            progressBar: false
+          })
         }
       })
     },

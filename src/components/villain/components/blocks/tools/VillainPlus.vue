@@ -442,6 +442,13 @@ export default {
     font-size: 19px;
   }
 
+  .villain-editor-plus-available-modules-svg {
+    >>> svg {
+      width: 150px;
+      height: auto;
+    }
+  }
+
   .villain-editor-plus-available-modules-help {
     font-size: 14px;
   }
@@ -579,7 +586,7 @@ export default {
   text-align: left;
 
   &.left-margin {
-    margin-left: 60px;
+    margin-left: 30px;
   }
 }
 

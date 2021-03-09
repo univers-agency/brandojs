@@ -22,8 +22,9 @@
           :label="$t('fields.language.label')" />
 
         <KInputSelect
+          v-if="parents && parents.entries"
           v-model="page.parentId"
-          :options="parents"
+          :options="parents.entries"
           option-value-key="id"
           option-label-key="title"
           name="page[parentId]"
@@ -368,7 +369,6 @@ export default {
     return {
       advancedConfig: false,
       templates: null,
-      parents: [],
       settings: {
         namespacedTemplates: []
       }
@@ -389,7 +389,7 @@ export default {
 
   methods: {
     findParent (id) {
-      const parent = this.parents.find(p => parseInt(p.id) === parseInt(id))
+      const parent = this.parents.entries.find(p => parseInt(p.id) === parseInt(id))
       if (parent) {
         return `[${parent.language.toUpperCase()}] ${parent.title}`
       }
@@ -409,11 +409,13 @@ export default {
       query: gql`
         query Parents {
           parents: pages {
-            id
-            language
-            title
-            uri
-            parentId
+            entries {
+              id
+              language
+              title
+              uri
+              parentId
+            }
           }
         }
       `,
@@ -422,7 +424,7 @@ export default {
         if (this.page) {
           if (this.page.parentId) {
             if (!this.page.uri) {
-              const parent = parents.find(p => parseInt(p.id) === parseInt(this.page.parentId))
+              const parent = parents.entries.find(p => parseInt(p.id) === parseInt(this.page.parentId))
               if (parent) {
                 this.$set(this.page, 'uri', parent.uri + '/path')
               }

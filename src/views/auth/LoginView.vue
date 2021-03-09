@@ -40,7 +40,7 @@
                   label="Login"
                   name="email"
                   placeholder="Epost"
-                  data-cy-email
+                  data-testid="email"
                   @keyup.native.enter="login" />
                 <KInputPassword
                   v-model="user.password"
@@ -48,12 +48,13 @@
                   label="Password"
                   name="password"
                   placeholder="Passord"
-                  data-cy-password
+                  data-testid="password"
                   @keyup.native.enter="login" />
               </form>
               <div>
                 <ButtonPrimary
                   :dark="true"
+                  data-testid="login-button"
                   @click.native.prevent="login">
                   Login &rarr;
                 </ButtonPrimary>

@@ -9,6 +9,7 @@
       tabindex="0"
       :class="{ open: open }"
       class="current-user"
+      data-testid="current-user"
       @click="toggle"
       @keyup.enter="toggle">
       <section class="button">
@@ -53,6 +54,7 @@
           </li>
           <li>
             <router-link
+              data-testid="logout"
               :tabindex="open ? 0 : -1"
               :to="{ name: 'logout' }">
               {{ $t('logout') }}

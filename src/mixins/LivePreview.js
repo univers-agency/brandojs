@@ -37,6 +37,10 @@ export default function ({ schema, prop, key }) {
 
     methods: {
       sharePreview (revision = null) {
+        if (!('id' in this[prop])) {
+          this.$alerts.alertError('Delt forhåndsvisning', 'Man kan ikke dele et objekt som aldri har vært lagret. Prøv å lagre som utkast før du deler!')
+          return false
+        }
         let args = { schema, key, prop, id: this[prop].id }
         if (revision) {
           args = { ...args, revision: revision.revision }

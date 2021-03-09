@@ -8,13 +8,15 @@
           v-model="user.password"
           rules="min:6|confirmed:user[passwordConfirm]"
           name="user[password]"
-          label="Passord"
-          placeholder="Passord" />
+          :label="$t('password')"
+          data-testid="password"
+          :placeholder="$t('password')" />
         <KInputPassword
           v-model="user.passwordConfirm"
           name="user[passwordConfirm]"
-          label="Bekreft passord"
-          placeholder="Bekreft passord" />
+          :label="$t('password-confirm')"
+          data-testid="password-confirm"
+          :placeholder="$t('password-confirm')" />
       </div>
     </section>
   </KForm>
@@ -35,7 +37,15 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>
+<i18n>
+  {
+    "en": {
+        "password": "Password",
+        "password-confirm": "Confirm password"
+    },
+    "no": {
+        "password": "Passord",
+        "password-confirm": "Bekreft passord"
+    }
+  }
+</i18n>

@@ -49,6 +49,7 @@
                 <ButtonPrimary
                   v-if="save"
                   v-shortkey="['meta', 's']"
+                  data-testid="submit"
                   :loading="loading"
                   @shortkey.native="validate()"
                   @click="validate()">
@@ -56,6 +57,7 @@
                 </ButtonPrimary>
                 <ButtonSecondary
                   v-if="back"
+                  data-testid="back"
                   :to="back">
                   &larr; {{ backText }}
                 </ButtonSecondary>
@@ -138,7 +140,7 @@
                       v-if="showPublishModal && revision === modalRevision"
                       :ref="`publishModal${revision.revision}`"
                       v-shortkey="['esc', 'enter']"
-                      ok-text="Lukk"
+                      :ok-text="$t('close')"
                       @shortkey.native="schedulePublishing(revision)"
                       @ok="schedulePublishing(revision)">
                       <template #header>
@@ -326,7 +328,7 @@ export default {
 
       button.button-secondary {
         color: azure;
-        border-color: azure;
+        border-color: azure !important;
 
         &:hover {
           color: #052753;

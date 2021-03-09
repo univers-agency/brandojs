@@ -2,10 +2,11 @@
   <div>
     <button
       type="button"
+      data-testid="children-button"
       :class="{ active }"
       @click.stop.prevent="clickHandler">
       <template v-if="active">
-        Lukk
+        {{ $t('close') }}
       </template>
       <template v-else>
         + {{ length }} <slot></slot>
@@ -52,6 +53,17 @@ export default {
   }
 }
 </script>
+
+<i18n>
+{
+  "en": {
+    "close": "Close"
+  },
+  "no": {
+    "close": "Lukk"
+  }
+}
+</i18n>
 
 <style lang="postcss" scoped>
   a {

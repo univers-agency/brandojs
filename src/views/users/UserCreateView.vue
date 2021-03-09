@@ -61,7 +61,7 @@ export default {
           }
         })
 
-        this.$toast.success({ message: 'Bruker opprettet' })
+        this.$toast.success({ message: this.$t('user.created') })
         this.$router.push({ name: 'users' })
       } catch (err) {
         this.$utils.showError(err)
@@ -75,11 +75,13 @@ export default {
 {
   "en": {
     "user.title": "Users",
-    "user.subtitle": "New user"
+    "user.subtitle": "New user",
+    "user.created": "User created"
   },
   "no": {
     "user.title": "Brukere",
-    "user.subtitle": "Ny bruker"
+    "user.subtitle": "Ny bruker",
+    "user.created": "Bruker opprettet"
   }
 }
 </i18n>

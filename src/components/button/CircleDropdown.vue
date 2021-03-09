@@ -4,8 +4,9 @@
     class="wrapper">
     <button
       ref="button"
-      :class="{ open }"
+      data-testid="circle-dropdown-button"
       type="button"
+      :class="{ open }"
       @click.stop="toggle">
       <svg
         width="40"
@@ -51,6 +52,7 @@
     </button>
     <ul
       ref="content"
+      data-testid="circle-dropdown-content"
       class="dropdown-content"
       @click.stop="closeContent">
       <slot></slot>
@@ -100,13 +102,17 @@ export default {
     closeContent () {
       if (this.open) {
         this.open = false
-        gsap.to(this.$refs.content, {
-          opacity: 0,
-          x: -15,
-          onComplete: () => {
-            gsap.set(this.$refs.content, { display: 'none' })
-          }
-        })
+        if (this.$refs.content) {
+          gsap.to(this.$refs.content, {
+            opacity: 0,
+            x: -15,
+            onComplete: () => {
+              if (this.$refs.content) {
+                gsap.set(this.$refs.content, { display: 'none' })
+              }
+            }
+          })
+        }
       }
     }
   }

@@ -2,6 +2,7 @@
   <div
     ref="el"
     tabindex="0"
+    data-testid="dropdown"
     :class="{ open: open }"
     class="dropdown"
     @click="toggle"

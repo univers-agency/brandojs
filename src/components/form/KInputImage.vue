@@ -10,11 +10,11 @@
         v-if="showErrorModal"
         ref="errorModal"
         v-shortkey="['esc', 'enter']"
-        ok-text="Lukk"
+        :ok-text="$t('close')"
         @shortkey.native="closeErrorModal"
         @ok="closeErrorModal">
         <template #header>
-          Feil
+          {{ $t('error') }}
         </template>
         <div v-html="errorMessage" />
       </KModal>
@@ -23,11 +23,11 @@
         v-if="showEditModal"
         ref="editModal"
         v-shortkey="['esc', 'enter']"
-        ok-text="Lukk"
+        :ok-text="$t('close')"
         @shortkey.native="closeEditModal"
         @ok="closeEditModal">
         <template #header>
-          Endre bildedata
+          {{ $t('edit-image-data') }}
         </template>
         <KInput
           v-model="innerValue.title"
@@ -74,7 +74,7 @@
             v-if="edit && innerValue"
             class="btn-edit"
             @click="showEditModal = true">
-            Endre bildedata
+            {{ $t('edit-image-data') }}
           </ButtonSecondary>
         </template>
 
@@ -88,11 +88,11 @@
             v-if="showModal"
             ref="modal"
             v-shortkey="['esc']"
-            ok-text="Lukk"
+            :ok-text="$t('close')"
             @shortkey.native="closeModal"
             @ok="closeModal">
             <template #header>
-              Rediger bilde
+              {{ $t('edit-image') }}
             </template>
             <PictureInput
               :id="id"
@@ -120,7 +120,7 @@
               v-if="edit && innerValue"
               class="btn-edit"
               @click="showEditModal = true">
-              Endre bildedata
+              {{ $t('edit-image-data') }}
             </ButtonSecondary>
           </KModal>
 
@@ -139,14 +139,14 @@
                 :src="prefill"
                 class="preview-image" />
             </figure>
-            <div>&larr; Klikk på bildet for å redigere/endre</div>
+            <div>&larr; {{ $t('click-to-edit') }}</div>
           </div>
 
           <div v-else>
             <!-- no image -->
             <ButtonSecondary
               @click="showModal = true">
-              Last opp bilde
+              {{ $t('upload-image') }}
             </ButtonSecondary>
           </div>
         </div>
@@ -442,6 +442,12 @@ export default {
 <i18n>
 {
   "en": {
+    "click-to-edit": "Click image to edit",
+    "edit-image": "Edit image",
+    "upload-image": "Upload image",
+    "edit-image-data": "Edit image data",
+    "error": "Error",
+    "close": "Close",
     "upload": "Your device does not support file uploads :(",
     "drag": "Click or drop your image her",
     "tap": "Tap to pick an image from your gallery",
@@ -455,6 +461,12 @@ export default {
     "fileTypeError": "Disallowed file type. <br><br>Valid file types for this field are<br><br>&lt;&lt; {accept} &gt;&gt;<br><br>"
   },
   "no": {
+    "click-to-edit": "Klikk på bildet for å redigere/endre",
+    "edit-image": "Rediger bilde",
+    "upload-image": "Last opp bilde",
+    "edit-image-data": "Endre bildedata",
+    "error": "Feil",
+    "close": "Lukk",
     "upload": "Dingsen du bruker støtter ikke filopplasting :(",
     "drag": "Klikk eller slipp bildet ditt her",
     "tap": "Tapp her for å velge et bilde fra galleriet ditt",
