@@ -108,7 +108,7 @@
                   v-for="(tp, idx) in tpls"
                   :key="'key-' + idx"
                   class="villain-editor-plus-available-module"
-                  @click="addTemplate(tp)">
+                  @click="addModule(tp)">
                   <div class="villain-editor-plus-available-modules-svg">
                     <div
                       v-if="tp.data.svg"
@@ -130,7 +130,7 @@
               v-for="(tp, idx) in namespacedModules.general"
               :key="'general-' + idx"
               class="villain-editor-plus-available-module"
-              @click="addTemplate(tp)">
+              @click="addModule(tp)">
               <div
                 class="villain-editor-plus-available-modules-svg"
                 :class="tp.data.svg ? '' : 'empty'">
@@ -314,7 +314,7 @@ export default {
       this.$emit('add', { block: block, after: this.after, parent: this.parent })
     },
 
-    addTemplate (tp) {
+    addModule (tp) {
       const block = { ...tp, uid: createUID() }
       this.active = false
       this.showingModules = false
