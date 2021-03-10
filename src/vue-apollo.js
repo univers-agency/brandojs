@@ -82,7 +82,6 @@ const defaultOptions = {
   },
 
   onCacheInit: cache => {
-    console.debug('// PATCHING CACHE IN INIT.')
     cache.originalReadQuery = cache.readQuery
     cache.readQuery = (...args) => {
       try {
