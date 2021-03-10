@@ -36,6 +36,7 @@ export default function ({ schema, prop, key }) {
           prop,
           key
         },
+        revisionsInitialRun: true,
         activeRevision: {},
         revisionSet: false
       }
@@ -53,6 +54,23 @@ export default function ({ schema, prop, key }) {
           .push('revision:activate', { schema: this.revisionMeta.schema, id: this[prop][key], revision: revision.revision })
           .receive('ok', payload => {
             this.selectRevision(revision)
+            this.$apollo.queries.revisions.refresh()
+          })
+      },
+
+      toggleProtected (revision) {
+        const action = revision.protected ? 'unprotect' : 'protect'
+        this.adminChannel.channel
+          .push(`revision:${action}`, { schema: this.revisionMeta.schema, id: this[prop][key], revision: revision.revision })
+          .receive('ok', payload => {
+            this.$apollo.queries.revisions.refresh()
+          })
+      },
+
+      describeRevision(revision, description) {
+        this.adminChannel.channel
+          .push('revision:describe', { schema: this.revisionMeta.schema, id: this[prop][key], revision: revision.revision, description: description })
+          .receive('ok', payload => {
             this.$apollo.queries.revisions.refresh()
           })
       },
@@ -93,7 +111,10 @@ export default function ({ schema, prop, key }) {
         },
 
         update ({ revisions }) {
-          this.activeRevision = revisions.find(r => r.active)
+          if (this.revisionsInitialRun) {
+            this.activeRevision = revisions.find(r => r.active)
+            this.revisionsInitialRun = false
+          }
           return revisions
         },
 

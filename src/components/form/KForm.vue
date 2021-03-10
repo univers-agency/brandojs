@@ -84,85 +84,138 @@
             <p>
               {{ $t('revision-store-help') }}
             </p>
-            <ButtonSecondary @click="storeRevision($parent.activeRevision)">
-              {{ $t('save-version') }}
-            </ButtonSecondary>
+            <div class="button-group">
+              <ButtonSecondary @click="storeRevision($parent.activeRevision)">
+                {{ $t('save-version') }}
+              </ButtonSecondary>
 
-            <ButtonSecondary @click="$parent.purgeRevisions()">
-              {{ $t('purge-versions') }}
-            </ButtonSecondary>
+              <ButtonSecondary @click="$parent.purgeRevisions()">
+                {{ $t('purge-versions') }}
+              </ButtonSecondary>
+            </div>
           </div>
           <table class="revisions-table">
-            <tr
-              v-for="revision in $parent.revisions"
-              :key="`${revision.entryName}_${revision.entryId}_${revision.revision}`"
-              :class="{ active: $parent.activeRevision === revision }"
-              class="revisions-line"
-              @click="$parent.selectRevision(revision)">
-              <td class="fit">
-                #{{ revision.revision }}
-              </td>
-              <td class="fit">
-                <FontAwesomeIcon
-                  v-if="revision.active"
-                  icon="star"
-                  size="sm" />
-              </td>
-              <td class="date fit">
-                {{ $utils.datetime(revision.insertedAt, $identity.config.timezone) }}
-              </td>
-              <td class="user">
-                {{ revision.creator.name }}
-              </td>
-              <td class="activate fit">
-                <CircleDropdown>
-                  <li v-if="!revision.active">
-                    <button
-                      type="button"
-                      @click="$parent.activateRevision(revision)">
-                      {{ $t('activate-revision') }}
-                    </button>
-                  </li>
-                  <li v-if="!revision.active">
-                    <button
-                      type="button"
-                      @click="$parent.deleteRevision(revision)">
-                      {{ $t('delete-revision') }}
-                    </button>
-                  </li>
-                  <li v-if="!revision.active">
-                    <button
-                      type="button"
-                      @click="openPublishModal(revision)">
-                      {{ $t('schedule-revision') }}
-                    </button>
-                    <KModal
-                      v-if="showPublishModal && revision === modalRevision"
-                      :ref="`publishModal${revision.revision}`"
-                      v-shortkey="['esc', 'enter']"
-                      :ok-text="$t('close')"
-                      @shortkey.native="schedulePublishing(revision)"
-                      @ok="schedulePublishing(revision)">
-                      <template #header>
+            <template
+              v-for="revision in $parent.revisions">
+              <tr
+                :key="`${revision.entryName}_${revision.entryId}_${revision.revision}`"
+                :class="{ active: $parent.activeRevision.revision === revision.revision }"
+                class="revisions-line"
+                @click="$parent.selectRevision(revision)">
+                <td class="fit">
+                  #{{ revision.revision }}
+                </td>
+                <td class="fit">
+                  <FontAwesomeIcon
+                    v-if="revision.active"
+                    icon="star"
+                    size="sm" />
+                </td>
+                <td class="fit">
+                  <FontAwesomeIcon
+                    v-if="revision.protected"
+                    icon="lock"
+                    size="sm" />
+                </td>
+                <td class="date fit">
+                  {{ $utils.datetime(revision.insertedAt, $identity.config.timezone) }}
+                </td>
+                <td class="user">
+                  {{ revision.creator.name }}
+                </td>
+                <td class="activate fit">
+                  <CircleDropdown>
+                    <li v-if="!revision.active">
+                      <button
+                        type="button"
+                        @click="$parent.activateRevision(revision)">
+                        {{ $t('activate-revision') }}
+                      </button>
+                    </li>
+                    <li v-if="!revision.active">
+                      <button
+                        type="button"
+                        @click="$parent.deleteRevision(revision)">
+                        {{ $t('delete-revision') }}
+                      </button>
+                    </li>
+                    <li v-if="!revision.active">
+                      <button
+                        type="button"
+                        @click="openPublishModal(revision)">
                         {{ $t('schedule-revision') }}
-                      </template>
-                      <KInputDatetime
-                        v-model="publishAt"
-                        name="publishAt"
-                        :label="$t('publishAt-label')"
-                        :help-text="$t('publishAt-helpText')" />
-                    </KModal>
-                  </li>
-                  <li>
-                    <button
-                      type="button"
-                      @click="$parent.sharePreview(revision)">
-                      {{ $t('share-preview') }}
-                    </button>
-                  </li>
-                </CircleDropdown>
-              </td>
-            </tr>
+                      </button>
+                      <KModal
+                        v-if="showPublishModal && revision === modalRevision"
+                        :ref="`publishModal${revision.revision}`"
+                        v-shortkey="['esc', 'enter']"
+                        :ok-text="$t('close')"
+                        @shortkey.native="schedulePublishing(revision)"
+                        @ok="schedulePublishing(revision)">
+                        <template #header>
+                          {{ $t('schedule-revision') }}
+                        </template>
+                        <KInputDatetime
+                          v-model="publishAt"
+                          name="publishAt"
+                          :label="$t('publishAt-label')"
+                          :help-text="$t('publishAt-helpText')" />
+                      </KModal>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        @click="$parent.sharePreview(revision)">
+                        {{ $t('share-preview') }}
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        @click="$parent.toggleProtected(revision)">
+                        {{ $t(revision.protected ? 'unprotect-revision' : 'protect-revision') }}
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        @click="openDescribeModal(revision)">
+                        {{ $t('describe-revision') }}
+                      </button>
+                      <KModal
+                        v-if="showDescribeModal && revision === modalRevision"
+                        :ref="`describeModal${revision.revision}`"
+                        v-shortkey="['esc', 'enter']"
+                        :ok-text="$t('close')"
+                        @shortkey.native="describeRevision(revision)"
+                        @ok="describeRevision(revision)">
+                        <template #header>
+                          {{ $t('describe-revision') }}
+                        </template>
+                        <KInput
+                          v-model="description"
+                          name="description"
+                          :label="$t('description-label')"
+                          :help-text="$t('description-helpText')" />
+                      </KModal>
+                    </li>
+                  </CircleDropdown>
+                </td>
+              </tr>
+              <tr
+                v-if="revision.description"
+                :key="`${revision.entryName}_${revision.entryId}_${revision.revision}_description`"
+                :class="{ active: $parent.activeRevision.revision === revision.revision }"
+                class="revisions-line"
+                @click="$parent.selectRevision(revision)">
+                <td colspan="3"></td>
+                <td
+                  colspan="3"
+                  class="revision-description">
+                  &uarr; {{ revision.description }}
+                </td>
+              </tr>
+            </template>
           </table>
         </div>
       </div>
@@ -210,6 +263,7 @@ export default {
       hasRevisions: false,
       showRevisions: false,
       showPublishModal: false,
+      showDescribeModal: false,
       publishAt: null,
       modalRevision: null
     }
@@ -245,6 +299,20 @@ export default {
     openPublishModal (revision) {
       this.modalRevision = revision
       this.showPublishModal = true
+    },
+
+    openDescribeModal (revision) {
+      this.modalRevision = revision
+      this.description = revision.description
+      this.showDescribeModal = true
+    },
+
+    async describeRevision (revision) {
+      this.$parent.describeRevision(revision, this.description)
+      await this.$refs[`describeModal${revision.revision}`][0].close()
+      this.showDescribeModal = false
+      this.description = null
+      this.modalRevision = null
     },
 
     async schedulePublishing (revision) {
@@ -304,6 +372,21 @@ export default {
       @space padding 15px;
     }
 
+    .button-group {
+      display: flex;
+      width: 100%;
+
+      button {
+        display: flex;
+        flex-grow: 1;
+        text-align: center;
+
+        + button {
+          margin-left: -1px;
+        }
+      }
+    }
+
     .revisions-header {
       display: flex;
       justify-content: space-between;
@@ -351,18 +434,35 @@ export default {
               border-color: #052753;
             }
           }
+
+          >>> .circle-dropdown {
+            .main-circle {
+              stroke: #052753;
+            }
+
+            line {
+              stroke: #052753;
+            }
+
+            &:hover {
+              line {
+                stroke: azure;
+              }
+            }
+          }
         }
 
         td {
           @font mono;
           white-space: pre-line;
           border: 1px solid azure;
-          padding: 5px 10px;
-          font-size: 16px;
+          padding: 3px 10px;
+          font-size: 13px;
           transition: color 250ms ease, background-color 250ms ease;
 
           &.fit {
-            white-space: pre;
+            white-space: nowrap;
+            min-width: 34px;
           }
 
           &.active {
@@ -370,8 +470,28 @@ export default {
             text-align: center;
           }
 
+          &.revision-description {
+            padding: 10px 10px;
+          }
+
           &.activate {
             @font main;
+          }
+
+          >>> .circle-dropdown {
+            .main-circle {
+              stroke: azure;
+            }
+
+            line {
+              stroke: azure;
+            }
+
+            &:hover {
+              line {
+                stroke: azure;
+              }
+            }
           }
         }
       }
@@ -456,6 +576,9 @@ export default {
     "select": "Select",
     "active": "Active",
     "close": "Close",
+    "describe-revision": "Describe version",
+    "protect-revision": "Protect version",
+    "unprotect-revision": "Unprotect version",
     "activate-revision": "Activate version",
     "delete-revision": "Delete version",
     "purge-versions": "Purge inactive versions",
@@ -463,7 +586,9 @@ export default {
     "revision-store-help": "You may also store a new version of the entry without activating it. This might be useful for scheduling content publishing.",
     "schedule-revision": "Schedule publication",
     "publishAt-label": "Publish at",
-    "publishAt-helpText": "Entry is set to this version at this time"
+    "publishAt-helpText": "Entry is set to this version at this time",
+    "description-label": "Describe the version",
+    "description-helpText": "A short description to help you identify this version"
   },
   "no": {
     "add": "Legg til",
@@ -478,6 +603,9 @@ export default {
     "select": "Velg",
     "active": "Aktiv",
     "close": "Lukk",
+    "describe-revision": "Beskriv versjonen",
+    "protect-revision": "Beskytt versjonen",
+    "unprotect-revision": "Ubeskytt versjonen",
     "activate-revision": "Aktivér versjon",
     "delete-revision": "Slett versjon",
     "purge-versions": "Kast inaktive versjoner",
@@ -485,7 +613,9 @@ export default {
     "revision-store-help": "Du kan også lagre en ny versjon av objektet uten å aktivere. Dette kan være nyttig for å teste ut endringer uten at de går live, for senere å aktivere versjonen.",
     "schedule-revision": "Planlegg publisering",
     "publishAt-label": "Publiseringstidspunkt",
-    "publishAt-helpText": "Objektet skiftes til denne versjonen til dette tidspunktet"
+    "publishAt-helpText": "Objektet skiftes til denne versjonen til dette tidspunktet",
+    "description-label": "Beskrivelse av versjonen",
+    "description-helpText": "En kort tekst som kan hjelpe deg å identifisere versjonen"
   }
 }
 </i18n>

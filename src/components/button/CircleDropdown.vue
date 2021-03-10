@@ -1,7 +1,7 @@
 <template>
   <div
     v-click-outside="closeContent"
-    class="wrapper">
+    class="circle-dropdown wrapper">
     <button
       ref="button"
       data-testid="circle-dropdown-button"

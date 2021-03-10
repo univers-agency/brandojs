@@ -125,7 +125,7 @@ export default {
       query: GET_USER,
       variables () {
         return {
-          userId: this.me.id
+          matches: { id: this.me.id }
         }
       },
 

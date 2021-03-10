@@ -122,7 +122,7 @@ export default {
 
   computed: {
     orderedUsers () {
-      const usrs = [...this.users]
+      const usrs = [...this.users.entries]
       if (!usrs) {
         return []
       }
@@ -485,10 +485,12 @@ export default {
       query: gql`
         query Users {
           users {
-            id
-            name
-            avatar {
-              thumb: url(size: "thumb")
+            entries {
+              id
+              name
+              avatar {
+                thumb: url(size: "thumb")
+              }
             }
           }
         }
@@ -1259,7 +1261,7 @@ export default {
   font-size: 12px;
   text-transform: uppercase;
   display: inline-block;
-  padding: 5px 6px 4px;
+  padding: 5px 8px 4px;
   line-height: 1;
   border: 1px solid theme(colors.grayLight);
   border-radius: 15px;

@@ -81,7 +81,7 @@ export default {
       fetchPolicy: 'no-cache',
       variables () {
         return {
-          userId: this.me.id
+          matches: { id: this.me.id }
         }
       },
 

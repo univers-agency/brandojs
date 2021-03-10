@@ -175,7 +175,7 @@ export default {
       },
 
       skip () {
-        return !this.pageId
+        return !this.pageId || !this.page
       }
     }
   },

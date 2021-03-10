@@ -3,6 +3,8 @@ fragment revision on Revision {
   entryType
   revision
   active
+  protected
+  description
 
   creator {
     id

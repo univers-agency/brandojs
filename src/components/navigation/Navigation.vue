@@ -62,15 +62,17 @@ export default {
 
 <style lang="postcss" scoped>
   #navigation {
-    @space padding-x md;
     @responsive desktop_xl { width: 370px }
     @responsive desktop_lg { width: 370px }
     @responsive desktop_md { width: 330px }
     @responsive ipad_landscape { width: 330px }
     @responsive mobile { width: 330px }
     @responsive iphone { width: 330px }
+    @space padding-x md;
 
-    background-color: theme(colors.peach);
+    background-color: #ffffff;
+    border-right: 1px solid theme(colors.dark);
+
     flex-shrink: 0;
     flex-grow: 0;
 

@@ -68,6 +68,9 @@
         </div>
         <div class="col-2 justify-end">
           <div class="badge">
+            <FontAwesomeIcon
+              icon="map"
+              size="sm" />
             {{ $t('menus.menu') }}
           </div>
         </div>
@@ -130,10 +133,7 @@
           sequence-handle="item-sequence-handle"
           @sort="sortItems($event, rootMenu, rootMenu)">
           <template #row="{ entry: item }">
-            <div class="col-1">
-              <div class="circle">
-              </div>
-            </div>
+            <div class="col-1"></div>
             <div class="col-6 subtitle">
               <div class="arrow">
                 ↳
@@ -145,15 +145,19 @@
                   {{ item.title || 'Ingen tittel' }}
                 </div>
                 <div class="keys">
-                  <div class="badge">
-                    {{ item.key }}
+                  <div class="badge url">
+                    <FontAwesomeIcon
+                      icon="globe-americas"
+                      size="sm" /> &rarr; {{ item.url }}
                   </div>
                 </div>
               </div>
             </div>
             <div class="col-3 justify-end">
-              <div class="badge">
-                {{ $t('menus.item') }}
+              <div class="badge url">
+                <FontAwesomeIcon
+                  icon="map-pin"
+                  size="sm" /> {{ $t('menus.item') }}
               </div>
             </div>
             <div class="col-4 justify-end">
@@ -583,10 +587,10 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-  .title {
+  /* .title {
     @fontsize base(0.8);
     font-family: theme(typography.families.mono);
-  }
+  } */
 
   .arrow {
     margin-right: 15px;
@@ -595,13 +599,14 @@ export default {
 
   .subtitle {
     @fontsize base(0.8);
-    font-family: theme(typography.families.mono);
+    /* font-family: theme(typography.families.mono); */
     display: flex;
     flex-direction: row;
+  }
 
-    .badge {
-      margin-top: 5px;
-    }
+  .badge {
+    text-transform: none;
+    margin-top: 5px;
   }
 
   .clickable {

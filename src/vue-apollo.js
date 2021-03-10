@@ -99,6 +99,8 @@ const defaultOptions = {
   }
 }
 
+let PREVIOUS_ERROR
+
 // Call this in the Vue app file
 export function createProvider (options = {}) {
   // Create apollo client
@@ -119,6 +121,13 @@ export function createProvider (options = {}) {
 
     async errorHandler (err) {
       const { networkError, graphQLErrors } = err
+
+      if (PREVIOUS_ERROR === graphQLErrors) {
+        return
+      }
+
+      PREVIOUS_ERROR = graphQLErrors
+
       if (networkError) {
         switch (networkError.statusCode) {
           case 422:
