@@ -53,10 +53,6 @@ export default {
     }
   },
 
-  created () {
-    console.debug('<HtmlBlock /> created')
-  },
-
   mounted () {
     this.codeMirror = CodeMirror.fromTextArea(this.$refs.txt, {
       mode: 'twig',

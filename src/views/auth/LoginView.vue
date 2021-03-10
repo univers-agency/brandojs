@@ -88,7 +88,6 @@ export default {
 
   created () {
     this.loading++
-    console.debug('created <login />')
 
     if (this.token && this.checkExpired()) {
       //

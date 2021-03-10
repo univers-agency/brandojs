@@ -120,7 +120,6 @@ export default {
   },
 
   created () {
-    console.debug('==> Villain created')
     if (this.value === null) {
       this.innerValue = []
     }

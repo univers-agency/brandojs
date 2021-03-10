@@ -59,10 +59,6 @@ export default {
     }
   },
 
-  created () {
-    console.debug('<MarkdownBlock /> created')
-  },
-
   destroy () {
     // garbage cleanup
     const element = this.codeMirror.doc.cm.getWrapperElement()

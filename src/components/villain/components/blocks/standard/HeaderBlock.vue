@@ -118,10 +118,6 @@ export default {
     }
   },
 
-  created () {
-    console.debug('<HeaderBlock /> created')
-  },
-
   mounted () {
     autosize(this.$refs.txt)
   }

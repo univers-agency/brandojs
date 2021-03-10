@@ -68,10 +68,6 @@ export default {
     return {
       uid: null
     }
-  },
-
-  created () {
-    console.debug('<InputBlock /> created')
   }
 }
 </script>

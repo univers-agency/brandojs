@@ -36,7 +36,6 @@ export default {
   },
 
   created () {
-    console.debug('<BlockConfig /> created')
     this.innerValue = this.value
   },
 

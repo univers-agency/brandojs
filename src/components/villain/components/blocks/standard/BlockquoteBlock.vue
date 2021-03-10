@@ -51,10 +51,6 @@ export default {
       customClass: '',
       uid: null
     }
-  },
-
-  created () {
-    console.debug('<BlockquoteBlock /> created')
   }
 }
 </script>

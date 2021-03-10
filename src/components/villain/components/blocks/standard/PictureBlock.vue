@@ -359,10 +359,6 @@ export default {
     }
   },
 
-  created () {
-    console.debug('<PictureBlock /> created')
-  },
-
   methods: {
     clickDrop () {
       this.$refs.fileInput.click()

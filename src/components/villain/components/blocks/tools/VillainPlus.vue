@@ -223,10 +223,6 @@ export default {
     }
   },
 
-  created () {
-    console.debug('<VillainPlus /> created')
-  },
-
   mounted () {
     this.$refs.plusLink.addEventListener('dragenter', this.dragEnter)
     this.$refs.plusLink.addEventListener('dragover', this.dragOver)

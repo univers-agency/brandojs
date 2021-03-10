@@ -67,10 +67,6 @@ export default {
     }
   },
 
-  created () {
-    console.debug('<MediaBlock /> created')
-  },
-
   methods: {
     getComponentName ({ component }) {
       const foundBlock = this.available.blocks.find(b => b.component === component)

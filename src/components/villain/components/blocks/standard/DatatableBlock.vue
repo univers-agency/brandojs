@@ -126,10 +126,6 @@ export default {
     }
   },
 
-  created () {
-    console.debug('<DatatableBlock /> created')
-  },
-
   methods: {
     forceUpdate (data) {
       this.$set(this.block, 'data', data)

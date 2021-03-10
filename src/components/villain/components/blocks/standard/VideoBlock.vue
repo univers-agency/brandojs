@@ -165,8 +165,6 @@ export default {
   },
 
   created () {
-    console.debug('<VideoBlock /> created')
-
     if (this.block.data.remote_id) {
       this.html = this.providers[this.block.data.source].html
         .replace('{{protocol}}', window.location.protocol)

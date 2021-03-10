@@ -296,8 +296,6 @@ export default {
   },
 
   created () {
-    console.debug('<SlideshowBlock /> created')
-
     this.getImages()
 
     if (!this.block.data.images.length) {

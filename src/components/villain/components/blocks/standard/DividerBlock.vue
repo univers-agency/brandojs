@@ -44,10 +44,6 @@ export default {
     return {
       uid: null
     }
-  },
-
-  created () {
-    console.debug('<DividerBlock /> created')
   }
 }
 </script>

@@ -59,7 +59,6 @@ export default {
   },
 
   created () {
-    console.debug('created <ModalImageSeries />')
     this.getData()
   },
 

@@ -83,14 +83,6 @@ export default {
       uid: null,
       showConfig: false
     }
-  },
-
-  created () {
-    console.debug('<SvgBlock /> created')
-  },
-
-  methods: {
-
   }
 }
 </script>

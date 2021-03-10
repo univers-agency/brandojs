@@ -152,10 +152,6 @@ export default {
     }
   },
 
-  created () {
-    console.debug('<ListBlock /> created')
-  },
-
   methods: {
     refreshData (data) {
       this.$set(this.block.data, 'rows', data.rows)

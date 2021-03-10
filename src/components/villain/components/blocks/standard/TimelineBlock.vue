@@ -95,10 +95,6 @@ export default {
     }
   },
 
-  created () {
-    console.debug('<TimelineBlock /> created')
-  },
-
   updated () {
     console.debug('<TimelineBlock /> updated')
   },

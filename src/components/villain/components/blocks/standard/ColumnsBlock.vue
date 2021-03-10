@@ -124,7 +124,6 @@ export default {
   },
 
   created () {
-    console.debug('<ColumnsBlock /> created')
     if (!this.block.data.length) {
       this.showConfig = true
     }

@@ -163,7 +163,6 @@ export default {
   },
 
   created () {
-    console.debug('<ModuleBlock /> created')
     this.deleteProps()
 
     // if this is a multi but refs is not an array of arrays

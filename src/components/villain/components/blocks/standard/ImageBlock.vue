@@ -329,10 +329,6 @@ export default {
     }
   },
 
-  created () {
-    console.debug('<ImageBlock /> created')
-  },
-
   methods: {
     resetImage () {
       this.$set(this.block.data, 'url', '')

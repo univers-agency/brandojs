@@ -53,10 +53,6 @@ export default {
     }
   },
 
-  created () {
-    console.debug('<CommentBlock /> created')
-  },
-
   methods: {
     handleInput (e) {
       const start = e.target.selectionStart

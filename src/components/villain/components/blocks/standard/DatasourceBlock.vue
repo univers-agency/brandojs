@@ -205,7 +205,6 @@ export default {
   },
 
   async created () {
-    console.debug('<DatasourceBlock /> created')
     this.getModules()
     if (this.block.data.module) {
       this.getModuleKeys()

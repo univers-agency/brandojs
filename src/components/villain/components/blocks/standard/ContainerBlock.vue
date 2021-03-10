@@ -135,8 +135,6 @@ export default {
   },
 
   created () {
-    console.debug('<ContainerBlock /> created')
-
     this.availableSections = this.$app.sections || [{ label: 'Standard', value: 'standard', color: '#000' }]
   },
 

@@ -101,8 +101,6 @@ export default {
   },
 
   created () {
-    console.debug('<MapBlock /> created')
-
     if (this.block.data.embed_url) {
       this.populateMap()
     }

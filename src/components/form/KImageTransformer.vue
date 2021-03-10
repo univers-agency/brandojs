@@ -176,8 +176,6 @@ export default {
   },
 
   created () {
-    console.debug('<KImageTransformer /> created')
-
     if (this.value) {
       this.new = false
       this.innerValue = this.value
