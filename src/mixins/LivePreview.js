@@ -27,7 +27,7 @@ export default function ({ schema, prop, key }) {
               this.livePreviewPreviousValue = cloneDeep(v)
             }
           }
-        }, 1000, true)
+        }, 750, true)
       }
     },
 

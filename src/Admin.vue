@@ -179,8 +179,6 @@ export default {
     this.$root.ready = false
     this.$root.initialized = false
 
-    console.debug('created <App />')
-
     this.listenForTabs()
     this.checkFullscreen()
     this.checkToken()
