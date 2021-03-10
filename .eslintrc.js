@@ -17,6 +17,7 @@ module.exports = {
     'vue/no-v-html': 0,
     'vue/html-end-tags': 1,
     'vue/html-self-closing': 0,
+    'vue/no-use-v-if-with-v-for': 0,
     'vue/html-closing-bracket-newline': ['error', {
       singleline: 'never',
       multiline: 'never'
