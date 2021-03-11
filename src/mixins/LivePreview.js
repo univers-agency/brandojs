@@ -64,8 +64,7 @@ export default function ({ schema, prop, key }) {
 
               window.open(
                 '/__livepreview?key=' + this.livePreviewCacheKey,
-                '_blank',
-                'location=no,menubar=no,resizable=yes,status=no'
+                '_blank'
               )
 
               this.livePreviewActivated = true

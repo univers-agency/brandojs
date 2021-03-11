@@ -179,14 +179,18 @@
           </template>
           <template #edit="{ editEntry }">
             <td>
-              <input
+              <KInput
                 v-model="editEntry.name"
-                type="text">
+                compact
+                :placeholder="$t('link-name')"
+                name="editLink[name]" />
             </td>
             <td>
-              <input
+              <KInput
                 v-model="editEntry.url"
-                type="text">
+                compact
+                :placeholder="$t('link-url')"
+                name="editLink[url]" />
             </td>
           </template>
         </KInputTable>

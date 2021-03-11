@@ -1165,6 +1165,10 @@ export default {
   margin-top: 25px;
 }
 
+.mb-1 {
+  margin-bottom: 7px !important;
+}
+
 .mb-2 {
   margin-bottom: 15px !important;
 }

@@ -168,6 +168,12 @@ export default {
       default: null
     },
 
+    // should only deal with arrays of IDs, not objects
+    idsOnly: {
+      type: Boolean,
+      default: false
+    },
+
     disabled: {
       type: Boolean,
       default: false
@@ -253,7 +259,10 @@ export default {
 
   computed: {
     innerValue () {
-      return this.selected.map(v => v[this.optionValueKey])
+      if (this.idsOnly) {
+        return this.selected.map(v => v[this.optionValueKey])
+      }
+      return this.selected
     },
 
     pointerPosition () {
@@ -310,16 +319,20 @@ export default {
     },
 
     selectFromValue () {
-      this.selected = this.value
-        .map(v => {
-          if (typeof v === 'object') {
-            return v
-          } else {
-            return this.options
-              .find(o => o[this.optionValueKey].toString() === v.toString())
-          }
-        })
-        .filter(o => o !== undefined)
+      if (this.idsOnly) {
+        this.selected = this.value
+          .map(v => {
+            if (typeof v === 'object') {
+              return v
+            } else {
+              return this.options
+                .find(o => o[this.optionValueKey].toString() === v.toString())
+            }
+          })
+          .filter(o => o !== undefined)
+      } else {
+        this.selected = this.value
+      }
     },
 
     emitSelected () {
