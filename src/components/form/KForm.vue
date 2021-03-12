@@ -77,11 +77,14 @@
       </form>
 
       <div
+        v-if="hasMeta"
         class="drawer"
-        :class="{open: showMeta}">
+        :class="{ open: showMeta }">
         <div class="inner">
           <div class="drawer-header">
-            <h2>{{ $t('meta') }}</h2>
+            <h2>
+              {{ $t('meta') }}
+            </h2>
             <button
               class="rev-button"
               @click="showMeta = false">
@@ -121,6 +124,7 @@
       </div>
 
       <div
+        v-if="hasRevisions"
         class="drawer"
         :class="{open: showRevisions}">
         <div class="inner">
@@ -390,7 +394,6 @@ export default {
 
     openMeta () {
       this.showMeta = !this.showMeta
-      console.log('openMeta', this.showMeta)
     },
 
     openRevisions () {
@@ -416,6 +419,7 @@ export default {
 <style lang="postcss" scoped>
   .drawer {
     height: 100vh;
+    z-index: 999;
     width: 650px;
     position: fixed;
     right: 0;
