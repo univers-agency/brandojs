@@ -121,11 +121,11 @@ module.exports = {
           help: {
             iphone: '14px',
             mobile: '14px',
-            ipad_portrait: '16px',
-            ipad_landscape: '16px',
-            desktop_md: '16px',
-            desktop_lg: '16px',
-            desktop_xl: '17px'
+            ipad_portrait: '15px',
+            ipad_landscape: '15px',
+            desktop_md: '15px',
+            desktop_lg: '15px',
+            desktop_xl: '15px'
           },
           label: {
             iphone: '15px',

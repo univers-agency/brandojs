@@ -27,18 +27,6 @@ export default {
       cssClasses: {
         label: 'Extra CSS classes'
       },
-      metaTitle: {
-        label: 'META title',
-        helpText: 'Title (for search engines) — overrides main title'
-      },
-      metaDescription: {
-        label: 'META description',
-        helpText: 'Short description (for search engines)'
-      },
-      metaImage: {
-        label: 'META image',
-        helpText: 'If you need a custom image for sharing. <br>Cropped to 1200x630'
-      },
       properties: {
         label: 'Page properties (advanced)'
       },
@@ -120,18 +108,6 @@ export default {
       },
       cssClasses: {
         label: 'Ekstra CSS klasser'
-      },
-      metaTitle: {
-        label: 'META tittel',
-        helpText: 'Tittel (for søkemotorer) — overstyrer hovedtittel'
-      },
-      metaDescription: {
-        label: 'META beskrivelse',
-        helpText: 'Kort beskrivelse (for søkemotorer)'
-      },
-      metaImage: {
-        label: 'Delebilde (META bilde)',
-        helpText: 'Om du trenger et spesialtilpasset bilde for deling.<br>Beskjæres til 1200x630.'
       },
       properties: {
         label: 'Sideegenskaper (avansert)'

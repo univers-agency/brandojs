@@ -3,6 +3,7 @@
     :name="name"
     :label="label"
     :rules="rules"
+    :character-count="characterCount"
     :maxlength="maxlength"
     :help-text="helpText"
     :value="value">
@@ -18,11 +19,6 @@
         :name="name"
         :disabled="disabled"
         @input="handleInput"></textarea>
-      <div
-        v-if="counter"
-        class="counter">
-        {{ charCounter }}
-      </div>
     </template>
   </KFieldBase>
 </template>
@@ -36,7 +32,7 @@ export default {
       default: false
     },
 
-    counter: {
+    characterCount: {
       type: Boolean,
       default: false
     },

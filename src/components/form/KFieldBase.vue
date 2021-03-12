@@ -54,7 +54,12 @@
       <div
         v-if="maxlength"
         class="max-length">
-        {{ maxlength - value.length }}
+        {{ maxlength - (value ? value.length : 0) }}
+      </div>
+      <div
+        v-if="characterCount"
+        class="character-count">
+        {{ value ? value.length : 0 }}
       </div>
     </div>
   </div>
@@ -81,6 +86,11 @@ export default {
     maxlength: {
       type: Number,
       default: null
+    },
+
+    characterCount: {
+      type: Boolean,
+      default: false
     },
 
     rules: {
@@ -200,6 +210,13 @@ export default {
 
       .help-text {
         @fontsize form.help;
+      }
+
+      .character-count {
+        font-size: 12px;
+        border: 1px solid theme(colors.dark);
+        border-radius: 16px;
+        padding: 3px 5px 2px;
       }
     }
   }

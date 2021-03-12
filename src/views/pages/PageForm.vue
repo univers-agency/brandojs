@@ -45,17 +45,6 @@
           rules="required"
           name="page[title]" />
 
-        <template v-if="templates">
-          <KInputSelect
-            v-if="advancedConfig || !page.id"
-            v-model="page.template"
-            rules="required"
-            :options="templates"
-            option-value-key="value"
-            name="page[template]"
-            :label="$t('fields.template.label')" />
-        </template>
-
         <KInput
           v-model="page.uri"
           monospace
@@ -68,49 +57,32 @@
       <div class="half">
         <fieldset>
           <KInputToggle
-            v-if="advancedConfig"
             v-model="page.isHomepage"
             name="config[isHomepage]"
             :label="$t('fields.isHomepage.label')" />
 
           <KInputDatetime
-            v-if="advancedConfig"
             v-model="page.publishAt"
             name="page[publishAt]"
             :null="true"
             :label="$t('fields.publishAt.label')"
             :help-text="$t('fields.publishAt.helpText')" />
 
+          <KInputSelect
+            v-if="templates"
+            v-model="page.template"
+            rules="required"
+            :options="templates"
+            option-value-key="value"
+            name="page[template]"
+            :label="$t('fields.template.label')" />
+
           <KInput
-            v-if="advancedConfig"
             v-model="page.cssClasses"
             name="page[cssClasses]"
             type="text"
             :placeholder="$t('fields.cssClasses.label')"
             :label="$t('fields.cssClasses.label')" />
-
-          <KInput
-            v-model="page.metaTitle"
-            name="page[metaTitle]"
-            type="text"
-            :help-text="$t('fields.metaTitle.helpText')"
-            :label="$t('fields.metaTitle.label')" />
-
-          <KInputTextarea
-            v-model="page.metaDescription"
-            :rows="4"
-            name="page[metaDescription]"
-            type="text"
-            :help-text="$t('fields.metaDescription.helpText')"
-            :label="$t('fields.metaDescription.label')" />
-
-          <KInputImage
-            v-model="page.metaImage"
-            small
-            name="page[metaImage]"
-            preview-key="original"
-            :help-text="$t('fields.metaImage.helpText')"
-            :label="$t('fields.metaImage.label')" />
         </fieldset>
       </div>
     </section>
@@ -333,15 +305,21 @@
 import gql from 'graphql-tag'
 import LivePreview from '../../mixins/LivePreview'
 import Revisions from '../../mixins/Revisions'
+import Meta from '../../mixins/Meta'
 import locale from '../../locales/pages'
 
 export default {
   mixins: [
+    Meta({
+      prop: 'page'
+    }),
+
     LivePreview({
       schema: 'Brando.Pages.Page',
       prop: 'page',
       key: 'data'
     }),
+
     Revisions({
       schema: 'Brando.Pages.Page',
       prop: 'page',

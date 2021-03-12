@@ -4,6 +4,7 @@
     :label="label"
     :rules="rules"
     :maxlength="maxlength"
+    :character-count="characterCount"
     :help-text="helpText"
     :compact="compact"
     :value="value">
@@ -51,6 +52,11 @@ export default {
     maxlength: {
       type: Number,
       default: null
+    },
+
+    characterCount: {
+      type: Boolean,
+      default: false,
     },
 
     placeholder: {

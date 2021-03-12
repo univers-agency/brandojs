@@ -4,6 +4,15 @@
     @enter="enter">
     <div class="form-wrapper">
       <div class="mixins">
+        <template v-if="hasMeta">
+          <div class="mixin">
+            <ButtonSmall
+              @click="openMeta">
+              <CircleFilled :status="$parent.metaScoreStatus" />
+              Meta
+            </ButtonSmall>
+          </div>
+        </template>
         <template v-if="hasRevisions && $parent.hasId">
           <div class="mixin">
             <ButtonSmall
@@ -68,10 +77,54 @@
       </form>
 
       <div
-        class="revisions-drawer"
+        class="drawer"
+        :class="{open: showMeta}">
+        <div class="inner">
+          <div class="drawer-header">
+            <h2>{{ $t('meta') }}</h2>
+            <button
+              class="rev-button"
+              @click="showMeta = false">
+              {{ $t('close') }}
+            </button>
+          </div>
+          <div class="drawer-info">
+            <p>{{ $t('meta-help') }}</p>
+          </div>
+          <div class="drawer-form">
+            <KInput
+              v-model="$parent.$parent[$parent.meta.prop]['metaTitle']"
+              character-count
+              :name="`${$parent.meta.prop}[metaTitle]`"
+              type="text"
+              :help-text="$t('fields.metaTitle.helpText')"
+              :label="$t('fields.metaTitle.label')" />
+
+            <KInputTextarea
+              v-model="$parent.$parent[$parent.meta.prop]['metaDescription']"
+              character-count
+              :name="`${$parent.meta.prop}[metaDescription]`"
+              :rows="4"
+              type="text"
+              :help-text="$t('fields.metaDescription.helpText')"
+              :label="$t('fields.metaDescription.label')" />
+
+            <KInputImage
+              v-model="$parent.$parent[$parent.meta.prop]['metaImage']"
+              :name="`${$parent.meta.prop}[metaImage]`"
+              small
+              preview-key="original"
+              :help-text="$t('fields.metaImage.helpText')"
+              :label="$t('fields.metaImage.label')" />
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="drawer"
         :class="{open: showRevisions}">
         <div class="inner">
-          <div class="revisions-header">
+          <div class="drawer-header">
             <h2>{{ $t('revisions') }}</h2>
             <button
               class="rev-button"
@@ -79,7 +132,7 @@
               {{ $t('close') }}
             </button>
           </div>
-          <div class="revisions-info">
+          <div class="drawer-info">
             <p>{{ $t('revisions-help') }}</p>
             <p>
               {{ $t('revision-store-help') }}
@@ -261,6 +314,8 @@ export default {
       loading: false,
       hasLivePreview: false,
       hasRevisions: false,
+      hasMeta: false,
+      showMeta: false,
       showRevisions: false,
       showPublishModal: false,
       showDescribeModal: false,
@@ -282,6 +337,10 @@ export default {
 
     if (this.$parent.hasOwnProperty('revisions')) {
       this.hasRevisions = true
+    }
+
+    if (this.$parent.hasOwnProperty('meta')) {
+      this.hasMeta = true
     }
   },
 
@@ -329,6 +388,11 @@ export default {
       this.$parent.activeRevision = this.$parent.revisions[0]
     },
 
+    openMeta () {
+      this.showMeta = !this.showMeta
+      console.log('openMeta', this.showMeta)
+    },
+
     openRevisions () {
       this.showRevisions = !this.showRevisions
     },
@@ -350,7 +414,7 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-  .revisions-drawer {
+  .drawer {
     height: 100vh;
     width: 650px;
     position: fixed;
@@ -387,7 +451,7 @@ export default {
       }
     }
 
-    .revisions-header {
+    .drawer-header {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
@@ -398,7 +462,16 @@ export default {
       }
     }
 
-    .revisions-info {
+    button.button-secondary, >>> button.button-secondary {
+      color: azure;
+      border-color: azure !important;
+
+      &:hover {
+        color: #052753;
+      }
+    }
+
+    .drawer-info {
       @space padding-y 20px;
 
       p {
@@ -408,14 +481,17 @@ export default {
           @space! margin-bottom 15px;
         }
       }
+    }
 
-      button.button-secondary {
-        color: azure;
+    .drawer-form {
+      >>> input, >>> textarea {
+        background-color: transparent !important;
+        color: azure !important;
+        border: 1px solid azure !important;
+      }
+
+      >>> .character-count, >>> .prefill-small {
         border-color: azure !important;
-
-        &:hover {
-          color: #052753;
-        }
       }
     }
 
@@ -545,6 +621,12 @@ export default {
 
       svg {
         @space margin-right 7px;
+
+        &.circle-filled {
+          margin-right: 4px;
+          display: inline;
+          margin-top: -2px;
+        }
       }
     }
   }
@@ -571,6 +653,8 @@ export default {
     "error-form": "Form error",
     "errors-in-schema": "Please correct fields with errors",
     "revisions": "Revisions",
+    "meta": "Meta",
+    "meta-help": "Meta information for search engines. Try to keep the title tag below 70 characters while incorporating key terms for your content. The description tag should be around 155 characters to prevent getting truncated in search results. You can also attach your own META image which will override your entry's cover image, if it has one.",
     "live-preview": "Live preview",
     "share-preview": "Share preview",
     "select": "Select",
@@ -588,7 +672,21 @@ export default {
     "publishAt-label": "Publish at",
     "publishAt-helpText": "Entry is set to this version at this time",
     "description-label": "Describe the version",
-    "description-helpText": "A short description to help you identify this version"
+    "description-helpText": "A short description to help you identify this version",
+    "fields": {
+      "metaTitle": {
+        "label": "META title",
+        "helpText": "Title (for search engines) — overrides main title"
+      },
+      "metaDescription": {
+        "label": "META description",
+        "helpText": "Short description (for search engines)"
+      },
+      "metaImage": {
+        "label": "META image",
+        "helpText": "If you need a custom image for sharing. <br>Cropped to 1200x630"
+      }
+    }
   },
   "no": {
     "add": "Legg til",
@@ -598,6 +696,8 @@ export default {
     "error-form": "Feil i skjema",
     "errors-in-schema": "Vennligst se over og rett feil i rødt",
     "revisions": "Versjoner",
+    "meta": "Meta",
+    "meta-help": "Metainformasjon for søkemotorer. Prøv å holde META-tittelen under 70 tegn samtidig som du inkorporerer viktige emner fra innholdet ditt. Beskrivelsesfeltet bør være under 155 tegn for å forhindre at det kuttes ned i søkeresultatene. Du kan også laste opp ditt eget META delebilde som vil overstyre artikkelens coverbilde, om det har et.",
     "live-preview": "Forhåndsvisning",
     "share-preview": "Del forhåndsvisning",
     "select": "Velg",
@@ -615,7 +715,21 @@ export default {
     "publishAt-label": "Publiseringstidspunkt",
     "publishAt-helpText": "Objektet skiftes til denne versjonen til dette tidspunktet",
     "description-label": "Beskrivelse av versjonen",
-    "description-helpText": "En kort tekst som kan hjelpe deg å identifisere versjonen"
+    "description-helpText": "En kort tekst som kan hjelpe deg å identifisere versjonen",
+    "fields": {
+      "metaTitle": {
+        "label": "META tittel",
+        "helpText": "Tittel (for søkemotorer) — overstyrer hovedtittel"
+      },
+      "metaDescription": {
+        "label": "META beskrivelse",
+        "helpText": "Kort beskrivelse (for søkemotorer)"
+      },
+      "metaImage": {
+        "label": "META delebilde",
+        "helpText": "Om du trenger et spesialtilpasset bilde for deling.<br>Beskjæres til 1200x630."
+      }
+    }
   }
 }
 </i18n>
