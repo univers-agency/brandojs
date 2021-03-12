@@ -1633,6 +1633,64 @@ export default {
   font-family: theme(typography.families.main);
   border-radius: 0;
 
+  &.iziToast-theme-small-error {
+    background-color: #310d0d;
+    border-radius: 15px;
+    padding: 0;
+    min-height: 0;
+
+    > .iziToast-body {
+      padding: 0;
+      min-height: 25px;
+      margin: 0 0 0 12px;
+
+      .iziToast-texts {
+        margin: 6px 0 0 0;
+      }
+
+      .iziToast-title {
+        color: white;
+        margin-right: 7px !important;
+        font-size: 11px;
+      }
+
+      .iziToast-message {
+        color: #eee;
+        font-size: 9px;
+        font-family: 'Mono';
+      }
+    }
+  }
+
+  &.iziToast-theme-small-success {
+    background-color: #1e3d06;
+    border-radius: 15px;
+    padding: 0;
+    min-height: 0;
+
+    > .iziToast-body {
+      padding: 0;
+      min-height: 25px;
+      margin: 0 0 0 12px;
+
+      .iziToast-texts {
+        margin: 6px 0 0 0;
+      }
+
+      .iziToast-title {
+        color: white;
+        margin-right: 7px !important;
+        font-size: 11px;
+      }
+
+      .iziToast-message {
+        color: #eee;
+        font-size: 9px;
+        font-family: 'Mono';
+      }
+    }
+  }
+
   &.iziToast-theme-mutations {
     @color bg dark;
     border-radius: 15px;

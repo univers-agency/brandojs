@@ -22,12 +22,22 @@ export default {
             }
 
             resolve()
+          } else {
+            Vue.prototype.$toast.show({
+              title: '✌️',
+              message: 'Reconnected to mainframe!',
+              theme: 'small-success',
+              displayMode: 2,
+              position: 'topRight',
+              close: false,
+              progressBar: false
+            })
           }
         }
 
         socket.onOpen(() => { onConnectionEstablished(socket) })
 
-        socket.onError(() => {
+        socket.onError(e => {
           if (!connectionEstablishedOnce) {
             console.error('==> WS failed—trying longpoll')
             socket.disconnect(null, 3000)
@@ -35,7 +45,16 @@ export default {
             socket.onOpen(() => onConnectionEstablished(socket, true))
             socket.connect()
           } else {
-            Vue.prototype.$toast.error('WS server connection failed', { theme: 'error' })
+            console.error(e)
+            Vue.prototype.$toast.show({
+              title: '⚡️',
+              message: 'Mainframe connection was dropped! Retrying...',
+              theme: 'small-error',
+              displayMode: 2,
+              position: 'topRight',
+              close: false,
+              progressBar: false
+            })
           }
         })
 
