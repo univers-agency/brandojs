@@ -7,6 +7,7 @@
         <template v-if="hasMeta">
           <div class="mixin">
             <ButtonSmall
+              data-testid="meta-button"
               @click="openMeta">
               <CircleFilled :status="$parent.metaScoreStatus" />
               Meta
@@ -16,6 +17,7 @@
         <template v-if="hasRevisions && $parent.hasId">
           <div class="mixin">
             <ButtonSmall
+              data-testid="revisions-button"
               @click="openRevisions">
               <FontAwesomeIcon
                 icon="code-branch" />
@@ -26,6 +28,7 @@
         <template v-if="hasLivePreview">
           <div class="mixin">
             <ButtonSmall
+              data-testid="livepreview-button"
               @click="$parent.openLivePreview">
               <FontAwesomeIcon
                 icon="eye" />
@@ -34,6 +37,7 @@
           </div>
           <div class="mixin">
             <ButtonSmall
+              data-testid="share-button"
               @click="$parent.sharePreview(null)">
               <FontAwesomeIcon
                 icon="share" />
@@ -78,6 +82,7 @@
 
       <div
         v-if="hasMeta"
+        data-testid="meta-drawer"
         class="drawer"
         :class="{ open: showMeta }">
         <div class="inner">
@@ -125,6 +130,7 @@
 
       <div
         v-if="hasRevisions"
+        data-testid="revisions-drawer"
         class="drawer"
         :class="{open: showRevisions}">
         <div class="inner">

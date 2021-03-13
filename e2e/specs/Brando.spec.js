@@ -95,48 +95,53 @@ describe('Pages', () => {
 
   it('can edit page', () => {
     cy.get('@currentUser').then(response => {
-      cy.factorydb('page', { title: 'Page title', uri: 'page-title' })
-      cy.factorydb('module', {})
+      cy.defaultlanguage().then(language => {
+        cy.factorydb('page', { title: 'Page title', uri: 'page-title', language })
+        cy.factorydb('module', {})
 
-      cy.visit('/admin/pages')
-      cy.contains('Pages and sections')
+        cy.visit('/admin/pages')
+        cy.contains('Pages and sections')
 
-      cy.contains('Page title')
-      cy.contains('page-title')
+        cy.contains('Page title')
+        cy.contains('page-title')
 
-      cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="circle-dropdown-button"]')
-        .click()
-      cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="circle-dropdown-content"]')
-        .contains('Edit page')
-        .click()
+        cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="circle-dropdown-button"]')
+          .click()
+        cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="circle-dropdown-content"]')
+          .contains('Edit page')
+          .click()
 
-      cy.location('pathname').should('match', /admin\/pages\/edit\/(\d+)/)
-      cy.contains('Edit page')
+        cy.location('pathname').should('match', /admin\/pages\/edit\/(\d+)/)
+        cy.contains('Edit page')
 
-      cy.get('#page_uri_').type('-edit')
-      cy.get('#page_title_').type(' edit')
+        cy.get('#page_uri_').type('-edit')
+        cy.get('#page_title_').type(' edit')
 
-      cy.get('[data-testid="submit"]').click()
+        cy.get('[data-testid="submit"]').click()
 
-      cy.contains('Please correct fields with errors')
+        cy.contains('Please correct fields with errors')
 
-      cy.get('.vex-dialog-button-primary').click()
+        cy.get('.vex-dialog-button-primary').click()
 
-      cy.get('.villain-editor-plus-inactive > a').click()
-      cy.get('.villain-editor-plus-available-module').click()
-      cy.get('.villain-header-input').clear().click().type('This is a heading')
+        cy.get('.villain-editor-plus-inactive > a').click()
+        cy.get('.villain-editor-plus-available-module').click()
+        cy.get('.villain-header-input').clear().click().type('This is a heading')
 
-      cy.get('[data-testid="submit"]').click()
+        cy.get('[data-testid="submit"]').click()
 
-      cy.location('pathname').should('eq', '/admin/pages')
-      cy.contains('Page updated')
-      cy.contains('Page title edit')
-      cy.contains('page-title-edit')
+        cy.location('pathname').should('eq', '/admin/pages')
+        cy.contains('Page updated')
+        cy.contains('Page title edit')
+        cy.contains('page-title-edit')
+      })
     })
   })
 
   it('can delete page', () => {
-    cy.factorydb('page', { title: 'Page title', uri: 'page-title' })
+    cy.defaultlanguage().then(language => {
+      cy.factorydb('page', { title: 'Page title', uri: 'page-title', language })
+    })
+
     cy.get('@currentUser').then(response => {
       cy.visit('/admin/pages')
       cy.contains('Pages and sections')
@@ -157,7 +162,9 @@ describe('Pages', () => {
   })
 
   it('can recreate page', () => {
-    cy.factorydb('page', { title: 'Page title', uri: 'page-title' })
+    cy.defaultlanguage().then(language => {
+      cy.factorydb('page', { title: 'Page title', uri: 'page-title', language })
+    })
     cy.get('@currentUser').then(response => {
       cy.visit('/admin/pages')
       cy.contains('Pages and sections')
@@ -176,7 +183,10 @@ describe('Pages', () => {
   })
 
   it('can duplicate page', () => {
-    cy.factorydb('page', { title: 'Page title', uri: 'page-title', data: [{ 'type': 'text', 'data': { 'text': 'test', 'type': 'paragraph' } }] })
+    cy.defaultlanguage().then(language => {
+      cy.factorydb('page', { title: 'Page title', uri: 'page-title', language, data: [{ 'type': 'text', 'data': { 'text': 'test', 'type': 'paragraph' } }] })
+    })
+
     cy.get('@currentUser').then(response => {
       cy.visit('/admin/pages')
       cy.contains('Pages and sections')
@@ -206,14 +216,15 @@ describe('Pages', () => {
 
       cy.get('#page_uri_').type('my-uri')
       cy.get('#page_title_').type('My title')
-      cy.get(':nth-child(4) > .multiselect > .button-edit').click()
-      cy.get('.options > span > :nth-child(3)').click()
-      cy.get('#page_metaDescription_').type('Meta description')
 
       cy.get('.villain-editor-plus-inactive > a').click()
       cy.get('.villain-editor-plus-available-module').click()
       cy.get('.villain-header-input').clear().click().type('This is a heading')
 
+      cy.get('[data-testid="meta-button"]').click()
+      cy.get('#page_metaTitle_').type('A META title')
+      cy.get('#page_metaDescription_').type('A META description')
+      cy.get('[data-testid="meta-drawer"] > .inner > .drawer-header > .rev-button').click()
       cy.get('[data-testid="submit"]').click()
 
       cy.contains('Page created')
@@ -231,19 +242,21 @@ describe('PageFragments', () => {
 
   it('can delete fragment', () => {
     cy.get('@currentUser').then(response => {
-      cy.factorydb('page', { uri: 'about', creator_id: response.body.id, creator: null }).then(resp => {
-        cy.factorydb('page_fragment', { title: 'A fine fragment', parent_key: 'about', page_id: resp.body.id, key: 'my-pf-key', creator_id: response.body.id, creator: null }).then(r => {
-          cy.visit('/admin/pages')
-          cy.contains('Page Title')
-          cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="children-button"]').click()
-          cy.contains('about/my-pf-key')
-          cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-button"]')
-            .click()
-          cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-content"]')
-            .contains('Delete section')
-            .click()
-          cy.get('.vex-dialog-button-primary').click()
-          cy.contains('Section deleted')
+      cy.defaultlanguage().then(language => {
+        cy.factorydb('page', { uri: 'about', creator_id: response.body.id, creator: null, language, sequence: 99 }).then(resp => {
+          cy.factorydb('page_fragment', { language, title: 'A fine fragment', parent_key: 'about', page_id: resp.body.id, key: 'my-pf-key', creator_id: response.body.id, creator: null }).then(r => {
+            cy.visit('/admin/pages')
+            cy.contains('Page Title')
+            cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="children-button"]').click()
+            cy.contains('about/my-pf-key')
+            cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-button"]')
+              .click()
+            cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-content"]')
+              .contains('Delete section')
+              .click()
+            cy.get('.vex-dialog-button-primary').click()
+            cy.contains('Section deleted')
+          })
         })
       })
     })
@@ -251,18 +264,20 @@ describe('PageFragments', () => {
 
   it('can recreate fragment', () => {
     cy.get('@currentUser').then(response => {
-      cy.factorydb('page', { uri: 'about', creator_id: response.body.id, creator: null }).then(resp => {
-        cy.factorydb('page_fragment', { title: 'A fine fragment', parent_key: 'about', page_id: resp.body.id, key: 'my-pf-key', creator_id: response.body.id, creator: null }).then(r => {
-          cy.visit('/admin/pages')
-          cy.contains('Page Title')
-          cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="children-button"]').click()
-          cy.contains('about/my-pf-key')
-          cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-button"]')
-            .click()
-          cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-content"]')
-            .contains('Rerender section')
-            .click()
-          cy.contains('Section rerendered')
+      cy.defaultlanguage().then(language => {
+        cy.factorydb('page', { uri: 'about', creator_id: response.body.id, creator: null, language, sequence: 99 }).then(resp => {
+          cy.factorydb('page_fragment', { language, title: 'A fine fragment', parent_key: 'about', page_id: resp.body.id, key: 'my-pf-key', creator_id: response.body.id, creator: null }).then(r => {
+            cy.visit('/admin/pages')
+            cy.contains('Page Title')
+            cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="children-button"]').click()
+            cy.contains('about/my-pf-key')
+            cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-button"]')
+              .click()
+            cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-content"]')
+              .contains('Rerender section')
+              .click()
+            cy.contains('Section rerendered')
+          })
         })
       })
     })
@@ -270,19 +285,21 @@ describe('PageFragments', () => {
 
   it('can duplicate fragment', () => {
     cy.get('@currentUser').then(response => {
-      cy.factorydb('page', { uri: 'about', creator_id: response.body.id, creator: null }).then(resp => {
-        cy.factorydb('page_fragment', { title: 'A fine fragment', parent_key: 'about', page_id: resp.body.id, key: 'my-pf-key', creator_id: response.body.id, creator: null, data: [] }).then(r => {
-          cy.visit('/admin/pages')
-          cy.contains('Page Title')
-          cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="children-button"]').click()
-          cy.contains('about/my-pf-key')
-          cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-button"]')
-            .click()
-          cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-content"]')
-            .contains('Duplicate section')
-            .click()
-          cy.contains('Section duplicated')
-          cy.contains('my-pf-key_kopi')
+      cy.defaultlanguage().then(language => {
+        cy.factorydb('page', { uri: 'about', creator_id: response.body.id, creator: null, language, sequence: 99 }).then(resp => {
+          cy.factorydb('page_fragment', { language, title: 'A fine fragment', parent_key: 'about', page_id: resp.body.id, key: 'my-pf-key', creator_id: response.body.id, creator: null, data: [] }).then(r => {
+            cy.visit('/admin/pages')
+            cy.contains('Page Title')
+            cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="children-button"]').click()
+            cy.contains('about/my-pf-key')
+            cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-button"]')
+              .click()
+            cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-content"]')
+              .contains('Duplicate section')
+              .click()
+            cy.contains('Section duplicated')
+            cy.contains('my-pf-key_kopi')
+          })
         })
       })
     })
@@ -291,31 +308,33 @@ describe('PageFragments', () => {
   it('can create fragment', () => {
     cy.factorydb('module', {})
     cy.get('@currentUser').then(response => {
-      cy.factorydb('page', { uri: 'about', creator_id: response.body.id, creator: null }).then(resp => {
-        cy.factorydb('page_fragment', { title: 'A fine fragment', parent_key: 'about', page_id: resp.body.id, key: 'my-pf-key', creator_id: response.body.id, creator: null, data: [] }).then(r => {
-          cy.visit('/admin/pages')
-          cy.contains('Page Title')
-          cy.get('[data-testid="contentlist-row"][data-test-level="1"][data-testidx="1"] > .main-content [data-testid="circle-dropdown-button"]')
-            .click()
-          cy.get('[data-testid="contentlist-row"][data-test-level="1"][data-testidx="1"] > .main-content [data-testid="circle-dropdown-content"]')
-            .contains('New section')
-            .click()
-          cy.contains('New section')
+      cy.defaultlanguage().then(language => {
+        cy.factorydb('page', { uri: 'about', creator_id: response.body.id, creator: null, language, sequence: 99 }).then(resp => {
+          cy.factorydb('page_fragment', { language, title: 'A fine fragment', parent_key: 'about', page_id: resp.body.id, key: 'my-pf-key', creator_id: response.body.id, creator: null, data: [] }).then(r => {
+            cy.visit('/admin/pages')
+            cy.contains('Page Title')
+            cy.get('[data-testid="contentlist-row"][data-test-level="1"][data-testidx="1"] > .main-content [data-testid="circle-dropdown-button"]')
+              .click()
+            cy.get('[data-testid="contentlist-row"][data-test-level="1"][data-testidx="1"] > .main-content [data-testid="circle-dropdown-content"]')
+              .contains('New section')
+              .click()
+            cy.contains('New section')
 
-          cy.get('#page_title_').type('Section title')
-          cy.get('#page_parentKey_').type('parent-key')
-          cy.get('#page_key_').type('my-key')
+            cy.get('#page_title_').type('Section title')
+            cy.get('#page_parentKey_').type('parent-key')
+            cy.get('#page_key_').type('my-key')
 
-          cy.get('.villain-editor-plus-inactive > a').click()
-          cy.get('.villain-editor-plus-available-modules-title').click()
-          cy.get('.villain-header-input').clear().click().type('This is a heading')
-          cy.get('[data-testid="submit"]').click()
+            cy.get('.villain-editor-plus-inactive > a').click()
+            cy.get('.villain-editor-plus-available-modules-title').click()
+            cy.get('.villain-header-input').clear().click().type('This is a heading')
+            cy.get('[data-testid="submit"]').click()
 
-          cy.contains('Section created')
-          cy.location('pathname').should('eq', '/admin/pages')
+            cy.contains('Section created')
+            cy.location('pathname').should('eq', '/admin/pages')
 
-          cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="children-button"]').click()
-          cy.contains('parent-key/my-key')
+            cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="children-button"]').click()
+            cy.contains('parent-key/my-key')
+          })
         })
       })
     })
@@ -324,33 +343,35 @@ describe('PageFragments', () => {
   it('can edit fragment', () => {
     cy.factorydb('module', {})
     cy.get('@currentUser').then(response => {
-      cy.factorydb('page', { uri: 'about', creator_id: response.body.id, creator: null }).then(resp => {
-        cy.factorydb('page_fragment', { title: 'A fine fragment', parent_key: 'about', page_id: resp.body.id, key: 'my-pf-key', creator_id: response.body.id, creator: null, data: [] }).then(r => {
-          cy.visit('/admin/pages')
-          cy.contains('Page Title')
-          cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="children-button"]').click()
-          cy.contains('about/my-pf-key')
-          cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-button"]')
-            .click()
-          cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-content"]')
-            .contains('Edit section')
-            .click()
-          cy.contains('Edit section')
+      cy.defaultlanguage().then(language => {
+        cy.factorydb('page', { uri: 'about', creator_id: response.body.id, creator: null, language, sequence: 99 }).then(resp => {
+          cy.factorydb('page_fragment', { language, title: 'A fine fragment', parent_key: 'about', page_id: resp.body.id, key: 'my-pf-key', creator_id: response.body.id, creator: null, data: [] }).then(r => {
+            cy.visit('/admin/pages')
+            cy.contains('Page Title')
+            cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="children-button"]').click()
+            cy.contains('about/my-pf-key')
+            cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-button"]')
+              .click()
+            cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testidx="0"] [data-testid="circle-dropdown-content"]')
+              .contains('Edit section')
+              .click()
+            cy.contains('Edit section')
 
-          cy.get('#page_title_').type(' edit')
-          cy.get('#page_key_').type('-edit')
+            cy.get('#page_title_').type(' edit')
+            cy.get('#page_key_').type('-edit')
 
-          cy.get('.villain-editor-plus-inactive > a').click()
-          cy.get('.villain-editor-plus-available-modules-title').click()
-          cy.get('.villain-header-input').clear().click().type('This is an edited heading')
-          cy.get('[data-testid="submit"]').click()
+            cy.get('.villain-editor-plus-inactive > a').click()
+            cy.get('.villain-editor-plus-available-modules-title').click()
+            cy.get('.villain-header-input').clear().click().type('This is an edited heading')
+            cy.get('[data-testid="submit"]').click()
 
-          cy.location('pathname').should('eq', '/admin/pages')
-          cy.contains('Section updated')
+            cy.location('pathname').should('eq', '/admin/pages')
+            cy.contains('Section updated')
 
-          cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="children-button"]').click()
-          cy.contains('A fine fragment edit')
-          cy.contains('about/my-pf-key-edit')
+            cy.get('[data-testid="contentlist-row"][data-testidx="1"] [data-testid="children-button"]').click()
+            cy.contains('A fine fragment edit')
+            cy.contains('about/my-pf-key-edit')
+          })
         })
       })
     })
