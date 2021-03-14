@@ -449,6 +449,7 @@ export default {
       update ({ me }) {
         if (!this.$root.initialized && me) {
           this.$i18n.locale = me.language
+          this.$root.$i18n.locale = me.language
           localize(me.language, me.language === 'no' ? no : en)
           this.$root.initialized = true
 
