@@ -80,6 +80,7 @@ export default {
     return {
       options: [
         { value: 'draft', label: this.$t('draft') },
+        { value: 'pending', label: this.$t('pending') },
         { value: 'published', label: this.$t('published') },
         { value: 'disabled', label: this.$t('deactivated') }
       ]
@@ -181,12 +182,14 @@ export default {
   {
     "en": {
       "draft": "Draft",
+      "pending": "Pending",
       "published": "Published",
       "deactivated": "Deactivated"
     },
 
     "no": {
       "draft": "Utkast",
+      "pending": "Venter",
       "published": "Publisert",
       "deactivated": "Deaktivert"
     }

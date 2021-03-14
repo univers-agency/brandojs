@@ -116,7 +116,8 @@ export default {
       progressStatus: {},
       noFocus: true,
       loading: 2,
-      fullScreen: false
+      fullScreen: false,
+      vsn: null
     }
   },
 
@@ -304,8 +305,18 @@ export default {
     joinUserChannel (me) {
       this.userChannel = this.$socket.channel(`user:${me.id}`, {})
       this.userChannel.join()
-        .receive('ok', userId => {
-          console.debug(`==> Joined user_channel:${me.id} with user:${userId}`)
+        .receive('ok', ({ user_id: userId, vsn }) => {
+          console.debug(`==> Joined user_channel:${me.id} with user:${userId} —— vsn: ${vsn}`)
+
+          if (this.vsn) {
+            // we've connected before. see if versions match!
+            if (this.vsn !== vsn) {
+              // new version, alert user
+              this.$alerts.alertError('👀', this.$t('application-updated'))
+            }
+          } else {
+            this.vsn = vsn
+          }
         })
         .receive('error', resp => { console.error('!! Failed to join ', resp) })
 
@@ -500,6 +511,19 @@ export default {
   }
 }
 </script>
+
+<i18n>
+  {
+    "en": {
+      "application-updated": "The application was updated while you were logged in. It is recommended to refresh the page, but make sure you have saved your work first.",
+      "refresh": "Refresh app"
+    },
+    "no": {
+      "application-updated": "Applikasjonen ble oppdatert mens du var innlogget. Det anbefales å laste inn siden på nytt, men pass på at du har lagret eventuelle endringer først!",
+      "refresh": "Last på nytt"
+    }
+  }
+</i18n>
 
 <style lang="postcss">
   @europa base;

@@ -78,7 +78,7 @@ export default {
     },
 
     status () {
-      if (this.entry.publishAt) {
+      if (this.entry.publishAt && ['published', 'pending'].includes(this.entry.status)) {
         if (differenceInSeconds(parseISO(this.entry.publishAt), this.now) < 0) {
           return 'published'
         } else {

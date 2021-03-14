@@ -4,47 +4,61 @@
     @enter="enter">
     <div class="form-wrapper">
       <div class="mixins">
-        <template v-if="hasMeta">
-          <div class="mixin">
-            <ButtonSmall
-              data-testid="meta-button"
-              @click="openMeta">
-              <CircleFilled :status="$parent.metaScoreStatus" />
-              Meta
-            </ButtonSmall>
-          </div>
-        </template>
-        <template v-if="hasRevisions && $parent.hasId">
-          <div class="mixin">
-            <ButtonSmall
-              data-testid="revisions-button"
-              @click="openRevisions">
-              <FontAwesomeIcon
-                icon="code-branch" />
-              {{ $t('revisions') }}
-            </ButtonSmall>
-          </div>
-        </template>
-        <template v-if="hasLivePreview">
-          <div class="mixin">
-            <ButtonSmall
-              data-testid="livepreview-button"
-              @click="$parent.openLivePreview">
-              <FontAwesomeIcon
-                icon="eye" />
-              {{ $t('live-preview') }}
-            </ButtonSmall>
-          </div>
-          <div class="mixin">
-            <ButtonSmall
-              data-testid="share-button"
-              @click="$parent.sharePreview(null)">
-              <FontAwesomeIcon
-                icon="share" />
-              {{ $t('share-preview') }}
-            </ButtonSmall>
-          </div>
-        </template>
+        <div class="left">
+          <template v-if="hasScheduledPublishing && $parent.scheduledPublishingStatus">
+            <div class="mixin">
+              <ButtonSmall
+                data-testid="meta-button"
+                @click="openScheduledPublishing">
+                <CircleFilled :status="$parent.scheduledPublishingStatus.status" />
+                {{ $t($parent.scheduledPublishingStatus.message, $parent.scheduledPublishingStatus.args) }}
+              </ButtonSmall>
+            </div>
+          </template>
+          <template v-if="hasMeta">
+            <div class="mixin">
+              <ButtonSmall
+                data-testid="meta-button"
+                @click="openMeta">
+                <CircleFilled :status="$parent.metaScoreStatus" />
+                Meta
+              </ButtonSmall>
+            </div>
+          </template>
+        </div>
+        <div class="right">
+          <template v-if="hasRevisions && $parent.hasId">
+            <div class="mixin">
+              <ButtonSmall
+                data-testid="revisions-button"
+                @click="openRevisions">
+                <FontAwesomeIcon
+                  icon="code-branch" />
+                {{ $t('revisions') }}
+              </ButtonSmall>
+            </div>
+          </template>
+          <template v-if="hasLivePreview">
+            <div class="mixin">
+              <ButtonSmall
+                data-testid="livepreview-button"
+                @click="$parent.openLivePreview">
+                <FontAwesomeIcon
+                  icon="eye" />
+                {{ $t('live-preview') }}
+              </ButtonSmall>
+            </div>
+            <div class="mixin">
+              <ButtonSmall
+                data-testid="share-button"
+                @click="$parent.sharePreview(null)">
+                <FontAwesomeIcon
+                  icon="share" />
+                {{ $t('share-preview') }}
+              </ButtonSmall>
+            </div>
+          </template>
+        </div>
       </div>
       <form>
         <ValidationObserver
@@ -79,6 +93,36 @@
           </template>
         </ValidationObserver>
       </form>
+
+      <div
+        v-if="hasScheduledPublishing"
+        data-testid="meta-drawer"
+        class="drawer"
+        :class="{ open: showScheduledPublishing }">
+        <div class="inner">
+          <div class="drawer-header">
+            <h2>
+              {{ $t('scheduled-publishing') }}
+            </h2>
+            <button
+              class="rev-button"
+              @click="closeScheduledPublishing">
+              {{ $t('close') }}
+            </button>
+          </div>
+          <div class="drawer-info">
+            <p>{{ $t('scheduled-publishing-help') }}</p>
+          </div>
+          <div class="drawer-form">
+            <KInputDatetime
+              v-model="$parent.$parent[$parent.meta.prop]['publishAt']"
+              :name="`${$parent.meta.prop}[publishAt]`"
+              :null="true"
+              :label="$t('fields.publishAt.label')"
+              :help-text="$t('fields.publishAt.helpText')" />
+          </div>
+        </div>
+      </div>
 
       <div
         v-if="hasMeta"
@@ -291,10 +335,12 @@
 import { gsap } from 'gsap'
 
 export default {
+  name: 'KForm',
 
   inject: [
     'adminChannel'
   ],
+
   props: {
     save: {
       type: Boolean,
@@ -325,8 +371,10 @@ export default {
       hasLivePreview: false,
       hasRevisions: false,
       hasMeta: false,
+      hasScheduledPublishing: false,
       showMeta: false,
       showRevisions: false,
+      showScheduledPublishing: false,
       showPublishModal: false,
       showDescribeModal: false,
       publishAt: null,
@@ -352,6 +400,10 @@ export default {
     if (this.$parent.hasOwnProperty('meta')) {
       this.hasMeta = true
     }
+
+    if (this.$parent.hasOwnProperty('scheduledPublishing')) {
+      this.hasScheduledPublishing = true
+    }
   },
 
   methods: {
@@ -368,6 +420,13 @@ export default {
     openPublishModal (revision) {
       this.modalRevision = revision
       this.showPublishModal = true
+    },
+
+    closeScheduledPublishing () {
+      if (!this.$parent.checkScheduledPublishingStatus()) {
+        this.$alerts.alertWarning('OBS', this.$t('scheduled-publishing-changed-status'))
+      }
+      this.showScheduledPublishing = false
     },
 
     openDescribeModal (revision) {
@@ -404,6 +463,10 @@ export default {
 
     openRevisions () {
       this.showRevisions = !this.showRevisions
+    },
+
+    openScheduledPublishing () {
+      this.showScheduledPublishing = !this.showScheduledPublishing
     },
 
     setLoader (status) {
@@ -617,13 +680,24 @@ export default {
 
   .mixins {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     opacity: 1;
     cursor: pointer;
 
-    >>> .small {
-      margin-bottom: 8px;
+    .left, .right {
+      display: flex;
+    }
+
+    .left >>> .small {
+      margin-right: 5px;
+    }
+
+    .right >>> .small {
       margin-left: 5px;
+    }
+
+    >>> .small {
+      margin-bottom: 20px;
       border-radius: 30px;
       font-size: 13px;
       text-transform: none;
@@ -656,6 +730,15 @@ export default {
 <i18n>
 {
   "en": {
+    "draft": "Draft",
+    "draft_at": "Scheduled at {publishAt}",
+    "pending": "Pending indefininetly",
+    "pending_at": "Scheduled at {publishAt}",
+    "published": "Published",
+    "published_at": "Published at {publishAt}",
+    "published_on_save": "Will publish when saved",
+    "disabled": "Disabled",
+    "scheduled-publishing-changed-status": "When choosing scheduled publishing, your entry's status must be `pending`. We have changed this for you, but the entry will not be published before your set time and date!",
     "add": "Add",
     "save": "Save",
     "save-version": "Save version without activating",
@@ -695,10 +778,23 @@ export default {
       "metaImage": {
         "label": "META image",
         "helpText": "If you need a custom image for sharing. <br>Cropped to 1200x630"
+      },
+      "publishAt": {
+        "label": "Time to publish",
+        "helpText": "Leave blank if you wish to publish immediately"
       }
     }
   },
   "no": {
+    "draft": "Utkast",
+    "draft_at": "Planlagt @ {publishAt}",
+    "pending": "Pending indefininetly",
+    "pending_at": "Planlagt @ {publishAt}",
+    "published": "Publisert",
+    "published_at": "Publisert @ {publishAt}",
+    "published_on_save": "Publiseres ved lagring",
+    "disabled": "Deaktivert",
+    "scheduled-publishing-changed-status": "Ved planlagt publisering må innlegget ha status `venter`. Vi har endret dette for deg nå, men innlegget vil ikke publiseres før din valgte tid og dato!",
     "add": "Legg til",
     "save": "Lagre",
     "save-version": "Lagre ny versjon uten å aktivere",
@@ -738,6 +834,10 @@ export default {
       "metaImage": {
         "label": "META delebilde",
         "helpText": "Om du trenger et spesialtilpasset bilde for deling.<br>Beskjæres til 1200x630."
+      },
+      "publishAt": {
+        "label": "Publiseringstidspunkt",
+        "helpText": "La feltet være blankt om du ønsker å publisere umiddelbart"
       }
     }
   }

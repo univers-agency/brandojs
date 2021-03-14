@@ -13,6 +13,12 @@
     </section>
     <section class="row">
       <div class="sized">
+        <KInputStatus
+          v-model="page.status"
+          name="page[status]"
+          rules="required"
+          label="Status" />
+
         <KInputSelect
           v-model="page.language"
           rules="required"
@@ -60,13 +66,6 @@
             v-model="page.isHomepage"
             name="config[isHomepage]"
             :label="$t('fields.isHomepage.label')" />
-
-          <KInputDatetime
-            v-model="page.publishAt"
-            name="page[publishAt]"
-            :null="true"
-            :label="$t('fields.publishAt.label')"
-            :help-text="$t('fields.publishAt.helpText')" />
 
           <KInputSelect
             v-if="templates"
@@ -306,10 +305,15 @@ import gql from 'graphql-tag'
 import LivePreview from '../../mixins/LivePreview'
 import Revisions from '../../mixins/Revisions'
 import Meta from '../../mixins/Meta'
+import ScheduledPublishing from '../../mixins/ScheduledPublishing'
 import locale from '../../locales/pages'
 
 export default {
   mixins: [
+    ScheduledPublishing({
+      prop: 'page'
+    }),
+
     Meta({
       prop: 'page'
     }),
