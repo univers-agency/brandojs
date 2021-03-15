@@ -10,7 +10,7 @@
         :id="id"
         v-model="innerValue"
         :placeholder="placeholder"
-        :options="dateTimeOptions"
+        :options="opts"
         class="flatpickr" />
       <button
         class="button-clear"
@@ -24,6 +24,7 @@
 <script>
 import { formatISO } from 'date-fns'
 import VueFlatpickr from '@jacobmischka/vue-flatpickr'
+import { english } from "flatpickr/dist/l10n/default.js"
 
 const LOCALE_NO = {
   weekdays: {
@@ -91,7 +92,6 @@ export default {
           enableTime: true,
           minuteIncrement: 15,
           time_24hr: true,
-          locale: LOCALE_NO,
           altInput: true,
           altFormat: 'l j F, Y @ H:i',
           dateFormat: 'Z',
@@ -140,7 +140,8 @@ export default {
 
   data () {
     return {
-      innerValue: ''
+      innerValue: '',
+      opts: {}
     }
   },
 
@@ -164,6 +165,11 @@ export default {
   },
 
   created () {
+    this.opts = {
+      ...this.dateTimeOptions,
+      locale: this.$me.language === 'en' ? english : LOCALE_NO,
+    }
+
     this.innerValue = this.value
 
     if (!this.innerValue) {

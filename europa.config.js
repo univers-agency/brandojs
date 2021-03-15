@@ -171,19 +171,19 @@ module.exports = {
           },
           mainItem: {
             iphone: {
-              'font-size': '28px',
+              'font-size': '24px',
               'line-height': '40px'
             },
             mobile: {
-              'font-size': '28px',
+              'font-size': '24px',
               'line-height': '40px'
             },
             ipad_portrait: {
-              'font-size': '28px',
+              'font-size': '24px',
               'line-height': '40px'
             },
             ipad_landscape: {
-              'font-size': '28px',
+              'font-size': '24px',
               'line-height': '40px'
             },
             desktop_md: {

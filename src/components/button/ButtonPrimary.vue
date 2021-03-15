@@ -140,8 +140,8 @@ export default {
 
       svg {
         margin: 0 auto;
-        margin-top: -8px;
-        height: 60px;
+        margin-top: -4px;
+        height: 49px;
       }
     }
 

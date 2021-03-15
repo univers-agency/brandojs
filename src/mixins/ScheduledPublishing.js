@@ -30,9 +30,14 @@ export default function ({ prop }) {
       scheduledPublishingStatus () {
         const status = this[prop] ? this[prop]['status'] : null
         let publishAt = this[prop] ? this[prop]['publishAt'] : null
+
+        if (!status && !publishAt) {
+          // probably not ready yet
+          return null
+        }
+
         let now = Date.now()
         let futureDate = false
-
 
         if (publishAt) {
           futureDate = (differenceInSeconds(parseISO(publishAt), now) > 0)

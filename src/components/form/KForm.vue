@@ -8,7 +8,7 @@
           <template v-if="hasScheduledPublishing && $parent.scheduledPublishingStatus">
             <div class="mixin">
               <ButtonSmall
-                data-testid="meta-button"
+                data-testid="schedule-button"
                 @click="openScheduledPublishing">
                 <CircleFilled :status="$parent.scheduledPublishingStatus.status" />
                 {{ $t($parent.scheduledPublishingStatus.message, $parent.scheduledPublishingStatus.args) }}
@@ -96,7 +96,7 @@
 
       <div
         v-if="hasScheduledPublishing"
-        data-testid="meta-drawer"
+        data-testid="schedule-drawer"
         class="drawer"
         :class="{ open: showScheduledPublishing }">
         <div class="inner">
@@ -732,7 +732,7 @@ export default {
   "en": {
     "draft": "Draft",
     "draft_at": "Scheduled at {publishAt}",
-    "pending": "Pending indefininetly",
+    "pending": "Pending indefinitely",
     "pending_at": "Scheduled at {publishAt}",
     "published": "Published",
     "published_at": "Published at {publishAt}",
@@ -788,7 +788,7 @@ export default {
   "no": {
     "draft": "Utkast",
     "draft_at": "Planlagt @ {publishAt}",
-    "pending": "Pending indefininetly",
+    "pending": "Venter på ubestemt tid",
     "pending_at": "Planlagt @ {publishAt}",
     "published": "Publisert",
     "published_at": "Publisert @ {publishAt}",

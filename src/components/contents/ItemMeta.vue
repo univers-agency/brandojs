@@ -69,7 +69,7 @@ export default {
     .avatar-wrapper {
       align-items: center;
       display: flex;
-      margin-right: 15px;
+      margin-right: 10px;
 
       .avatar {
         width: 40px;
@@ -86,8 +86,6 @@ export default {
       display: flex;
       line-height: 1.3;
       justify-content: space-between;
-      padding-left: 15px;
-      border-left: 1px solid;
       padding-top: 2px;
 
       .name {
@@ -97,7 +95,7 @@ export default {
       }
 
       .time {
-        font-size: 14px;
+        font-size: 11px;
         opacity: 0.7;
         user-select: none;
         text-transform: uppercase;

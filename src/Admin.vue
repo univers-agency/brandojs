@@ -824,6 +824,9 @@ export default {
 
     @responsive <=ipad_landscape {
       flex-wrap: wrap;
+      > * {
+        margin-left: 0 !important;
+      }
     }
 
     &.baseline {

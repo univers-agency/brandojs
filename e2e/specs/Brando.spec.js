@@ -224,13 +224,80 @@ describe('Pages', () => {
       cy.get('[data-testid="meta-button"]').click()
       cy.get('#page_metaTitle_').type('A META title')
       cy.get('#page_metaDescription_').type('A META description')
-      cy.get('[data-testid="meta-drawer"] > .inner > .drawer-header > .rev-button').click()
+      cy.get('[data-testid="meta-drawer"] .rev-button').click()
       cy.get('[data-testid="submit"]').click()
 
       cy.contains('Page created')
       cy.location('pathname').should('eq', '/admin/pages')
       cy.contains('my-uri')
       cy.contains('My title')
+    })
+  })
+
+  it('can schedule future publishing', () => {
+    cy.get('@currentUser').then(response => {
+      cy.defaultlanguage().then(language => {
+        cy.factorydb('page', { title: 'Page title', uri: 'page-title', language })
+        cy.factorydb('module', {})
+
+        cy.visit('/admin/pages/new')
+      })
+    })
+
+    let today = new Date()
+    today.setHours(today.getHours() + 1)
+
+    cy.get('#page_title_').type('A scheduled post')
+    cy.get('#page_uri_').type('a-scheduled-post')
+    cy.get('.villain-editor-plus-inactive > a').click()
+    cy.get('.villain-editor-plus-available-module').click()
+    cy.get(':nth-child(1) > [data-testid=schedule-button]').click()
+    cy.get('.form-control').type(`${today.toISOString()}{enter}`)
+    cy.get('[data-testid=schedule-drawer] .rev-button').click()
+    cy.get('.vex-dialog-message').should('contain', 'must be `pending`')
+    cy.get('.vex-dialog-button-primary').click()
+    cy.get('[data-testid=schedule-button]').then(($btn) => {
+      // store the button's text
+      const txt = $btn.text().replace('Scheduled at', '').trim()
+      cy.get('[data-testid=submit]').click()
+      cy.location('pathname').should('eq', '/admin/pages')
+      cy.get('[data-testidx="0"] > .main-content').should('contain', 'A scheduled post')
+      cy.get('[data-testid="status-pending"]')
+        .eq(0).invoke('show')
+        .trigger('mouseenter')
+        .wait(1000)
+        .should('have.class', 'v-tooltip-open')
+        .trigger('mouseleave')
+      cy.get('.tooltip-inner').should('contain', `Publish at ${txt}`)
+    })
+  })
+
+  it('can schedule past publishAt', () => {
+    cy.get('@currentUser').then(response => {
+      cy.defaultlanguage().then(language => {
+        cy.factorydb('page', { title: 'Page title', uri: 'page-title', language })
+        cy.factorydb('module', {})
+
+        cy.visit('/admin/pages/new')
+      })
+    })
+
+    let today = new Date()
+    today.setHours(today.getHours() - 3)
+
+    cy.get('[data-testid=status-published]').click()
+    cy.get('#page_title_').type('A published post')
+    cy.get('#page_uri_').type('a-published-post')
+    cy.get('.villain-editor-plus-inactive > a').click()
+    cy.get('.villain-editor-plus-available-module').click()
+    cy.get(':nth-child(1) > [data-testid=schedule-button]').click()
+    cy.get('.form-control').type(`${today.toISOString()}{enter}`)
+    cy.get('[data-testid=schedule-drawer] .rev-button').click()
+    cy.get('[data-testid=schedule-button]').then(($btn) => {
+      cy.get('[data-testid=submit]').click()
+      cy.location('pathname').should('eq', '/admin/pages')
+      cy.get('[data-testidx="0"] > .main-content').should('contain', 'A published post')
+      cy.get('[data-testid="status-published"]')
     })
   })
 })

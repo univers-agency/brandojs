@@ -16,6 +16,7 @@
           <label class="form-check-label">
             <input
               v-model="innerValue"
+              :data-testid="`status-${o.value}`"
               :name="name"
               :value="o.value"
               class="form-check-input"

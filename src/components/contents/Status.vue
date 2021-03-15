@@ -3,6 +3,7 @@
     <svg
       v-if="isWaiting"
       v-popover="$t('publish-at') + publishTime"
+      :data-testid="`status-${status}`"
       width="15"
       height="15"
       viewBox="0 0 15 15"
@@ -29,6 +30,7 @@
 
     <svg
       v-else
+      :data-testid="`status-${status}`"
       xmlns="http://www.w3.org/2000/svg"
       width="15"
       height="15"
