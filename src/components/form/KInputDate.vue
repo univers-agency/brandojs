@@ -76,6 +76,8 @@ export default {
     VueFlatpickr
   },
 
+  inject: ['GLOBALS'],
+
   props: {
     dateTimeOptions: {
       type: Object,
@@ -126,8 +128,6 @@ export default {
       required: true
     }
   },
-
-  inject: ['GLOBALS'],
 
   data () {
     return {

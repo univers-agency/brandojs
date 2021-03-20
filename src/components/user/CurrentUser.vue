@@ -71,13 +71,13 @@
 import { gsap } from 'gsap'
 
 export default {
+
+  inject: ['GLOBALS'],
   data () {
     return {
       open: false
     }
   },
-
-  inject: ['GLOBALS'],
 
   methods: {
     beforeEnter (el) {

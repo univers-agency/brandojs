@@ -50,9 +50,24 @@
       class="dropdown-content"
       @click.stop="closeContent">
       <li>
-        <button v-if="status !== 'published'" @click="setStatus('published')" type="button">{{ $t('published') }}</button>
-        <button v-if="status !== 'draft'" @click="setStatus('draft')" type="button">{{ $t('draft') }}</button>
-        <button v-if="status !== 'disabled'" @click="setStatus('disabled')" type="button">{{ $t('disabled') }}</button>
+        <button
+          v-if="status !== 'published'"
+          type="button"
+          @click="setStatus('published')">
+          {{ $t('published') }}
+        </button>
+        <button
+          v-if="status !== 'draft'"
+          type="button"
+          @click="setStatus('draft')">
+          {{ $t('draft') }}
+        </button>
+        <button
+          v-if="status !== 'disabled'"
+          type="button"
+          @click="setStatus('disabled')">
+          {{ $t('disabled') }}
+        </button>
       </li>
     </ul>
   </div>
@@ -65,6 +80,8 @@ import { gsap } from 'gsap'
 import gql from 'graphql-tag'
 
 export default {
+
+  inject: ['GLOBALS'],
   props: {
     entry: {
       type: Object,
@@ -78,8 +95,6 @@ export default {
       open: false
     }
   },
-
-  inject: ['GLOBALS'],
 
   computed: {
     publishTime () {

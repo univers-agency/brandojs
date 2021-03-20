@@ -93,8 +93,8 @@
               <KInputSelect
                 v-model="block.data.module_id"
                 :options="modules"
-                optionValueKey="id"
-                optionLabelKey="name"
+                option-value-key="id"
+                option-label-key="name"
                 name="data[module_id]"
                 :label="$t('module')" />
 

@@ -81,12 +81,12 @@ import gql from 'graphql-tag'
 import GET_USER from '../../gql/users/USER_QUERY.graphql'
 
 export default {
+
+  inject: ['rootApollo', 'GLOBALS'],
   data () {
     return {
     }
   },
-
-  inject: ['rootApollo', 'GLOBALS'],
 
   methods: {
     async save () {

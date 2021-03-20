@@ -26,6 +26,8 @@ import { parseISO } from 'date-fns'
 import { format } from 'date-fns-tz'
 
 export default {
+
+  inject: ['GLOBALS'],
   props: {
     user: {
       type: Object,
@@ -42,8 +44,6 @@ export default {
       default: true
     }
   },
-
-  inject: ['GLOBALS'],
 
   methods: {
     getDate (datetime) {
