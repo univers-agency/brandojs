@@ -43,19 +43,21 @@ export default {
     }
   },
 
+  inject: ['GLOBALS'],
+
   methods: {
     getDate (datetime) {
       if (!datetime) {
         return '—'
       }
-      return format(parseISO(datetime), 'dd.MM.yy', { timeZone: this.$identity.config.timezone })
+      return format(parseISO(datetime), 'dd.MM.yy', { timeZone: this.GLOBALS.identity.config.timezone })
     },
 
     getTime (datetime) {
       if (!datetime) {
         return '—'
       }
-      return format(parseISO(datetime), 'HH:mm', { timeZone: this.$identity.config.timezone })
+      return format(parseISO(datetime), 'HH:mm', { timeZone: this.GLOBALS.identity.config.timezone })
     }
   }
 }

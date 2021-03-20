@@ -11,10 +11,13 @@
       @show="$emit('show', $event)"
       @delete="$emit('delete', $event)">
       <div class="villain-block-datasource-info">
+        <FontAwesomeIcon
+          icon="database"
+          size="6x"
+          fixed-width />
         <div
           v-if="block.data.module"
           class="inside">
-          <i class="fa fa-fw fa-database"></i>
           <p>{{ $t('datasource') }} — {{ block.data.description }}</p>
           <p><small><code>{{ block.data.module }}<br>{{ block.data.type }}|{{ block.data.query }}</code></small></p>
           <div v-if="block.data.type === 'selection'">
@@ -62,7 +65,7 @@
               <KInputRadios
                 v-model="block.data.module"
                 rules="required"
-                :options="availableModules"
+                :options="availableDatasources"
                 option-value-key="module"
                 option-label-key="module"
                 name="data[module]"
@@ -71,14 +74,14 @@
               <KInputRadios
                 v-model="block.data.type"
                 rules="required"
-                :options="availableModuleTypes"
+                :options="availableDatasourceTypes"
                 name="data[type]"
                 :label="$t('type')" />
 
               <KInputRadios
                 v-model="block.data.query"
                 rules="required"
-                :options="availableModuleQueries"
+                :options="availableDatasourceQueries"
                 name="data[query]"
                 :label="$t('query')" />
 
@@ -86,6 +89,14 @@
                 v-model="block.data.arg"
                 name="data[arg]"
                 :label="$t('argument')" />
+
+              <KInputSelect
+                v-model="block.data.module_id"
+                :options="modules"
+                optionValueKey="id"
+                optionLabelKey="name"
+                name="data[module_id]"
+                :label="$t('module')" />
 
               <KInputNumber
                 v-if="block.data.type === 'selection'"
@@ -179,22 +190,22 @@ export default {
       showConfig: false,
       showAvailableEntries: false,
       availableEntries: [],
-      availableModules: [],
-      availableModuleKeys: [],
-      availableModuleTypes: [],
-      availableModuleQueries: [],
+      availableDatasources: [],
+      availableDatasourceKeys: [],
+      availableDatasourceTypes: [],
+      availableDatasourceQueries: [],
       selectedEntries: [],
-      templates: []
+      modules: []
     }
   },
 
   watch: {
     'block.data.module' (val) {
-      this.getModuleKeys(val)
+      this.getDatasourceKeys(val)
     },
 
     'block.data.type' (val) {
-      this.getModuleQueries(val)
+      this.getDatasourceQueries(val)
     },
 
     'block.data.arg' (val) {
@@ -205,9 +216,11 @@ export default {
   },
 
   async created () {
-    this.getModules()
+    this.getDatasources()
+    this.getTemplates()
+
     if (this.block.data.module) {
-      this.getModuleKeys()
+      this.getDatasourceKeys()
     }
 
     if (this.block.data.ids.length) {
@@ -234,28 +247,36 @@ export default {
       this.block.data.ids = this.sortedArray
     },
 
-    getModules () {
+    getDatasources () {
       this.adminChannel.channel
-        .push('datasource:list_modules', {})
+        .push('datasource:list_datasources', {})
         .receive('ok', payload => {
-          this.availableModules = payload.available_modules
+          this.availableDatasources = payload.available_datasources
         })
     },
 
-    getModuleKeys () {
+    getTemplates () {
       this.adminChannel.channel
-        .push('datasource:list_module_keys', { module: this.block.data.module })
+        .push('datasource:list_modules')
         .receive('ok', payload => {
-          this.availableModuleKeys = payload.available_module_keys
-          this.availableModuleTypes = Object.keys(payload.available_module_keys).map(t => ({ name: t, value: t }))
+          this.modules = payload.modules
+        })
+    },
+
+    getDatasourceKeys () {
+      this.adminChannel.channel
+        .push('datasource:list_datasource_keys', { module: this.block.data.module })
+        .receive('ok', payload => {
+          this.availableDatasourceKeys = payload.available_datasource_keys
+          this.availableDatasourceTypes = Object.keys(payload.available_datasource_keys).map(t => ({ name: t, value: t }))
           if (this.block.data.type) {
-            this.availableModuleQueries = this.availableModuleKeys[this.block.data.type].map(t => ({ name: t, value: t }))
+            this.availableDatasourceQueries = this.availableDatasourceKeys[this.block.data.type].map(t => ({ name: t, value: t }))
           }
         })
     },
 
-    getModuleQueries (val) {
-      this.availableModuleQueries = this.availableModuleKeys[val].map(t => ({ name: t, value: t }))
+    getDatasourceQueries (val) {
+      this.availableDatasourceQueries = this.availableDatasourceKeys[val].map(t => ({ name: t, value: t }))
     },
 
     selectEntries () {
@@ -323,6 +344,10 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+  .helpful-actions {
+    justify-content: center;
+  }
+
   .row-wrap {
     display: flex;
     width: 100%;
@@ -345,9 +370,6 @@ export default {
     }
 
     svg {
-      width: 30%;
-      height: 30%;
-      max-width: 250px;
       margin-bottom: 25px;
     }
   }
@@ -373,7 +395,7 @@ export default {
       "query": "Query",
       "argument": "Argument",
       "limit": "Limit",
-      "template": "Template for datasource",
+      "module": "Module for datasource",
       "close": "Close",
       "add": "Add",
       "remove": "Remove",

@@ -225,7 +225,7 @@
                     size="sm" />
                 </td>
                 <td class="date fit">
-                  {{ $utils.datetime(revision.insertedAt, $identity.config.timezone) }}
+                  {{ $utils.datetime(revision.insertedAt, GLOBALS.identity.config.timezone) }}
                 </td>
                 <td class="user">
                   {{ revision.creator.name }}
@@ -338,7 +338,8 @@ export default {
   name: 'KForm',
 
   inject: [
-    'adminChannel'
+    'adminChannel',
+    'GLOBALS'
   ],
 
   props: {

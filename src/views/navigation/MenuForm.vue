@@ -1,6 +1,6 @@
 <template>
   <KForm
-    v-if="menu && identity"
+    v-if="menu && GLOBALS.identity"
     :back="{ name: 'navigation' }"
     @save="save">
     <section class="row">
@@ -29,7 +29,7 @@
         <KInputSelect
           v-model="menu.language"
           rules="required"
-          :options="identity.languages"
+          :options="GLOBALS.identity.languages"
           option-value-key="id"
           name="menu[language]"
           label="Språk" />
@@ -39,13 +39,13 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
-
 export default {
 
   inject: [
-    'adminChannel'
+    'adminChannel',
+    'GLOBALS'
   ],
+
   props: {
     menu: {
       type: Object,
@@ -60,23 +60,6 @@ export default {
 
   data () {
     return {
-    }
-  },
-
-  apollo: {
-    identity: {
-      query: gql`
-        query Identity {
-          identity {
-            id
-            defaultLanguage
-            languages {
-              id
-              name
-            }
-          }
-        }
-      `
     }
   }
 }

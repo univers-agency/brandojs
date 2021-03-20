@@ -454,25 +454,20 @@ export default {
             /**
              * Check for old format using `template`
              */
-            if (block.data.wrapper || block.data.template) {
+            if (block.data.wrapper) {
               this.$alerts.alertError('OBS!', this.$t('old-datasource-wrapper'))
               if (block.data.wrapper) {
                 console.error('Datasource/Datakilde-wrapper\r\n\r\n', block.data.wrapper)
               }
-              if (block.data.template) {
-                // find module
-                const t = this.availableModules.find(t => parseInt(t.data.id) === parseInt(block.data.template))
 
-                if (t) {
-                  console.error('Datasource/Malkode\r\n\r\n', t.data.code)
-                  console.error('Datasource/Wrapper\r\n\r\n', t.data.wrapper)
-                } else {
-                  console.error('Datasource/Malkode: fant ikke malen')
-                }
-              }
               delete block.data.wrapper
+            }
+
+            if (block.data.template) {
+              this.$set(block.data, 'module_id', block.data.template)
               delete block.data.template
             }
+
             break
 
           case 'container':
@@ -487,7 +482,7 @@ export default {
 
         const blueprint = bpBlock.dataTemplate
         for (const blueprintProp in blueprint) {
-          if (!block.data.hasOwnProperty(blueprintProp)) {
+          if (!(blueprintProp in block.data)) {
             this.$set(block.data, blueprintProp, blueprint[blueprintProp])
             console.debug(`==> Added missing property '${blueprintProp}' to '${block.type}'`)
             this.needsRefresh = true
@@ -595,7 +590,11 @@ export default {
 
     addUIDs () {
       return [...this.innerValue].map(b => {
-        return { ...b, uid: this.createUID() }
+        if ('uid' in b) {
+          return b
+        } else {
+          return { ...b, uid: this.createUID() }
+        }
       })
     },
 
@@ -1389,7 +1388,7 @@ select.form-control {
       "open-fullscreen": "Show fullscreen mode",
       "update": "Update",
       "autosaving": "autosaving...",
-      "old-datasource-wrapper": "Old datasource wrapper! Check console for source",
+      "old-datasource-wrapper": "Old datasource wrapper! This should be moved to your `code` field or source template. Check console for source",
       "old-datasource-type": "Old datasource type specification. Type has been converted from `many` to `list`. Please save the entry to enforce.",
       "replace-with-autosave": "You are replacing your current content with an autosaved version. Are you sure you want to proceed?",
       "block-duplicated": "Block duplicated",
@@ -1405,7 +1404,7 @@ select.form-control {
       "open-fullscreen": "Vis fullskjermsmodus",
       "update": "Oppdatér",
       "autosaving": "autolagrer...",
-      "old-datasource-wrapper": "Datakilden har et gammelt format. Flytt malkode og `wrapper` til datakildens eget felt. Wrapperkode og malkode finner du i konsollen OBS! Wrapper og mal nulles ut ved lagring av dette skjemaet!",
+      "old-datasource-wrapper": "Datakilden har et gammelt format. Flytt `wrapper` til datakildens eget felt. Wrapperkode finner du i konsollen OBS! Wrapper nulles ut ved lagring av dette skjemaet!",
       "old-datasource-type": "Datakilden har et gammelt format. Type er konvertert fra `many` til `list`, men blir ikke gjeldene før du lagrer denne siden.",
       "replace-with-autosave": "Du er i ferd med å erstatte innholdet med data fra en autolagret versjon. Er du sikker på at du vil fortsette?",
       "block-duplicated": "Blokken ble duplisert",

@@ -31,7 +31,7 @@ export default {
 
 <style lang="postcss" scoped>
   section {
-    @space margin-top md;
+    @space margin-top sm;
 
     header {
       display: flex;

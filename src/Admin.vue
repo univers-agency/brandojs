@@ -81,6 +81,8 @@ import GET_ME from './gql/users/ME_QUERY.graphql'
 
 import LoggedWarnings from './components/system/LoggedWarnings'
 
+const GLOBALS = Vue.observable({ me: {}, identity: {}})
+
 export default {
   components: {
     LoggedWarnings
@@ -89,7 +91,8 @@ export default {
   provide () {
     const userChannel = {}
     const adminChannel = {}
-    const shared = {}
+    // const shared = {}
+    const rootApollo = {}
 
     Object.defineProperty(userChannel, 'channel', {
       enumerable: true,
@@ -101,12 +104,17 @@ export default {
       get: () => this.adminChannel
     })
 
-    Object.defineProperty(shared, 'me', {
-      enumberable: true,
-      get: () => this.me
+    Object.defineProperty(rootApollo, 'queries', {
+      enumerable: true,
+      get: () => this.$apollo.queries
     })
 
-    return { userChannel, adminChannel, shared }
+    return {
+      userChannel,
+      adminChannel,
+      rootApollo,
+      GLOBALS
+    }
   },
 
   data () {
@@ -117,7 +125,8 @@ export default {
       noFocus: true,
       loading: 2,
       fullScreen: false,
-      vsn: null
+      vsn: null,
+      $me: null
     }
   },
 
@@ -349,12 +358,6 @@ export default {
 
     joinAdminChannel () {
       this.adminChannel = this.$socket.channel('admin', {})
-      this.adminChannel.join()
-        .receive('ok', userId => {
-          console.debug(`==> Joined admin channel with user:${userId}`)
-          this.loading = 0
-        })
-        .receive('error', resp => { console.error('!! Failed to join ', resp) })
 
       // receive initial presence data from server, sent after join
       this.adminChannel.on('admin:presence_state', state => {
@@ -366,8 +369,14 @@ export default {
         this.storeLobbyPresencesDiff(diff)
       })
 
-      // request presences
-      this.adminChannel.push('admin:list_presence', {})
+      this.adminChannel.join()
+        .receive('ok', userId => {
+          console.debug(`==> Joined admin channel with user:${userId}`)
+          // request presences
+          this.adminChannel.push('admin:list_presence', {})
+          this.loading = 0
+        })
+        .receive('error', resp => { console.error('!! Failed to join ', resp) })
 
       this.adminChannel.on('notifications:mutation', payload => {
         if (this.me.config.showMutationNotifications) {
@@ -455,8 +464,7 @@ export default {
 
           this.initializeApp(me)
         }
-
-        Vue.prototype.$me = me
+        GLOBALS.me = me
         return me
       },
 
@@ -469,7 +477,7 @@ export default {
       query: GET_IDENTITY,
 
       update ({ identity }) {
-        Vue.prototype.$identity = identity
+        GLOBALS.identity = identity
         return identity
       },
 
@@ -557,16 +565,20 @@ export default {
     font-style: normal;
   }
 
+  .avatar img {
+    vertical-align: baseline;
+  }
+
   .tooltip {
-    font-size: 13px;
+    font-size: 12px;
     display: block !important;
     z-index: 10000;
 
     .tooltip-inner {
       @color fg peach;
-      @color bg blue;
+      @color bg dark;
       border-radius: 12px;
-      padding: 5px 15px 5px;
+      padding: 5px 7px 5px;
     }
 
     .tooltip-arrow {
@@ -575,7 +587,7 @@ export default {
       border-style: solid;
       position: absolute;
       margin: 5px;
-      border-color: theme(colors.blue);
+      border-color: theme(colors.dark);
       z-index: 1;
     }
 
@@ -693,18 +705,20 @@ export default {
       display: inline-block;
       width: 30px;
       height: 30px;
+      border: 1px solid theme(colors.dark);
+      border-radius: 50%;
 
       &:after {
         content: " ";
         border-radius: 50%;
-        border: 2px solid #efefef;
-        top: 0;
+        border: 1px solid #ffffff;
+        top: -2px;
         right: 0;
         width: 10px;
         height: 10px;
         position: absolute;
         opacity: 0;
-        background-color: forestgreen;
+        background-color: theme(colors.status.published);
         transition: opacity 1s ease, background-color 2s ease;
       }
 
@@ -734,7 +748,7 @@ export default {
         }
 
         &:after {
-          background-color: rgba(117, 206, 117, 0.84);
+          background-color: theme(colors.status.published);
           opacity: 1;
           transition: opacity 1s ease, background-color 2s ease;
         }
@@ -751,7 +765,7 @@ export default {
         }
 
         &:after {
-          background-color: rgba(242, 188, 34, 0.67);
+          background-color: theme(colors.status.pending);
           opacity: 1;
           transition: opacity 1s ease, background-color 2s ease;
         }
@@ -808,7 +822,12 @@ export default {
 
   body {
     color: theme(colors.dark);
-    background-color: theme(colors.peachDarker);
+    background-color: theme(colors.dark);
+  }
+
+  .main-content .circle-dropdown.wrapper {
+    justify-content: flex-end;
+    margin-right: 1vw;
   }
 
   .float-right {
@@ -1250,7 +1269,7 @@ export default {
   height: 40px;
   border-radius: 20px;
   line-height: 1;
-  border: 1px solid theme(colors.grayLight);
+  border: 1px solid theme(colors.dark);
   font-family: theme(typography.families.mono);
   font-size: 14px;
   text-transform: uppercase;
@@ -1293,7 +1312,7 @@ export default {
   display: inline-block;
   padding: 5px 8px 4px;
   line-height: 1;
-  border: 1px solid theme(colors.grayLight);
+  border: 1px solid theme(colors.dark);
   border-radius: 15px;
   user-select: none;
 
@@ -1683,9 +1702,9 @@ export default {
       }
 
       .iziToast-message {
+        @font mono;
         color: #eee;
         font-size: 9px;
-        font-family: 'Mono';
       }
     }
   }
@@ -1712,9 +1731,9 @@ export default {
       }
 
       .iziToast-message {
+        @font mono;
         color: #eee;
         font-size: 9px;
-        font-family: 'Mono';
       }
     }
   }
@@ -1741,9 +1760,9 @@ export default {
       }
 
       .iziToast-message {
+        @font mono;
         @color fg peachDarker;
         font-size: 9px;
-        font-family: 'Mono';
       }
     }
   }

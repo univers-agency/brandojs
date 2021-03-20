@@ -337,10 +337,15 @@
 import gql from 'graphql-tag'
 import GET_PAGES from '../../gql/pages/PAGES_QUERY.graphql'
 import locale from '../../locales/pages'
+// import Blueprint from '../../mixins/Blueprint'
 
 export default {
+  // mixins: [
+  //   Blueprint({ blueprint: 'Brando.Blueprints.Pages.Page' })
+  // ],
 
   inject: ['adminChannel'],
+
   data () {
     return {
       visibleChildren: [],
@@ -409,14 +414,14 @@ export default {
       try {
         await this.$apollo.mutate({
           mutation: gql`
-            mutation DuplicatePage($pageId: ID!) {
-              duplicatePage(pageId: $pageId) {
+            mutation DuplicatePage($id: ID!) {
+              duplicatePage(id: $id) {
                 id
               }
             }
           `,
           variables: {
-            pageId: page.id
+            id: page.id
           }
         })
 
@@ -431,14 +436,14 @@ export default {
       try {
         await this.$apollo.mutate({
           mutation: gql`
-            mutation DuplicateSection($sectionId: ID!) {
-              duplicateSection(sectionId: $sectionId) {
+            mutation DuplicateSection($id: ID!) {
+              duplicateSection(id: $id) {
                 id
               }
             }
           `,
           variables: {
-            sectionId: section.id
+            id: section.id
           },
 
           update: (store, { data: { duplicateSection } }) => {

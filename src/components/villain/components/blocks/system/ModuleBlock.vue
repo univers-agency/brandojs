@@ -189,10 +189,6 @@ export default {
     // check if any refs are missing
   },
 
-  updated () {
-    console.debug('<ModuleBlock /> updated')
-  },
-
   methods: {
     getOrder () {
       return this.block.data.entries

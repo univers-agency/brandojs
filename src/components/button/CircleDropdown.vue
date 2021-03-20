@@ -128,11 +128,6 @@ export default {
         .main-circle {
           fill: theme(colors.dark);
 
-          /* &.inverted {
-            fill: theme(colors.peach);
-            stroke: theme(colors.peach);
-          } */
-
           &.inverted {
             fill: theme(colors.peach);
           }
@@ -173,7 +168,7 @@ export default {
 
       .main-circle {
         transition: fill 0.3s ease;
-        stroke: theme(colors.grayLight);
+        stroke: theme(colors.dark);
         fill: transparent;
 
         &.inverted {
@@ -212,12 +207,15 @@ export default {
 
     li {
       a, button {
+        @font mono;
         display: block;
         padding: 15px;
         text-align: right;
         line-height: 1;
         float: right;
         width: 100%;
+        font-size: 15px;
+        text-transform: uppercase;
 
         &:hover {
           background-color: theme(colors.dark);

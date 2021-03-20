@@ -4,7 +4,7 @@
     @beforeEnter="beforeEnter"
     @enter="enter">
     <div
-      v-if="!$apollo.queries.me.loading"
+      v-if="GLOBALS.me"
       ref="el"
       tabindex="0"
       :class="{ open: open }"
@@ -15,16 +15,16 @@
       <section class="button">
         <section class="avatar-wrapper">
           <div class="avatar">
-            <img :src="me.avatar ? me.avatar.thumb : '/images/admin/avatar.png'" />
+            <img :src="GLOBALS.me.avatar ? GLOBALS.me.avatar.thumb : '/images/admin/avatar.png'" />
           </div>
         </section>
         <section class="content">
           <div class="info">
             <div class="name">
-              {{ me.name }}
+              {{ GLOBALS.me.name }}
             </div>
             <div class="role">
-              {{ me.role }}
+              {{ GLOBALS.me.role }}
             </div>
           </div>
           <div class="dropdown-icon">
@@ -69,7 +69,6 @@
 <script>
 
 import { gsap } from 'gsap'
-import GET_ME from '../../gql/users/ME_QUERY.graphql'
 
 export default {
   data () {
@@ -77,6 +76,8 @@ export default {
       open: false
     }
   },
+
+  inject: ['GLOBALS'],
 
   methods: {
     beforeEnter (el) {
@@ -103,22 +104,18 @@ export default {
 
       gsap.to(this.$refs.el.querySelector('.dropdown-icon'), { duration: 0.35, rotate: '+=180' })
       if (this.open) {
-        gsap.to(Array.from(lis).reverse(), { duration: 0.35, autoAlpha: 0, x: -15, stagger: 0.1 })
+        gsap.to(Array.from(lis).reverse(), { duration: 0.35, autoAlpha: 0, x: -8, stagger: 0.06 })
         gsap.to(this.$refs.el, { duration: 0.35, delay: 0.2, height: this.height })
         this.open = false
       } else {
         this.height = this.$refs.el.offsetHeight
 
-        gsap.set(lis, { autoAlpha: 0, x: -15 })
+        gsap.set(lis, { autoAlpha: 0, x: -8 })
         gsap.to(this.$refs.el, { duration: 0.35, height: 'auto' })
-        gsap.to(lis, { duration: 0.35, delay: 0.2, autoAlpha: 1, x: 0, stagger: 0.1 })
+        gsap.to(lis, { duration: 0.35, delay: 0.2, autoAlpha: 1, x: 0, stagger: 0.06 })
         this.open = true
       }
     }
-  },
-
-  apollo: {
-    me: GET_ME
   }
 }
 </script>
@@ -130,8 +127,6 @@ export default {
     border: 1px solid theme(colors.dark);
     height: 60px;
     border-radius: 30px;
-    margin-left: -8px;
-    margin-right: -8px;
     cursor: pointer;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -139,13 +134,8 @@ export default {
     background-color: transparent;
     transition: background-color 250ms ease;
 
-    &.open {
-      /* height: auto; */
-      /* border-radius: 0; */
-    }
-
     &:hover {
-      background-color: #ffffff;
+      @color bg peachLighter;
     }
 
     .button {
@@ -190,7 +180,7 @@ export default {
       }
 
       .role {
-        font-family: 'Maison Neue', monospace;
+        @font main;
         font-size: 12px;
         opacity: 0.7;
         user-select: none;
@@ -219,7 +209,7 @@ export default {
 
           &:before {
             content: '';
-            background-image: url("data:image/svg+xml,%3Csvg width='15' height='11' viewBox='0 0 15 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.545998 6.3L11.76 6.3L8.106 9.918L9.15 10.962L14.28 5.832L14.28 5.364L9.15 0.234001L8.106 1.278L11.742 4.878L0.545998 4.878L0.545998 6.3Z' fill='black'/%3E%3C/svg%3E%0A");
+            background-image: url("data:image/svg+xml,%3Csvg width='15' height='11' viewBox='0 0 15 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.545998 6.3L11.76 6.3L8.106 9.918L9.15 10.962L14.28 5.832L14.28 5.364L9.15 0.234001L8.106 1.278L11.742 4.878L0.545998 4.878L0.545998 6.3Z' fill='white'/%3E%3C/svg%3E%0A");
             width: 15px;
             height: 11px;
             position: absolute;
@@ -231,7 +221,8 @@ export default {
           }
 
           &:hover {
-            background-color: theme(colors.peach);
+            @color bg dark;
+            @color fg peach;
             &:before {
               opacity: 1;
             }

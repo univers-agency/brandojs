@@ -52,7 +52,7 @@
         <div class="shaded">
           <FocusPoint v-model="img.image.focal">
             <img
-              :src="`${$identity.config.mediaUrl}/${img.image.path}?${timestamp}`"
+              :src="`${GLOBALS.config.mediaUrl}/${img.image.path}?${timestamp}`"
               class="img-fluid">
           </FocusPoint>
 
@@ -126,7 +126,8 @@ export default {
   },
 
   inject: [
-    'adminChannel'
+    'adminChannel',
+    'GLOBALS'
   ],
 
   props: {

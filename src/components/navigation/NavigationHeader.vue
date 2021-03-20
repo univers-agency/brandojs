@@ -9,20 +9,12 @@
 
 <script>
 
-import GET_IDENTITY from '../../gql/identity/IDENTITY_QUERY.graphql'
-
-export default {
-  apollo: {
-    identity: {
-      query: GET_IDENTITY
-    }
-  }
-}
+export default {}
 </script>
 
 <style lang="postcss">
   .navigation-header {
-    @space margin-bottom sm;
+    @space margin-bottom 30px;
     display: flex;
     flex-direction: column;
     align-items: center;

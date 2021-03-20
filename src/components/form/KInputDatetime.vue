@@ -138,6 +138,8 @@ export default {
     }
   },
 
+  inject: ['GLOBALS'],
+
   data () {
     return {
       innerValue: '',
@@ -167,7 +169,7 @@ export default {
   created () {
     this.opts = {
       ...this.dateTimeOptions,
-      locale: this.$me.language === 'en' ? english : LOCALE_NO,
+      locale: this.GLOBALS.me.language === 'en' ? english : LOCALE_NO,
     }
 
     this.innerValue = this.value

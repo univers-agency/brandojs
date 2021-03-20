@@ -1,5 +1,5 @@
 <template>
-  <article v-if="identity">
+  <article v-if="GLOBALS.identity">
     <ContentHeader>
       <template #title>
         {{ $t('pages.new') }}
@@ -21,6 +21,8 @@ export default {
   components: {
     PageForm
   },
+
+  inject: ['GLOBALS'],
 
   props: {
     pageId: {
@@ -48,6 +50,7 @@ export default {
 
   created () {
     this.page.parentId = this.pageId
+    this.page.language = this.GLOBALS.identity.defaultLanguage
   },
 
   methods: {
@@ -87,26 +90,6 @@ export default {
     }
   },
 
-  apollo: {
-    identity: {
-      query: gql`
-        query Identity {
-          identity {
-            id
-            defaultLanguage
-            languages {
-              id
-              name
-            }
-          }
-        }
-      `,
-      update ({ identity }) {
-        this.page.language = identity.defaultLanguage
-        return identity
-      }
-    }
-  },
   i18n: {
     sharedMessages: locale
   }

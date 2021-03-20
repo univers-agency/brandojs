@@ -20,27 +20,30 @@
           placeholder="min@epost.no"
           name="user[email]" />
 
-        <KInputRadios
-          v-model="user.role"
-          rules="required"
-          :label="$t('user.role')"
-          :options="[
-            { name: $t('role.super'), value: 'superuser' },
-            { name: $t('role.admin'), value: 'admin' },
-            { name: $t('role.editor'), value: 'editor' },
-            { name: $t('role.user'), value: 'user' },
-          ]"
-          name="user[role]" />
+        <div class="row">
+          <KInputRadios
+            v-model="user.role"
+            rules="required"
+            :label="$t('user.role')"
+            :options="[
+              { name: $t('role.super'), value: 'superuser' },
+              { name: $t('role.admin'), value: 'admin' },
+              { name: $t('role.editor'), value: 'editor' },
+              { name: $t('role.user'), value: 'user' },
+            ]"
+            name="user[role]" />
 
-        <KInputRadios
-          v-model="user.language"
-          rules="required"
-          :options="[
-            { name: 'English', value: 'en' },
-            { name: 'Norsk', value: 'no' }
-          ]"
-          name="user[language]"
-          :label="$t('user.language')" />
+          <KInputRadios
+            v-model="user.language"
+            rules="required"
+            :options="[
+              { name: 'English', value: 'en' },
+              { name: 'Norsk', value: 'no' }
+            ]"
+            name="user[language]"
+            :label="$t('user.language')" />
+        </div>
+
         <KInputPassword
           v-model="user.password"
           :label="$t('user.password')"

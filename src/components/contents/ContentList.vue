@@ -657,7 +657,7 @@ export default {
 
         .status {
           position: absolute;
-          margin-left: -30px;
+          margin-left: -36px;
         }
       }
     }

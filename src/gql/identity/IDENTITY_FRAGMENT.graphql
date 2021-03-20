@@ -45,6 +45,8 @@ fragment identity on Identity {
     value
   }
 
+  defaultLanguage
+
   languages {
     id
     name

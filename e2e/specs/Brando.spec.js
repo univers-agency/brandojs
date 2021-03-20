@@ -124,7 +124,7 @@ describe('Pages', () => {
         cy.get('.vex-dialog-button-primary').click()
 
         cy.get('.villain-editor-plus-inactive > a').click()
-        cy.get('.villain-editor-plus-available-module').click()
+        cy.get('.villain-editor-plus-available-module').last().click()
         cy.get('.villain-header-input').clear().click().type('This is a heading')
 
         cy.get('[data-testid="submit"]').click()
@@ -218,7 +218,7 @@ describe('Pages', () => {
       cy.get('#page_title_').type('My title')
 
       cy.get('.villain-editor-plus-inactive > a').click()
-      cy.get('.villain-editor-plus-available-module').click()
+      cy.get('.villain-editor-plus-available-module').last().click()
       cy.get('.villain-header-input').clear().click().type('This is a heading')
 
       cy.get('[data-testid="meta-button"]').click()
@@ -250,7 +250,7 @@ describe('Pages', () => {
     cy.get('#page_title_').type('A scheduled post')
     cy.get('#page_uri_').type('a-scheduled-post')
     cy.get('.villain-editor-plus-inactive > a').click()
-    cy.get('.villain-editor-plus-available-module').click()
+    cy.get('.villain-editor-plus-available-module').last().click()
     cy.get(':nth-child(1) > [data-testid=schedule-button]').click()
     cy.get('.form-control').type(`${today.toISOString()}{enter}`)
     cy.get('[data-testid=schedule-drawer] .rev-button').click()
@@ -289,7 +289,7 @@ describe('Pages', () => {
     cy.get('#page_title_').type('A published post')
     cy.get('#page_uri_').type('a-published-post')
     cy.get('.villain-editor-plus-inactive > a').click()
-    cy.get('.villain-editor-plus-available-module').click()
+    cy.get('.villain-editor-plus-available-module').last().click()
     cy.get(':nth-child(1) > [data-testid=schedule-button]').click()
     cy.get('.form-control').type(`${today.toISOString()}{enter}`)
     cy.get('[data-testid=schedule-drawer] .rev-button').click()
@@ -392,7 +392,7 @@ describe('PageFragments', () => {
             cy.get('#page_key_').type('my-key')
 
             cy.get('.villain-editor-plus-inactive > a').click()
-            cy.get('.villain-editor-plus-available-modules-title').click()
+            cy.get('.villain-editor-plus-available-module').last().click()
             cy.get('.villain-header-input').clear().click().type('This is a heading')
             cy.get('[data-testid="submit"]').click()
 
@@ -428,7 +428,7 @@ describe('PageFragments', () => {
             cy.get('#page_key_').type('-edit')
 
             cy.get('.villain-editor-plus-inactive > a').click()
-            cy.get('.villain-editor-plus-available-modules-title').click()
+            cy.get('.villain-editor-plus-available-module').last().click()
             cy.get('.villain-header-input').clear().click().type('This is an edited heading')
             cy.get('[data-testid="submit"]').click()
 
@@ -507,8 +507,8 @@ describe('Users', () => {
       cy.contains('Superuser cannot be deactivated')
       cy.get('.vex-dialog-button-primary').click()
 
-      cy.get('[data-testidx="1"] > .main-content > .col-1 > .wrapper > [data-testid=circle-dropdown-button]').click()
-      cy.get('[data-testidx="1"] > .main-content > .col-1 > .wrapper > [data-testid=circle-dropdown-content] > li > button').click()
+      cy.get('[data-testidx="2"] > .main-content > .col-1 > .wrapper > [data-testid=circle-dropdown-button]').click()
+      cy.get('[data-testidx="2"] > .main-content > .col-1 > .wrapper > [data-testid=circle-dropdown-content] > li > button').click()
 
       cy.contains('User deactivated')
     })

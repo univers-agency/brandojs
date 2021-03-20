@@ -26,8 +26,8 @@ module.exports = {
       status: {
         draft: '#636363',
         pending: '#f1ac00',
-        published: '#8bd271',
-        disabled: '#9a0000'
+        published: '#3cb371',
+        disabled: '#cd5c5c'
       },
 
       /*
@@ -49,7 +49,7 @@ module.exports = {
         blockBorder: '#9a9a9a26',
         availableBlock: 'rgb(211, 0, 0)',
         availableBlockHover: '#eeeeee',
-        popover: '#f9f9f9'
+        popover: '#052752'
       }
     }),
 

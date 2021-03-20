@@ -127,6 +127,8 @@ export default {
     }
   },
 
+  inject: ['GLOBALS'],
+
   data () {
     return {
       innerValue: ''
@@ -154,7 +156,7 @@ export default {
 
     if (!this.innerValue) {
       if (!this.null) {
-        this.innerValue = format(Date.now(), 'yyyy-MM-dd', { timeZone: this.$identity.config.timezone })
+        this.innerValue = format(Date.now(), 'yyyy-MM-dd', { timeZone: this.GLOBALS.identity.config.timezone })
       }
     }
   }

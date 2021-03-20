@@ -68,7 +68,7 @@ export default {
     @responsive ipad_landscape { width: 330px }
     @responsive mobile { width: 330px }
     @responsive iphone { width: 330px }
-    @space padding-x md;
+    @space padding-x sm;
 
     background-color: #ffffff;
     border-right: 1px solid theme(colors.dark);

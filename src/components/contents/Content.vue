@@ -173,8 +173,7 @@ export default {
     padding-bottom: 100px;
 
     > .content {
-      @space padding-left md;
-      @space padding-right md;
+      @space padding-x sm;
       @space padding-bottom md;
       min-height: 100vh;
     }

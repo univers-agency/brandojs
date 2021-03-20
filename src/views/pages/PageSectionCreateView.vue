@@ -22,7 +22,8 @@ export default {
   },
 
   inject: [
-    'adminChannel'
+    'adminChannel',
+    'GLOBALS'
   ],
 
   props: {
@@ -44,6 +45,7 @@ export default {
 
   created () {
     this.page.pageId = this.pageId
+    this.page.language = this.GLOBALS.identity.defaultLanguage
   },
 
   methods: {
@@ -71,27 +73,6 @@ export default {
         this.$router.push({ name: 'pages' })
       } catch (err) {
         this.$utils.showError(err)
-      }
-    }
-  },
-
-  apollo: {
-    identity: {
-      query: gql`
-        query Identity {
-          identity {
-            id
-            defaultLanguage
-            languages {
-              id
-              name
-            }
-          }
-        }
-      `,
-      update ({ identity }) {
-        this.page.language = identity.defaultLanguage
-        return identity
       }
     }
   }

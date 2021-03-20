@@ -53,6 +53,7 @@ export default {
           { component: 'Picture', dataTemplate: {} },
           { component: 'Video', dataTemplate: {} },
           { component: 'Slideshow', dataTemplate: {} },
+          { component: 'Gallery', dataTemplate: {} },
           { component: 'Svg', dataTemplate: {} }
         ],
         data: null
@@ -76,9 +77,21 @@ export default {
     },
 
     {
-      name: 'Gallery/slider',
+      name: 'Slider',
       icon: 'fa-images',
       component: 'Slideshow',
+      dataTemplate: {
+        images: [],
+        class: '',
+        series_slug: 'post',
+        lightbox: false
+      }
+    },
+
+    {
+      name: 'Gallery',
+      icon: 'fa-images',
+      component: 'Gallery',
       dataTemplate: {
         images: [],
         class: '',
@@ -144,7 +157,8 @@ export default {
         arg: null,
         limit: null,
         ids: [],
-        description: null
+        description: null,
+        module_id: null
       }
     },
 
@@ -301,6 +315,7 @@ export default {
         available_components: [
           { component: 'Picture', dataTemplate: {} },
           { component: 'Video', dataTemplate: {} },
+          { component: 'Gallery', dataTemplate: {} },
           { component: 'Slideshow', dataTemplate: {} },
           { component: 'Svg', dataTemplate: {} }
         ],
@@ -325,9 +340,21 @@ export default {
     },
 
     {
-      name: 'Galleri/slider',
+      name: 'Slider',
       icon: 'fa-images',
       component: 'Slideshow',
+      dataTemplate: {
+        images: [],
+        class: '',
+        series_slug: 'post',
+        lightbox: false
+      }
+    },
+
+    {
+      name: 'Galleri',
+      icon: 'fa-images',
+      component: 'Gallery',
       dataTemplate: {
         images: [],
         class: '',
@@ -395,7 +422,8 @@ export default {
         arg: null,
         limit: null,
         ids: [],
-        description: null
+        description: null,
+        module_id: null
       }
     },
 

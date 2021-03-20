@@ -548,7 +548,7 @@ export default {
           }
         })
 
-        this.$toast.success({ message: this.$t('modules.updated') })
+        this.$toast.success({ message: this.$t('module.saved') })
       } catch (err) {
         this.$utils.showError(err)
       }
@@ -755,3 +755,13 @@ export default {
   padding: 15px;
 }
 </style>
+<i18n>
+  {
+    "en": {
+        "module.saved": "Module saved"
+    },
+    "no": {
+        "module.saved": "Modul lagret"
+    }
+  }
+</i18n>

@@ -12,25 +12,25 @@
       @delete="$emit('delete', $event)">
       <div
         ref="block"
-        class="villain-block-slideshow">
+        class="villain-block-gallery">
         <transition-group
           v-if="block.data.images.length"
-          v-sortable="{handle: '.villain-block-slideshow-image', animation: 500, store: {get: getOrder, set: storeOrder}}"
+          v-sortable="{handle: '.villain-block-gallery-image', animation: 500, store: {get: getOrder, set: storeOrder}}"
           name="fade-move"
           tag="div"
-          class="villain-block-slideshow-images">
+          class="villain-block-gallery-images">
           <div
             v-for="i in block.data.images"
             :key="i.url"
             :data-id="i.url"
-            class="villain-block-slideshow-image"
+            class="villain-block-gallery-image"
             @mouseover.stop="imgHover(i, $event)"
             @mouseout="imgLeave"
             @click="toggleImage(i)">
             <i class="fa fa-trash info" />
             <div
               v-if="toggledImageUrl === i.url"
-              class="villain-block-slideshow-image-overlay">
+              class="villain-block-gallery-image-overlay">
               <FontAwesomeIcon
                 icon="trash"
                 size="4x"
@@ -217,6 +217,20 @@
               name="block[data][class]"
               label="CSS klasser" />
           </div>
+          <div
+            class="col-12 form-group mt-4">
+            <KInputRadios
+              v-model="block.data.placeholder"
+              :options="[
+                {label: 'SVG', value: 'svg'},
+                {label: 'Dominant color', value: 'dominant_color'},
+                {label: 'Micro', value: 'micro'},
+              ]"
+              option-value-key="value"
+              option-label-key="label"
+              name="block[data][placeholder]"
+              label="Placeholder type" />
+          </div>
         </div>
 
         <div class="villain-config-content-buttons">
@@ -238,7 +252,7 @@ import Block from '../system/Block'
 import { Drop } from 'vue-drag-drop'
 
 export default {
-  name: 'SlideshowBlock',
+  name: 'GalleryBlock',
 
   components: {
     Block,
@@ -480,12 +494,12 @@ export default {
 }
 </script>
 <style lang="postcss" scoped>
-  .villain-block-slideshow {
+  .villain-block-gallery {
     width: 100%;
     position: relative;
 
-    .villain-block-slideshow-popup-wrapper {
-      .villain-block-slideshow-popup {
+    .villain-block-gallery-popup-wrapper {
+      .villain-block-gallery-popup {
         padding: 2rem 3rem;
         min-width: 760px;
         margin-left: auto;
@@ -504,7 +518,7 @@ export default {
       }
     }
 
-    .villain-block-slideshow-images-meta {
+    .villain-block-gallery-images-meta {
       margin: 0 auto;
       margin-top: 40px;
       margin-bottom: 10px;
@@ -520,14 +534,14 @@ export default {
       }
     }
 
-    .villain-block-slideshow-images {
+    .villain-block-gallery-images {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       width: 100%;
       justify-content: center;
 
-      .villain-block-slideshow-image {
+      .villain-block-gallery-image {
         position: relative;
         padding: .5rem;
         user-select: none;
@@ -551,7 +565,7 @@ export default {
           }
         }
 
-        .villain-block-slideshow-image-delete-overlay {
+        .villain-block-gallery-image-delete-overlay {
           user-select: none;
           display: flex;
           justify-content: center;
@@ -567,7 +581,7 @@ export default {
           display: none;
         }
 
-        .villain-block-slideshow-image-overlay {
+        .villain-block-gallery-image-overlay {
           user-select: none;
           display: flex;
           justify-content: center;
@@ -632,8 +646,8 @@ export default {
 <i18n>
   {
     "en": {
-      "configure": "Configure carousel block",
-      "help": "To remove an image from the carousel, first click the image, then click the trashcan icon.<br><br>To caption images, click \"Configure gallery block\", then \"Edit captions\"<br><br>To sort, you can drag and drop the images in your prefered sequence",
+      "configure": "Configure gallery block",
+      "help": "To remove an image from the gallery, first click the image, then click the trashcan icon.<br><br>To caption images, click \"Configure gallery block\", then \"Edit captions\"<br><br>To sort, you can drag and drop the images in your prefered sequence",
       "grid": "Grid",
       "list": "List",
       "upload-images": "Upload images",
@@ -651,8 +665,8 @@ export default {
       "error-uploading-info": "Error uploading :(\n\n{error}"
     },
     "no": {
-      "configure": "Konfigurér karusellblokk",
-      "help": "For å slette et bilde i bildekarusellen, klikker du på bildet, deretter klikker du på søplekasse-ikonet<br><br>For å gi bildene bildetekst, klikker du på \"Konfigurér galleriblokk\" og deretter \"Endre bildetekster\"<br><br>For å sortere bildene kan du dra og slippe de i ønsket rekkefølge.",
+      "configure": "Konfigurér galleriblokk",
+      "help": "For å slette et bilde i galleriet, klikker du på bildet, deretter klikker du på søplekasse-ikonet<br><br>For å gi bildene bildetekst, klikker du på \"Konfigurér galleriblokk\" og deretter \"Endre bildetekster\"<br><br>For å sortere bildene kan du dra og slippe de i ønsket rekkefølge.",
       "grid": "Grid",
       "list": "List",
       "upload-images": "Last opp bilder",

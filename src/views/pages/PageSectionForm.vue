@@ -1,6 +1,6 @@
 <template>
   <KForm
-    v-if="!loading && identity"
+    v-if="!loading && GLOBALS.identity"
     :back="{ name: 'pages' }"
     @save="save">
     <section class="row">
@@ -15,7 +15,7 @@
         <KInputSelect
           v-model="page.language"
           rules="required"
-          :options="identity.languages"
+          :options="GLOBALS.identity.languages"
           option-value-key="id"
           name="page[language]"
           :label="$t('language')" />
@@ -75,9 +75,9 @@
 import gql from 'graphql-tag'
 
 export default {
-
   inject: [
-    'adminChannel'
+    'adminChannel',
+    'GLOBALS'
   ],
   props: {
     page: {
@@ -124,23 +124,6 @@ export default {
           console.error(err)
           this.loading = 0
         })
-    }
-  },
-
-  apollo: {
-    identity: {
-      query: gql`
-        query Identity {
-          identity {
-            id
-            defaultLanguage
-            languages {
-              id
-              name
-            }
-          }
-        }
-      `
     }
   }
 }

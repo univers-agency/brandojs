@@ -196,6 +196,6 @@ export default {
   .code-input {
     border: 0;
     width: 100%;
-    font-family: "SF Mono", "Menlo", "Monaco", "Inconsolata", "Fira Mono", "Droid Sans Mono", "Source Code Pro", monospace;
+    font-family: 'Mono', "SF Mono", "Menlo", "Monaco", "Inconsolata", "Fira Mono", "Droid Sans Mono", "Source Code Pro", monospace;
   }
 </style>

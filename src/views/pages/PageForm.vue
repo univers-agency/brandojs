@@ -1,6 +1,6 @@
 <template>
   <KForm
-    v-if="page && identity"
+    v-if="page && GLOBALS.identity"
     :back="{ name: 'pages' }"
     @save="save">
     <section class="row">
@@ -22,7 +22,7 @@
         <KInputSelect
           v-model="page.language"
           rules="required"
-          :options="identity.languages"
+          :options="GLOBALS.identity.languages"
           option-value-key="id"
           name="page[language]"
           :label="$t('fields.language.label')" />
@@ -332,7 +332,8 @@ export default {
   ],
 
   inject: [
-    'adminChannel'
+    'adminChannel',
+    'GLOBALS'
   ],
 
   props: {
@@ -416,21 +417,6 @@ export default {
 
         return parents
       }
-    },
-
-    identity: {
-      query: gql`
-        query Identity {
-          identity {
-            id
-            defaultLanguage
-            languages {
-              id
-              name
-            }
-          }
-        }
-      `
     }
   },
   i18n: {

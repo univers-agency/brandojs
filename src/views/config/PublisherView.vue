@@ -64,7 +64,8 @@ import { format } from 'date-fns-tz'
 
 export default {
   inject: [
-    'adminChannel'
+    'adminChannel',
+    'GLOBALS'
   ],
 
   data () {
@@ -85,7 +86,7 @@ export default {
 
   methods: {
     fdt (dt) {
-      return format(parseISO(dt), 'dd.MM.yy @ HH:mm (z)', { timeZone: this.$identity.config.timezone })
+      return format(parseISO(dt), 'dd.MM.yy @ HH:mm (z)', { timeZone: this.GLOBALS.identity.config.timezone })
     },
 
     deleteJob (job) {

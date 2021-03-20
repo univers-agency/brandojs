@@ -5,6 +5,7 @@ import ContainerBlock from './ContainerBlock'
 import DatasourceBlock from './DatasourceBlock'
 import DatatableBlock from './DatatableBlock'
 import DividerBlock from './DividerBlock'
+import GalleryBlock from './GalleryBlock'
 import HeaderBlock from './HeaderBlock'
 import HtmlBlock from './HtmlBlock'
 import ImageBlock from './ImageBlock'
@@ -28,6 +29,7 @@ export default {
   DatasourceBlock,
   DatatableBlock,
   DividerBlock,
+  GalleryBlock,
   HeaderBlock,
   HtmlBlock,
   ImageBlock,

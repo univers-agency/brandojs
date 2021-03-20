@@ -16,7 +16,8 @@ import { format } from 'date-fns-tz'
 export default function ({ prop }) {
   return {
     inject: [
-      'adminChannel'
+      'adminChannel',
+      'GLOBALS'
     ],
 
     computed: {
@@ -41,7 +42,7 @@ export default function ({ prop }) {
 
         if (publishAt) {
           futureDate = (differenceInSeconds(parseISO(publishAt), now) > 0)
-          publishAt = format(parseISO(publishAt), 'dd.MM.yy @ HH:mm (z)', { timeZone: this.$identity.config.timezone })
+          publishAt = format(parseISO(publishAt), 'dd.MM.yy @ HH:mm (z)', { timeZone: this.GLOBALS.identity.config.timezone })
         }
 
         if (futureDate) {
