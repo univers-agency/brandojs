@@ -55,9 +55,9 @@ export default function ({ prop }) {
 
         if (status === 'published') {
           if (this[prop]['id']) {
-            return { status: 'published', message: 'published_on_save', args: { publishAt } }
+            return { status: 'published', message: 'published', args: { publishAt } }
           }
-          return { status: 'published', message: 'published', args: {} }
+          return { status: 'published', message: 'published_on_save', args: {} }
         }
 
         if (status === 'pending' && publishAt) {

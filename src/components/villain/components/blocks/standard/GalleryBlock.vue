@@ -459,6 +459,7 @@ export default {
               url: data.image.src,
               width: data.image.width,
               height: data.image.height,
+              dominant_color: data.image.dominant_color,
               webp: data.image.webp
             }
           ]
@@ -484,6 +485,7 @@ export default {
           credits: img.credits,
           title: img.title,
           url: img.src,
+          dominant_color: img.dominant_color,
           width: img.width,
           height: img.height,
           webp: img.webp
@@ -592,6 +594,7 @@ export default {
           opacity: 1;
           top: 0;
           left: 0;
+          z-index: 2;
           width: 100%;
           height: 100%;
 

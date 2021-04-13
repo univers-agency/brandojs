@@ -1,5 +1,5 @@
-query PageFragment ($pageFragmentId: ID!) {
-  pageFragment (pageFragmentId: $pageFragmentId) {
+query Fragment ($matches: FragmentMatches, $status: String, $revision: ID) {
+  fragment (matches: $matches, status: $status, revision: $revision) {
     id
     title
     parentKey

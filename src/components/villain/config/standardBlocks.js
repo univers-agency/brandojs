@@ -96,7 +96,8 @@ export default {
         images: [],
         class: '',
         series_slug: 'post',
-        lightbox: false
+        lightbox: false,
+        placeholder: 'dominant_color'
       }
     },
 
@@ -359,7 +360,8 @@ export default {
         images: [],
         class: '',
         series_slug: 'post',
-        lightbox: false
+        lightbox: false,
+        placeholder: 'dominant_color'
       }
     },
 

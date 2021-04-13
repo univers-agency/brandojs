@@ -368,7 +368,7 @@ export default {
         })
 
       this.adminChannel.channel
-        .push('page_fragment:rerender_all', {})
+        .push('fragment:rerender_all', {})
         .receive('ok', payload => {
           this.$toast.success({ message: this.$t('pages.fragments-rerendered') })
         })
@@ -384,7 +384,7 @@ export default {
 
     rerenderSection (id) {
       this.adminChannel.channel
-        .push('page_fragment:rerender', { id })
+        .push('fragment:rerender', { id })
         .receive('ok', payload => {
           this.$toast.success({ message: this.$t('pages.section-rerendered') })
         })
@@ -400,7 +400,7 @@ export default {
 
     sortSections (seq, pageId) {
       this.adminChannel.channel
-        .push('page_fragments:sequence_fragments', { ids: seq })
+        .push('fragments:sequence_fragments', { ids: seq })
         .receive('ok', payload => {
           this.$toast.success({ message: this.$t('pages.sequence-updated') })
         })
@@ -468,14 +468,14 @@ export default {
             try {
               await this.$apollo.mutate({
                 mutation: gql`
-                  mutation DeletePageFragment($pageFragmentId: ID!) {
-                    deletePageFragment(pageFragmentId: $pageFragmentId) {
+                  mutation DeleteFragment($fragmentId: ID!) {
+                    deleteFragment(fragmentId: $fragmentId) {
                       id
                     }
                   }
                 `,
                 variables: {
-                  pageFragmentId: section.id
+                  fragmentId: section.id
                 }
               })
 

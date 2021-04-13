@@ -207,6 +207,7 @@ export default {
             break
           }
         }
+
         if (!{}.hasOwnProperty.call(this.providers, this.block.data.source)) {
           return false
         }

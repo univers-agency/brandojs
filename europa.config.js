@@ -67,11 +67,11 @@ module.exports = {
       padding: {
         iphone: '15px',
         mobile: '15px',
-        ipad_portrait: '50px',
-        ipad_landscape: '50px',
-        desktop_md: '50px',
-        desktop_lg: '50px',
-        desktop_xl: '50px'
+        ipad_portrait: '25px',
+        ipad_landscape: '25px',
+        desktop_md: '25px',
+        desktop_lg: '25px',
+        desktop_xl: '25px'
       }
     },
 

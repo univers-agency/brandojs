@@ -212,7 +212,7 @@ export default {
   },
 
   mounted () {
-    this.watchDrop(this.$el)
+    this.watchDrop(this.$el.querySelector('.dropzone'))
     this.buildCfg()
   },
 
@@ -250,9 +250,9 @@ export default {
       this.dropElement = el
 
       if (this.dropElement) {
-        document.addEventListener('dragenter', this.onDragenter, false)
-        document.addEventListener('dragleave', this.onDragleave, false)
-        document.addEventListener('drop', this.onDocumentDrop, false)
+        // document.addEventListener('dragenter', this.onDragenter, false)
+        // document.addEventListener('dragleave', this.onDragleave, false)
+        // document.addEventListener('drop', this.onDocumentDrop, false)
         this.dropElement.addEventListener('dragover', this.onDragover, false)
         this.dropElement.addEventListener('drop', this.onDrop, false)
       }

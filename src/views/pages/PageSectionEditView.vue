@@ -1,12 +1,12 @@
 <template>
-  <article v-if="pageFragment">
+  <article v-if="fragment">
     <ContentHeader>
       <template #title>
         {{ $t('section.edit') }}
       </template>
     </ContentHeader>
     <PageSectionForm
-      :page="pageFragment"
+      :page="fragment"
       :save="save" />
   </article>
 </template>
@@ -40,16 +40,16 @@ export default {
 
   methods: {
     async save () {
-      const pageFragmentParams = this.$utils.stripParams(this.pageFragment, ['__typename', 'id', 'creator', 'deletedAt', 'insertedAt'])
-      this.$utils.serializeParams(pageFragmentParams, ['data'])
+      const fragmentParams = this.$utils.stripParams(this.fragment, ['__typename', 'id', 'creator', 'deletedAt', 'insertedAt'])
+      this.$utils.serializeParams(fragmentParams, ['data'])
 
       try {
         await this.$apollo.mutate({
           mutation: gql`
-            mutation UpdatePageFragment($pageFragmentId: ID!, $pageFragmentParams: PageFragmentParams) {
-              updatePageFragment(
-                pageFragmentId: $pageFragmentId,
-                pageFragmentParams: $pageFragmentParams,
+            mutation UpdateFragment($fragmentId: ID!, $fragmentParams: FragmentParams) {
+              updateFragment(
+                fragmentId: $fragmentId,
+                fragmentParams: $fragmentParams,
               ) {
                 id
               }
@@ -57,8 +57,8 @@ export default {
           `,
 
           variables: {
-            pageFragmentParams,
-            pageFragmentId: this.sectionId
+            fragmentParams,
+            fragmentId: this.sectionId
           }
         })
 
@@ -71,10 +71,10 @@ export default {
   },
 
   apollo: {
-    pageFragment: {
+    fragment: {
       query: gql`
-        query PageFragment ($matches: PageFragmentMatches!) {
-          pageFragment (matches: $matches) {
+        query Fragment ($matches: FragmentMatches!) {
+          fragment (matches: $matches) {
             id
             title
             parentKey

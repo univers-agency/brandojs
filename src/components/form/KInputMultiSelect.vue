@@ -419,7 +419,7 @@ export default {
             return
           }
         }
-        this.selected.unshift(option)
+        this.$set(this, 'selected', [option, ...this.selected])
       }
       this.searchString = ''
       this.emitSelected()

@@ -50,22 +50,22 @@ export default {
 
   methods: {
     async save () {
-      const pageFragmentParams = this.$utils.stripParams(this.page, ['__typename', 'id'])
-      this.$utils.serializeParams(pageFragmentParams, ['data'])
+      const fragmentParams = this.$utils.stripParams(this.page, ['__typename', 'id'])
+      this.$utils.serializeParams(fragmentParams, ['data'])
 
       try {
         await this.$apollo.mutate({
           mutation: gql`
-            mutation CreatePageFragment($pageFragmentParams: PageFragmentParams) {
-              createPageFragment(
-                pageFragmentParams: $pageFragmentParams,
+            mutation CreateFragment($fragmentParams: FragmentParams) {
+              createFragment(
+                fragmentParams: $fragmentParams,
               ) {
                 id
               }
             }
           `,
           variables: {
-            pageFragmentParams
+            fragmentParams
           }
         })
 

@@ -87,7 +87,8 @@ export default {
           locale: LOCALE_NO,
           altInput: true,
           altFormat: 'l j F, Y',
-          dateFormat: 'Y-m-d'
+          dateFormat: 'Y-m-d',
+          allowInput: true
         }
       }
     },

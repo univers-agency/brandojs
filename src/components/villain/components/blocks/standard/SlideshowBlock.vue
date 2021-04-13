@@ -445,6 +445,7 @@ export default {
               url: data.image.src,
               width: data.image.width,
               height: data.image.height,
+              dominant_color: data.image.dominant_color,
               webp: data.image.webp
             }
           ]
@@ -472,6 +473,7 @@ export default {
           url: img.src,
           width: img.width,
           height: img.height,
+          dominant_color: img.dominant_color,
           webp: img.webp
         }
       ])
@@ -576,6 +578,7 @@ export default {
           background-color: #000fe0cf;
           position: absolute;
           opacity: 1;
+          z-index: 2;
           top: 0;
           left: 0;
           width: 100%;

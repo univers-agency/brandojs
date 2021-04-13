@@ -52,7 +52,7 @@
         <div class="shaded">
           <FocusPoint v-model="img.image.focal">
             <img
-              :src="`${GLOBALS.config.mediaUrl}/${img.image.path}?${timestamp}`"
+              :src="`${GLOBALS.identity.config.mediaUrl}/${img.image.path}?${timestamp}`"
               class="img-fluid">
           </FocusPoint>
 
